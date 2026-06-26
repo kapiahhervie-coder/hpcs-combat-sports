@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menunggu Persetujuan — HPCS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#0d0f18;border:1px solid rgba(255,255,255,0.07);border-radius:16px;width:100%;max-width:420px;padding:40px 32px;text-align:center}
+.icon{width:72px;height:72px;border-radius:50%;background:rgba(245,158,11,0.1);border:2px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;color:#64748b;margin-bottom:16px;text-transform:uppercase}
+h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:10px}
+p{font-size:13px;color:#64748b;line-height:1.7;margin-bottom:24px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;color:#f59e0b;letter-spacing:.5px;margin-bottom:24px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:#f59e0b;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}
+.info-box{background:#111626;border:1px solid rgba(255,255,255,0.05);border-radius:8px;padding:14px 16px;margin-bottom:24px;text-align:left}
+.info-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.info-row:last-child{border-bottom:none}
+.info-row .key{color:#64748b}
+.info-row .val{color:#e2e8f0;font-weight:500}
+.btn-logout{display:block;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;color:#64748b;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-logout:hover{border-color:#e63946;color:#e63946}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">HPCS Combat Sports</div>
+  <div class="icon">⏳</div>
+  <h2>Menunggu Persetujuan</h2>
+  <p>Akun kamu sudah terdaftar dan sedang ditinjau oleh administrator. Kamu akan mendapat konfirmasi setelah akun disetujui.</p>
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Status: Pending Review
+  </div>
+
+  <div class="info-box">
+    <div class="info-row">
+      <span class="key">Nama</span>
+      <span class="val">{{ user.get_full_name }}</span>
+    </div>
+    <div class="info-row">
+      <span class="key">Username</span>
+      <span class="val">{{ user.username }}</span>
+    </div>
+    <div class="info-row">
+      <span class="key">Cabang</span>
+      <span class="val">{{ profil.get_cabang_display }}</span>
+    </div>
+    <div class="info-row">
+      <span class="key">Didaftarkan</span>
+      <span class="val">{{ profil.dibuat_pada|date:"d M Y, H:i" }}</span>
+    </div>
+  </div>
+
+  <a href="{% url 'logout' %}" class="btn-logout">Keluar dari akun ini</a>
+</div>
+</body>
+</html>

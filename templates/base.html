@@ -1,0 +1,575 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}HPCS Combat Sports{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      background: #f3f4f6;
+      color: #111827;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 220px;
+      height: 100vh;
+      background: #111827;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 20px 20px 16px;
+      border-bottom: 0.5px solid rgba(255,255,255,.1);
+    }
+    .sidebar-brand .brand-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .3px;
+    }
+    .sidebar-brand .brand-sub {
+      font-size: 10px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-top: 2px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      padding: 8px 16px 4px;
+      font-size: 10px;
+      font-weight: 500;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      color: #d1d5db;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      transition: background .15s, color .15s;
+      border-left: 3px solid transparent;
+    }
+    .nav-link:hover {
+      background: rgba(255,255,255,.06);
+      color: #fff;
+    }
+    .nav-link.active {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      border-left-color: #3b82f6;
+      font-weight: 500;
+    }
+    .nav-link .nav-icon {
+      font-size: 16px;
+      width: 18px;
+      text-align: center;
+      opacity: .8;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 0.5px solid rgba(255,255,255,.1);
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .sidebar-footer .user-name {
+      color: #d1d5db;
+      font-weight: 500;
+    }
+
+    /* ── Main area ── */
+    .main-wrapper {
+      margin-left: 230px;
+      transition: margin-left .25s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: #fff;
+      border-bottom: 0.5px solid #e5e7eb;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .topbar-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #374151;
+    }
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Page content ── */
+    .page-content {
+      flex: 1;
+      padding: 24px;
+    }
+
+    /* ── Messages / alerts ── */
+    .messages { list-style: none; margin-bottom: 1rem; }
+    .messages li {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .messages .success { background: #EAF3DE; color: #3B6D11; }
+    .messages .error   { background: #FCEBEB; color: #A32D2D; }
+    .messages .warning { background: #FAEEDA; color: #854F0B; }
+    .messages .info    { background: #E6F1FB; color: #185FA5; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .main-wrapper { margin-left: 0; }
+    }
+  
+    .sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:linear-gradient(180deg,#0f0f0f 0%,#1a0a00 100%);border-right:1px solid rgba(239,68,68,0.15);display:flex;flex-direction:column;z-index:100;}
+    .sidebar-brand{padding:18px 20px 16px;border-bottom:1px solid rgba(239,68,68,0.15);background:rgba(239,68,68,0.05);}
+    .sidebar-brand .brand-name{font-size:17px;font-weight:800;color:#fff;letter-spacing:2px;text-transform:uppercase;}
+    .sidebar-brand .brand-name span{color:#ef4444;}
+    .sidebar-brand .brand-sub{font-size:9px;color:#6b7280;text-transform:uppercase;letter-spacing:2px;margin-top:3px;}
+    .sidebar-nav{flex:1;padding:10px 0;overflow-y:auto;}
+    .nav-section{padding:12px 16px 4px;font-size:9px;font-weight:700;color:#4b5563;text-transform:uppercase;letter-spacing:1.5px;}
+    .nav-link{display:flex;align-items:center;gap:10px;padding:9px 18px;color:#9ca3af;text-decoration:none;font-size:11.5px;font-weight:500;transition:all .15s;border-left:3px solid transparent;white-space:nowrap;overflow:hidden;}
+    .nav-link:hover{background:rgba(239,68,68,0.08);color:#f9fafb;border-left-color:rgba(239,68,68,0.4);}
+    .nav-link.active{background:rgba(239,68,68,0.12);color:#fff;border-left-color:#ef4444;font-weight:600;}
+    .nav-link .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+    .nav-link .nav-badge{margin-left:auto;font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(239,68,68,0.2);color:#ef4444;font-weight:700;}
+    .nav-divider{height:1px;background:rgba(255,255,255,0.05);margin:8px 16px;}
+    .sidebar-footer{padding:14px 20px;border-top:1px solid rgba(239,68,68,0.1);font-size:12px;color:#6b7280;display:flex;justify-content:space-between;align-items:center;}
+    .sidebar-footer .user-name{font-weight:600;color:#9ca3af;}
+
+
+    .sidebar{transition:width .25s ease;}
+    .sidebar.collapsed{width:54px;}
+    .sidebar.collapsed .brand-sub,
+    .sidebar.collapsed .nav-section,
+    .sidebar.collapsed .nav-badge,
+    .sidebar.collapsed .nav-link-text,
+    .sidebar.collapsed .user-name,
+    .sidebar.collapsed .logout-link{display:none !important;}
+    .sidebar.collapsed .brand-name{font-size:13px;letter-spacing:1px;}
+    .sidebar.collapsed .nav-link{padding:10px 0;justify-content:center;}
+    .sidebar.collapsed .nav-icon{width:54px;text-align:center;font-size:17px;}
+    .sidebar.collapsed .sidebar-brand{padding:14px 0;text-align:center;}
+    .sidebar.collapsed .sidebar-footer{padding:10px 0;justify-content:center;}
+    .sidebar-toggle{position:absolute;top:14px;right:-12px;width:24px;height:24px;
+      background:#ef4444;border-radius:50%;display:flex;align-items:center;
+      justify-content:center;cursor:pointer;z-index:200;font-size:12px;
+      color:#fff;border:2px solid #0f0f0f;transition:transform .25s;}
+    .sidebar.collapsed .sidebar-toggle{transform:rotate(180deg);}
+    .main-content{transition:margin-left .25s ease;}
+    .main-content.expanded{margin-left:54px;}
+
+
+    .logout-icon { display: none; }
+    .sidebar.collapsed .logout-link { display: none !important; }
+    .sidebar.collapsed .logout-icon { display: inline !important; }
+    .sidebar.collapsed .user-name { display: none !important; }
+    .sidebar.collapsed .sidebar-footer a { display: none !important; }
+
+</style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+    <aside class="sidebar">
+    <div class="sidebar-toggle" onclick="toggleSidebar()">&#9664;</div>
+    <div class="sidebar-brand">
+      <div class="brand-name">&#9889; <span>HPCS</span></div>
+      <div class="brand-sub" data-i18n="brand_sub">High Performance Combat Sports</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section" data-i18n="nav_dashboard">Dashboard</div>
+      <a href="{% url 'combat:dashboard_boxing' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard_boxing' %}active{% endif %}">
+        <span class="nav-icon">&#127946;</span> <span class="nav-link-text" data-i18n="nav_boxing">Boxing Division</span>
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_assessment">Assessment</div>
+      <a href="{% url 'combat:l1_correction' %}" class="nav-link {% if request.resolver_match.url_name == 'l1_correction' %}active{% endif %}">
+        <span class="nav-icon">&#128308;</span> <span class="nav-link-text" data-i18n="nav_l1">L1 — Correction</span><span class="nav-badge">MOB</span>
+      </a>
+      <a href="{% url 'combat:l2_strength' %}" class="nav-link {% if request.resolver_match.url_name == 'l2_strength' %}active{% endif %}">
+        <span class="nav-icon">&#128309;</span> <span class="nav-link-text" data-i18n="nav_l2">L2 — Strength</span><span class="nav-badge">STR</span>
+      </a>
+      <a href="{% url 'combat:l3_power' %}" class="nav-link {% if request.resolver_match.url_name == 'l3_power' %}active{% endif %}">
+        <span class="nav-icon">&#128992;</span> <span class="nav-link-text" data-i18n="nav_l3">L3 — Power</span><span class="nav-badge">PWR</span>
+      </a>
+      <a href="{% url 'combat:l4_speed_agility' %}" class="nav-link {% if request.resolver_match.url_name == 'l4_speed_agility' %}active{% endif %}">
+        <span class="nav-icon">&#128993;</span> <span class="nav-link-text" data-i18n="nav_l4">L4 — Speed & Agility</span><span class="nav-badge">SPD</span>
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_system">Sistem</div>
+      <a href="{% url 'admin:index' %}" class="nav-link">
+        <span class="nav-icon">&#9881;</span> <span class="nav-link-text" data-i18n="nav_admin">Admin Panel</span>
+      </a>
+      {% if request.user.is_superuser or request.user.is_staff %}
+      <a href="{% url 'combat:admin_coach' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_coach' %}active{% endif %}">
+        <span class="nav-icon">&#128101;</span> <span class="nav-link-text">Manajemen Coach</span>
+      </a>
+      {% endif %}
+    </nav>
+    <div class="sidebar-footer">
+      <span class="user-name">{{ request.user.username }}</span>
+      <div class="lang-switcher" style="display:flex;gap:4px;margin-top:6px;">
+        <button onclick="setLang('id')" id="btn_id"
+          style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);
+                 color:#9ca3af;border-radius:4px;padding:2px 7px;font-size:10px;
+                 cursor:pointer;font-weight:600;transition:all 0.15s;">
+          &#127470;&#127465; ID
+        </button>
+        <button onclick="setLang('en')" id="btn_en"
+          style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+                 color:#9ca3af;border-radius:4px;padding:2px 7px;font-size:10px;
+                 cursor:pointer;font-weight:600;transition:all 0.15s;">
+          &#127468;&#127463; EN
+        </button>
+      </div>
+      <form method="post" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" style="background:none;border:none;color:#ef4444;font-size:11px;cursor:pointer;padding:0" title="Logout">
+          <span class="nav-link-text logout-link">&#9747; Logout</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrapper">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      <div class="topbar-right">
+        {% if user.is_authenticated %}
+        <div class="topbar-user">
+          <div class="avatar">
+            {{ user.username|first|upper }}
+          </div>
+          {{ user.username }}
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <!-- Django messages -->
+    {% if messages %}
+    <div style="padding: 12px 24px 0;">
+      <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Page content -->
+    <main class="page-content">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+
+
+<script>
+function toggleSidebar() {
+    var sb = document.querySelector('.sidebar');
+    var mw = document.querySelector('.main-wrapper');
+    sb.classList.toggle('collapsed');
+    if (mw) mw.style.marginLeft = sb.classList.contains('collapsed') ? '54px' : '230px';
+    localStorage.setItem('sidebar_collapsed', sb.classList.contains('collapsed'));
+}
+// Restore state
+window.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('sidebar_collapsed') === 'true') {
+        var sb = document.querySelector('.sidebar');
+        var mw = document.querySelector('.main-wrapper');
+        if (sb) sb.classList.add('collapsed');
+        if (mw) mw.style.marginLeft = '54px';
+    }
+});
+</script>
+{% block extra_js %}{% endblock %}
+
+<script>
+var TRANSLATIONS = {
+  id: {
+    nav_dashboard:  'Dashboard',
+    nav_boxing:     'Divisi Boxing',
+    nav_assessment: 'Asesmen',
+    nav_l1:         'L1 — Koreksi',
+    nav_l2:         'L2 — Kekuatan',
+    nav_l3:         'L3 — Power',
+    nav_l4:         'L4 — Kecepatan & Kelincahan',
+    nav_system:     'Sistem',
+    nav_admin:      'Panel Admin',
+    nav_report:     'Pusat Laporan',
+    nav_coach:      'Manajemen Coach',
+    brand_sub:      'Olahraga Tempur Performa Tinggi',
+    logout:         'Keluar',
+    stat_total_atlet: 'Total Atlet',
+    stat_l1:          'Audit L1 • Correction',
+    stat_l2:          'Audit L2 • Strength',
+    stat_l3:          'Audit L3 • Power',
+    level_1:          'LEVEL 1',
+    level_2:          'LEVEL 2',
+    level_3:          'LEVEL 3',
+    level_4:          'LEVEL 4'
+  },
+  page: {
+    id: {
+      'IDENTITAS ATLET': 'IDENTITAS ATLET',
+      'DATA MENTAH PILAR L2': 'DATA MENTAH PILAR L2',
+      'STRENGTH DISTRIBUTION RADAR': 'RADAR DISTRIBUSI KEKUATAN',
+      'AUDIT RESULT': 'HASIL AUDIT',
+      'Pilih Atlet': 'Pilih Atlet',
+      'SIMPAN DATA L2': 'SIMPAN DATA L2',
+      'Cetak PDF (Browser)': 'Cetak PDF (Browser)',
+      'LOWER': 'LOWER',
+      'PUSH': 'PUSH',
+      'PULL': 'PULL',
+      'CORE': 'CORE',
+      'ISOMETRIC': 'ISOMETRIC',
+      'Beban': 'Beban',
+      'BW Ratio': 'Rasio BB',
+      'Reps': 'Repetisi',
+      'Detik': 'Detik',
+      'Total hold': 'Total tahan',
+      'Tremor onset': 'Awal tremor',
+      'History Audit L2': 'Riwayat Audit L2',
+      'Record': 'Record',
+      'Tanggal': 'Tanggal',
+      'Atlet': 'Atlet',
+      'Kategori': 'Kategori',
+      'Total': 'Total',
+      'Predikat': 'Predikat',
+      'Aksi': 'Aksi',
+      'Lihat Standar Rubrik & Protokol': 'Lihat Standar Rubrik & Protokol',
+      'Rekomendasi Pelatih': 'Rekomendasi Pelatih',
+      'Profil Kondisi Atlet': 'Profil Kondisi Atlet',
+      'KEUNGGULAN': 'KEUNGGULAN',
+      'AREA KELEMAHAN': 'AREA KELEMAHAN',
+      'KESIMPULAN': 'KESIMPULAN',
+      'History Audit L1': 'Riwayat Audit L1',
+      'Database & History Audit': 'Database & Riwayat Audit',
+      'Biomechanics Radar': 'Radar Biomekanik',
+      'Pilar Analysis': 'Analisis Pilar',
+      'Audit Result': 'Hasil Audit',
+      'SAVE AUDIT': 'SIMPAN AUDIT',
+      'Rekomendasi HPCS': 'Rekomendasi HPCS',
+      'Identitas Atlet': 'Identitas Atlet',
+      'Pilih Atlet': 'Pilih Atlet',
+      'HPCS Level 1': 'HPCS Level 1',
+      'HPCS Level 2': 'HPCS Level 2',
+      'History Audit L3': 'Riwayat Audit L3',
+      'History Audit L4': 'Riwayat Audit L4',
+      'SIMPAN DATA L3': 'SIMPAN DATA L3',
+      'SIMPAN DATA L4': 'SIMPAN DATA L4',
+      'Belum ada data': 'Belum ada data'
+    },
+    en: {
+      'IDENTITAS ATLET': 'ATHLETE IDENTITY',
+      'DATA MENTAH PILAR L2': 'L2 RAW PILLAR DATA',
+      'STRENGTH DISTRIBUTION RADAR': 'STRENGTH DISTRIBUTION RADAR',
+      'AUDIT RESULT': 'AUDIT RESULT',
+      'Pilih Atlet': 'Select Athlete',
+      'SIMPAN DATA L2': 'SAVE L2 DATA',
+      'Cetak PDF (Browser)': 'Print PDF',
+      'LOWER': 'LOWER',
+      'PUSH': 'PUSH',
+      'PULL': 'PULL',
+      'CORE': 'CORE',
+      'ISOMETRIC': 'ISOMETRIC',
+      'Beban': 'Load',
+      'BW Ratio': 'BW Ratio',
+      'Reps': 'Reps',
+      'Detik': 'Seconds',
+      'Total hold': 'Total hold',
+      'Tremor onset': 'Tremor onset',
+      'History Audit L2': 'L2 Audit History',
+      'Record': 'Record',
+      'Tanggal': 'Date',
+      'Atlet': 'Athlete',
+      'Kategori': 'Category',
+      'Total': 'Total',
+      'Predikat': 'Predicate',
+      'Aksi': 'Action',
+      'Lihat Standar Rubrik & Protokol': 'View Rubric & Protocol Standards',
+      'Rekomendasi Pelatih': 'Coach Recommendations',
+      'Profil Kondisi Atlet': 'Athlete Condition Profile',
+      'KEUNGGULAN': 'STRENGTHS',
+      'AREA KELEMAHAN': 'WEAKNESS AREAS',
+      'KESIMPULAN': 'CONCLUSION',
+      'History Audit L1': 'L1 Audit History',
+      'Database & History Audit': 'Database & Audit History',
+      'Biomechanics Radar': 'Biomechanics Radar',
+      'Pilar Analysis': 'Pillar Analysis',
+      'Audit Result': 'Audit Result',
+      'SAVE AUDIT': 'SAVE AUDIT',
+      'Rekomendasi HPCS': 'HPCS Recommendations',
+      'Identitas Atlet': 'Athlete Identity',
+      'Pilih Atlet': 'Select Athlete',
+      'HPCS Level 1': 'HPCS Level 1',
+      'HPCS Level 2': 'HPCS Level 2',
+      'History Audit L3': 'L3 Audit History',
+      'History Audit L4': 'L4 Audit History',
+      'SIMPAN DATA L3': 'SAVE L3 DATA',
+      'SIMPAN DATA L4': 'SAVE L4 DATA',
+      'Belum ada data': 'No data available'
+    }
+  },
+  en: {
+    nav_dashboard:  'Dashboard',
+    nav_boxing:     'Boxing Division',
+    nav_assessment: 'Assessment',
+    nav_l1:         'L1 — Correction',
+    nav_l2:         'L2 — Strength',
+    nav_l3:         'L3 — Power',
+    nav_l4:         'L4 — Speed & Agility',
+    nav_system:     'System',
+    nav_admin:      'Admin Panel',
+    nav_report:     'Report Center',
+    nav_coach:      'Coach Management',
+    brand_sub:      'High Performance Combat Sports',
+    logout:         'Logout',
+    stat_total_atlet: 'Total Athletes',
+    stat_l1:          'Audit L1 • Correction',
+    stat_l2:          'Audit L2 • Strength',
+    stat_l3:          'Audit L3 • Power',
+    level_1:          'LEVEL 1',
+    level_2:          'LEVEL 2',
+    level_3:          'LEVEL 3',
+    level_4:          'LEVEL 4'
+  }
+};
+
+function applyLang(lang) {
+  var t = TRANSLATIONS[lang] || TRANSLATIONS['id'];
+  // Translate sidebar
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  // Translate page content
+  var pt = TRANSLATIONS.page[lang] || TRANSLATIONS.page['id'];
+  if (pt) {
+    // Translate semua elemen teks di halaman
+    var selectors = [
+      '.card-title', '.section-label', 'h1', 'h2', 'h3', 'h4', 'h5',
+      '.pilar-label', '.pilar-name', 'th', 'button[type=submit]',
+      '.history-header .card-title', 'label', '.card-title'
+    ];
+    selectors.forEach(function(sel) {
+      document.querySelectorAll(sel).forEach(function(el) {
+        var orig = el.getAttribute('data-orig') || el.textContent.trim();
+        if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', orig);
+        if (pt[orig]) {
+          // Jaga ikon/child elements
+          if (el.childElementCount === 0) {
+            el.textContent = pt[orig];
+          } else {
+            el.childNodes.forEach(function(node) {
+              if (node.nodeType === 3) {
+                var txt = node.textContent.trim();
+                if (pt[txt]) node.textContent = node.textContent.replace(txt, pt[txt]);
+              }
+            });
+          }
+        }
+      });
+    });
+    // Translate placeholder
+    document.querySelectorAll('[placeholder]').forEach(function(el) {
+      var orig = el.getAttribute('data-orig-ph') || el.placeholder;
+      if (!el.getAttribute('data-orig-ph')) el.setAttribute('data-orig-ph', orig);
+      if (pt[orig]) el.placeholder = pt[orig];
+    });
+  }
+  // Update tombol aktif
+  var btnId = document.getElementById('btn_id');
+  var btnEn = document.getElementById('btn_en');
+  if (btnId && btnEn) {
+    var activeStyle = 'background:rgba(239,68,68,0.3);border:1px solid rgba(239,68,68,0.6);color:#fff;border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;font-weight:700;';
+    var inactiveStyle = 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#9ca3af;border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;font-weight:600;';
+    btnId.style.cssText = lang === 'id' ? activeStyle : inactiveStyle;
+    btnEn.style.cssText = lang === 'en' ? activeStyle : inactiveStyle;
+  }
+  document.documentElement.lang = lang;
+}
+
+function setLang(lang) {
+  localStorage.setItem('hpcs_lang', lang);
+  applyLang(lang);
+}
+
+// Auto apply saat halaman load
+window.addEventListener('DOMContentLoaded', function() {
+  var saved = localStorage.getItem('hpcs_lang') || 'id';
+  applyLang(saved);
+});
+</script>
+</body>
+</html>
+

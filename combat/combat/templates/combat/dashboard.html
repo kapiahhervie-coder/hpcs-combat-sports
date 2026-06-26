@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard — HPCS Combat Sports{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="max-width:1100px; margin:0 auto;">
+
+  <!-- Header -->
+  <div style="margin-bottom:1.5rem;">
+    <p style="font-size:11px; color:#9ca3af; text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px;">
+      HPCS — High Performance Combat Sports
+    </p>
+    <h1 style="font-size:20px; font-weight:500; color:#111827;">Overview Sistem Audit</h1>
+  </div>
+
+  <!-- Metric Cards -->
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:1rem;">
+    <div style="background:#f9fafb; border-radius:8px; padding:1rem;">
+      <p style="font-size:12px; color:#6b7280; margin-bottom:6px;">Total Atlet</p>
+      <p style="font-size:28px; font-weight:500; color:#111827;">{{ total_atlet }}</p>
+      <p style="font-size:11px; color:#9ca3af; margin-top:2px;">Terdaftar aktif</p>
+    </div>
+    <div style="background:#f9fafb; border-radius:8px; padding:1rem;">
+      <p style="font-size:12px; color:#6b7280; margin-bottom:6px;">Audit L1 Correction</p>
+      <p style="font-size:28px; font-weight:500; color:#185FA5;">{{ total_l1 }}</p>
+      <p style="font-size:11px; color:#9ca3af; margin-top:2px;">
+        <span style="color:#3B6D11; font-weight:500;">{{ l1_layak }}</span> layak naik ke L2
+      </p>
+    </div>
+    <div style="background:#f9fafb; border-radius:8px; padding:1rem;">
+      <p style="font-size:12px; color:#6b7280; margin-bottom:6px;">Audit L2 Strength</p>
+      <p style="font-size:28px; font-weight:500; color:#3B6D11;">{{ total_l2 }}</p>
+      <p style="font-size:11px; color:#9ca3af; margin-top:2px;">
+        <span style="color:#3B6D11; font-weight:500;">{{ l2_layak }}</span> layak naik ke L3
+      </p>
+    </div>
+    <div style="background:#f9fafb; border-radius:8px; padding:1rem;">
+      <p style="font-size:12px; color:#6b7280; margin-bottom:6px;">Audit L3 Power</p>
+      <p style="font-size:28px; font-weight:500; color:#854F0B;">{{ total_l3 }}</p>
+      <p style="font-size:11px; color:#9ca3af; margin-top:2px;">
+        <span style="color:#3B6D11; font-weight:500;">{{ l3_layak }}</span> layak kompetisi
+      </p>
+    </div>
+  </div>
+
+  <!-- Alur HPCS -->
+  <div style="background:#fff; border:0.5px solid #e5e7eb; border-radius:12px; padding:1rem 1.25rem; margin-bottom:1.5rem;">
+    <p style="font-size:11px; font-weight:500; color:#9ca3af; text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px;">Alur Sistem HPCS</p>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+      <a href="{% url 'combat:l1_correction' %}" style="display:flex; flex-direction:column; padding:12px 20px; background:#E6F1FB; border-radius:8px; text-decoration:none; min-width:140px;">
+        <span style="font-size:11px; color:#185FA5; font-weight:500; text-transform:uppercase; letter-spacing:.5px;">L1 — Correction</span>
+        <span style="font-size:20px; font-weight:600; color:#185FA5; margin:4px 0;">{{ total_l1 }}</span>
+        <span style="font-size:11px; color:#185FA5;">Core Stability & Mobility</span>
+      </a>
+      <span style="font-size:18px; color:#d1d5db;">&#8594;</span>
+      <a href="{% url 'combat:l2_strength' %}" style="display:flex; flex-direction:column; padding:12px 20px; background:#EAF3DE; border-radius:8px; text-decoration:none; min-width:140px;">
+        <span style="font-size:11px; color:#3B6D11; font-weight:500; text-transform:uppercase; letter-spacing:.5px;">L2 — Strength</span>
+        <span style="font-size:20px; font-weight:600; color:#3B6D11; margin:4px 0;">{{ total_l2 }}</span>
+        <span style="font-size:11px; color:#3B6D11;">5RM + CNS Tremor</span>
+      </a>
+      <span style="font-size:18px; color:#d1d5db;">&#8594;</span>
+      <a href="{% url 'combat:l3_power' %}" style="display:flex; flex-direction:column; padding:12px 20px; background:#FAEEDA; border-radius:8px; text-decoration:none; min-width:140px;">
+        <span style="font-size:11px; color:#854F0B; font-weight:500; text-transform:uppercase; letter-spacing:.5px;">L3 — Power</span>
+        <span style="font-size:20px; font-weight:600; color:#854F0B; margin:4px 0;">{{ total_l3 }}</span>
+        <span style="font-size:11px; color:#854F0B;">Explosive Power</span>
+      </a>
+      <span style="font-size:18px; color:#d1d5db;">&#8594;</span>
+      <div style="display:flex; flex-direction:column; padding:12px 20px; background:#EAF3DE; border-radius:8px; min-width:140px;">
+        <span style="font-size:11px; color:#3B6D11; font-weight:500; text-transform:uppercase; letter-spacing:.5px;">Layak Kompetisi</span>
+        <span style="font-size:20px; font-weight:600; color:#3B6D11; margin:4px 0;">{{ l3_layak }}</span>
+        <span style="font-size:11px; color:#3B6D11;">Siap tanding</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dua kolom: atlet terbaru + audit L1 & L2 -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:1.5rem;">
+
+    <!-- Atlet terbaru -->
+    <div style="background:#fff; border:0.5px solid #e5e7eb; border-radius:12px; padding:1rem 1.25rem;">
+      <p style="font-size:11px; font-weight:500; color:#9ca3af; text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px;">Atlet Terbaru</p>
+      <table style="width:100%; font-size:13px; border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">NAMA</th>
+            <th style="text-align:center; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">LEVEL</th>
+            <th style="text-align:center; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">RISIKO</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for atlet in atlet_terbaru %}
+          <tr>
+            <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; color:#111827; font-weight:500;">
+              {{ atlet.nama_atlet }}
+              <span style="display:block; font-size:11px; color:#9ca3af; font-weight:400;">{{ atlet.get_cabang_display|default:"—" }}</span>
+            </td>
+            <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center;">
+              <span style="display:inline-block; font-size:10px; padding:2px 6px; border-radius:4px; font-weight:500; background:#E6F1FB; color:#185FA5;">
+                {{ atlet.level_saat_ini }}
+              </span>
+            </td>
+            <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center;">
+              {% with r=atlet.risiko_cedera %}
+              {% if r == 'TINGGI' %}
+                <span style="display:inline-block; font-size:10px; padding:2px 6px; border-radius:4px; font-weight:500; background:#FCEBEB; color:#A32D2D;">TINGGI</span>
+              {% elif r == 'SEDANG' %}
+                <span style="display:inline-block; font-size:10px; padding:2px 6px; border-radius:4px; font-weight:500; background:#FAEEDA; color:#854F0B;">SEDANG</span>
+              {% elif r == 'RENDAH' %}
+                <span style="display:inline-block; font-size:10px; padding:2px 6px; border-radius:4px; font-weight:500; background:#EAF3DE; color:#3B6D11;">RENDAH</span>
+              {% else %}
+                <span style="color:#9ca3af; font-size:12px;">—</span>
+              {% endif %}
+              {% endwith %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" style="padding:16px 8px; text-align:center; color:#9ca3af;">Belum ada atlet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Audit terbaru L1 + L2 -->
+    <div style="background:#fff; border:0.5px solid #e5e7eb; border-radius:12px; padding:1rem 1.25rem;">
+      <p style="font-size:11px; font-weight:500; color:#9ca3af; text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px;">Audit Terbaru</p>
+
+      <span style="font-size:11px; color:#185FA5; font-weight:500; padding:3px 8px; background:#E6F1FB; border-radius:4px;">L1 Correction</span>
+      <table style="width:100%; font-size:13px; border-collapse:collapse; margin:8px 0 14px;">
+        <tbody>
+          {% for audit in audit_l1_terbaru %}
+          <tr>
+            <td style="padding:6px 8px; border-bottom:0.5px solid #f3f4f6; color:#111827;">{{ audit.atlet_name }}</td>
+            <td style="padding:6px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center; font-size:11px; font-weight:500; color:{% if audit.predikat == 'ELITE' %}#3B6D11{% elif audit.predikat == 'READY' %}#185FA5{% elif audit.predikat == 'DEVELOPING' %}#854F0B{% else %}#A32D2D{% endif %};">{{ audit.predikat }}</td>
+            <td style="padding:6px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center;">
+              {% if audit.layak_naik %}<span style="font-size:10px; padding:2px 6px; border-radius:4px; background:#EAF3DE; color:#3B6D11; font-weight:500;">Layak L2</span>
+              {% else %}<span style="font-size:10px; padding:2px 6px; border-radius:4px; background:#FCEBEB; color:#A32D2D; font-weight:500;">Belum</span>{% endif %}
+            </td>
+            <td style="padding:6px 8px; text-align:right; color:#9ca3af; font-size:11px;">{{ audit.timestamp|date:"d M" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" style="padding:8px; color:#9ca3af; font-size:12px;">Belum ada audit L1.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <span style="font-size:11px; color:#3B6D11; font-weight:500; padding:3px 8px; background:#EAF3DE; border-radius:4px;">L2 Strength</span>
+      <table style="width:100%; font-size:13px; border-collapse:collapse; margin-top:8px;">
+        <tbody>
+          {% for audit in audit_l2_terbaru %}
+          <tr>
+            <td style="padding:6px 8px; border-bottom:0.5px solid #f3f4f6; color:#111827;">{{ audit.atlet_name }}</td>
+            <td style="padding:6px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center; font-size:11px; font-weight:500; color:{% if audit.predikat == 'ELITE' %}#3B6D11{% elif audit.predikat == 'READY' %}#185FA5{% elif audit.predikat == 'DEVELOPING' %}#854F0B{% else %}#A32D2D{% endif %};">{{ audit.predikat }}</td>
+            <td style="padding:6px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center; font-size:11px; color:#6b7280;">{{ audit.cns_status }}</td>
+            <td style="padding:6px 8px; text-align:right; color:#9ca3af; font-size:11px;">{{ audit.timestamp|date:"d M" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" style="padding:8px; color:#9ca3af; font-size:12px;">Belum ada audit L2.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- L3 terbaru -->
+  <div style="background:#fff; border:0.5px solid #e5e7eb; border-radius:12px; padding:1rem 1.25rem;">
+    <p style="font-size:11px; font-weight:500; color:#9ca3af; text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px;">Audit L3 Power Terbaru</p>
+    <table style="width:100%; font-size:13px; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="text-align:left; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">ATLET</th>
+          <th style="text-align:center; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">PREDIKAT</th>
+          <th style="text-align:center; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">TOTAL SKOR</th>
+          <th style="text-align:center; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">STATUS</th>
+          <th style="text-align:right; font-size:11px; color:#9ca3af; padding:6px 8px; border-bottom:0.5px solid #e5e7eb; font-weight:500;">TANGGAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for audit in audit_l3_terbaru %}
+        <tr>
+          <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; color:#111827; font-weight:500;">{{ audit.atlet_name }}</td>
+          <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center; font-size:11px; font-weight:500; color:{% if audit.predikat == 'ELITE' %}#3B6D11{% elif audit.predikat == 'READY' %}#185FA5{% elif audit.predikat == 'DEVELOPING' %}#854F0B{% else %}#A32D2D{% endif %};">{{ audit.predikat }}</td>
+          <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center; font-weight:500;">{{ audit.total_skor }}</td>
+          <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; text-align:center;">
+            {% if audit.layak_naik %}
+              <span style="font-size:11px; padding:2px 8px; border-radius:6px; background:#EAF3DE; color:#3B6D11; font-weight:500;">Layak Kompetisi</span>
+            {% elif audit.layak_bertahan %}
+              <span style="font-size:11px; padding:2px 8px; border-radius:6px; background:#E6F1FB; color:#185FA5; font-weight:500;">Bertahan L3</span>
+            {% else %}
+              <span style="font-size:11px; padding:2px 8px; border-radius:6px; background:#FAEEDA; color:#854F0B; font-weight:500;">Kembali L2</span>
+            {% endif %}
+          </td>
+          <td style="padding:9px 8px; border-bottom:0.5px solid #f3f4f6; text-align:right; color:#9ca3af; font-size:12px;">{{ audit.timestamp|date:"d M Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" style="padding:16px 8px; text-align:center; color:#9ca3af;">Belum ada audit L3.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

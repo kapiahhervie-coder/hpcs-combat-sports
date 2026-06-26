@@ -1,0 +1,494 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard — HPCS Combat Sports{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #0b111e;
+  --bg-card: #131c2e;
+  --neon-blue: #00d2ff;
+  --neon-green: #00ff88;
+  --text-muted-custom: #8492a6;
+}
+.exec-wrapper {
+  background-color: var(--bg-dark);
+  color: #fff;
+  min-height: 100vh;
+  padding: 2rem;
+  margin: -24px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.coach-profile-card {
+  background: linear-gradient(135deg, #1e293b 0%, var(--bg-card) 100%);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 20px;
+}
+.avatar-coach {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-blue);
+  background: #2d3748;
+  display: flex; align-items: center; justify-content: center;
+}
+.btn-athlete-profile {
+  background: rgba(0,210,255,0.1);
+  color: var(--neon-blue);
+  border: 1px solid var(--neon-blue);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+.btn-athlete-profile:hover {
+  background: var(--neon-blue);
+  color: var(--bg-dark);
+  box-shadow: 0 0 15px rgba(0,210,255,0.4);
+}
+
+/* ── STAT CARDS ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 1.5rem 0;
+}
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  transition: all .2s;
+}
+.stat-card:hover {
+  border-color: rgba(0,210,255,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,210,255,0.1);
+}
+.stat-label {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--text-muted-custom); margin-bottom: 8px;
+}
+.stat-val {
+  font-size: 32px; font-weight: 700; line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-sub { font-size: 11px; color: var(--text-muted-custom); }
+.stat-sub b { color: var(--neon-green); }
+
+/* ── LEVEL CARDS ── */
+.level-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 30px 25px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  text-decoration: none;
+  display: block;
+  color: #fff;
+}
+.level-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 4px;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+  transform: translateX(-100%);
+  transition: 0.5s;
+}
+.level-card:hover::before { transform: translateX(100%); }
+.level-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--neon-blue);
+  box-shadow: 0 15px 30px rgba(0,210,255,0.15);
+  color: #fff;
+}
+.level-badge {
+  font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--neon-blue);
+  font-weight: bold; margin-bottom: 10px;
+  display: inline-block;
+}
+.level-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 8px; }
+.level-count {
+  font-size: 2.5rem; font-weight: 800;
+  color: var(--neon-blue); line-height: 1;
+  margin-bottom: 8px;
+}
+.level-desc {
+  font-size: 0.85rem; color: var(--text-muted-custom);
+  margin-bottom: 20px; min-height: 36px;
+}
+.btn-level-action {
+  background: linear-gradient(90deg, #00b4db, #00d2ff);
+  color: #fff; border: none; border-radius: 30px;
+  padding: 10px 25px; font-weight: 600;
+  width: 100%; transition: all 0.3s ease;
+  display: block; text-decoration: none;
+  font-size: 14px;
+}
+.btn-level-action:hover {
+  box-shadow: 0 0 20px rgba(0,210,255,0.5);
+  opacity: 0.9; color: #fff;
+}
+
+/* ── ATLET TABLE ── */
+.dark-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px;
+}
+.dark-table th {
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted-custom);
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dark-table td {
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color: #e2e8f0;
+}
+.dark-table tr:hover td { background: rgba(0,210,255,0.03); }
+.dark-table tr:last-child td { border-bottom: none; }
+
+.badge-level {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  padding: 2px 8px; border-radius: 4px;
+  background: rgba(0,210,255,0.1);
+  color: var(--neon-blue);
+  border: 1px solid rgba(0,210,255,0.2);
+}
+.badge-risk-high   { background:rgba(255,61,61,0.1);  color:#ff3d3d; border:1px solid rgba(255,61,61,0.2); }
+.badge-risk-mid    { background:rgba(255,179,0,0.1);  color:#ffb300; border:1px solid rgba(255,179,0,0.2); }
+.badge-risk-low    { background:rgba(0,255,136,0.1);  color:var(--neon-green); border:1px solid rgba(0,255,136,0.2); }
+.badge-layak       { background:rgba(0,255,136,0.1);  color:var(--neon-green); border:1px solid rgba(0,255,136,0.2); font-size:10px; padding:2px 8px; border-radius:4px; display:inline-block; font-weight:600; }
+.badge-belum       { background:rgba(255,61,61,0.1);  color:#ff3d3d; border:1px solid rgba(255,61,61,0.2); font-size:10px; padding:2px 8px; border-radius:4px; display:inline-block; font-weight:600; }
+
+.pred-ELITE      { color:#00e5ff; font-weight:700; }
+.pred-READY      { color:var(--neon-green); font-weight:700; }
+.pred-DEVELOPING { color:#ffb300; font-weight:700; }
+.pred-NOVICE     { color:#ff3d3d; font-weight:700; }
+
+.section-divider {
+  border-color: rgba(255,255,255,0.06);
+  margin: 1.5rem 0;
+}
+.dark-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+}
+.dark-card-title {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-muted-custom);
+  margin-bottom: 1rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.dark-card-title i { color: var(--neon-blue); }
+
+.audit-tag {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 3px 10px; border-radius: 4px;
+  margin-bottom: 8px; margin-top: 4px;
+}
+.audit-tag-l1 { background:rgba(0,210,255,0.08); color:var(--neon-blue); border:1px solid rgba(0,210,255,0.2); }
+.audit-tag-l2 { background:rgba(0,255,136,0.08); color:var(--neon-green); border:1px solid rgba(0,255,136,0.2); }
+
+.empty-state { text-align:center; color:rgba(255,255,255,0.2); font-size:12px; padding:16px 0; letter-spacing:.5px; }
+
+@media (max-width: 768px) {
+  .stat-grid { grid-template-columns: repeat(2,1fr); }
+  .exec-wrapper { padding: 1rem; margin: -24px; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="exec-wrapper">
+
+  <!-- HEADER -->
+  <div class="row align-items-center g-4 mb-2">
+    <div class="col-md-6">
+      <h1 class="fw-bold mb-1" style="letter-spacing:-1px; font-size:28px;">
+        HPCS <span style="color:var(--neon-blue);">COMBAT SPORTS</span>
+      </h1>
+      <p style="color:var(--text-muted-custom); font-size:13px; margin:0;">
+        High Performance Coaching System &bull; Dashboard Manajemen
+      </p>
+    </div>
+    <div class="col-md-6">
+      <div class="coach-profile-card d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <div class="avatar-coach">
+            <i class="fa-solid fa-user-tie text-white fs-4"></i>
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold" style="font-size:14px;">
+              {{ user.get_full_name|default:"Coach Fanny H. Kapiah, S.Pd" }}
+            </h6>
+            <small style="color:var(--text-muted-custom);">Head Strength &amp; Conditioning</small>
+          </div>
+        </div>
+        <a href="{% url 'admin:index' %}" class="btn-athlete-profile">
+          <i class="fa-solid fa-id-card me-1"></i>Admin
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label" data-i18n="stat_total_atlet">Total Atlet</div>
+      <div class="stat-val" style="color:#fff;">{{ total_atlet }}</div>
+      <div class="stat-sub">Terdaftar aktif</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" data-i18n="stat_l1">Audit L1 &bull; Correction</div>
+      <div class="stat-val" style="color:var(--neon-blue);">{{ total_l1 }}</div>
+      <div class="stat-sub"><b>{{ l1_layak }}</b> layak naik ke L2</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" data-i18n="stat_l2">Audit L2 &bull; Strength</div>
+      <div class="stat-val" style="color:var(--neon-green);">{{ total_l2 }}</div>
+      <div class="stat-sub"><b>{{ l2_layak }}</b> layak naik ke L3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" data-i18n="stat_l3">Audit L3 &bull; Power</div>
+      <div class="stat-val" style="color:#ffb300;">{{ total_l3 }}</div>
+      <div class="stat-sub"><b>{{ l3_layak }}</b> layak kompetisi</div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- LEVEL CARDS -->
+  <div class="mb-4">
+    <h5 class="fw-bold mb-1">
+      <i class="fa-solid fa-layer-group me-2" style="color:var(--neon-blue);"></i>
+      Hierarki Pembentukan Performa
+    </h5>
+    <p style="color:var(--text-muted-custom); font-size:13px; margin-bottom:1.25rem;">
+      Pilih level modul evaluasi fisik berkala di bawah ini untuk mengaudit atlet.
+    </p>
+    <div class="row g-4">
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <a href="{% url 'combat:l1_correction' %}" class="level-card">
+          <span class="level-badge">Fase Dasar 01</span>
+          <div class="level-title" data-i18n="level_1">LEVEL 1</div>
+          <div class="level-count">{{ total_l1 }}</div>
+          <div class="level-desc">Correction, Mobility, Stability &amp; Anatomi Struktur Sendi</div>
+          <span class="btn-level-action">
+            <i class="fa-solid fa-shield-halved me-2"></i>Mulai Audit
+          </span>
+        </a>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <a href="{% url 'combat:l3_power' %}" class="level-card">
+          <span class="level-badge" style="color:var(--neon-green);">Fase Kekuatan 02</span>
+          <div class="level-title" data-i18n="level_2">LEVEL 2</div>
+          <div class="level-count" style="color:var(--neon-green);">{{ total_l2 }}</div>
+          <div class="level-desc">Maximum Strength &amp; Integrasi Dinding Core Tubuh</div>
+          <span class="btn-level-action" style="background:linear-gradient(90deg,#00b894,#00ff88);">
+            <i class="fa-solid fa-dumbbell me-2"></i>Mulai Audit
+          </span>
+        </a>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <a href="{% url 'combat:l3_power' %}" class="level-card">
+          <span class="level-badge" style="color:#ffb300;">Fase Ledakan 03</span>
+          <div class="level-title" data-i18n="level_3">LEVEL 3</div>
+          <div class="level-count" style="color:#ffb300;">{{ total_l3 }}</div>
+          <div class="level-desc">Power &amp; Rate of Force Development (Mekanika Pukulan)</div>
+          <span class="btn-level-action" style="background:linear-gradient(90deg,#f39c12,#ffb300);">
+            <i class="fa-solid fa-bolt me-2"></i>Mulai Audit
+          </span>
+        </a>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="level-card" style="opacity:.5; cursor:not-allowed;">
+          <span class="level-badge" style="color:#8492a6;">Fase Spesifik 04</span>
+          <div class="level-title" data-i18n="level_4">LEVEL 4</div>
+          <div class="level-count" style="color:#8492a6;">—</div>
+          <div class="level-desc">Reactive Speed, Agility &amp; Metabolic Endurance (Yo-Yo)</div>
+          <span class="btn-level-action" style="background:#2d3748; color:#8492a6; cursor:not-allowed;">
+            <i class="fa-solid fa-lock me-2"></i>Coming Soon
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ATLET + AUDIT TERBARU -->
+  <div class="row g-4 mb-4">
+
+    <!-- Atlet Terbaru -->
+    <div class="col-md-6">
+      <div class="dark-card">
+        <div class="dark-card-title">
+          <i class="fa-solid fa-users"></i> Atlet Terbaru
+        </div>
+        <table class="dark-table">
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th style="text-align:center">Level</th>
+              <th style="text-align:center">Risiko</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for atlet in atlet_terbaru %}
+            <tr>
+              <td>
+                <span style="font-weight:600;">{{ atlet.nama_atlet }}</span>
+                <span style="display:block;font-size:11px;color:var(--text-muted-custom);">
+                  {{ atlet.get_cabang_display|default:"—" }}
+                </span>
+              </td>
+              <td style="text-align:center;">
+                <span class="badge-level">{{ atlet.level_saat_ini }}</span>
+              </td>
+              <td style="text-align:center;">
+                {% with r=atlet.risiko_cedera %}
+                {% if r == 'TINGGI' %}<span class="badge-level badge-risk-high">TINGGI</span>
+                {% elif r == 'SEDANG' %}<span class="badge-level badge-risk-mid">SEDANG</span>
+                {% elif r == 'RENDAH' %}<span class="badge-level badge-risk-low">RENDAH</span>
+                {% else %}<span style="color:rgba(255,255,255,0.2);">—</span>
+                {% endif %}
+                {% endwith %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="empty-state">Belum ada atlet terdaftar</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Audit Terbaru -->
+    <div class="col-md-6">
+      <div class="dark-card">
+        <div class="dark-card-title">
+          <i class="fa-solid fa-clipboard-check"></i> Audit Terbaru
+        </div>
+
+        <div class="audit-tag audit-tag-l1">L1 &bull; Correction</div>
+        <table class="dark-table" style="margin-bottom:12px;">
+          <tbody>
+            {% for audit in audit_l1_terbaru %}
+            <tr>
+              <td>{{ audit.atlet_name }}</td>
+              <td style="text-align:center;">
+                <span class="pred-{{ audit.predikat }}">{{ audit.predikat }}</span>
+              </td>
+              <td style="text-align:center;">
+                {% if audit.layak_naik %}
+                  <span class="badge-layak">Layak L2</span>
+                {% else %}
+                  <span class="badge-belum">Belum</span>
+                {% endif %}
+              </td>
+              <td style="text-align:right;font-size:11px;color:rgba(255,255,255,0.2);">
+                {{ audit.timestamp|date:"d/m" }}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="empty-state">Belum ada audit L1</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <div class="audit-tag audit-tag-l2">L2 &bull; Strength</div>
+        <table class="dark-table">
+          <tbody>
+            {% for audit in audit_l2_terbaru %}
+            <tr>
+              <td>{{ audit.atlet_name }}</td>
+              <td style="text-align:center;">
+                <span class="pred-{{ audit.predikat }}">{{ audit.predikat }}</span>
+              </td>
+              <td style="text-align:center;font-size:11px;color:var(--text-muted-custom);">
+                {{ audit.cns_status }}
+              </td>
+              <td style="text-align:right;font-size:11px;color:rgba(255,255,255,0.2);">
+                {{ audit.timestamp|date:"d/m" }}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="empty-state">Belum ada audit L2</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- L3 TERBARU -->
+  <div class="dark-card">
+    <div class="dark-card-title">
+      <i class="fa-solid fa-bolt"></i> Audit L3 &bull; Power Terbaru
+    </div>
+    <table class="dark-table">
+      <thead>
+        <tr>
+          <th>Atlet</th>
+          <th style="text-align:center">Predikat</th>
+          <th style="text-align:center">Skor</th>
+          <th style="text-align:center">Status</th>
+          <th style="text-align:right">Tanggal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for audit in audit_l3_terbaru %}
+        <tr>
+          <td style="font-weight:600;">{{ audit.atlet_name }}</td>
+          <td style="text-align:center;">
+            <span class="pred-{{ audit.predikat }}">{{ audit.predikat }}</span>
+          </td>
+          <td style="text-align:center;font-weight:700;color:#fff;">{{ audit.total_skor }}</td>
+          <td style="text-align:center;">
+            {% if audit.layak_naik %}
+              <span class="badge-layak">Layak Kompetisi</span>
+            {% elif audit.layak_bertahan %}
+              <span class="badge-level">Bertahan L3</span>
+            {% else %}
+              <span class="badge-level badge-risk-mid">Kembali L2</span>
+            {% endif %}
+          </td>
+          <td style="text-align:right;font-size:11px;color:rgba(255,255,255,0.2);">
+            {{ audit.timestamp|date:"d M Y" }}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="empty-state">Belum ada audit L3</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

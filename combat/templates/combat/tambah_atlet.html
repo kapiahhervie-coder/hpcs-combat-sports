@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tambah Atlet -- HPCS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh;padding:32px 20px}
+.container{max-width:680px;margin:0 auto}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:1px}
+.logo span{color:#e63946}
+.back-btn{font-size:12px;color:#64748b;text-decoration:none;display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;transition:all .2s}
+.back-btn:hover{color:#e2e8f0;border-color:rgba(255,255,255,0.15)}
+.card{background:#0d0f18;border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden}
+.card-header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(230,57,70,0.05)}
+.card-header h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:.5px;color:#fff;margin-bottom:4px}
+.card-header p{font-size:12px;color:#64748b}
+.card-body{padding:24px}
+.section-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#e63946;margin-bottom:14px;margin-top:20px}
+.section-label:first-child{margin-top:0}
+.form-grid{display:grid;gap:14px}
+.form-grid.col-2{grid-template-columns:1fr 1fr}
+.form-grid.col-3{grid-template-columns:1fr 1fr 1fr}
+.form-group label{display:block;font-size:11px;font-weight:600;letter-spacing:.5px;color:#64748b;margin-bottom:5px;text-transform:uppercase}
+.form-group input,.form-group select{width:100%;background:#111626;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 13px;color:#e2e8f0;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.form-group input:focus,.form-group select:focus{border-color:#e63946}
+.form-group select option{background:#111626}
+.form-group input::placeholder{color:#334155}
+.divider{height:1px;background:rgba(255,255,255,0.05);margin:20px 0}
+.alert{padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:16px}
+.alert-error{background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.25);color:#fca5a5}
+.alert-success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:#6ee7b7}
+.coach-info{background:#111626;border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:10px 14px;font-size:12px;color:#64748b;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.coach-info strong{color:#e2e8f0}
+.btn-row{display:flex;gap:10px;margin-top:24px}
+.btn-submit{flex:1;background:#e63946;border:none;border-radius:8px;padding:12px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity .2s}
+.btn-submit:hover{opacity:.85}
+.btn-cancel{padding:12px 20px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#64748b;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;text-decoration:none;display:flex;align-items:center;transition:all .2s}
+.btn-cancel:hover{border-color:rgba(255,255,255,0.2);color:#e2e8f0}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo"><span>HPCS</span> -- Tambah Atlet</div>
+    <a href="{% url 'combat:dashboard_boxing' %}" class="back-btn">&#8592; Kembali</a>
+  </div>
+
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card">
+    <div class="card-header">
+      <h2>Registrasi Atlet Baru</h2>
+      <p>Data atlet akan otomatis terhubung ke akun pelatih Anda</p>
+    </div>
+    <div class="card-body">
+
+      <div class="coach-info">
+        &#128101; Pelatih: <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+        &nbsp;&bull;&nbsp; Atlet akan langsung masuk binaan Anda
+      </div>
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="section-label">Identitas Atlet</div>
+        <div class="form-group" style="margin-bottom:14px">
+          <label>Nama Lengkap *</label>
+          <input type="text" name="nama_atlet" placeholder="Nama lengkap atlet" required>
+        </div>
+
+        <div class="form-grid col-3" style="margin-bottom:14px">
+          <div class="form-group">
+            <label>Kategori Usia *</label>
+            <select name="kategori_umur" required>
+              <option value="">-- Pilih --</option>
+              <option value="ELITE">Elite</option>
+              <option value="YOUTH">Youth</option>
+              <option value="JUNIOR">Junior</option>
+              <option value="SENIOR">Senior</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Gender *</label>
+            <select name="gender" required>
+              <option value="">-- Pilih --</option>
+              <option value="Putra">Putra</option>
+              <option value="Putri">Putri</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cabang Olahraga</label>
+            <select name="cabang">
+              <option value="">-- Pilih --</option>
+              <option value="boxing">Boxing</option>
+              <option value="muaythai">Muay Thai</option>
+              <option value="karate">Karate</option>
+              <option value="tkd">Taekwondo</option>
+              <option value="judo">Judo</option>
+              <option value="mma">MMA</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">Data Fisik</div>
+
+        <div class="form-grid col-3" style="margin-bottom:14px">
+          <div class="form-group">
+            <label>Berat Badan (kg) *</label>
+            <input type="number" name="kelas_berat" placeholder="mis. 60.5" step="0.1" min="20" max="200" required>
+          </div>
+          <div class="form-group">
+            <label>Tinggi Badan (cm)</label>
+            <input type="number" name="tinggi_badan" placeholder="mis. 170" step="0.1" min="100" max="250">
+          </div>
+          <div class="form-group">
+            <label>Tanggal Lahir</label>
+            <input type="date" name="tanggal_lahir">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+        <div class="section-label">Tahap LTAD</div>
+
+        <div class="form-group" style="margin-bottom:0">
+          <label>Tahap Long-Term Athlete Development</label>
+          <select name="tahap_ltad">
+            <option value="">-- Pilih Tahap --</option>
+            <option value="fundamental">FUNdamental (6-9 thn)</option>
+            <option value="learn_train">Learn to Train (9-12 thn)</option>
+            <option value="train_train">Train to Train (12-16 thn)</option>
+            <option value="train_compete">Train to Compete (16-19 thn)</option>
+            <option value="train_win">Train to Win (19+ thn)</option>
+            <option value="active_life">Active for Life</option>
+          </select>
+        </div>
+
+        <div class="btn-row">
+          <a href="{% url 'combat:dashboard_boxing' %}" class="btn-cancel">Batal</a>
+          <button type="submit" class="btn-submit">+ Simpan Atlet</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
