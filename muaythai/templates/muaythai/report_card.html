@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPCS - Athlete Performance Report</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; }
+body { font-family: "Inter", sans-serif; background: #05080f; color: #e2e8f0; margin: 0; }
+.top-rule { height: 3px; background: linear-gradient(90deg, #b45309 0%, #f59e0b 40%, #fcd34d 60%, #b45309 100%); }
+.report-header { background: linear-gradient(135deg, #0a0e1a 0%, #0f1629 100%); border-bottom: 1px solid rgba(245,158,11,0.15); padding: 28px 40px 24px; }
+.brand-logo { width: 40px; height: 40px; background: linear-gradient(135deg, #b45309, #f59e0b); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #000; flex-shrink: 0; }
+.report-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: #fff; line-height: 1; }
+.report-title span { color: #f59e0b; }
+.card { background: #0d1117; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; }
+.card-premium { background: linear-gradient(135deg, #0d1117 0%, #111827 100%); border: 1px solid rgba(245,158,11,0.12); border-radius: 12px; }
+.section-label { font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #f59e0b; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ""; flex: 1; height: 1px; background: rgba(245,158,11,0.15); }
+.readiness-score { font-size: 68px; font-weight: 900; color: #fff; line-height: 1; letter-spacing: -2px; }
+.readiness-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; margin-top: 16px; }
+.readiness-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #b45309, #f59e0b, #fcd34d); }
+.bio-name { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -0.5px; line-height: 1; text-transform: uppercase; }
+.bio-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.bio-label { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; color: #475569; text-transform: uppercase; }
+.bio-value { font-size: 12px; font-weight: 600; color: #cbd5e1; }
+.level-scores { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-top: 16px; }
+.level-pill { padding: 8px 4px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.06); overflow: hidden; }
+.lp-label { font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #475569; display: block; margin-bottom: 4px; }
+.lp-score { font-size: 15px; font-weight: 800; font-family: "DM Mono", monospace; line-height: 1; display: block; }
+.lp-pred { font-size: 6px; font-weight: 700; letter-spacing: 0; display: block; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+.lp-l1 { border-color: rgba(0,210,255,0.2); background: rgba(0,210,255,0.04); }
+.lp-l1 .lp-score, .lp-l1 .lp-pred { color: #00d2ff; }
+.lp-l2 { border-color: rgba(0,229,176,0.2); background: rgba(0,229,176,0.04); }
+.lp-l2 .lp-score, .lp-l2 .lp-pred { color: #00e5b0; }
+.lp-l3 { border-color: rgba(251,191,36,0.2); background: rgba(251,191,36,0.04); }
+.lp-l3 .lp-score, .lp-l3 .lp-pred { color: #fbbf24; }
+.lp-l4 { border-color: rgba(232,121,249,0.2); background: rgba(232,121,249,0.04); }
+.lp-l4 .lp-score, .lp-l4 .lp-pred { color: #e879f9; }
+.dna-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; color: #f59e0b; }
+.risk-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.risk-low { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.5); }
+.analytic-card { padding: 20px; border-radius: 10px; background: #0d1117; }
+.analytic-title { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+.analytic-item { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; font-size: 11px; color: #94a3b8; }
+.action-num { font-size: 18px; font-weight: 900; color: #f59e0b; font-family: "DM Mono", monospace; line-height: 1; flex-shrink: 0; width: 24px; }
+.report-footer { background: #080c15; border-top: 1px solid rgba(255,255,255,0.04); padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; }
+.btn-print { background: linear-gradient(135deg, #b45309, #f59e0b); color: #000; font-weight: 800; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer; }
+@media print {
+    .no-print { display: none !important; }
+    body { background: #000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    @page { margin: 0; size: A4 landscape; }
+}
+</style>
+</head>
+<body>
+<div class="top-rule"></div>
+<div class="report-header">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div class="brand-logo">H</div>
+        <div>
+          <div style="font-size:13px;font-weight:800;letter-spacing:2px;color:#fff;">HPCS</div>
+          <div style="font-size:8px;color:#f59e0b;letter-spacing:2px;font-weight:600;">HIGH PERFORMANCE COMBAT SYSTEM</div>
+        </div>
+      </div>
+      <div class="report-title">ATHLETE <span>PERFORMANCE</span> REPORT</div>
+      <div style="font-size:9px;letter-spacing:2px;color:#475569;text-transform:uppercase;font-weight:600;margin-top:6px;">Combat Sports Assessment &middot; Official Document</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:9px;color:#475569;letter-spacing:2px;text-transform:uppercase;">Assessment Cycle</div>
+      <div style="color:#f59e0b;font-weight:700;font-size:12px;">{{ tanggal_cetak|date:"F Y"|upper }}</div>
+      <div style="font-size:9px;color:#475569;letter-spacing:2px;text-transform:uppercase;margin-top:8px;">Report ID</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:#475569;">HPCS-BOX-{{ tanggal_cetak|date:"my" }}-{{ atlet.pk|stringformat:"03d" }}</div>
+    </div>
+  </div>
+</div>
+<div style="padding:28px 40px;max-width:1280px;margin:0 auto;">
+  <div style="display:grid;grid-template-columns:240px 1fr 270px;gap:16px;margin-bottom:20px;">
+    <div class="card-premium" style="padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;">
+      <div class="section-label">Combat Readiness</div>
+      <div style="text-align:center;padding:8px 0;">
+        <div class="readiness-score">{{ readiness }}</div>
+        <div style="font-size:9px;color:#475569;letter-spacing:1px;margin-top:4px;">/100 POINTS</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:2px;margin-top:10px;text-transform:uppercase;color:{% if readiness >= 80 %}#10b981{% elif readiness >= 60 %}#f59e0b{% else %}#ef4444{% endif %};">
+          {% if readiness >= 80 %}COMPETITION READY{% elif readiness >= 60 %}NEAR READY{% else %}IN DEVELOPMENT{% endif %}
+        </div>
+      </div>
+      <div class="readiness-bar"><div class="readiness-fill" style="width:{{ readiness }}%;"></div></div>
+      <div class="level-scores">
+        <div class="level-pill lp-l1"><span class="lp-label">L1</span><span class="lp-score">{% if l1 %}{{ l1.total_skor|floatformat:1 }}{% else %}&mdash;{% endif %}</span><span class="lp-pred">{% if l1 %}{{ l1.predikat }}{% else %}N/A{% endif %}</span></div>
+        <div class="level-pill lp-l2"><span class="lp-label">L2</span><span class="lp-score">{% if l2 %}{{ l2.total_skor|floatformat:1 }}{% else %}&mdash;{% endif %}</span><span class="lp-pred">{% if l2 %}{{ l2.predikat }}{% else %}N/A{% endif %}</span></div>
+        <div class="level-pill lp-l3"><span class="lp-label">L3</span><span class="lp-score">{% if l3 %}{{ l3.total_skor|floatformat:1 }}{% else %}&mdash;{% endif %}</span><span class="lp-pred">{% if l3 %}{{ l3.predikat }}{% else %}N/A{% endif %}</span></div>
+        <div class="level-pill lp-l4"><span class="lp-label">L4</span><span class="lp-score">{% if l4 %}{{ l4.total_skor|floatformat:1 }}{% else %}&mdash;{% endif %}</span><span class="lp-pred">{% if l4 %}{{ l4.predikat }}{% else %}N/A{% endif %}</span></div>
+      </div>
+    </div>
+    <div class="card" style="padding:24px;">
+      <div class="bio-name">{{ atlet.nama_atlet }}</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;color:#f59e0b;text-transform:uppercase;margin-top:4px;">Muay Thai Division &middot; HPCS Athlete</div>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+        <div class="bio-row"><span class="bio-label">Tanggal Lahir</span><span class="bio-value">{{ atlet.tanggal_lahir|date:"d M Y"|default:"&mdash;" }}</span></div>
+        <div class="bio-row"><span class="bio-label">Umur</span><span class="bio-value">{{ atlet.umur|default:"&mdash;" }} Tahun</span></div>
+        <div class="bio-row"><span class="bio-label">Gender</span><span class="bio-value">{{ atlet.gender|default:"&mdash;" }}</span></div>
+        <div class="bio-row"><span class="bio-label">Berat Badan</span><span class="bio-value">{{ atlet.kelas_berat|default:"&mdash;" }} KG</span></div>
+        <div class="bio-row"><span class="bio-label">Tinggi</span><span class="bio-value">{{ atlet.tinggi_badan|default:"&mdash;" }} CM</span></div>
+        <div class="bio-row"><span class="bio-label">Kategori</span><span class="bio-value">{{ atlet.get_kategori_umur_display|default:"&mdash;" }}</span></div>
+        <div class="bio-row" style="grid-column:span 2;"><span class="bio-label">Kelas Tanding</span><span class="bio-value" style="color:#f59e0b;font-weight:700;">{{ kelas|default:"&mdash;" }}</span></div>
+      </div>
+    </div>
+    <div class="card" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <div class="section-label">Quick Diagnostics</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div><div style="font-size:8px;color:#475569;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">INJURY RISK</div><div style="font-size:13px;font-weight:800;color:#10b981;"><span class="risk-dot risk-low"></span>LOW</div></div>
+          <div><div style="font-size:8px;color:#475569;letter-spacing:1.5px;font-weight:700;margin-bottom:6px;">PERFORMANCE TIER</div><div style="font-size:11px;font-weight:800;color:#f59e0b;line-height:1.2;">{% if overall_predikat == "ELITE" %}ELITE CLASS{% elif overall_predikat == "READY" %}COMP READY{% elif overall_predikat == "DEVELOPING" %}DEVELOPMENT{% else %}FOUNDATION{% endif %}</div></div>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.05);margin-bottom:14px;"></div>
+        <div style="font-size:8px;color:#475569;letter-spacing:1.5px;font-weight:700;margin-bottom:8px;">COMBAT DNA</div>
+        <div class="dna-badge">&#9889; Explosive Counter Fighter</div>
+        <p style="font-size:10px;color:#475569;margin-top:10px;line-height:1.6;">Strong power profile with high efficiency in counter attacking situations.</p>
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+    <div class="card" style="padding:24px;">
+      <div class="section-label">Performance Architecture</div>
+      <div style="height:240px;display:flex;align-items:center;justify-content:center;"><canvas id="radarChart"></canvas></div>
+    </div>
+    <div class="card" style="padding:24px;">
+      <div class="section-label">Trend Progress (6 Months)</div>
+      <div style="height:240px;position:relative;"><canvas id="trendChart"></canvas></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px;">
+    <div class="analytic-card" style="border-left:3px solid #10b981;">
+      <div class="analytic-title" style="color:#10b981;">&#10003; Key Strengths</div>
+      <div class="analytic-item"><span style="color:#10b981;flex-shrink:0;">&#10003;</span><span>Explosive rotational power</span></div>
+      <div class="analytic-item"><span style="color:#10b981;flex-shrink:0;">&#10003;</span><span>Excellent strike transfer mechanics</span></div>
+      <div class="analytic-item"><span style="color:#10b981;flex-shrink:0;">&#10003;</span><span>Strong acceleration profile</span></div>
+      <div class="analytic-item"><span style="color:#10b981;flex-shrink:0;">&#10003;</span><span>High anaerobic capacity</span></div>
+    </div>
+    <div class="analytic-card" style="border-left:3px solid #ef4444;">
+      <div class="analytic-title" style="color:#ef4444;">&#9888; Limiting Factors</div>
+      <div class="analytic-item"><span style="color:#f59e0b;flex-shrink:0;">&#9888;</span><span>Thoracic mobility restrictions</span></div>
+      <div class="analytic-item"><span style="color:#f59e0b;flex-shrink:0;">&#9888;</span><span>Reactive agility reaction time</span></div>
+      <div class="analytic-item"><span style="color:#f59e0b;flex-shrink:0;">&#9888;</span><span>Defensive timing under fatigue</span></div>
+    </div>
+    <div class="analytic-card" style="border-left:3px solid #f59e0b;">
+      <div class="analytic-title" style="color:#f59e0b;">&#128203; Coach Priority Actions</div>
+      <div class="analytic-item" style="align-items:flex-start;gap:10px;"><span class="action-num">01</span><div><strong style="color:#e2e8f0;font-size:11px;display:block;">MOBILITY RESTORATION</strong><span style="font-size:10px;color:#475569;">Focus on thoracic extension and ankle mobility drills.</span></div></div>
+      <div class="analytic-item" style="align-items:flex-start;gap:10px;margin-top:10px;"><span class="action-num">02</span><div><strong style="color:#e2e8f0;font-size:11px;display:block;">REACTIVE MOVEMENT</strong><span style="font-size:10px;color:#475569;">Implement reaction-based agility and defense drills.</span></div></div>
+    </div>
+  </div>
+</div>
+<div class="report-footer no-print">
+  <div style="font-size:10px;color:#1e293b;letter-spacing:1px;text-transform:uppercase;">HPCS Combat Sports Performance Engine &middot; {{ tanggal_cetak|date:"Y" }}</div>
+  <button onclick="downloadPDF()" class="btn-print">&#128229; Download PDF</button>
+<button onclick="window.print()" class="btn-print" style="margin-left:8px;background:linear-gradient(135deg,#1e3a5f,#2563eb);color:#fff;">&#128424; Print</button>
+</div>
+<script>
+        // Membaca data JSON yang dikirimkan dari Django Views
+        const radarData = {{ radar_data_json|safe }};
+        const trendData = {{ trend_data_json|safe }};
+        const monthsLabels = {{ months_labels_json|safe }};
+
+        // 1. Radar Chart (Performance Architecture)
+        const ctxRadar = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: ['FOUNDATION', 'FORCE', 'POWER', 'ATHLETICISM', 'SKILL', 'READINESS'],
+                datasets: [{
+                    label: 'Athlete Level',
+                    data: radarData,
+                    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                    borderColor: '#f59e0b',
+                    pointBackgroundColor: '#f59e0b',
+                    borderWidth: 2,
+                    lineTension: 0.1
+                }, {
+                    label: 'Elite Benchmark',
+                    data: [90, 85, 95, 88, 85, 90],
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    borderWidth: 1.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(255, 255, 255, 0.08)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                        pointLabels: { color: '#9CA3AF', font: { size: 9, weight: 'bold' } },
+                        ticks: { display: false, stepSize: 20 },
+                        min: 0,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 2. Line Chart (Trend Progress)
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: monthsLabels,
+                datasets: [
+                    {
+                        label: 'Power',
+                        data: trendData.power,
+                        borderColor: '#f59e0b',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#f59e0b',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Readiness',
+                        data: trendData.readiness,
+                        borderColor: '#3b82f6',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#3b82f6',
+                        tension: 0.3,
+                        fill: false
+                    },
+                    {
+                        label: 'Athleticism',
+                        data: trendData.athleticism,
+                        borderColor: '#a78bfa',
+                        borderWidth: 1.5,
+                        pointBackgroundColor: '#a78bfa',
+                        tension: 0.3,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                        ticks: { color: '#9CA3AF', font: { size: 9, weight: 'bold' } }
+                    },
+                    y: {
+                        grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                        ticks: { color: '#6B7280', font: { size: 9 } },
+                        min: 0,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#9CA3AF', font: { size: 10, weight: 'bold' }, boxWidth: 12 }
+                    }
+                }
+            }
+        });
+    </script>
+
+<script>
+function downloadPDF() {
+    var btn = document.querySelector('.btn-print');
+    if (btn) btn.style.display = 'none';
+    var footer = document.querySelector('.report-footer');
+    if (footer) footer.style.display = 'none';
+    var element = document.body;
+    var opt = {
+        margin: 0,
+        filename: 'HPCS-Report-Benaya.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#05080f' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+    html2pdf().set(opt).from(element).save().then(function() {
+        if (btn) btn.style.display = '';
+        if (footer) footer.style.display = '';
+    });
+}
+</script>
+</body>
+</html>

@@ -82,10 +82,10 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
             <label>Kategori Usia *</label>
             <select name="kategori_umur" required>
               <option value="">-- Pilih --</option>
-              <option value="ELITE">Elite</option>
-              <option value="YOUTH">Youth</option>
-              <option value="JUNIOR">Junior</option>
-              <option value="SENIOR">Senior</option>
+              <option value="ELITE">Elite (18-23 thn)</option>
+              <option value="YOUTH">Youth (14-17 thn)</option>
+              <option value="JUNIOR">Junior (10-13 thn)</option>
+              <option value="SENIOR">Senior (24+ thn)</option>
             </select>
           </div>
           <div class="form-group">
@@ -153,5 +153,35 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
     </div>
   </div>
 </div>
+<script>
+// Auto-sinkron LTAD berdasarkan Kategori Usia
+const kategoriToLtad = {
+  'YOUTH':  'learn_train',    // Youth 14-17 -> Learn to Train
+  'JUNIOR': 'train_train',    // Junior 10-13 -> Train to Train
+  'ELITE':  'train_compete',  // Elite 18-23 -> Train to Compete
+  'SENIOR': 'train_win',      // Senior 24+  -> Train to Win
+};
+
+document.querySelector('[name="kategori_umur"]').addEventListener('change', function() {
+  const ltadSelect = document.querySelector('[name="tahap_ltad"]');
+  const mapped = kategoriToLtad[this.value];
+  if (mapped) ltadSelect.value = mapped;
+});
+</script>
+<script>
+// Auto-sinkron LTAD berdasarkan Kategori Usia
+const kategoriToLtad = {
+  'YOUTH':  'learn_train',    // Youth 14-17 -> Learn to Train
+  'JUNIOR': 'train_train',    // Junior 10-13 -> Train to Train
+  'ELITE':  'train_compete',  // Elite 18-23 -> Train to Compete
+  'SENIOR': 'train_win',      // Senior 24+  -> Train to Win
+};
+
+document.querySelector('[name="kategori_umur"]').addEventListener('change', function() {
+  const ltadSelect = document.querySelector('[name="tahap_ltad"]');
+  const mapped = kategoriToLtad[this.value];
+  if (mapped) ltadSelect.value = mapped;
+});
+</script>
 </body>
 </html>

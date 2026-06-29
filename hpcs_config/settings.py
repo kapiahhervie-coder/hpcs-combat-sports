@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'combat.apps.CombatConfig',
+    'muaythai',
+    # Tambah cabang lain di sini: 'boxing', 'taekwondo', dst
 ]
 
 MIDDLEWARE = [

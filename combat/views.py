@@ -100,49 +100,6 @@ class DashboardView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 # ══════════════════════════════════════════════════════════════════════
-# DASHBOARD MUAY THAI (L1)
-# ══════════════════════════════════════════════════════════════════════
-
-class DashboardMuayThaiView(LoginRequiredMixin, View):
-    template_name = 'combat/dashboard_muaythai.html'
-
-    def get(self, request):
-        atlet_id = request.GET.get('atlet_id')
-        daftar_atlet = get_atlet_queryset(request.user).filter(cabang='muaythai').order_by('nama_atlet')
-
-        if atlet_id:
-            atlet = daftar_atlet.filter(id=atlet_id).first()
-        else:
-            atlet = daftar_atlet.first()
-
-        score_labels = []
-        score_data   = []
-
-        if atlet:
-            riwayat = CorrectionAuditL1.objects.filter(
-                atlet=atlet
-            ).order_by('timestamp')[:8]
-
-            for r in riwayat:
-                score_labels.append(r.timestamp.strftime('%d/%m'))
-                score_data.append(float(r.total_skor))
-
-        if not score_data:
-            score_labels = ['-']
-            score_data   = [0]
-
-        import json
-        context = {
-            'atlet':         atlet,
-            'daftar_atlet':  daftar_atlet,
-            'total_atlet':   daftar_atlet.count(),
-            'score_labels':  json.dumps(score_labels),
-            'score_data':    json.dumps(score_data),
-            'training_load': 0,
-        }
-        return render(request, self.template_name, context)
-
-# ══════════════════════════════════════════════════════════════════════
 # DASHBOARD BOXING
 # ══════════════════════════════════════════════════════════════════════
 
@@ -929,3 +886,94 @@ class TambahAtletView(LoginRequiredMixin, View):
         except Exception as e:
             messages.error(request, f'Gagal menyimpan: {e}')
             return render(request, self.template_name)
+
+
+# ======================================================================
+# TAMBAH ATLET (oleh Coach)
+# ======================================================================
+
+class TambahAtletView(LoginRequiredMixin, View):
+    template_name = 'combat/tambah_atlet.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        try:
+            nama        = request.POST.get('nama_atlet', '').strip()
+            kategori    = request.POST.get('kategori_umur', '')
+            gender      = request.POST.get('gender', '')
+            kelas_berat = request.POST.get('kelas_berat', '')
+            tinggi      = request.POST.get('tinggi_badan', '') or None
+            tgl_lahir   = request.POST.get('tanggal_lahir', '') or None
+            cabang      = request.POST.get('cabang', '')
+            tahap_ltad  = request.POST.get('tahap_ltad', '')
+
+            if not nama or not kategori or not gender or not kelas_berat:
+                messages.error(request, 'Nama, kategori usia, gender, dan berat badan wajib diisi.')
+                return render(request, self.template_name)
+
+            atlet = Atlet(
+                nama_atlet    = nama,
+                kategori_umur = kategori,
+                gender        = gender,
+                kelas_berat   = float(kelas_berat),
+                tinggi_badan  = float(tinggi) if tinggi else None,
+                tanggal_lahir = tgl_lahir,
+                cabang        = cabang,
+                tahap_ltad    = tahap_ltad,
+                pelatih       = request.user,
+            )
+            atlet.save()
+            messages.success(request, f'Atlet {nama} berhasil ditambahkan!')
+            return redirect('combat:tambah_atlet')
+
+        except Exception as e:
+            messages.error(request, f'Gagal menyimpan: {e}')
+            return render(request, self.template_name)
+
+
+# ======================================================================
+# TAMBAH ATLET (oleh Coach)
+# ======================================================================
+
+class TambahAtletView(LoginRequiredMixin, View):
+    template_name = 'combat/tambah_atlet.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        try:
+            nama        = request.POST.get('nama_atlet', '').strip()
+            kategori    = request.POST.get('kategori_umur', '')
+            gender      = request.POST.get('gender', '')
+            kelas_berat = request.POST.get('kelas_berat', '')
+            tinggi      = request.POST.get('tinggi_badan', '') or None
+            tgl_lahir   = request.POST.get('tanggal_lahir', '') or None
+            cabang      = request.POST.get('cabang', '')
+            tahap_ltad  = request.POST.get('tahap_ltad', '')
+
+            if not nama or not kategori or not gender or not kelas_berat:
+                messages.error(request, 'Nama, kategori usia, gender, dan berat badan wajib diisi.')
+                return render(request, self.template_name)
+
+            atlet = Atlet(
+                nama_atlet    = nama,
+                kategori_umur = kategori,
+                gender        = gender,
+                kelas_berat   = float(kelas_berat),
+                tinggi_badan  = float(tinggi) if tinggi else None,
+                tanggal_lahir = tgl_lahir,
+                cabang        = cabang,
+                tahap_ltad    = tahap_ltad,
+                pelatih       = request.user,
+            )
+            atlet.save()
+            messages.success(request, f'Atlet {nama} berhasil ditambahkan!')
+            return redirect('combat:tambah_atlet')
+
+        except Exception as e:
+            messages.error(request, f'Gagal menyimpan: {e}')
+            return render(request, self.template_name)
+
