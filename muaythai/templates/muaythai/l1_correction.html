@@ -1,9 +1,9 @@
-﻿{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>HPCS ” Level 1: Core Analysis</title>
+<title>HPCS — Level 1: Mobility &amp; Stability Screening</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -25,8 +25,21 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .brand-mark{width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,var(--cyan),#1ab5b8);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:#000;}
 .brand-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:var(--text)}
 .brand-sub{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:1.5px}
-.btn-dash{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:5px 12px;border-radius:6px;background:var(--card);border:1px solid var(--border2);color:var(--text2);text-decoration:none;transition:.2s;}
-.btn-dash:hover{color:var(--text);border-color:var(--cyan)}
+.btn-dash{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;font-weight:700;letter-spacing:1.5px;
+    padding:8px 18px;border-radius:8px;
+    background:linear-gradient(135deg,rgba(80,238,241,0.15),rgba(80,238,241,0.05));
+    border:1.5px solid var(--cyan);
+    color:var(--cyan);text-decoration:none;
+    transition:.2s;display:inline-flex;align-items:center;gap:7px;
+    box-shadow:0 0 12px rgba(80,238,241,0.15);
+}
+.btn-dash:hover{
+    background:linear-gradient(135deg,rgba(80,238,241,0.3),rgba(80,238,241,0.1));
+    color:#fff;box-shadow:0 0 20px rgba(80,238,241,0.3);
+    transform:translateY(-1px);
+}
 .main{padding:20px 28px;max-width:1500px;margin:0 auto}
 .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,42px);letter-spacing:3px;color:var(--cyan);line-height:1;}
 .page-sub{font-size:11px;color:var(--text3);margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:1px}
@@ -54,51 +67,18 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 .pred-NOVICE{border-color:var(--red);color:var(--red);background:rgba(231,76,60,0.1)}
 .reko-item{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:8px;margin-bottom:5px;background:rgba(80,238,241,0.05);border:1px solid rgba(80,238,241,0.12);font-size:11px;line-height:1.55;}
 .reko-icon{font-size:13px;flex-shrink:0;margin-top:1px}
-/* Camera floating panel */
-.cam-wrap{background:#000;border-radius:12px;overflow:hidden;position:relative;aspect-ratio:4/3;min-height:180px;}
-.cam-canvas{width:100%;height:100%;display:block}
-.cam-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);transition:opacity .3s;}
-.cam-overlay.hidden{opacity:0;pointer-events:none}
-.cam-badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;pointer-events:none;}
-.cam-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;}
-.cam-fps{position:absolute;bottom:6px;right:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.4)}
-.cam-status-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);}
-.btn-cam{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.5px;padding:6px 14px;border-radius:8px;border:1px solid;transition:.2s;cursor:pointer;}
-.btn-cam-start{background:rgba(52,152,219,0.15);border-color:var(--blue);color:var(--blue)}
-.btn-cam-capture{background:rgba(46,204,113,0.15);border-color:var(--green);color:var(--green)}
-.btn-cam-capture:disabled{opacity:.4;cursor:not-allowed}
-.btn-cam-stop{background:rgba(231,76,60,0.1);border-color:var(--red);color:var(--red)}
-.score-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:8px;}
-.sp-item{text-align:center}
-.sp-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
-.sp-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--cyan);margin-top:2px}
-/* Rubrik */
-.rubrik-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);cursor:pointer;padding:4px 10px;border-radius:6px;border:1px solid rgba(80,238,241,0.2);transition:.2s;margin-top:10px;}
-.rubrik-panel{margin-top:12px;border:1px solid var(--border2);border-radius:12px;overflow:hidden;}
-.rubrik-header{background:linear-gradient(90deg,#003d70,#00c8cb);color:#000;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;display:grid;grid-template-columns:200px 1fr 1fr 1fr;}
-.rubrik-header div,.rubrik-row div{padding:10px 12px}
-.rubrik-tabs{display:flex;gap:4px;padding:8px 10px;background:var(--card2);border-bottom:1px solid var(--border)}
-.rtab{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 10px;border-radius:12px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:.2s;}
-.rtab.active,.rtab:hover{color:var(--text);background:rgba(255,255,255,0.06)}
-.rubrik-row{display:grid;grid-template-columns:200px 1fr 1fr 1fr;border-top:1px solid var(--border);}
-.rubrik-row:hover{background:rgba(255,255,255,0.02)}
-.aspek-cell{background:var(--card2);border-right:2px solid var(--cyan)}
-.aspek-name{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--cyan);display:block;margin-bottom:2px}
-.aspek-test{font-size:10px;color:var(--text3)}
-.aspek-link{font-size:10px;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:3px;margin-top:3px}
-.val-cell{padding:10px 12px}
-.score-chip{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:4px;border-left:3px solid;margin:1px 0;line-height:1.5;width:100%;}
-.chip-green{border-left-color:var(--green);background:rgba(46,204,113,0.08);color:#9be8b5}
-.chip-blue{border-left-color:var(--blue);background:rgba(52,152,219,0.08);color:#90c8f0}
-.chip-yellow{border-left-color:var(--gold);background:rgba(245,166,35,0.08);color:#f5d08a}
-.table-dark{--bs-table-bg:transparent;--bs-table-hover-bg:rgba(255,255,255,0.03)}
-.table thead th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-weight:400;border-bottom:1px solid var(--border2)!important;padding:10px 12px;}
-.table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04)!important;vertical-align:middle}
-.modal-content{background:var(--card);border:1px solid var(--border2)}
-.toast-hpcs{position:fixed;top:18px;right:18px;z-index:9999;font-family:'JetBrains Mono',monospace;font-size:11px;padding:10px 18px;border-radius:8px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:opacity .4s;}
+.item-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.item-card:hover{border-color:rgba(80,238,241,0.25)}
+.item-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.item-sub{font-size:10px;color:var(--text3);font-style:italic;margin-bottom:8px}
+.neural-select{display:flex;gap:6px;margin-top:8px}
+.neural-btn{flex:1;padding:6px 4px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;border-radius:6px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:.15s;background:transparent;}
+.neural-btn.active-1{background:rgba(231,76,60,0.15);border-color:var(--red);color:var(--red)}
+.neural-btn.active-2{background:rgba(245,166,35,0.15);border-color:var(--gold);color:var(--gold)}
+.neural-btn.active-3{background:rgba(46,204,113,0.15);border-color:var(--green);color:var(--green)}
 .no-print{display:block}
 @media print{
-  .no-print,.btn,.topbar,.filter-bar,.cam-wrap,.btn-cam{display:none!important}
+  .no-print,.btn,.topbar,.filter-bar{display:none!important}
   body{background:#fff!important;color:#000!important}
   .card-x{background:#fff!important;border-color:#eee!important}
   .score-big{color:#0066aa!important}
@@ -107,7 +87,6 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 </style>
 </head>
 <body>
-
 <!-- TOPBAR -->
 <header class="topbar no-print">
   <div class="topbar-brand">
@@ -118,176 +97,184 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
     </div>
   </div>
   <div class="d-flex gap-2 align-items-center">
-    <a href="{% url 'muaythai:dashboard' %}" class="btn-dash">Dashboard</a>
+    <a href="{% url 'muaythai:dashboard' %}" class="btn-dash"><i class="bi bi-grid-fill"></i> &larr; DASHBOARD</a>
   </div>
 </header>
 
-<!-- FLOATING CAMERA PANEL -->
-<div id="camPanel" style="display:none;position:fixed;top:64px;right:20px;width:340px;z-index:500;background:#13151f;border:1px solid rgba(80,238,241,0.3);border-radius:14px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <div class="card-title mb-0"><i class="bi bi-camera-video-fill"></i> AI Camera Ã¢â€šÂ¬Ã¢â‚¬Â Pose Detection</div>
-    <button type="button" onclick="toggleCamPanel()" style="background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer">Ã…“Ã¢â‚¬Â¢</button>
-  </div>
-  <video id="input_video" playsinline style="display:none"></video>
-  <div class="cam-wrap" id="camWrap">
-    <canvas id="output_canvas" class="cam-canvas"></canvas>
-    <div class="cam-overlay" id="camOverlay">
-      <i class="bi bi-camera-video-off" style="font-size:2rem;color:rgba(255,255,255,0.3)"></i>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);margin-top:8px;text-align:center">
-        Kamera belum aktif<br>Klik "Aktifkan" untuk mulai
-      </div>
-    </div>
-    <div class="cam-badges" id="camBadges" style="display:none">
-      <div class="cam-badge" style="background:rgba(80,238,241,0.85);color:#000" id="b_rotl">ROT-L: Ã¢â€šÂ¬Ã¢â‚¬Â</div>
-      <div class="cam-badge" style="background:rgba(80,238,241,0.85);color:#000" id="b_rotr">ROT-R: Ã¢â€šÂ¬Ã¢â‚¬Â</div>
-      <div class="cam-badge" style="background:rgba(245,166,35,0.85);color:#000" id="b_ext">EXT: Ã¢â€šÂ¬Ã¢â‚¬Â</div>
-      <div class="cam-badge" style="background:rgba(46,204,113,0.85);color:#000" id="b_pos">POST: Ã¢â€šÂ¬Ã¢â‚¬Â</div>
-    </div>
-    <div class="cam-fps" id="camFps">Ã¢â€šÂ¬Ã¢â‚¬Â FPS</div>
-    <div class="cam-status-bar" id="camStatusBar" style="display:none">
-      <span id="camStatusTxt" style="color:var(--cyan)">Mendeteksi pose...</span>
-    </div>
-  </div>
-  <div class="d-flex gap-2 mt-2 flex-wrap">
-    <button type="button" class="btn-cam btn-cam-start" id="btnStart" onclick="startCam()">
-      <i class="bi bi-camera-video"></i> Aktifkan
-    </button>
-    <button type="button" class="btn-cam btn-cam-capture" id="btnCapture" onclick="captureScores()" disabled>
-      <i class="bi bi-check-circle-fill"></i> Gunakan
-    </button>
-    <button type="button" class="btn-cam btn-cam-stop" id="btnStop" onclick="stopCam()" style="display:none">
-      <i class="bi bi-stop-circle"></i> Stop
-    </button>
-  </div>
-  <div class="score-preview" id="scorePreview" style="display:none">
-    <div class="sp-item"><div class="sp-lbl">Rot-L</div><div class="sp-val" id="sp_rotl">Ã¢â€šÂ¬Ã¢â‚¬Â</div></div>
-    <div class="sp-item"><div class="sp-lbl">Rot-R</div><div class="sp-val" id="sp_rotr">Ã¢â€šÂ¬Ã¢â‚¬Â</div></div>
-    <div class="sp-item"><div class="sp-lbl">Ext</div><div class="sp-val" id="sp_ext">Ã¢â€šÂ¬Ã¢â‚¬Â</div></div>
-    <div class="sp-item"><div class="sp-lbl">Post</div><div class="sp-val" id="sp_pos">Ã¢â€šÂ¬Ã¢â‚¬Â</div></div>
-  </div>
-  <div class="x-small mono mt-1" style="color:var(--text3)">
-    <i class="bi bi-info-circle"></i> Rata-rata 30 frame. MediaPipe Pose Lite.
-  </div>
-</div>
-
 <div class="main">
 
-  <!-- PAGE HEADER -->
-    <h1 class="page-title">HPCS LEVEL 1 — CORE & MOBILITY</h1>
-    <div class="page-sub">Audit Fisik & Biomekanika Muay Thai· Coach Fanny</div>
-    <div class="filter-bar">
-      <span class="mono x-small" style="color:var(--text3)"><i class="bi bi-funnel-fill me-1"></i>FILTER:</span>
-      <a href="?category=" class="ftab {% if not selected_category %}ftab-all{% endif %}">Semua</a>
-      <a href="?category=elite"  class="ftab {% if selected_category == 'elite'  %}ftab-elite{% endif %}">Elite</a>
-      <a href="?category=youth"  class="ftab {% if selected_category == 'youth'  %}ftab-youth{% endif %}">Youth</a>
-      <a href="?category=junior" class="ftab {% if selected_category == 'junior' %}ftab-junior{% endif %}">Junior</a>
-      <a href="?category=senior" class="ftab {% if selected_category == 'senior' %}ftab-senior{% endif %}">Senior</a>
-      {% if selected_category %}<a href="?category=" class="x-small" style="color:var(--text3);text-decoration:none"><i class="bi bi-x-circle"></i> Reset</a>{% endif %}
-    </div>
-    <!-- Baris Rubrik + Tombol Aksi sejajar -->
-    <div class="d-flex align-items-center justify-content-between no-print" style="margin-top:10px;flex-wrap:wrap;gap:8px">
-      <a class="rubrik-toggle" onclick="toggleRubrik()" id="btnRubrik" style="margin-top:0">
-        <i class="bi bi-table"></i> RUBRIK STANDAR SKORING
-        <i class="bi bi-chevron-down" id="rubrik-chevron"></i>
-      </a>
-      <div class="d-flex gap-2">
-        <button type="button" id="btnToggleCam" onclick="toggleCamPanel()"
-                style="background:rgba(46,204,113,0.12);border:1px solid var(--green);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:6px;cursor:pointer">
-          <i class="bi bi-camera-video-fill me-1"></i>AI Camera
-        </button>
-        <button type="button" onclick="handlePrint()"
-                style="background:rgba(80,238,241,0.12);border:1px solid var(--cyan);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:6px;cursor:pointer">
-          <i class="bi bi-printer-fill me-1"></i>PRINT REPORT
-        </button>
-      </div>
-    </div>
-    <div class="rubrik-panel no-print" id="rubrikPanel" style="display:none">
-<div class="rubrik-tabs"><span style="font-size:9px;color:#445566;margin-right:6px;">KATEGORI:</span><button class="rtab active" onclick="setRubrikKat('all',this)">Semua</button><button class="rtab" onclick="setRubrikKat('elite',this)">Elite</button><button class="rtab" onclick="setRubrikKat('youth',this)">Youth</button><button class="rtab" onclick="setRubrikKat('junior',this)">Junior</button></div>
-<style>.rb-table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:0;}.rb-table th,.rb-table td{border:1px solid var(--border2);padding:7px 9px;vertical-align:top;line-height:1.5;}.rb-table ul{margin:2px 0;padding-left:14px;}.rb-th-aspek{background:#0a1e35;color:#00d2ff;font-weight:700;width:110px;}.rb-td-elite{background:rgba(0,255,136,0.05);color:#a0e4bc;}.rb-td-ready{background:rgba(56,189,248,0.05);color:#90cce8;}.rb-td-dev{background:rgba(255,179,0,0.05);color:#e8c870;}.rb-td-novice{background:rgba(255,107,107,0.05);color:#e89090;}.rb-section{font-size:10px;font-weight:900;color:#00d2ff;background:rgba(0,210,255,0.06);border-left:3px solid #00d2ff;padding:6px 12px;letter-spacing:1px;text-transform:uppercase;border-top:1px solid var(--border2);}</style>
-<div class="rubrik-header" style="display:grid;grid-template-columns:110px 1fr 1fr 1fr 1fr;font-size:9px;font-weight:700;letter-spacing:1px;"><div style="background:#061020;color:#445566;">ASPEK</div><div style="background:#0d2d1a;color:#00ff88;text-align:center;">&#127942; VERY COMPETENT<br><span style="font-weight:400">(9-10)</span></div><div style="background:#0d2535;color:#38bdf8;text-align:center;">&#9989; COMPETENT<br><span style="font-weight:400">(7-8)</span></div><div style="background:#2a1e08;color:#ffb300;text-align:center;">&#128260; DEVELOPING<br><span style="font-weight:400">(5-6)</span></div><div style="background:#2a0d0d;color:#ff6b6b;text-align:center;">&#9888; NOVICE<br><span style="font-weight:400">(1-4)</span></div></div>
-<div class="rb-section">Pilar 1 &#8212; Rotation</div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=Xh25uxFkU-k" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Seated Rotation Test <span style="font-size:9px;opacity:0.6;">&#9654;</span></a><br><small style="color:var(--text3)">Kiri &amp; Kanan</small></td><td class="rb-td-elite"><ul><li>E: &gt;50&#176;</li><li>Y: &gt;45&#176;</li><li>J: &gt;40&#176;</li></ul></td><td class="rb-td-ready"><ul><li>E: 40-50&#176;</li><li>Y: 35-45&#176;</li><li>J: 30-40&#176;</li></ul></td><td class="rb-td-dev"><ul><li>E: 30-40&#176;</li><li>Y: 25-35&#176;</li><li>J: 20-30&#176;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;30&#176;</li><li>Y: &lt;25&#176;</li><li>J: &lt;20&#176;</li></ul></td></tr><tr><td class="rb-th-aspek">Simetri L-R</td><td class="rb-td-elite"><ul><li>Selisih &#8804;3&#176;</li><li>Gerakan fluid</li></ul></td><td class="rb-td-ready"><ul><li>Selisih 4-8&#176;</li></ul></td><td class="rb-td-dev"><ul><li>Selisih 9-15&#176;</li></ul></td><td class="rb-td-novice"><ul><li>Selisih &gt;15&#176; / nyeri</li></ul></td></tr></tbody></table>
-<div class="rb-section">Pilar 2 &#8212; Extension</div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=2OyQGH9vzok" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Lumbar Extension Test <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;25 cm</li><li>Y: &gt;20 cm</li><li>J: &gt;15 cm</li></ul></td><td class="rb-td-ready"><ul><li>E: 15-25 cm</li><li>Y: 12-20 cm</li><li>J: 10-15 cm</li></ul></td><td class="rb-td-dev"><ul><li>E: 10-15 cm</li><li>Y: 8-12 cm</li><li>J: 5-10 cm</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;10 cm</li><li>Y: &lt;8 cm</li><li>J: &lt;5 cm</li></ul></td></tr></tbody></table>
-<div class="rb-section">Pilar 3 &#8212; Stability</div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=Y0jR3GZDVnk" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Single Leg Balance <span style="font-size:9px;opacity:0.6;">&#9654;</span></a><br><small style="color:var(--text3)">Detik</small></td><td class="rb-td-elite"><ul><li>E: &gt;45 dtk</li><li>Y: &gt;35 dtk</li><li>J: &gt;30 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 30-45 dtk</li><li>Y: 25-35 dtk</li><li>J: 20-30 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 15-30 dtk</li><li>Y: 12-25 dtk</li><li>J: 10-20 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;15 dtk</li><li>Y: &lt;12 dtk</li><li>J: &lt;10 dtk</li></ul></td></tr><tr><td class="rb-th-aspek">Core Plank Hold</td><td class="rb-td-elite"><ul><li>&#8805;60 dtk stabil</li><li>Panggul netral</li></ul></td><td class="rb-td-ready"><ul><li>45-59 dtk</li></ul></td><td class="rb-td-dev"><ul><li>25-44 dtk</li></ul></td><td class="rb-td-novice"><ul><li>&lt;25 dtk</li></ul></td></tr></tbody></table>
-<div class="rb-section">Pilar 4 &#8212; Posture</div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek">Lateral Alignment</td><td class="rb-td-elite"><ul><li>Satu garis sempurna</li><li>Kurva spinal normal</li></ul></td><td class="rb-td-ready"><ul><li>Deviasi 1 segmen</li></ul></td><td class="rb-td-dev"><ul><li>Deviasi 2 segmen</li><li>Forward head</li></ul></td><td class="rb-td-novice"><ul><li>Deviasi &#8805;3 segmen</li></ul></td></tr><tr><td class="rb-th-aspek">Muay Thai Guard</td><td class="rb-td-elite"><ul><li>Chin tucked, elbows in</li><li>Weight 60-40</li></ul></td><td class="rb-td-ready"><ul><li>1-2 koreksi minor</li></ul></td><td class="rb-td-dev"><ul><li>Guard terbuka</li></ul></td><td class="rb-td-novice"><ul><li>Guard sangat buruk</li></ul></td></tr></tbody></table>
-<div class="rb-section">Pilar 5 &#8212; Breathing</div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=0Ua9bOsZTYg" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Pola Istirahat <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>Diafragma dominan</li><li>12-16 napas/mnt</li></ul></td><td class="rb-td-ready"><ul><li>16-18 napas/mnt</li></ul></td><td class="rb-td-dev"><ul><li>18-22 napas/mnt</li></ul></td><td class="rb-td-novice"><ul><li>&gt;22 napas/mnt</li></ul></td></tr><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=0Ua9bOsZTYg" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Saat Tekanan <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>Napas terkontrol</li></ul></td><td class="rb-td-ready"><ul><li>Tahan &lt;5 dtk</li></ul></td><td class="rb-td-dev"><ul><li>Valsava tidak tepat</li></ul></td><td class="rb-td-novice"><ul><li>Tidak bisa napas sambil gerak</li></ul></td></tr></tbody></table>
-<div class="rb-section">Pilar 6 &#8212; Ankle Mobility</div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=Clutk_VsgUY" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Knee-to-Wall Test <span style="font-size:9px;opacity:0.6;">&#9654;</span></a><br><small style="color:var(--text3)">(cm)</small></td><td class="rb-td-elite"><ul><li>E: &#8805;12 cm</li><li>Y: &#8805;10 cm</li><li>J: &#8805;9 cm</li></ul></td><td class="rb-td-ready"><ul><li>E: 9-11 cm</li><li>Y: 7-9 cm</li><li>J: 6-8 cm</li></ul></td><td class="rb-td-dev"><ul><li>E: 6-8 cm</li><li>Y: 5-6 cm</li><li>J: 4-5 cm</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;6 cm</li><li>Y: &lt;5 cm</li><li>J: &lt;4 cm</li></ul></td></tr></tbody></table>
-<div style="padding:8px 12px;font-size:9px;color:var(--text3);border-top:1px solid var(--border2);"><strong style="color:var(--cyan);">Ket:</strong> E=Elite | Y=Youth | J=Junior | Skor 9-10: Very Competent | 7-8: Competent | 5-6: Developing | 1-4: Novice</div>
-</div>
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }} no-print">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="no-print">
+    <div class="page-title">L1 — MOBILITY &amp; STABILITY</div>
+    <div class="page-sub">SCREENING FUNGSIONAL &middot; FONDASI SEBELUM TEKNIK &middot; MOTOR AUTOMATICITY ASSESSMENT</div>
   </div>
 
-  <!-- FORM AUDIT -->
-  <form id="form-audit" action="{% url 'muaythai:l1_correction' %}" method="POST">
+  <form method="POST" action="{% url 'muaythai:l1_correction' %}" id="mainForm" class="mt-3">
     {% csrf_token %}
-    <div class="row g-3 mb-3">
+    <input type="hidden" name="atlet_id" id="id_atlet_hidden">
+    <input type="hidden" name="atlet_name" id="input_nama">
+    <input type="hidden" name="kategori_usia" id="input_kategori" value="ELITE">
+    <input type="hidden" name="gender" id="input_gender" value="Putra">
+    <input type="hidden" name="kelas_berat" id="input_berat">
 
-      <!-- Kolom 1: Identitas + Skor -->
+    <div class="row g-3">
+      <!-- Kolom 1: Form Input -->
       <div class="col-lg-4">
         <div class="card-x">
           <div class="card-title"><i class="bi bi-person-fill"></i> Identitas Atlet</div>
-          <div id="print_identitas_full" style="display:none">
-            <div id="p_nama" style="font-size:1.4rem;font-weight:800;color:#0066aa">ATLET: Ã¢â€šÂ¬Ã¢â‚¬Â</div>
-            <div id="p_detail" style="font-size:1rem;color:#555;margin-bottom:10px">Kategori: Ã¢â€šÂ¬Ã¢â‚¬Â | Gender: Ã¢â€šÂ¬Ã¢â‚¬Â | Berat: Ã¢â€šÂ¬Ã¢â‚¬Â kg</div>
+          {% if atlet_list %}
+          <div class="mb-3">
+            <label>Pilih Atlet</label>
+            <select id="select-atlet" class="form-select" onchange="onAtletChange(this)">
+              <option value="">— Pilih Atlet —</option>
+              {% for atlet in atlet_list %}
+              <option value="{{ atlet.id }}"
+                      data-nama="{{ atlet.nama_atlet }}"
+                      data-kategori="{{ atlet.kategori_umur }}"
+                      data-gender="{{ atlet.gender }}"
+                      data-berat="{{ atlet.kelas_berat }}">
+                {{ atlet.nama_atlet }}
+              </option>
+              {% endfor %}
+            </select>
           </div>
-          <div class="no-print">
-            {% if atlet_list %}
-            <div class="mb-3">
-              <label>Pilih Atlet</label>
-              <select id="select-atlet" class="form-select" onchange="onAtletChange(this)">
-                <option value="">â€” Pilih Atlet â€”</option>
-                {% for atlet in atlet_list %}
-                <option value="{{ atlet.id }}"
-                        data-nama="{{ atlet.nama_atlet }}"
-                        data-kategori="{{ atlet.kategori_umur }}"
-                        data-gender="{{ atlet.gender }}"
-                        data-berat="{{ atlet.kelas_berat }}">
-                  
-                 {{ atlet.nama_atlet }}
-                </option>
-                {% endfor %}
-              </select>
-              <div class="x-small mono mt-1" style="color:var(--text3)">
-                {% if selected_category %}
-                  Kategori: <strong style="color:var(--cyan)">{{ selected_category|title }}</strong>
-                  <a href="?category=" style="color:var(--text3)"> Reset</a>
-                {% else %}
-                  {{ atlet_list|length }}|{{ atlet_list|length }} atlet ditemukan.
-                {% endif %}
-              </div>
+          {% else %}
+          <div class="alert alert-warning py-2 small">Tidak ada atlet ditemukan.</div>
+          {% endif %}
+
+          <div class="card-title mt-2"><i class="bi bi-arrow-repeat"></i> 1. Hip Rotation ROM</div>
+          <div class="item-card">
+            <div class="item-sub">Prone/supine, hip fleksi 90°, ukur rotasi internal &amp; eksternal (derajat)</div>
+            <div class="row g-2">
+              <div class="col-6"><label class="cyan">Internal Kanan</label><input type="number" name="hip_rotasi_internal_kanan" id="f_hip_int_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="cyan">Internal Kiri</label><input type="number" name="hip_rotasi_internal_kiri" id="f_hip_int_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Eksternal Kanan</label><input type="number" name="hip_rotasi_eksternal_kanan" id="f_hip_ext_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Eksternal Kiri</label><input type="number" name="hip_rotasi_eksternal_kiri" id="f_hip_ext_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
-            {% else %}
-            <div class="alert alert-warning py-2 small">Tidak ada atlet{% if selected_category %} kategori <strong>{{ selected_category|title }}</strong>{% endif %}.</div>
-            {% endif %}
-            <input type="hidden" name="atlet_id" id="id_atlet_hidden">
-<input type="hidden" id="display_kategori">
-<input type="hidden" id="display_berat">
+            <div class="neural-select" data-target="skor_neural_hip_rotasi">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_hip_rotasi" id="n_hip_rotasi" value="1">
           </div>
-          <div class="card-title mt-2"><i class="bi bi-bar-chart-fill"></i> Pilar Analysis</div>
-          <div class="row g-2">
-            <div class="col-6"><label class="cyan">Rotation (L)</label><input type="number" name="score_rotation" id="score_rot_l" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
-            <div class="col-6"><label class="cyan">Rotation (R)</label><input type="number" name="score_rotation_r" id="score_rot_r" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
-            <div class="col-6"><label class="cyan">Stability (L)</label><input type="number" name="score_stability" id="score_sta_l" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
-            <div class="col-6"><label class="cyan">Stability (R)</label><input type="number" name="score_stability_r" id="score_sta_r" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
-            <div class="col-12"><label class="gold">Ankle Mobility (cm)</label><input type="number" name="score_ankle" id="score_ank" class="form-control" step="0.1" min="0" oninput="liveUpdate()"></div>
-            <div class="col-6"><label class="cyan">Extension</label><input type="number" name="score_extension" id="score_ext" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
-            <div class="col-6"><label class="cyan">Posture</label><input type="number" name="score_posture" id="score_pos" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
-            <div class="col-12"><label class="cyan">Breathing</label><input type="number" name="score_breathing" id="score_brth" class="form-control" step="0.1" min="0" max="10" oninput="liveUpdate()"></div>
+
+          <div class="card-title mt-2"><i class="bi bi-person-standing"></i> 2. Single-Leg Balance</div>
+          <div class="item-card">
+            <div class="item-sub">Berdiri satu kaki, tangan di pinggang, maks 30 detik tiap kondisi</div>
+            <div class="row g-2">
+              <div class="col-6"><label class="cyan">Mata Terbuka (dtk)</label><input type="number" name="balance_durasi_mata_terbuka" id="f_bal_terbuka" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Mata Tertutup (dtk)</label><input type="number" name="balance_durasi_mata_tertutup" id="f_bal_tertutup" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+            </div>
+            <div class="neural-select" data-target="skor_neural_balance">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_balance" id="n_balance" value="1">
           </div>
+
+          <div class="card-title mt-2"><i class="bi bi-arrow-down-circle"></i> 3. Ankle Dorsiflexion</div>
+          <div class="item-card">
+            <div class="item-sub">Knee-to-wall test, jarak jempol kaki ke tembok (cm)</div>
+            <div class="row g-2">
+              <div class="col-6"><label class="cyan">Kanan (cm)</label><input type="number" name="ankle_dorsifleksi_kanan_cm" id="f_ankle_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Kiri (cm)</label><input type="number" name="ankle_dorsifleksi_kiri_cm" id="f_ankle_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+            </div>
+            <div class="neural-select" data-target="skor_neural_ankle">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_ankle" id="n_ankle" value="1">
+          </div>
+
+          <div class="card-title mt-2"><i class="bi bi-arrow-left-right"></i> 4. Thoracic Rotation</div>
+          <div class="item-card">
+            <div class="item-sub">Quadruped, tangan di belakang kepala, rotasi trunk (derajat)</div>
+            <div class="row g-2">
+              <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="thoracic_rotasi_kanan" id="f_thor_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Kiri</label><input type="number" name="thoracic_rotasi_kiri" id="f_thor_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+            </div>
+            <div class="neural-select" data-target="skor_neural_thoracic">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_thoracic" id="n_thoracic" value="1">
+          </div>
+
+          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 5. Shoulder Overhead Mobility</div>
+          <div class="item-card">
+            <div class="item-sub">Overhead reach test, fleksi bahu (derajat)</div>
+            <div class="row g-2">
+              <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="shoulder_fleksi_kanan" id="f_shl_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Kiri</label><input type="number" name="shoulder_fleksi_kiri" id="f_shl_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+            </div>
+            <div class="neural-select" data-target="skor_neural_shoulder">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_shoulder" id="n_shoulder" value="1">
+          </div>
+
+          <div class="card-title mt-2"><i class="bi bi-check2-square"></i> 6. Hip Hinge Pattern</div>
+          <div class="item-card">
+            <div class="item-sub">Bodyweight hip hinge, observasi kualitas pola tanpa cueing verbal</div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="f_hiphinge_pass" onchange="syncHipHinge();liveUpdate()">
+              <label class="form-check-label" for="f_hiphinge_pass" style="display:inline;color:var(--text2)">Pola benar (neutral spine, hip-dominant)</label>
+            </div>
+            <input type="hidden" name="hip_hinge_pass" id="input_hiphinge" value="false">
+            <div class="neural-select" data-target="skor_neural_hip_hinge">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_hip_hinge" id="n_hiphinge" value="1">
+          </div>
+
+          <div class="card-title mt-2"><i class="bi bi-shield-check"></i> 7. Core Anti-Rotation</div>
+          <div class="item-card">
+            <div class="item-sub">Pallof Press hold dengan resistance band, durasi (detik)</div>
+            <label class="cyan">Durasi Hold (detik)</label>
+            <input type="number" name="core_hold_durasi_detik" id="f_core" class="form-control" step="0.1" oninput="liveUpdate()">
+            <div class="neural-select" data-target="skor_neural_core">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_core" id="n_core" value="1">
+          </div>
+
+          <div class="card-title mt-2"><i class="bi bi-lightning-charge"></i> 8. Dynamic Balance Recovery</div>
+          <div class="item-card">
+            <div class="item-sub">Simulasi tendangan ringan, waktu kembali stabil (detik)</div>
+            <label class="gold">Recovery Time (detik)</label>
+            <input type="number" name="recovery_waktu_detik" id="f_recovery" class="form-control" step="0.1" oninput="liveUpdate()">
+            <div class="neural-select" data-target="skor_neural_recovery">
+              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
+              <button type="button" class="neural-btn" data-val="2">Associative</button>
+              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+            </div>
+            <input type="hidden" name="skor_neural_recovery" id="n_recovery" value="1">
+          </div>
+
         </div>
       </div>
 
-      <!-- Kolom 2: Radar -->
+      <!-- Kolom 2: Radar + Narasi -->
       <div class="col-lg-4">
         <div class="card-x text-center">
-          <div class="card-title"><i class="bi bi-radar"></i> Biomechanics Radar</div>
+          <div class="card-title"><i class="bi bi-radar"></i> Neural Efficiency Radar</div>
           <div style="height:300px;display:flex;align-items:center;justify-content:center">
             <canvas id="radarChart"></canvas>
-            <img id="chart-image" alt="Radar" style="display:none;max-width:100%">
           </div>
           <div id="narasi_panel" class="mt-3 text-start" style="display:none">
             <div class="card-title"><i class="bi bi-person-lines-fill" style="color:var(--cyan)"></i> Profil Kondisi Atlet</div>
@@ -318,24 +305,17 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
   </form>
 
   <!-- TABEL HISTORY -->
-  <div class="no-print">
+  <div class="no-print mt-3">
     <div class="card-x">
       <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <div class="card-title mb-0"><i class="bi bi-database-fill"></i> Database & History Audit</div>
-        <div class="filter-bar mb-0">
-          <a href="?category="       class="ftab {% if not selected_category %}ftab-all{% endif %}">Semua</a>
-          <a href="?category=elite"  class="ftab {% if selected_category == 'elite'  %}ftab-elite{% endif %}">Elite</a>
-          <a href="?category=youth"  class="ftab {% if selected_category == 'youth'  %}ftab-youth{% endif %}">Youth</a>
-          <a href="?category=junior" class="ftab {% if selected_category == 'junior' %}ftab-junior{% endif %}">Junior</a>
-          <a href="?category=senior" class="ftab {% if selected_category == 'senior' %}ftab-senior{% endif %}">Senior</a>
-        </div>
+        <div class="card-title mb-0"><i class="bi bi-database-fill"></i> Database &amp; History Audit L1</div>
       </div>
       <div class="table-responsive">
         <table class="table table-dark table-hover align-middle">
           <thead>
             <tr>
               <th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Total Skor</th><th>Predikat</th>
-              <th>Rotation</th><th>Extension</th><th>Stability</th><th>Posture</th><th>Breathing</th>
+              <th>Item Terlemah</th>
               <th class="text-center">Aksi</th>
             </tr>
           </thead>
@@ -343,7 +323,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
           {% for audit in history %}
           <tr id="row-{{ audit.id }}">
             <td class="mono x-small" style="color:var(--text3)">{{ audit.timestamp|date:"d/m/Y H:i" }}</td>
-            <td class="fw-bold">{{ audit.atlet.nama_atlet }}</td>
+            <td class="fw-bold">{{ audit.atlet_name }}</td>
             <td><span class="mono x-small" style="color:var(--cyan)">{{ audit.kategori_usia }}</span></td>
             <td><span class="bebas" style="font-size:1.2rem;color:var(--cyan)">{{ audit.total_skor }}</span></td>
             <td>
@@ -351,352 +331,284 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
                 {{ audit.predikat }}
               </span>
             </td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_rotation|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_extension|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_stability|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_posture|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_breathing|floatformat:1 }}</td>
+            <td class="mono x-small" style="color:var(--gold)">{{ audit.item_terlemah }}</td>
             <td class="text-center">
-              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 me-1" title="Cetak PDF"
-                      onclick="cetakAudit({{ audit.id }},'{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}','{{ audit.atlet.gender }}','{{ audit.atlet.kelas_berat }}',{{ audit.score_rotation|default:0 }},{{ audit.score_extension|default:0 }},{{ audit.score_stability|default:0 }},{{ audit.score_posture|default:0 }},{{ audit.score_breathing|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.rekomendasi|default:''|escapejs }}','{{ audit.timestamp|date:"d/m/Y H:i" }}')">
-                <i class="bi bi-printer-fill"></i>
-              </button>
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
-                      onclick="konfirmasiHapus({{ audit.id }}, '{{ audit.atlet.nama_atlet|escapejs }}')">
+                      onclick="if(confirm('Hapus data {{ audit.atlet_name|escapejs }}?')) window.location='{% url 'muaythai:hapus_l1_audit' audit.pk %}'">
                 <i class="bi bi-trash3-fill"></i>
               </button>
             </td>
           </tr>
           {% empty %}
-          <tr><td colspan="11" class="text-center py-5" style="color:var(--text3)"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data. Simpan audit pertama Anda.</td></tr>
+          <tr><td colspan="7" class="text-center py-5" style="color:var(--text3)"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data. Simpan audit pertama Anda.</td></tr>
           {% endfor %}
           </tbody>
         </table>
       </div>
-      {% if history %}
-      <div class="text-end mono x-small" style="color:var(--text3)">Menampilkan {{ history|length }} record{% if selected_category %} &middot; filter: {{ selected_category|title }}{% endif %}</div>
-      {% endif %}
     </div>
   </div>
 
 </div><!-- /main -->
 
-<!-- MODAL HAPUS -->
-<div class="modal fade" id="modalHapus" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="border-color:rgba(231,76,60,0.4)">
-      <div class="modal-body p-4">
-        <div class="d-flex gap-3 align-items-start">
-          <i class="bi bi-exclamation-triangle-fill text-danger fs-4 mt-1"></i>
-          <div>
-            <div class="fw-bold mb-1">Hapus Data Audit?</div>
-            <div class="small" style="color:var(--text2)">Data audit <strong id="modal_nama_atlet" class="text-white"></strong> akan dihapus permanen.<br><span class="text-danger">Tindakan ini tidak dapat dibatalkan.</span></div>
-          </div>
-        </div>
-        <div class="d-flex gap-2 justify-content-end mt-3">
-          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="button" class="btn btn-sm btn-danger fw-bold" id="btn_hapus_confirm"><i class="bi bi-trash3-fill me-1"></i>Ya, Hapus</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
 <script>
-function onAtletChange(sel) {
-    const opt = sel.options[sel.selectedIndex];
-    if (!opt || !opt.value) return;
-
-    const nama     = opt.dataset.nama     || '';
-    const kategori = opt.dataset.kategori || '';
-    const gender   = opt.dataset.gender   || '';
-    const berat    = opt.dataset.berat    || '';
-
-    // Field hidden untuk POST ke Django views.py
-    const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
-    setVal('id_atlet_hidden', opt.value); setVal('display_kategori', kategori);  // id atlet FK
-    setVal('display_kategori', kategori);
-    setVal('atlet_id',        opt.value);  // fallback
-    setVal('atlet_name',      nama);       // nama untuk POST
-    setVal('input_nama',      nama);       // untuk syncPrint
-    setVal('input_berat',     berat);      // untuk calcBWRatio
-    setVal('kelas_berat',     berat);      // untuk POST
-    setVal('display_berat',   berat);      // tampilan
-
-    // Set dropdown kategori & gender (select element)
-    const setSelect = (id, v) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        for (let o of el.options) {
-            if (o.value.toLowerCase() === v.toLowerCase()) { el.value = o.value; return; }
-        }
-    };
-    setSelect('usia_atlet',   kategori);
-    setSelect('gender_atlet', gender);
-
-    // Update print header
-    const pNama   = document.getElementById('p_nama');
-    const pDetail = document.getElementById('p_detail');
-    if (pNama)   pNama.textContent   = 'ATLET: ' + nama.toUpperCase();
-    if (pDetail) pDetail.textContent = `Kategori: ${kategori} | Gender: ${gender} | Berat: ${berat} kg`;
-
-    // Trigger kalkulasi jika ada
-    if (typeof syncPrint   === 'function') syncPrint();
-    if (typeof calcBWRatio === 'function') calcBWRatio();
-}
-function g(id){ return parseFloat(document.getElementById(id)?.value) || 0 }
-function liveUpdate() {
-    const avgRot = (g('score_rot_l')+g('score_rot_r'))/2;
-    const avgSta = (g('score_sta_l')+g('score_sta_r'))/2;
-    const ext=g('score_ext'), pos=g('score_pos'), brth=g('score_brth');
-    const scores=[avgRot,ext,avgSta,pos,brth];
-    const filled=scores.filter(s=>s>0);
-    const total=filled.length?+(filled.reduce((a,b)=>a+b,0)/filled.length).toFixed(1):0;
-    document.getElementById('res_total').textContent=total.toFixed(1);
-    let pred,col;
-    if(total>=9.0){pred='ELITE';col='var(--green)'}
-    else if(total>=7.5){pred='READY';col='var(--cyan)'}
-    else if(total>=5.5){pred='DEVELOPING';col='var(--gold)'}
-    else{pred='NOVICE';col='var(--red)'}
-    const predEl=document.getElementById('res_predikat');
-    predEl.textContent=pred; predEl.className='predikat-pill pred-'+pred;
-    document.getElementById('res_total').style.color=col;
-    updateRadar([avgRot,ext,avgSta,pos,brth]);
-    generateReko([{nama:'Rotation',val:avgRot},{nama:'Extension',val:ext},{nama:'Stability',val:avgSta},{nama:'Posture',val:pos},{nama:'Breathing',val:brth}]);
-  generateNarasi([{nama:'Rotation',val:avgRot},{nama:'Extension',val:ext},{nama:'Stability',val:avgSta},{nama:'Posture',val:pos},{nama:'Breathing',val:brth}],total,pred);
-}
-
-function generateNarasi(pilars,total,pred){
-  var panel=document.getElementById('narasi_panel');
-  var box=document.getElementById('narasi_box');
-  var filled=pilars.filter(function(p){return p.val>0;});
-  if(!filled.length){panel.style.display='none';return;}
-  var namaEl=document.querySelector('select option:checked');
-  var namaAtlet=namaEl?namaEl.textContent.trim():'Atlet';
-  function lbl(v){return v>=9?'sangat baik':v>=7.5?'baik':v>=5.5?'cukup':'perlu perhatian khusus';}
-  function wrn(v){return v>=9?'var(--green)':v>=7.5?'var(--cyan)':v>=5.5?'var(--gold)':'var(--red)';}
-  var sorted=[].concat(filled).sort(function(a,b){return b.val-a.val;});
-  var kuat=sorted.slice(0,2);
-  var lemah=sorted.slice(-2).reverse();
-  var layak=total>=7.5;
-  var kPred={
-    ELITE:'menunjukkan kapasitas biomekanik <strong style="color:var(--green)">ELIT</strong> &mdash; seluruh pilar berada di level puncak.',
-    READY:'berada di level <strong style="color:var(--cyan)">SIAP (READY)</strong> &mdash; fondasi solid dengan beberapa area yang bisa ditingkatkan.',
-    DEVELOPING:'sedang <strong style="color:var(--gold)">BERKEMBANG</strong> &mdash; fondasi mulai terbentuk namun pilar kritis perlu koreksi.',
-    NOVICE:'berada di level <strong style="color:var(--red)">PEMULA (NOVICE)</strong> &mdash; perlu membangun kapasitas dasar sebelum program beban.'
-  };
-  var layakStr=layak
-    ?'<span style="color:var(--green);font-weight:700">&#9989; LAYAK mengikuti program Latihan Kekuatan (L2 Strength)</span>'
-    :'<span style="color:var(--red);font-weight:700">&#9940; BELUM LAYAK ke L2 &mdash; perlu program korektif terlebih dahulu</span>';
-  var kuatHTML=kuat.map(function(p){
-    return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
-      +'<div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>'
-      +'<span><strong style="color:var(--green)">'+p.nama+'</strong> &mdash; '+lbl(p.val)
-      +' <span style="color:'+wrn(p.val)+';font-weight:700;">('+p.val.toFixed(1)+'/10)</span>'
-      +(p.val>=9?' : pilar unggulan, pertahankan.':p.val>=7.5?' : aset performa bertarung.':' : menunjukkan perkembangan positif.')
-      +'</span></div>';
-  }).join('');
-  var minVal=Math.min.apply(null,filled.map(function(p){return p.val;}));
-  var maxVal=Math.max.apply(null,filled.map(function(p){return p.val;}));
-  var semuaPrima=(maxVal-minVal)<=0.5 && minVal>=8.5;
-  var lemahHTML=semuaPrima
-    ?'<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,255,136,0.07);border-radius:6px;border:1px solid rgba(0,255,136,0.2);">'
-      +'<span style="font-size:16px;">&#127942;</span>'
-      +'<span style="color:var(--green);font-weight:600;">Semua pilar dalam kondisi prima &mdash; tidak ada kelemahan signifikan yang perlu dikoreksi.</span>'
-      +'</div>'
-    :lemah.map(function(p){
-      var catatan=p.val<5.5?' : prioritas utama program korektif.':p.val<7.5?' : perlu perhatian dalam program latihan.':' : jaga konsistensi, masih bisa ditingkatkan.';
-      return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
-        +'<div style="width:6px;height:6px;border-radius:50%;background:'+wrn(p.val)+';flex-shrink:0;"></div>'
-        +'<span><strong style="color:'+wrn(p.val)+'">'+p.nama+'</strong> &mdash; '+lbl(p.val)
-        +' <span style="color:'+wrn(p.val)+';font-weight:700;">('+p.val.toFixed(1)+'/10)</span>'
-        +catatan+'</span></div>';
-    }).join('');
-  var fokus=semuaPrima
-    ?'Pertahankan performa di semua pilar. Atlet siap masuk program L2 Strength dengan beban penuh.'
-    :layak
-    ?'Fondasi biomekanik cukup kuat. Fokus perkuat <strong>'+(lemah[0]?lemah[0].nama:'-')+'</strong> selama L2.'
-    :'Jalankan korektif 4&#8211;6 minggu, fokus <strong>'+(lemah[0]?lemah[0].nama:'-')+'</strong> dan <strong>'+(lemah[1]?lemah[1].nama:'-')+'</strong>.';
-  box.innerHTML=''
-    +'<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,210,255,0.1);">'
-    +'<span style="color:var(--cyan);font-weight:700;font-size:12px;">&#128100; '+namaAtlet+'</span> '+(kPred[pred]||'')
-    +' Total skor: <strong style="font-size:13px;color:'+wrn(total)+'">'+total.toFixed(1)+'/10</strong></div>'
-    +'<div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>'+kuatHTML+'</div>'
-    +'<div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>'+lemahHTML+'</div>'
-    +'<div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">'
-    +'<div style="color:var(--text3);font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>'
-    +layakStr+'<br><span style="color:var(--text2);font-size:10.5px;">'+fokus+'</span></div>';
-  panel.style.display='block';
-}
-
-function handlePrint(){const c=document.getElementById('radarChart');if(c)document.getElementById('chart-image').src=c.toDataURL('image/png');window.print();}
-let radarInst=null;
-function updateRadar(vals){
-    const ctx=document.getElementById('radarChart').getContext('2d');
-    if(radarInst)radarInst.destroy();
-    radarInst=new Chart(ctx,{type:'radar',data:{labels:['Rotation','Extension','Stability','Posture','Breathing'],datasets:[{label:'Atlet',data:vals,fill:true,backgroundColor:'rgba(80,238,241,0.12)',borderColor:'#50eef1',borderWidth:2,pointBackgroundColor:'#50eef1',pointRadius:4},{label:'Elite',data:[9,9,9,9,9],fill:false,borderColor:'rgba(255,255,255,0.1)',borderWidth:1,borderDash:[4,4],pointRadius:2,pointBackgroundColor:'rgba(255,255,255,0.1)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'rgba(255,255,255,0.2)',font:{size:9},backdropColor:'transparent'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}}}});
-}
-updateRadar([0,0,0,0,0]);
-
-function generateReko(pilars){
-  const panel=document.getElementById('reko_panel'),list=document.getElementById('reko_list');
-  const filled=pilars.filter(p=>p.val>0);
-  if(!filled.length){panel.style.display='none';return;}
-  const weakest=[...filled].sort((a,b)=>a.val-b.val).slice(0,3);
-  let html='';
-  weakest.forEach(p=>{
-    const db=REKO_DB[p.nama];
-    if(!db)return;
-    const tips=p.val<5.5?db.low:p.val<7.5?db.mid:db.high;
-    const icon=p.val<5.5?'ðŸ”´':p.val<7.5?'ðŸŸ¡':'ðŸŸ¢';
-    html+=`<div style="margin-bottom:8px">
-      <div class="x-small mono mb-1" style="color:var(--cyan)">${icon} ${p.nama.toUpperCase()} â€” ${p.val.toFixed(1)}/10</div>
-      ${tips.map(t=>`<div class="reko-item"><span class="reko-icon">â†’</span><span>${t}</span></div>`).join('')}
-    </div>`;
+// ── Neural button selector ────────────────────────────────────────
+document.querySelectorAll('.neural-select').forEach(function(group){
+  var target = group.dataset.target;
+  var hidden = document.getElementById(
+    {skor_neural_hip_rotasi:'n_hip_rotasi', skor_neural_balance:'n_balance',
+     skor_neural_ankle:'n_ankle', skor_neural_thoracic:'n_thoracic',
+     skor_neural_shoulder:'n_shoulder', skor_neural_hip_hinge:'n_hiphinge',
+     skor_neural_core:'n_core', skor_neural_recovery:'n_recovery'}[target]
+  );
+  group.querySelectorAll('.neural-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      group.querySelectorAll('.neural-btn').forEach(function(b){
+        b.classList.remove('active-1','active-2','active-3');
+      });
+      var val = btn.dataset.val;
+      btn.classList.add('active-' + val);
+      if (hidden) hidden.value = val;
+      liveUpdate();
+    });
   });
-  list.innerHTML=html;
-  panel.style.display='block';
+});
+
+function syncHipHinge(){
+  var chk = document.getElementById('f_hiphinge_pass');
+  document.getElementById('input_hiphinge').value = chk.checked ? 'true' : 'false';
 }
 
-const REKO_DB={
-  Rotation:{
-    low:[
-      'Thoracic Mobility Drill â€” Cat-Cow 3x10 rep',
-      'Seated Rotation Stretch dengan resistance band',
-      'Open Book Stretch setiap pagi sebelum latihan'
-    ],
-    mid:[
-      'Pertahankan Seated Rotation Test 3x/minggu',
-      'Tambahkan rotasi dengan medicine ball 2 kg'
-    ],
-    high:[
-      'Pertahankan dengan Maintenance Stretch 2x/minggu'
-    ]
+function onAtletChange(sel) {
+  const opt = sel.options[sel.selectedIndex];
+  if (!opt || !opt.value) return;
+  document.getElementById('id_atlet_hidden').value = opt.value;
+  document.getElementById('input_nama').value = opt.dataset.nama || '';
+  document.getElementById('input_kategori').value = opt.dataset.kategori || 'ELITE';
+  document.getElementById('input_gender').value = opt.dataset.gender || 'Putra';
+  document.getElementById('input_berat').value = opt.dataset.berat || '';
+}
+
+function g(id){ return parseFloat(document.getElementById(id)?.value) || 0; }
+function n(id){ return parseInt(document.getElementById(id)?.value) || 1; }
+
+let radarChart = null;
+document.addEventListener('DOMContentLoaded', function(){
+  const ctx = document.getElementById('radarChart').getContext('2d');
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['HIP ROTATION','BALANCE','ANKLE','THORACIC','SHOULDER','HIP HINGE','CORE','RECOVERY'],
+      datasets: [{
+        data: [0,0,0,0,0,0,0,0],
+        backgroundColor: 'rgba(80,238,241,0.12)',
+        borderColor: '#50eef1', borderWidth: 2,
+        pointBackgroundColor: '#50eef1', pointRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { r: {
+        min: 0, max: 3,
+        ticks: { stepSize: 1, display: false },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        angleLines: { color: 'rgba(255,255,255,0.06)' },
+        pointLabels: { color: '#8892a8', font: { family:"'JetBrains Mono',monospace", size:9 } }
+      }},
+      plugins: { legend: { display: false } }
+    }
+  });
+});
+
+const ITEM_LABELS = {
+  hip_rotasi: 'Hip Rotation', balance: 'Single-Leg Balance', ankle: 'Ankle Dorsiflexion',
+  thoracic: 'Thoracic Rotation', shoulder: 'Shoulder Mobility', hip_hinge: 'Hip Hinge Pattern',
+  core: 'Core Anti-Rotation', recovery: 'Dynamic Balance Recovery'
+};
+
+const REKO_L1MT = {
+  hip_rotasi: {
+    1: ['90/90 Hip Stretch 3x30 detik tiap sisi', 'Hip CARs (Controlled Articular Rotations) 2x5 tiap arah, sangat perlahan', 'Assisted Hip Rotation dengan band 3x10'],
+    2: ['Deep Squat Hold dengan rotasi hip 3x30 detik', 'Cossack Squat 3x8 tiap sisi untuk ROM dinamis', 'Hip CARs tanpa bantuan 3x5 tiap arah'],
+    3: ['Pertahankan dengan dynamic hip opener rutin sebelum latihan', 'Hip CARs sebagai warm-up harian', 'Mulai integrasi ke gerak spesifik (pivot kick) dengan pengawasan']
   },
-  Extension:{
-    low:[
-      'Cobra Pose 3x30 detik setiap sesi',
-      'Prone Press-Up (McKenzie Extension) 10 rep',
-      'Hip Flexor Stretch â€” Kneeling Lunge 3x30 dtk'
-    ],
-    mid:[
-      'Lumbar Extension Strengthening dengan hyperextension bench',
-      'Pilates â€” Swan Dive 3x8 rep'
-    ],
-    high:[
-      'Pertahankan dengan Yoga Backbend Maintenance'
-    ]
+  balance: {
+    1: ['Single-Leg Stance dengan pegangan 3x20 detik tiap kaki', 'Double-Leg Balance di bosu/pad tidak stabil 3x30 detik', 'Static Balance dengan visual fokus tetap 3x20 detik'],
+    2: ['Single-Leg Stance tanpa pegangan 3x30 detik tiap kaki', 'Single-Leg Balance eyes-closed 3x15 detik', 'Single-Leg Reach (Y-Balance) 3x8 tiap arah'],
+    3: ['Single-Leg Balance eyes-closed di permukaan tidak stabil 3x20 detik', 'Perturbation Training (partner memberi dorongan ringan) 3x10', 'Integrasi ke pola tendangan dengan kontrol penuh']
   },
-  Stability:{
-    low:[
-      'Single Leg Stance â€” mulai 10 detik tiap sisi, 3 set',
-      'Balance Board Training 10 menit/sesi',
-      'BOSU Ball Squat 3x12 rep'
-    ],
-    mid:[
-      'Single Leg Deadlift dengan dumbbell 5 kg',
-      'Lateral Band Walk 3x15 langkah tiap sisi'
-    ],
-    high:[
-      'Challenge dengan Single Leg Stance mata tertutup'
-    ]
+  ankle: {
+    1: ['Ankle Mobilization dengan band 3x15 tiap sisi', 'Calf Stretch (gastrocnemius & soleus) 3x30 detik', 'Knee-to-Wall Drill submaksimal 3x10 tiap sisi'],
+    2: ['Weighted Ankle Mobilization (knee-to-wall dengan beban) 3x10', 'Ankle Circles + Dorsiflexion Hold 3x30 detik', 'Deep Squat dengan heel tetap menapak 3x8'],
+    3: ['Pertahankan dengan dynamic ankle prep sebelum latihan', 'Integrasi ke pivot roundhouse kick dengan pengawasan teknik', 'Single-Leg Ankle Mobilization dalam gerak dinamis']
   },
-  Posture:{
-    low:[
-      'Wall Angels â€” 3x10 rep setiap hari',
-      'Face Pull dengan resistance band 3x15 rep',
-      'Thoracic Extension di foam roller 5 menit'
-    ],
-    mid:[
-      'Plank variasi 3x45 detik',
-      'Band Pull-Apart 3x15 rep'
-    ],
-    high:[
-      'Pertahankan postur ideal saat shadow muaythai'
-    ]
+  thoracic: {
+    1: ['Open Book Stretch 3x10 tiap sisi', 'Quadruped Thoracic Rotation submaksimal 3x10 tiap sisi', 'Cat-Cow dengan fokus rotasi ringan 3x10'],
+    2: ['Quadruped Thoracic Rotation full ROM 3x12 tiap sisi', 'Side-Lying Windmill 3x10 tiap sisi', 'Thoracic Rotation dengan band resistance ringan 3x10'],
+    3: ['Pertahankan dengan T-spine mobility drill sebagai warm-up', 'Integrasi rotasi ke shadow boxing/kick dengan kontrol penuh', 'Loaded Thoracic Rotation (light med ball) 3x10 tiap sisi']
   },
-  Breathing:{
-    low:[
-      'Diaphragmatic Breathing â€” 5 menit sebelum latihan',
-      'Box Breathing 4-4-4-4 setiap hari',
-      'Hi-Lo Test mandiri 2x/minggu untuk monitoring'
-    ],
-    mid:[
-      'Breathing Ladder Drill saat sparring',
-      'Integrate nasal breathing saat drill ringan'
-    ],
-    high:[
-      'Pertahankan pola napas diafragma saat tanding'
-    ]
+  shoulder: {
+    1: ['Wall Slide 3x10 fokus teknik dasar', 'Band Pull-Apart 3x15 untuk mobilitas dasar', 'Passive Overhead Reach dengan bantuan 3x10'],
+    2: ['Overhead Reach aktif tanpa bantuan 3x10', 'Wall Slide dengan beban ringan (band) 3x12', 'Shoulder Dislocate dengan stick/band 3x10'],
+    3: ['Pertahankan dengan overhead mobility drill sebagai warm-up', 'Integrasi ke elbow strike/clinch dengan kontrol penuh', 'Loaded Overhead Carry ringan untuk stabilitas fungsional']
+  },
+  hip_hinge: {
+    1: ['Hip Hinge dengan cueing verbal (dowel di punggung) 3x10', 'Wall Hip Hinge (bokong menyentuh dinding) 3x10', 'Romanian Deadlift bodyweight submaksimal 3x10'],
+    2: ['Hip Hinge tanpa cueing, evaluasi ulang tiap sesi 3x10', 'Single-Leg Hip Hinge (assisted) 3x8 tiap sisi', 'Romanian Deadlift dengan beban ringan 3x10'],
+    3: ['Pertahankan pola dengan RDL/Good Morning terprogram', 'Single-Leg RDL tanpa bantuan untuk transfer ke knee strike', 'Integrasi hip hinge ke gerak clinch dengan kontrol penuh']
+  },
+  core: {
+    1: ['Pallof Press ringan (band) 3x8 tiap sisi, fokus tidak ada rotasi', 'Dead Bug 3x10 tiap sisi untuk anti-extension dasar', 'Plank Hold 3x20 detik'],
+    2: ['Pallof Press dengan beban sedang 3x10 tiap sisi', 'Pallof Press dengan langkah (half-kneeling to standing) 3x8', 'Anti-Rotation Chop/Lift dengan band 3x10 tiap sisi'],
+    3: ['Pallof Press dinamis (dengan gerak kaki) 3x10 tiap sisi', 'Pertahankan feedforward bracing sebagai bagian warm-up', 'Integrasi ke simulasi menerima clinch/dorongan dengan kontrol penuh']
+  },
+  recovery: {
+    1: ['Single-Leg Balance Recovery dari langkah kecil 3x10 tiap sisi', 'Step-Down Controlled dari box rendah 3x8', 'Static-to-Dynamic Balance Transition submaksimal 3x8'],
+    2: ['Simulasi tendangan ringan + recovery 3x8 tiap sisi', 'Lateral Bound dengan stick landing 3x6 tiap sisi', 'Single-Leg Hop dengan recovery terkontrol 3x8'],
+    3: ['Pertahankan dengan reactive balance drill sebagai bagian warm-up', 'Integrasi penuh ke kombinasi tendangan multi-arah', 'Perturbation Training dengan partner untuk simulasi kontak']
   }
 };
 
-function toggleRubrik(){const p=document.getElementById('rubrikPanel'),c=document.getElementById('rubrik-chevron'),o=p.style.display==='none';p.style.display=o?'block':'none';c.className=o?'bi bi-chevron-up':'bi bi-chevron-down';}
-function setRubrikKat(kat,btn){document.querySelectorAll('.rtab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.score-chip').forEach(chip=>{chip.style.display=(kat==='all'||chip.classList.contains('kat-all')||chip.classList.contains('kat-'+kat))?'block':'none';});}
-function toggleCamPanel(){const p=document.getElementById('camPanel'),open=p.style.display!=='none';p.style.display=open?'none':'block';if(open&&isRunning)stopCam();}
-const videoEl=document.getElementById('input_video');
-const canvasEl=document.getElementById('output_canvas');
-const ctx2d=canvasEl.getContext('2d');
-let poseInst=null,camInst=null,isRunning=false,lastT=0;
-const BUF=30,buf={rotL:[],rotR:[],ext:[],pos:[]};
-let stableScores={rotL:null,rotR:null,ext:null,pos:null};
-function rotToScore(d){return Math.min(10,Math.max(0,(d/90)*10))}
-function extToScore(d){return Math.min(10,Math.max(0,((d-90)/90)*10))}
-function posToScore(d){return Math.min(10,Math.max(0,10-Math.abs(d-90)/9))}
-function angleBetween(A,B,C){const r=Math.atan2(C.y-B.y,C.x-B.x)-Math.atan2(A.y-B.y,A.x-B.x);let a=Math.abs(r*180/Math.PI);return a>180?360-a:a;}
-function pushBuf(arr,v){arr.push(v);if(arr.length>BUF)arr.shift();return arr.reduce((s,x)=>s+x,0)/arr.length;}
-function setBadge(id,label,val){const el=document.getElementById(id);if(el)el.textContent=label+': '+(val!==null?val.toFixed(1):'Ã¢â€šÂ¬Ã¢â‚¬Â');}
-function onPoseResults(res){
-    const now=performance.now();document.getElementById('camFps').textContent=(now-lastT>0?(1000/(now-lastT)).toFixed(0):'Ã¢â€šÂ¬Ã¢â‚¬Â')+' FPS';lastT=now;
-    ctx2d.clearRect(0,0,canvasEl.width,canvasEl.height);ctx2d.drawImage(res.image,0,0,canvasEl.width,canvasEl.height);
-    if(!res.poseLandmarks||res.poseLandmarks.length<33){document.getElementById('camStatusTxt').textContent='Ã…Â¡  Pose tidak terdeteksi';return;}
-    const lm=res.poseLandmarks;document.getElementById('camStatusTxt').textContent='Ã…“Ã¢â‚¬Â Pose terdeteksi';
-    if(window.drawConnectors&&window.POSE_CONNECTIONS){drawConnectors(ctx2d,lm,POSE_CONNECTIONS,{color:'rgba(80,238,241,0.5)',lineWidth:2});drawLandmarks(ctx2d,lm,{color:'#50eef1',fillColor:'#50eef1',radius:3});}
-    const vis=l=>(l.visibility||0)>0.5;
-    const [LS,RS,LH,RH,LE,RE,LW,RW,LE_,RE_]=[lm[11],lm[12],lm[23],lm[24],lm[13],lm[14],lm[15],lm[16],lm[7],lm[8]];
-    let rotLdeg=null,rotRdeg=null,extDeg=null,posDeg=null;
-    if(vis(LS)&&vis(LH)){const dx=LS.x-LH.x,dy=LS.y-LH.y;rotLdeg=Math.abs(Math.atan2(dx,Math.abs(dy))*180/Math.PI);}
-    if(vis(RS)&&vis(RH)){const dx=RS.x-RH.x,dy=RS.y-RH.y;rotRdeg=Math.abs(Math.atan2(dx,Math.abs(dy))*180/Math.PI);}
-    let eSum=0,eN=0;
-    if(vis(LS)&&vis(LE)&&vis(LW)){eSum+=angleBetween(LS,LE,LW);eN++;}
-    if(vis(RS)&&vis(RE)&&vis(RW)){eSum+=angleBetween(RS,RE,RW);eN++;}
-    if(eN)extDeg=eSum/eN;
-    let pSum=0,pN=0;
-    if(vis(LE_)&&vis(LH)){pSum+=angleBetween({x:LE_.x,y:LE_.y-0.1},LE_,LH);pN++;}
-    if(vis(RE_)&&vis(RH)){pSum+=angleBetween({x:RE_.x,y:RE_.y-0.1},RE_,RH);pN++;}
-    if(pN)posDeg=pSum/pN;
-    const aRL=rotLdeg!==null?pushBuf(buf.rotL,rotToScore(rotLdeg)):null;
-    const aRR=rotRdeg!==null?pushBuf(buf.rotR,rotToScore(rotRdeg)):null;
-    const aExt=extDeg!==null?pushBuf(buf.ext,extToScore(extDeg)):null;
-    const aPos=posDeg!==null?pushBuf(buf.pos,posToScore(posDeg)):null;
-    stableScores={rotL:aRL,rotR:aRR,ext:aExt,pos:aPos};
-    setBadge('b_rotl','ROT-L',aRL);setBadge('b_rotr','ROT-R',aRR);setBadge('b_ext','EXT',aExt);setBadge('b_pos','POST',aPos);
-    const sp=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v!==null?v.toFixed(1):'Ã¢â€šÂ¬Ã¢â‚¬Â'};
-    sp('sp_rotl',aRL);sp('sp_rotr',aRR);sp('sp_ext',aExt);sp('sp_pos',aPos);
-    document.getElementById('btnCapture').disabled=!(aRL||aRR||aExt||aPos);
+function liveUpdate() {
+  const items = {
+    hip_rotasi: n('n_hip_rotasi'),
+    balance:    n('n_balance'),
+    ankle:      n('n_ankle'),
+    thoracic:   n('n_thoracic'),
+    shoulder:   n('n_shoulder'),
+    hip_hinge:  n('n_hiphinge'),
+    core:       n('n_core'),
+    recovery:   n('n_recovery'),
+  };
+
+  const vals = Object.values(items);
+  const rawTotal = vals.reduce((a,b)=>a+b,0);
+  const total = +((rawTotal/24)*10).toFixed(1);
+
+  document.getElementById('res_total').textContent = total.toFixed(1);
+  let pred, col;
+  if (total >= 8.3) { pred='ELITE'; col='var(--green)'; }
+  else if (total >= 5.8) { pred='READY'; col='var(--cyan)'; }
+  else if (total >= 4.2) { pred='DEVELOPING'; col='var(--gold)'; }
+  else { pred='NOVICE'; col='var(--red)'; }
+  const predEl = document.getElementById('res_predikat');
+  predEl.textContent = pred;
+  predEl.className = 'predikat-pill pred-' + pred;
+  document.getElementById('res_total').style.color = col;
+
+  if (radarChart) {
+    radarChart.data.datasets[0].data = vals;
+    radarChart.update();
+  }
+
+  generateNarasi(items, total, pred);
+  generateReko(items);
 }
-function initPose(){poseInst=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});poseInst.setOptions({modelComplexity:0,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.55,minTrackingConfidence:0.5});poseInst.onResults(onPoseResults);}
-function startCam(){
-    if(isRunning)return;if(!poseInst)initPose();
-    camInst=new Camera(videoEl,{onFrame:async()=>{if(canvasEl.width!==videoEl.videoWidth&&videoEl.videoWidth>0)canvasEl.width=videoEl.videoWidth;if(canvasEl.height!==videoEl.videoHeight&&videoEl.videoHeight>0)canvasEl.height=videoEl.videoHeight;await poseInst.send({image:videoEl});},width:640,height:480});
-    camInst.start().then(()=>{isRunning=true;document.getElementById('camOverlay').classList.add('hidden');document.getElementById('camBadges').style.display='flex';document.getElementById('camStatusBar').style.display='flex';document.getElementById('scorePreview').style.display='grid';document.getElementById('btnStart').style.display='none';document.getElementById('btnStop').style.display='inline-block';}).catch(e=>{alert('Kamera tidak bisa diakses: '+e.message);});
+
+function generateNarasi(items, total, pred) {
+  const panel = document.getElementById('narasi_panel');
+  const box = document.getElementById('narasi_box');
+
+  const namaEl = document.querySelector('#select-atlet option:checked');
+  const namaAtlet = namaEl && namaEl.value ? namaEl.textContent.trim() : 'Atlet';
+
+  function lbl(v){ return v>=3?'otomatis penuh (Autonomous)':v>=2?'berkembang (Associative)':'tahap awal (Cognitive)'; }
+  function wrn(v){ return v>=3?'var(--green)':v>=2?'var(--gold)':'var(--red)'; }
+
+  const entries = Object.entries(items).map(([key,val]) => ({key, nama: ITEM_LABELS[key], val}));
+  const sorted = [...entries].sort((a,b) => b.val - a.val);
+  const kuat = sorted.slice(0,2);
+  const lemah = sorted.slice(-2).reverse();
+
+  const layak = pred === 'ELITE' || pred === 'READY';
+  const semuaPrima = entries.every(e => e.val === 3);
+
+  const kPred = {
+    ELITE: 'menunjukkan efisiensi neural <strong style="color:var(--green)">AUTONOMOUS</strong> — kontrol motorik matang di hampir semua item.',
+    READY: 'berada di level <strong style="color:var(--cyan)">SIAP (READY)</strong> — kontrol neuromuskular cukup matang untuk lanjut.',
+    DEVELOPING: 'sedang <strong style="color:var(--gold)">BERKEMBANG (ASSOCIATIVE)</strong> — pola gerak mulai terbentuk namun belum otomatis.',
+    NOVICE: 'berada di tahap <strong style="color:var(--red)">COGNITIVE</strong> — kontrol motorik masih butuh perhatian visual/verbal besar.'
+  };
+
+  const layakStr = layak
+    ? '<span style="color:var(--green);font-weight:700">&#9989; LAYAK lanjut ke L2 Strength</span>'
+    : '<span style="color:var(--red);font-weight:700">&#9940; BELUM LAYAK ke L2 — fokus korektif mobility/stability dulu</span>';
+
+  const kuatHTML = kuat.map(p => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+      <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+      <span><strong style="color:var(--green)">${p.nama}</strong> — ${lbl(p.val)}
+      <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/3)</span></span>
+    </div>`).join('');
+
+  const lemahHTML = semuaPrima
+    ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,255,136,0.07);border-radius:6px;border:1px solid rgba(0,255,136,0.2);">
+        <span style="font-size:16px;">&#127942;</span>
+        <span style="color:var(--green);font-weight:600;">Semua item sudah Autonomous — tidak ada kelemahan signifikan.</span>
+      </div>`
+    : lemah.map(p => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+      <div style="width:6px;height:6px;border-radius:50%;background:${wrn(p.val)};flex-shrink:0;"></div>
+      <span><strong style="color:${wrn(p.val)}">${p.nama}</strong> — ${lbl(p.val)}
+      <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/3)</span>
+      ${p.val===1 ? ' : prioritas utama program korektif.' : ' : perlu perhatian dalam program latihan.'}</span>
+    </div>`).join('');
+
+  const fokus = semuaPrima
+    ? 'Pertahankan performa di semua item. Atlet siap masuk L2 Strength.'
+    : layak
+    ? `Fondasi mobility/stability cukup. Tetap latih <strong>${lemah[0]?.nama || '-'}</strong> selama transisi ke L2.`
+    : `Jalankan korektif 4–6 minggu, fokus <strong>${lemah[0]?.nama || '-'}</strong> dan <strong>${lemah[1]?.nama || '-'}</strong> sebelum lanjut ke teknik.`;
+
+  box.innerHTML = `
+    <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,210,255,0.1);">
+      <span style="color:var(--cyan);font-weight:700;font-size:12px;">&#9889; ${namaAtlet}</span> ${kPred[pred] || ''}
+      Total skor: <strong style="font-size:13px;color:${wrn(total/3.33)}">${total.toFixed(1)}/10</strong>
+    </div>
+    <div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>${kuatHTML}</div>
+    <div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>${lemahHTML}</div>
+    <div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">
+      <div style="color:var(--text3);font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>
+      ${layakStr}<br><span style="color:var(--text2);font-size:10.5px;">${fokus}</span>
+    </div>`;
+  panel.style.display = 'block';
 }
-function stopCam(){if(camInst)camInst.stop();isRunning=false;document.getElementById('camOverlay').classList.remove('hidden');document.getElementById('camBadges').style.display='none';document.getElementById('camStatusBar').style.display='none';document.getElementById('btnStart').style.display='inline-block';document.getElementById('btnStop').style.display='none';document.getElementById('btnCapture').disabled=true;ctx2d.clearRect(0,0,canvasEl.width,canvasEl.height);}
-function captureScores(){const map={'score_rot_l':stableScores.rotL,'score_rot_r':stableScores.rotR,'score_ext':stableScores.ext,'score_pos':stableScores.pos};Object.entries(map).forEach(([id,val])=>{const inp=document.getElementById(id);if(inp&&val!==null){inp.value=(Math.round(val*10)/10).toFixed(1);inp.dispatchEvent(new Event('input',{bubbles:true}));}});liveUpdate();showToast('Skor dari kamera diterapkan!','success');}
-window.addEventListener('beforeunload',stopCam);
-function getCsrf(){return document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))?.split('=')[1]??'';}
-function konfirmasiHapus(auditId,namaAtlet){document.getElementById('modal_nama_atlet').textContent=namaAtlet;const b=document.getElementById('btn_hapus_confirm'),baru=b.cloneNode(true);b.parentNode.replaceChild(baru,b);baru.addEventListener('click',()=>eksekusiHapus(auditId,namaAtlet));new bootstrap.Modal(document.getElementById('modalHapus')).show();}
-function eksekusiHapus(auditId,namaAtlet){fetch(`/combat/l1-correction/hapus/${auditId}/`,{method:'POST',headers:{'X-CSRFToken':getCsrf(),'X-Requested-With':'XMLHttpRequest'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json().catch(()=>({status:'success'}));}).then(()=>{bootstrap.Modal.getInstance(document.getElementById('modalHapus'))?.hide();const row=document.getElementById('row-'+auditId);if(row){row.style.transition='opacity .35s,transform .35s';row.style.opacity='0';row.style.transform='translateX(-12px)';setTimeout(()=>row.remove(),380);}showToast('Data '+namaAtlet+' berhasil dihapus.','success');}).catch(e=>showToast('Gagal: '+e.message,'danger'));}
-function cetakAudit(id,nama,kategori,gender,berat,rotation,extension,stability,posture,breathing,totalScore,predikat,rekomendasi,tanggal){const warna={ELITE:'#20c997',READY:'#0dcaf0',DEVELOPING:'#ffc107',NOVICE:'#dc3545'}[predikat]||'#6c757d';const pilar=[{n:'Rotation',v:parseFloat(rotation)||0},{n:'Extension',v:parseFloat(extension)||0},{n:'Stability',v:parseFloat(stability)||0},{n:'Posture',v:parseFloat(posture)||0},{n:'Breathing',v:parseFloat(breathing)||0}];const pilarHTML=pilar.map(p=>{const pct=Math.min(100,(p.v/10)*100).toFixed(0);return `<div style="flex:1;min-width:90px;text-align:center;background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;padding:10px"><div style="font-size:9px;color:#888;text-transform:uppercase">${p.n}</div><div style="font-size:22px;font-weight:900;color:#0dcaf0">${p.v.toFixed(1)}</div><div style="height:5px;background:#e9ecef;border-radius:3px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pct}%;background:#0dcaf0;border-radius:3px"></div></div></div>`;}).join('');let rekoHTML='';pilar.forEach(p=>{const db=REKO_DB[p.n];if(!db||p.v===0)return;const tips=p.v<5.5?db.low:p.v<7.5?db.mid:db.high;rekoHTML+=`<div style="margin-bottom:10px"><div style="font-weight:700;font-size:11px;color:#0dcaf0;margin-bottom:4px">${p.n.toUpperCase()} â€” ${p.v.toFixed(1)}/10</div>`;tips.forEach(t=>{rekoHTML+=`<div style="padding:4px 8px;border-left:3px solid #0dcaf0;margin:2px 0;font-size:11px;color:#444">${t}</div>`;});rekoHTML+='</div>';});const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit L1 â€” ${nama}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#fff;color:#111;padding:28px 36px;font-size:13px}</style></head><body><div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0dcaf0;padding-bottom:14px;margin-bottom:18px"><div><div style="font-size:20px;font-weight:900;letter-spacing:2px;color:#0dcaf0">HPCS BOXING â€” AUDIT LEVEL 1</div><div style="font-size:11px;color:#555;margin-top:3px">High Performance Coaching System · Core Stability & Correction</div></div><div style="text-align:right;font-size:11px;color:#888"><div>Tanggal Audit</div><div style="font-weight:700;color:#111">${tanggal}</div></div></div><div style="background:#f0f8ff;border:1px solid #0dcaf0;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${[['Nama Atlet',nama],['Kategori',kategori],['Gender',gender],['Berat',berat+' kg'],['Cabang','Muay Thai'],['Level','L1 â€” Correction']].map(([l,v])=>`<div><div style="font-size:9px;color:#555;text-transform:uppercase">${l}</div><div style="font-size:15px;font-weight:700">${v}</div></div>`).join('')}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:8px">Skor Pilar Analysis</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">${pilarHTML}</div><div style="display:flex;align-items:center;gap:20px;border:2px solid ${warna};border-radius:12px;padding:14px 22px;margin-bottom:18px"><div style="font-size:52px;font-weight:900;color:${warna};line-height:1">${parseFloat(totalScore).toFixed(1)}</div><div><div style="font-size:26px;font-weight:900;color:${warna};letter-spacing:3px">${predikat}</div></div></div><div style="background:#f8f9fa;border-left:4px solid #0dcaf0;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:18px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0dcaf0;margin-bottom:10px">Rekomendasi Program HPCS</div>${rekoHTML||'<p style="font-size:12px;color:#444">Tidak ada catatan.</p>'}</div></body></html>`;const win=window.open('','_blank','width=900,height=700');if(!win){alert('Izinkan pop-up.');return;}win.document.write(html);win.document.close();win.focus();win.onload=()=>{setTimeout(()=>{win.print();win.onafterprint=()=>win.close();},500);};}
-function showToast(msg,type){const el=document.createElement('div');el.className='toast-hpcs';el.style.background=type==='success'?'#20c997':'#e74c3c';el.style.color='#fff';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),420);},2800);}
+
+function generateReko(items) {
+  const panel = document.getElementById('reko_panel');
+  const list = document.getElementById('reko_list');
+
+  const entries = Object.entries(items).map(([key,val]) => ({key, nama: ITEM_LABELS[key], val}));
+  const sorted = [...entries].sort((a,b) => a.val - b.val);
+  const weakest = sorted.slice(0,3);
+
+  let html = '';
+  weakest.forEach(p => {
+    const db = REKO_L1MT[p.key];
+    if (!db) return;
+    const tips = db[p.val] || db[1];
+    const col = p.val === 1 ? 'var(--red)' : p.val === 2 ? 'var(--gold)' : 'var(--green)';
+    const icon = p.val === 1 ? '&#128308;' : p.val === 2 ? '&#128993;' : '&#128994;';
+    html += `<div style="margin-bottom:10px;padding:10px;background:rgba(80,238,241,0.04);border-radius:8px;border-left:3px solid ${col};">
+      <div style="font-size:10px;font-weight:700;color:${col};letter-spacing:1px;margin-bottom:6px;">${icon} ${p.nama.toUpperCase()} — ${p.val}/3</div>`;
+    tips.forEach(t => {
+      html += `<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;font-size:10.5px;color:var(--text2);">
+        <span style="color:${col};flex-shrink:0;margin-top:1px;">&#8594;</span><span>${t}</span></div>`;
+    });
+    html += `</div>`;
+  });
+
+  list.innerHTML = html;
+  panel.style.display = 'block';
+}
+
+document.getElementById('mainForm').addEventListener('submit', function(e) {
+  if (!document.getElementById('id_atlet_hidden').value) {
+    e.preventDefault();
+    alert('Pilih atlet terlebih dahulu!');
+  }
+});
 </script>
 </body>
 </html>
-
-
-

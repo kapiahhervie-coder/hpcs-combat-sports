@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'combat.apps.CombatConfig',
     'muaythai',
+    'boxing',
     # Tambah cabang lain di sini: 'boxing', 'taekwondo', dst
 ]
 

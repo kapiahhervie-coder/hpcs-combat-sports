@@ -8,7 +8,7 @@
 :root{--bg:#0f1117;--bg2:#171b25;--bg3:#1e2333;--border:#252d3d;--border2:#2f3a50;--amber:#f59e0b;--amber2:#fbbf24;--sky:#38bdf8;--green:#10b981;--red:#ef4444;--text:#cbd5e1;--text2:#94a3b8;--text3:#4b5e78;--white:#f1f5f9}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
-.l3-wrap{max-width:1280px;margin:0 auto;padding:24px 20px}
+.l3-wrap{max-width:1600px;margin:0 auto;padding:24px 28px}
 .l3-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:16px}
 .l3-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;margin-bottom:8px;text-transform:uppercase}
 .l3-badge::before{content:'';width:6px;height:6px;background:var(--amber);border-radius:50%;animation:pulse 2s infinite}
@@ -142,7 +142,7 @@ tbody tr:last-child td{border-bottom:none}
       <p class="l3-subtitle">High Velocity Power · Stretch-Shortening Cycle · Reactive Strength · Coach Fanny</p>
     </div>
     <div class="l3-header-actions">
-      <a href="{% url 'combat:dashboard' %}" class="btn btn-ghost">
+      <a href="{% url 'boxing:dashboard' %}" class="btn btn-ghost">
         <i class="bi bi-house-fill"></i> Dashboard
       </a>
       <button type="button" class="btn btn-outline" onclick="toggleRubrik()">
@@ -185,7 +185,7 @@ tbody tr:last-child td{border-bottom:none}
   </div>
 
   <!-- Form -->
-  <form action="{% url 'combat:l3_power' %}" method="POST" id="mainForm">
+  <form action="{% url 'boxing:l3_power' %}" method="POST" id="mainForm">
     {% csrf_token %}
     <input type="hidden" name="atlet_id"    id="h_atlet_id">
     <input type="hidden" name="atlet_name"  id="h_atlet_name">
@@ -402,7 +402,7 @@ tbody tr:last-child td{border-bottom:none}
               {% else %}<span class="badge badge-novice">NOVICE</span>{% endif %}
             </td>
             <td>
-              <a href="{% url 'combat:hapus_l3_audit' item.pk %}" class="btn-del-sm"
+              <a href="{% url 'boxing:hapus_l3_audit' item.pk %}" class="btn-del-sm"
                  onclick="return confirm('Hapus data {{ item.atlet_name|escapejs }}?')">
                 <i class="bi bi-trash"></i>
               </a>
@@ -606,22 +606,161 @@ tbody tr:last-child td{border-bottom:none}
 
     const a = parseFloat(avg);
     const badge = document.getElementById('res_badge');
-    const rekT  = document.getElementById('rekomendasi_text');
     document.getElementById('rekomendasi').classList.add('show');
 
-    if (a >= 9.0) {
-      badge.className = 'result-badge elite'; badge.textContent = 'ELITE';
-      rekT.innerHTML = '<b>Kapasitas Power Eksplosif Tinggi.</b> Atlet SIAP KOMPETISI. Pertahankan RSI > 2.5 dan sprint < 3.8 dtk.';
-    } else if (a >= 7.0) {
-      badge.className = 'result-badge ready'; badge.textContent = 'READY';
-      rekT.innerHTML = '<b>Kompeten.</b> Tingkatkan pilar terendah dengan plyometric progresif 2x/minggu. Target ELITE dalam 8 minggu.';
-    } else if (a >= 5.0) {
-      badge.className = 'result-badge developing'; badge.textContent = 'DEVELOPING';
-      rekT.innerHTML = '<b>Dalam Pengembangan.</b> Pastikan fondasi L2 solid sebelum menambah volume power. Fokus RSI dan sprint.';
-    } else {
-      badge.className = 'result-badge novice'; badge.textContent = 'NOVICE';
-      rekT.innerHTML = '<b>Power Dasar Lemah.</b> Kembali perkuat L2 Strength. Power tidak bisa dibangun tanpa fondasi kekuatan.';
+    let pred;
+    if (a >= 9.0)      { badge.className = 'result-badge elite';      badge.textContent = 'ELITE';      pred = 'ELITE'; }
+    else if (a >= 7.0) { badge.className = 'result-badge ready';      badge.textContent = 'READY';      pred = 'READY'; }
+    else if (a >= 5.0) { badge.className = 'result-badge developing'; badge.textContent = 'DEVELOPING'; pred = 'DEVELOPING'; }
+    else               { badge.className = 'result-badge novice';     badge.textContent = 'NOVICE';     pred = 'NOVICE'; }
+
+    const pilarDataL3 = [
+      { nama: 'Jump',    val: scores.jump },
+      { nama: 'Sprint',  val: scores.sprint },
+      { nama: 'Throw',   val: scores.throw },
+      { nama: 'RSI',     val: scores.rsi },
+      { nama: 'Agility', val: scores.agility }
+    ];
+    generateNarasiL3(pilarDataL3, a, pred);
+    generateRekoL3(pilarDataL3);
+  }
+
+  // ── Profil Kondisi Atlet (deskripsi otomatis berdasarkan hasil tes) ──
+  function generateNarasiL3(pilars, total, pred) {
+    const panel = document.getElementById('narasi_l3');
+    const box   = document.getElementById('narasi_box_l3');
+    const filled = pilars.filter(p => p.val > 0);
+    if (!filled.length) { panel.style.display = 'none'; return; }
+
+    const namaEl = document.getElementById('sel_atlet');
+    const opt = namaEl ? namaEl.options[namaEl.selectedIndex] : null;
+    let nama = opt && opt.dataset ? (opt.dataset.nama || opt.textContent) : 'Atlet';
+    nama = (nama || 'Atlet').trim();
+    if (!nama || nama.includes('Pilih')) nama = 'Atlet';
+
+    function wrn(v){ return v>=9?'var(--green)':v>=7?'var(--sky)':v>=5?'var(--amber)':'var(--red)'; }
+    function lbl(v){ return v>=9?'sangat baik':v>=7?'baik':v>=5?'cukup':'perlu perhatian khusus'; }
+
+    const sorted = filled.slice().sort((a,b) => b.val - a.val);
+    const kuat   = sorted.slice(0, 2);
+    const lemah  = sorted.slice(-2).reverse();
+    const layak  = total >= 7.5;
+
+    const minV = Math.min(...filled.map(p => p.val));
+    const maxV = Math.max(...filled.map(p => p.val));
+    const prima = (maxV - minV) <= 0.5 && minV >= 8.5;
+
+    const kPred = {
+      ELITE:      'menunjukkan kapasitas power eksplosif <strong style="color:var(--green)">ELIT</strong> — siap kompetisi penuh dengan output speed-power maksimal.',
+      READY:      'berada di level <strong style="color:var(--sky)">SIAP (READY)</strong> — fondasi power solid, tinggal optimasi detail teknis.',
+      DEVELOPING: 'sedang <strong style="color:var(--amber)">BERKEMBANG</strong> — power eksplosif mulai terbentuk namun beberapa pilar masih perlu penguatan.',
+      NOVICE:     'berada di level <strong style="color:var(--red)">PEMULA (NOVICE)</strong> — power dasar masih lemah, perlu kembali memperkuat fondasi L2 Strength.'
+    };
+
+    const layakStr = layak
+      ? '<span style="color:var(--green);font-weight:700">&#9989; LAYAK lanjut ke L4 Speed &amp; Agility</span>'
+      : '<span style="color:var(--red);font-weight:700">&#9940; BELUM LAYAK ke L4 — perkuat power dasar terlebih dahulu</span>';
+
+    const kuatHTML = kuat.map(p => `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span><strong style="color:var(--green)">${p.nama}</strong> — ${lbl(p.val)}
+        <span style="color:${wrn(p.val)};font-weight:700;">(${p.val.toFixed(1)}/10)</span>
+        ${p.val>=9 ? ' : pilar unggulan, pertahankan.' : p.val>=7 ? ' : aset power eksplosif.' : ' : menunjukkan perkembangan positif.'}</span>
+      </div>`).join('');
+
+    const lemahHTML = prima
+      ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(16,185,129,0.07);border-radius:6px;border:1px solid rgba(16,185,129,0.2);">
+          <span style="font-size:16px;">&#127942;</span>
+          <span style="color:var(--green);font-weight:600;">Semua pilar power dalam kondisi prima — tidak ada kelemahan signifikan.</span>
+        </div>`
+      : lemah.map(p => {
+          const catatan = p.val<5.5 ? ' : prioritas utama program korektif.' : p.val<7.5 ? ' : perlu perhatian dalam program latihan.' : ' : jaga konsistensi, masih bisa ditingkatkan.';
+          return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:${wrn(p.val)};flex-shrink:0;"></div>
+            <span><strong style="color:${wrn(p.val)}">${p.nama}</strong> — ${lbl(p.val)}
+            <span style="color:${wrn(p.val)};font-weight:700;">(${p.val.toFixed(1)}/10)</span>${catatan}</span>
+          </div>`;
+        }).join('');
+
+    const fokus = prima
+      ? 'Pertahankan performa di semua pilar. Atlet siap masuk program L4 Speed &amp; Agility.'
+      : layak
+        ? `Fondasi power cukup kuat. Fokus perkuat <strong>${lemah[0] ? lemah[0].nama : '-'}</strong> selama transisi ke L4.`
+        : `Jalankan program power dasar 4–6 minggu, prioritas <strong>${lemah[0] ? lemah[0].nama : '-'}</strong> dan <strong>${lemah[1] ? lemah[1].nama : '-'}</strong>.`;
+
+    box.innerHTML = `
+      <div style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(245,158,11,0.1);">
+        <span style="color:var(--amber);font-weight:700;font-size:12px;">&#9889; ${nama}</span> ${kPred[pred] || ''}
+        Total skor: <strong style="font-size:13px;color:${wrn(total)}">${total.toFixed(1)}/10</strong>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>
+        ${kuatHTML}
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>
+        ${lemahHTML}
+      </div>
+      <div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">
+        <div style="color:var(--text3);font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>
+        ${layakStr}<br><span style="color:var(--text2);font-size:10.5px;">${fokus}</span>
+      </div>`;
+    panel.style.display = 'block';
+  }
+
+  // ── Rekomendasi program latihan per pilar (bukan cuma 1 pesan umum) ──
+  const REKO_L3 = {
+    Jump: {
+      low: ['Box Jump 3x8 dengan fokus landing lembut', 'Squat Jump tanpa beban 4x6', 'Depth Drop dari 20cm 3x5 untuk pola landing', 'Kembali ke L2 Strength: perkuat Goblet Squat dulu'],
+      mid: ['Countermovement Jump 4x5 dengan target tinggi bertahap', 'Loaded Jump Squat dengan beban ringan 3x5', 'Reactive Box Jump 3x6 untuk kecepatan reaksi'],
+      high: ['Depth Jump dari 40cm 4x5 untuk power puncak', 'Contrast Training: Squat berat + CMJ 4x3']
+    },
+    Sprint: {
+      low: ['Acceleration Drill 10m 4x sprint dengan start berdiri', 'A-Skip & B-Skip 3x20m untuk mekanik lari', 'Resisted Sprint dengan band ringan 4x15m'],
+      mid: ['Flying Sprint 20m 4x dengan run-up 10m', 'Hill Sprint 6x15m untuk power akselerasi', 'Sprint Technique Drill: high knee, wall drill 3x'],
+      high: ['Max Velocity Sprint 30-40m 4x dengan recovery penuh', 'Resisted Sled Sprint 5x15m beban ringan']
+    },
+    Throw: {
+      low: ['Rotational Med Ball Throw ringan (2-3kg) 3x8 tiap sisi — fokus urutan hip-trunk-lengan', 'Chest Pass Med Ball dinding 3x10 sebagai pelengkap pola straight punch', 'Overhead Slam 3x10 untuk power tubuh penuh'],
+      mid: ['Rotational Throw dengan beban sedang (4-5kg) 4x8 tiap sisi — fokus kecepatan rotasi', 'Landmine Rotation 3x10 tiap sisi untuk transfer power hip-trunk', 'Rotational Med Ball Scoop Toss 4x8 tiap sisi, tambah jarak bertahap'],
+      high: ['Rotational Throw dengan run-up ringan 3x8 tiap sisi — simulasi momentum step-in cross', 'Med Ball Throw maksimal (6kg+) rotasional 4x5', 'Contrast Training: Landmine Rotation berat + Rotational Throw eksplosif']
+    },
+    RSI: {
+      low: ['Ankle Hop 3x15 untuk stiffness pergelangan kaki', 'Pogo Jump 3x20 detik fokus kontak cepat', 'Kembali ke Jump dasar sebelum drop jump'],
+      mid: ['Drop Jump dari 20cm 4x6 fokus waktu kontak minimal', 'Bounding Drill 3x20m untuk elastisitas', 'Single Leg Pogo Hop 3x10 tiap sisi'],
+      high: ['Drop Jump dari 40cm 4x5 kontak &lt;200ms', 'Depth Jump to Sprint 4x5 untuk transfer power']
+    },
+    Agility: {
+      low: ['Cone Drill dasar (4-corner) 3x untuk koordinasi arah', 'Ladder Drill 2-in 2-out 3x panjang', 'Lateral Shuffle 4x10m untuk footwork samping'],
+      mid: ['T-Test Drill 4x dengan target waktu bertahap', '5-10-5 Pro Agility 4x untuk perubahan arah', 'Reactive Agility dengan visual cue 3x'],
+      high: ['Kompetitif T-Test 5x dengan interval pendek', 'Sport-specific footwork boxing 3x1 menit']
     }
+  };
+
+  function generateRekoL3(pilars) {
+    const rekT = document.getElementById('rekomendasi_text');
+    const filled = pilars.filter(p => p.val > 0);
+    if (!filled.length) { rekT.innerHTML = ''; return; }
+
+    const sorted  = filled.slice().sort((a,b) => a.val - b.val);
+    const weakest = sorted.slice(0, 3);
+
+    let html = '<div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:8px;letter-spacing:1px;">PROGRAM REKOMENDASI PELATIH</div>';
+    weakest.forEach(p => {
+      const db = REKO_L3[p.nama];
+      if (!db) return;
+      const tips = p.val < 5.5 ? db.low : p.val < 7.5 ? db.mid : db.high;
+      const col  = p.val < 5.5 ? 'var(--red)' : p.val < 7.5 ? 'var(--amber)' : 'var(--green)';
+      const icon = p.val < 5.5 ? '&#128308;' : p.val < 7.5 ? '&#128993;' : '&#128994;';
+      html += `<div style="margin-bottom:8px;padding:7px 10px;background:rgba(245,158,11,0.04);border-radius:6px;border-left:3px solid ${col};">
+        <div style="font-size:10px;font-weight:700;color:${col};margin-bottom:4px;">${icon} ${p.nama.toUpperCase()} — ${p.val.toFixed(1)}/10</div>`;
+      tips.forEach(t => {
+        html += `<div style="display:flex;gap:5px;margin-bottom:2px;font-size:10.5px;color:var(--text2);"><span style="color:${col};flex-shrink:0;">&#8594;</span><span>${t}</span></div>`;
+      });
+      html += '</div>';
+    });
+    rekT.innerHTML = html;
   }
 
   // ── Rubrik & Print ────────────────────────────────────────────────

@@ -13,11 +13,11 @@ from django.contrib import messages
 
 from combat.models import (
     Atlet,
-    CorrectionAuditL1,
     StrengthAuditL2,
     PowerAuditL3,
     SpeedAgilityAuditL4,
 )
+from muaythai.models import CorrectionAuditL1MT
 
 
 def get_atlet_muaythai(user):
@@ -41,7 +41,7 @@ class DashboardMuayThaiView(LoginRequiredMixin, View):
 
         score_labels, score_data = [], []
         if atlet:
-            riwayat = CorrectionAuditL1.objects.filter(atlet=atlet).order_by('timestamp')[:8]
+            riwayat = CorrectionAuditL1MT.objects.filter(atlet=atlet).order_by('timestamp')[:8]
             for r in riwayat:
                 score_labels.append(r.timestamp.strftime('%d/%m'))
                 score_data.append(float(r.total_skor))
@@ -50,7 +50,7 @@ class DashboardMuayThaiView(LoginRequiredMixin, View):
             score_labels = ['-']
             score_data   = [0]
 
-        l1_last = CorrectionAuditL1.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
+        l1_last = CorrectionAuditL1MT.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
         l2_last = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
         l3_last = PowerAuditL3.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
         l4_last = SpeedAgilityAuditL4.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
@@ -99,7 +99,7 @@ class L1CorrectionMTView(LoginRequiredMixin, View):
 
     def get(self, request):
         atlet_qs   = get_atlet_muaythai(request.user)
-        history    = CorrectionAuditL1.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
+        history    = CorrectionAuditL1MT.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
         atlet_list = atlet_qs.order_by('nama_atlet')
         return render(request, self.template_name, {
             'history':    history,
@@ -111,18 +111,59 @@ class L1CorrectionMTView(LoginRequiredMixin, View):
             atlet_id = request.POST.get('atlet_id')
             atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai') if atlet_id else None
 
-            audit = CorrectionAuditL1(
-                atlet               = atlet,
-                atlet_name          = atlet.nama_atlet if atlet else request.POST.get('atlet_name', ''),
-                kategori_usia       = request.POST.get('kategori_usia', 'ELITE'),
-                gender              = request.POST.get('gender', 'Putra'),
-                kelas_berat         = request.POST.get('kelas_berat') or None,
-                score_rotation      = round((float(request.POST.get('score_rotation', 0) or 0) + float(request.POST.get('score_rotation_r', 0) or 0)) / 2, 2),
-                score_extension     = float(request.POST.get('score_extension', 0) or 0),
-                score_stability     = round((float(request.POST.get('score_stability', 0) or 0) + float(request.POST.get('score_stability_r', 0) or 0)) / 2, 2),
-                score_posture       = float(request.POST.get('score_posture', 0) or 0),
-                score_breathing     = float(request.POST.get('score_breathing', 0) or 0),
-                ai_confidence_score = request.POST.get('ai_confidence_score') or None,
+            def to_float(key):
+                val = request.POST.get(key)
+                try:
+                    return float(val) if val else None
+                except (ValueError, TypeError):
+                    return None
+
+            def to_int(key, default=1):
+                val = request.POST.get(key)
+                try:
+                    return int(val) if val else default
+                except (ValueError, TypeError):
+                    return default
+
+            audit = CorrectionAuditL1MT(
+                atlet         = atlet,
+                atlet_name    = atlet.nama_atlet if atlet else request.POST.get('atlet_name', ''),
+                kategori_usia = request.POST.get('kategori_usia', 'ELITE'),
+                gender        = request.POST.get('gender', 'Putra'),
+                kelas_berat   = to_float('kelas_berat'),
+
+                hip_rotasi_internal_kanan  = to_float('hip_rotasi_internal_kanan'),
+                hip_rotasi_internal_kiri   = to_float('hip_rotasi_internal_kiri'),
+                hip_rotasi_eksternal_kanan = to_float('hip_rotasi_eksternal_kanan'),
+                hip_rotasi_eksternal_kiri  = to_float('hip_rotasi_eksternal_kiri'),
+                skor_neural_hip_rotasi     = to_int('skor_neural_hip_rotasi'),
+
+                balance_durasi_mata_terbuka  = to_float('balance_durasi_mata_terbuka'),
+                balance_durasi_mata_tertutup = to_float('balance_durasi_mata_tertutup'),
+                skor_neural_balance          = to_int('skor_neural_balance'),
+
+                ankle_dorsifleksi_kanan_cm = to_float('ankle_dorsifleksi_kanan_cm'),
+                ankle_dorsifleksi_kiri_cm  = to_float('ankle_dorsifleksi_kiri_cm'),
+                skor_neural_ankle          = to_int('skor_neural_ankle'),
+
+                thoracic_rotasi_kanan = to_float('thoracic_rotasi_kanan'),
+                thoracic_rotasi_kiri  = to_float('thoracic_rotasi_kiri'),
+                skor_neural_thoracic  = to_int('skor_neural_thoracic'),
+
+                shoulder_fleksi_kanan = to_float('shoulder_fleksi_kanan'),
+                shoulder_fleksi_kiri  = to_float('shoulder_fleksi_kiri'),
+                skor_neural_shoulder  = to_int('skor_neural_shoulder'),
+
+                hip_hinge_pass        = request.POST.get('hip_hinge_pass') == 'true',
+                skor_neural_hip_hinge = to_int('skor_neural_hip_hinge'),
+
+                core_hold_durasi_detik = to_float('core_hold_durasi_detik'),
+                skor_neural_core       = to_int('skor_neural_core'),
+
+                recovery_waktu_detik = to_float('recovery_waktu_detik'),
+                skor_neural_recovery = to_int('skor_neural_recovery'),
+
+                ai_confidence_score = to_float('ai_confidence_score'),
             )
             audit.save()
 
@@ -138,7 +179,7 @@ class L1CorrectionMTView(LoginRequiredMixin, View):
 
 
 def hapus_l1_mt(request, pk):
-    audit = get_object_or_404(CorrectionAuditL1, pk=pk)
+    audit = get_object_or_404(CorrectionAuditL1MT, pk=pk)
     nama  = audit.atlet_name
     audit.delete()
     messages.success(request, f'Data L1 {nama} berhasil dihapus.')
@@ -146,7 +187,7 @@ def hapus_l1_mt(request, pk):
 
 
 def detail_l1_mt(request, pk):
-    audit = get_object_or_404(CorrectionAuditL1, pk=pk)
+    audit = get_object_or_404(CorrectionAuditL1MT, pk=pk)
     return JsonResponse({
         'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
         'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
@@ -165,11 +206,13 @@ class L2StrengthMTView(LoginRequiredMixin, View):
     template_name = 'muaythai/l2_strength.html'
 
     def get(self, request):
-        atlet_qs   = get_atlet_muaythai(request.user)
-        history    = StrengthAuditL2.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
-        atlet_list = atlet_qs.order_by('nama_atlet')
+        atlet_qs      = get_atlet_muaythai(request.user)
+        atlet_id      = request.GET.get('atlet_id')
+        selected_atlet = atlet_qs.filter(pk=atlet_id).first() if atlet_id else None
+        history       = StrengthAuditL2.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
         return render(request, self.template_name, {
-            'history': history, 'atlet_list': atlet_list,
+            'history':        history,
+            'selected_atlet': selected_atlet,
         })
 
     def post(self, request):
@@ -247,11 +290,13 @@ class L3PowerMTView(LoginRequiredMixin, View):
     template_name = 'muaythai/l3_power.html'
 
     def get(self, request):
-        atlet_qs   = get_atlet_muaythai(request.user)
-        history    = PowerAuditL3.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
-        atlet_list = atlet_qs.order_by('nama_atlet')
+        atlet_qs      = get_atlet_muaythai(request.user)
+        atlet_id      = request.GET.get('atlet_id')
+        selected_atlet = atlet_qs.filter(pk=atlet_id).first() if atlet_id else None
+        history       = PowerAuditL3.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
         return render(request, self.template_name, {
-            'history': history, 'atlet_list': atlet_list,
+            'history':        history,
+            'selected_atlet': selected_atlet,
         })
 
     def post(self, request):
@@ -324,11 +369,13 @@ class L4SpeedAgilityMTView(LoginRequiredMixin, View):
     template_name = 'muaythai/l4_speed_agility.html'
 
     def get(self, request):
-        atlet_qs   = get_atlet_muaythai(request.user)
-        history    = SpeedAgilityAuditL4.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
-        atlet_list = atlet_qs.order_by('nama_atlet')
+        atlet_qs      = get_atlet_muaythai(request.user)
+        atlet_id      = request.GET.get('atlet_id')
+        selected_atlet = atlet_qs.filter(pk=atlet_id).first() if atlet_id else None
+        history       = SpeedAgilityAuditL4.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
         return render(request, self.template_name, {
-            'history': history, 'atlet_list': atlet_list,
+            'history':        history,
+            'selected_atlet': selected_atlet,
         })
 
     def post(self, request):
@@ -415,7 +462,7 @@ class ReportCardMTView(LoginRequiredMixin, View):
         from django.utils import timezone
         atlet = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai')
 
-        l1 = CorrectionAuditL1.objects.filter(atlet=atlet).order_by('-timestamp').first()
+        l1 = CorrectionAuditL1MT.objects.filter(atlet=atlet).order_by('-timestamp').first()
         l2 = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first()
         l3 = PowerAuditL3.objects.filter(atlet=atlet).order_by('-timestamp').first()
         l4 = SpeedAgilityAuditL4.objects.filter(atlet=atlet).order_by('-timestamp').first()

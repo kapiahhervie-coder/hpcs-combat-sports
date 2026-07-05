@@ -78,6 +78,10 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .fc::placeholder { color: var(--text3); }
 select.fc { cursor: pointer; }
 textarea.fc { resize: vertical; min-height: 60px; }
+.fc-auto { background: rgba(6,182,212,0.06); border-color: rgba(6,182,212,0.25); color: var(--cyan); font-weight:600; cursor:not-allowed; }
+.fc-auto:focus { box-shadow:none; border-color: rgba(6,182,212,0.25); }
+.fl-auto { display:flex; align-items:center; gap:6px; }
+.auto-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--text3); background:var(--bg3); border:1px solid var(--border); padding:1px 6px; border-radius:10px; }
 .r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .r3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
@@ -223,7 +227,7 @@ tbody tr:last-child td { border-bottom: none; }
       <p class="page-sub">Hexagon Jump · 10-Second Punch Frequency · Yo-Yo IR Test Level 1 · Coach Fanny</p>
     </div>
     <div class="hdr-actions">
-      <a href="{% url 'combat:dashboard' %}" class="btn btn-ghost no-print">
+      <a href="{% url 'boxing:dashboard' %}" class="btn btn-ghost no-print">
         <i class="bi bi-house-fill"></i> Dashboard
       </a>
       <button class="btn btn-outline-cyan no-print" onclick="toggleRubrik()">
@@ -273,7 +277,7 @@ tbody tr:last-child td { border-bottom: none; }
   </div>
 
   <!-- Form -->
-  <form action="{% url 'combat:l4_speed_agility' %}" method="POST" id="mainForm">
+  <form action="{% url 'boxing:l4_speed_agility' %}" method="POST" id="mainForm">
     {% csrf_token %}
     <div class="main-grid">
 
@@ -365,8 +369,8 @@ tbody tr:last-child td { border-bottom: none; }
               Rata-rata: <span class="info-val" id="hex_avg">—</span> detik
             </div>
             <div class="fg" style="margin-top:8px;">
-              <label class="fl">Skor Hex Jump (0–10)</label>
-              <input type="number" name="score_hex" id="score_hex" class="fc" step="0.1" min="0" max="10" oninput="liveUpdate()" placeholder="auto">
+              <label class="fl fl-auto">Skor Hex Jump (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="number" name="score_hex" id="score_hex" class="fc fc-auto" step="0.1" min="0" max="10" readonly tabindex="-1" placeholder="Isi waktu putaran di atas">
             </div>
           </div>
         </div>
@@ -398,8 +402,8 @@ tbody tr:last-child td { border-bottom: none; }
               <input type="hidden" name="punch_postur_ok" id="punch_postur_ok" value="true">
             </div>
             <div class="fg">
-              <label class="fl">Skor Punch (0–10)</label>
-              <input type="number" name="score_punch" id="score_punch" class="fc" step="0.1" min="0" max="10" oninput="liveUpdate()" placeholder="auto">
+              <label class="fl fl-auto">Skor Punch (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="number" name="score_punch" id="score_punch" class="fc fc-auto" step="0.1" min="0" max="10" readonly tabindex="-1" placeholder="Isi jumlah pukulan di atas">
             </div>
           </div>
         </div>
@@ -430,8 +434,8 @@ tbody tr:last-child td { border-bottom: none; }
               Estimasi VO2 Max: <span class="vo2-val" id="vo2_val">—</span> mL/kg/min
             </div>
             <div class="fg" style="margin-top:8px;">
-              <label class="fl">Skor Yo-Yo (0–10)</label>
-              <input type="number" name="score_yoyo" id="score_yoyo" class="fc" step="0.1" min="0" max="10" oninput="liveUpdate()" placeholder="auto">
+              <label class="fl fl-auto">Skor Yo-Yo (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="number" name="score_yoyo" id="score_yoyo" class="fc fc-auto" step="0.1" min="0" max="10" readonly tabindex="-1" placeholder="Isi level & shuttle di atas">
             </div>
           </div>
         </div>
@@ -580,7 +584,7 @@ tbody tr:last-child td { border-bottom: none; }
               {% endif %}
             </td>
             <td>
-              <a href="{% url 'combat:hapus_l4_audit' item.pk %}"
+              <a href="{% url 'boxing:hapus_l4_audit' item.pk %}"
                  class="btn-del-sm"
                  onclick="return confirm('Hapus data {{ item.atlet_name }}?')">
                 <i class="bi bi-trash"></i>
@@ -876,4 +880,4 @@ function toggleRubrik() {
   document.getElementById('rubrikPanel').classList.toggle('open');
 }
 </script>
-{% endblock %}
+{% endblock %}s

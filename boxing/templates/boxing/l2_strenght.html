@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% block content %}
 <!DOCTYPE html>
@@ -12,11 +12,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-    /* ═══════════════════════════════════════════════════════════════════
+    /* -------------------------------------------------------------------
        HPCS L2 — TEMA: Dark Forge (Amber-Iron) — Strength Identity
        Filosofi: Baja panas + kekuatan berat — bukan wellness spa
        Warna utama: Deep Navy + Amber/Forge Orange + Steel White
-    ════════════════════════════════════════════════════════════════════ */
+    -------------------------------------------------------------------- */
     :root {
         --bg:        #0b0f14;
         --bg2:       #13181f;
@@ -24,12 +24,12 @@
         --border:    #252d3a;
         --border2:   #38465a;
 
-        /* ── PERUBAHAN UTAMA: Amber/Orange untuk karakter STRENGTH ── */
+        /* -- PERUBAHAN UTAMA: Amber/Orange untuk karakter STRENGTH -- */
         --accent:    #00e5b0;      /* amber — energi, kekuatan, api */
         --accent2:   #fb923c;      /* orange — power eksplosif */
         --accent-dim:#00a882;      /* amber gelap untuk border subtle */
 
-        /* ── Warna sekunder tetap untuk variasi komponen ── */
+        /* -- Warna sekunder tetap untuk variasi komponen -- */
         --teal:      #2dd4bf;      /* hanya untuk neuroscience/ISO info */
         --sky:       #38bdf8;      /* info boxes */
 
@@ -56,14 +56,14 @@
         min-height: 100vh;
     }
 
-    /* ── Container utama — beri padding bawah agar sticky tidak overlap ── */
+    /* -- Container utama — beri padding bawah agar sticky tidak overlap -- */
     .l2-container {
         padding-bottom: 4rem;
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        TYPOGRAPHY — Lebih Elegan, Title Case bukan ALL CAPS
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .header-title {
         font-family: 'Barlow Condensed', sans-serif;
         font-weight: 900;
@@ -95,9 +95,9 @@
         gap: 6px;
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        CARDS
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .card-hpcs {
         background: var(--bg2);
         border: 1px solid var(--border);
@@ -119,9 +119,9 @@
         border-color: rgba(0,229,176, 0.3);
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        STICKY PANELS — Solusi dead space saat scroll
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .sticky-panel {
         position: sticky;
         top: 80px;          /* sesuaikan dengan tinggi topbar */
@@ -135,9 +135,9 @@
     .sticky-panel::-webkit-scrollbar { width: 4px; }
     .sticky-panel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        FORM CONTROLS
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .form-control, .form-select {
         background: var(--bg3);
         border: 1px solid var(--border);
@@ -162,9 +162,9 @@
         font-size: 0.8rem;
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        PILAR CARDS — Exercise Input
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .pilar-card {
         background: var(--bg3);
         border: 1px solid var(--border);
@@ -197,9 +197,9 @@
     .icon-core  { color: var(--success); }
     .icon-iso   { color: var(--teal); }   /* teal hanya untuk neuroscience */
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        SCORE DISPLAY — Lebih impactful dengan ring
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .total-score {
         font-family: 'Barlow Condensed', sans-serif;
         font-size: 5.5rem;
@@ -246,9 +246,9 @@
         margin-top: 8px;
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        SCORE PILLS — Amber
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .score-pill {
         background: rgba(0,229,176,0.1);
         border: 1px solid rgba(0,229,176,0.2);
@@ -268,9 +268,9 @@
         color: var(--teal);
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        RUBRIK PANEL
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .rubrik-wrap {
         background: var(--bg2);
         border: 1px solid var(--border);
@@ -311,9 +311,9 @@
     .val-blue   { background: rgba(96,165,250,0.1); border-left-color: var(--info);    color: var(--info); }
     .val-yellow { background: rgba(0,229,176,0.1); border-left-color: var(--accent);  color: var(--accent); }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        NEUROSCIENCE BOX — tetap teal (beda domain)
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .neuro-box {
         background: rgba(45,212,191,0.06);
         border: 1px solid rgba(45,212,191,0.2);
@@ -328,9 +328,9 @@
     .pilar-card.iso-card { border-color: rgba(45,212,191,0.2); }
     .pilar-card.iso-card:hover { border-color: rgba(45,212,191,0.45); }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        BUTTONS
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .btn-hpcs-primary {
         background: linear-gradient(135deg, #00a882, var(--accent));
         color: #0b0f14;
@@ -395,9 +395,9 @@
     }
     .btn-camera:hover { background: rgba(0,229,176,0.18); color: var(--accent); }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        HISTORY TABLE
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .history-wrap {
         background: var(--bg2);
         border: 1px solid var(--border);
@@ -432,9 +432,9 @@
     .badge-dev    { background: rgba(251,191,36,0.1); color: #00e5b0; border: 1px solid rgba(251,191,36,0.35); }
     .badge-novice { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        REKOMENDASI PANEL
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     #rekomendasi_area {
         background: rgba(0,229,176,0.05);
         border: 1px solid rgba(0,229,176,0.12);
@@ -446,9 +446,9 @@
         margin-top: 12px;
     }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        CAMERA MODAL
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .camera-overlay {
         position: fixed; inset: 0;
         background: rgba(0,0,0,0.9);
@@ -488,9 +488,9 @@
     .stage-down { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid var(--red); }
     .stage-up   { background: rgba(0,229,176,0.12); color: var(--accent); border: 1px solid rgba(0,229,176,0.4); }
 
-    /* ══════════════════════════════════════════════════════
+    /* ------------------------------------------------------
        PRINT STYLES
-    ══════════════════════════════════════════════════════ */
+    ------------------------------------------------------ */
     .print-only { display: none; }
 
     @media print {
@@ -535,7 +535,7 @@
         </div>
         
 
-    <!-- ── HEADER — Title Case, Lebih Elegan ──────────────────────── -->
+    <!-- -- HEADER — Title Case, Lebih Elegan ------------------------ -->
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
         <div>
             <!-- UBAH: Title Case, bukan ALL CAPS -->
@@ -558,9 +558,9 @@
                                 <span class="aspek-name">Lower Strength</span>
                                 <span class="aspek-sub">5RM Goblet Squat</span>
                                 <a href="https://www.youtube.com/watch?v=k_EhLGvM8TQ" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">⚡ 5RM = Strength Murni. 1 Menit = Endurance (tidak dipakai di L2)</div>
+                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">? 5RM = Strength Murni. 1 Menit = Endurance (tidak dipakai di L2)</div>
                             </div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-green">≥ 1.5× BW</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-green">= 1.5× BW</div></div>
                             <div class="col-3 score-col text-center"><div class="val-box val-blue">1.0–1.49× BW</div></div>
                             <div class="col-3 score-col text-center"><div class="val-box val-yellow">0.6–0.99× BW</div></div>
                         </div>
@@ -599,7 +599,7 @@
                                 <span class="aspek-name">Isometric</span>
                                 <span class="aspek-sub">Split Squat Hold + Tremor</span>
                                 <a href="https://www.youtube.com/watch?v=sh3RO6QYvew" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">🧠 Catat detik tremor muncul → data CNS Fatigue</div>
+                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">?? Catat detik tremor muncul ? data CNS Fatigue</div>
                             </div>
                             <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 60 Detik</div></div>
                             <div class="col-3 score-col text-center"><div class="val-box val-blue">40–60 Detik</div></div>
@@ -619,12 +619,12 @@
         </div>
     </div>
 
-    <!-- ── MAIN FORM — 3 KOLOM ──────────────────────────────────────── -->
-    <form action="{% url 'combat:l2_strength' %}" method="POST" id="mainForm">
+    <!-- -- MAIN FORM — 3 KOLOM ---------------------------------------- -->
+    <form action="{% url 'boxing:l2_strength' %}" method="POST" id="mainForm">
         {% csrf_token %}
         <div class="row g-4 align-items-start">
 
-            <!-- ── KOLOM KIRI: Form Input (scroll bebas) ───────────── -->
+            <!-- -- KOLOM KIRI: Form Input (scroll bebas) ------------- -->
             <div class="col-lg-4">
                 <div class="card-hpcs">
                     <span class="section-label"><i class="bi bi-person-badge"></i>Identitas Atlet</span>
@@ -703,7 +703,7 @@
                                 <div class="input-group input-group-sm">
                                     <input type="text" id="bw_ratio_display" class="form-control"
                                            readonly placeholder="BW Ratio" style="color:var(--accent);">
-                                    <span class="input-group-text">×BW</span>
+                                    <span class="input-group-text">—BW</span>
                                 </div>
                             </div>
                         </div>
@@ -811,7 +811,7 @@
                 </div><!-- /card-hpcs -->
             </div><!-- /col-lg-4 kiri -->
 
-            <!-- ── KOLOM TENGAH: Radar ── -->
+            <!-- -- KOLOM TENGAH: Radar -- -->
             <div class="col-lg-4">
                 <div class="card-hpcs text-center">
                     <span class="section-label"><i class="bi bi-radar"></i>Strength Distribution Radar</span>
@@ -834,7 +834,7 @@
                 </div>
             </div>
 
-            <!-- ── KOLOM KANAN: Result ── -->
+            <!-- -- KOLOM KANAN: Result -- -->
             <div class="col-lg-4">
                 <div class="card-hpcs sticky-panel text-center">
                     <span class="section-label"><i class="bi bi-trophy-fill"></i>Audit Result</span>
@@ -865,7 +865,7 @@
         </div><!-- /row -->
     </form>
 
-    <!-- ── HISTORY TABLE ── -->
+    <!-- -- HISTORY TABLE -- -->
     <div class="history-wrap no-print mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="mb-0" style="color:#00e5b0;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
@@ -891,8 +891,8 @@
                         <td class="text-white-50">{{ forloop.counter }}</td>
                         <td class="text-white-50" style="font-size:0.75rem;white-space:nowrap;">{{ item.timestamp|date:"d/m/Y H:i" }}</td>
                         <td class="fw-bold" style="color:#e5e7eb;">{{ item.atlet_name }}</td>
-                        <td>{{ item.kategori_usia }}</td>
-                        <td>{{ item.gender }}</td>
+                        <td style="color:#9ca3af;">{{ item.kategori_usia }}</td>
+                        <td style="color:#9ca3af;">{{ item.gender }}</td>
                         <td><span style="color:{% if item.kelas_berat %}#9ca3af{% else %}#4b5563{% endif %}">{{ item.kelas_berat|default:"—" }} kg</span></td>
                         <td><span class="score-pill">{{ item.score_lower }}</span></td>
                         <td><span class="score-pill">{{ item.score_push }}</span></td>
@@ -908,7 +908,7 @@
                         <td><span style="font-size:0.75rem;padding:3px 10px;font-weight:700;border-radius:12px;background:rgba(0,229,176,0.15);color:#00e5b0;border:1px solid rgba(0,229,176,0.3);">{{ item.predikat }}</span></td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-danger py-0 px-2"
-                                    onclick="if(confirm('Hapus data {{ item.atlet_name }}?')) window.location='/combat/l2-strength/hapus/{{ item.pk }}/'">
+                                    onclick="if(confirm('Hapus data {{ item.atlet_name }}?')) window.location='{% url 'boxing:hapus_l2_audit' item.pk %}'">
                                 <i class="bi bi-trash3-fill"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="window.print()" title="Cetak PDF"><i class="bi bi-printer-fill"></i></button>
@@ -928,7 +928,7 @@
 </div><!-- /container -->
 
 <script>
-// ── Auto Scoring ──────────────────────────────────────────
+// -- Auto Scoring ------------------------------------------
 function calcScoreLower(beban, bb) {
     if (!beban || !bb || bb <= 0) return 0;
     var r = beban / bb;

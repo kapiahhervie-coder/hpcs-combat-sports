@@ -1,6 +1,22 @@
-﻿db.sqlite3
+db.sqlite3
 __pycache__/
 *.pyc
 .env
 media/
 *.log
+
+# Backup files dari proses debugging manual
+*.backup-*
+*_OLD.*
+*_BACKUP_*.py
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

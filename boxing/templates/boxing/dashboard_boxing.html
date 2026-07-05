@@ -307,7 +307,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 1</h5>
                     <p class="text-secondary small mb-0">Correction, Mobility, Stability &amp; Anatomi Sendi.</p>
                 </div>
-                <a href="{% url 'combat:l1_correction' %}?atlet_id={{ atlet.id }}"
+                <a href="{% url 'boxing:l1_correction' %}?atlet_id={{ atlet.id }}"
                    class="btn btn-action-audit w-100 mt-3 py-2">
                    Audit Level 1 — Correction
                 </a>
@@ -325,7 +325,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 2</h5>
                     <p class="text-secondary small mb-0">Maximum Strength &amp; Pengkondisian Dinding Core.</p>
                 </div>
-                <a href="{% url 'combat:l2_strength' %}"
+                <a href="{% url 'boxing:l2_strength' %}"
                    class="btn btn-action-audit w-100 mt-3 py-2">Audit Level 2</a>
             </div>
         </div>
@@ -341,7 +341,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 3</h5>
                     <p class="text-secondary small mb-0">Power &amp; RFD (Kecepatan Transfer Energi Pukulan).</p>
                 </div>
-                <a href="{% url 'combat:l3_power' %}"
+                <a href="{% url 'boxing:l3_power' %}"
                    class="btn btn-action-audit w-100 mt-3 py-2">Audit Level 3</a>
             </div>
         </div>
@@ -357,7 +357,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 4</h5>
                     <p class="text-secondary small mb-0">Reactive Speed, Agility, &amp; Metabolic Yo-Yo Test.</p>
                 </div>
-                <a href="{% url 'combat:l4_speed_agility' %}"
+                <a href="{% url 'boxing:l4_speed_agility' %}"
                    class="btn btn-action-audit w-100 mt-3 py-2"
                    >Audit Level 4</a>
             </div>
@@ -371,7 +371,7 @@
 // Ganti atlet: reload halaman dengan atlet_id baru
 function gantiAtlet(atletId) {
     if (!atletId) return;
-    window.location.href = '{% url "combat:dashboard_boxing" %}?atlet_id=' + atletId;
+    window.location.href = '{% url "boxing:dashboard" %}?atlet_id=' + atletId;
 }
 
 // Chart progression dengan gradient fill + placeholder
