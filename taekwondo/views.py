@@ -1,0 +1,498 @@
+"""
+HPCS — Taekwondo Views
+Terpisah penuh dari Boxing/Muay Thai. Model L2-L4 shared, L1 & halaman
+terpisah (custom neural mobility scheme untuk Taekwondo).
+"""
+
+import json
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+from django.http import JsonResponse
+from django.contrib import messages
+
+from combat.models import (
+    Atlet,
+    StrengthAuditL2,
+    PowerAuditL3,
+    SpeedAgilityAuditL4,
+)
+from taekwondo.models import CorrectionAuditL1TKD
+
+
+def get_atlet_taekwondo(user):
+    qs = Atlet.objects.filter(cabang='tkd')
+    if user.is_superuser or user.is_staff:
+        return qs
+    return qs.filter(pelatih=user)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# DASHBOARD
+# ══════════════════════════════════════════════════════════════════════
+
+class DashboardTaekwondoView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/dashboard_taekwondo.html'
+
+    def get(self, request):
+        atlet_id     = request.GET.get('atlet_id')
+        daftar_atlet = get_atlet_taekwondo(request.user).order_by('nama_atlet')
+        atlet = daftar_atlet.filter(id=atlet_id).first() if atlet_id else daftar_atlet.first()
+
+        score_labels, score_data = [], []
+        if atlet:
+            riwayat = CorrectionAuditL1TKD.objects.filter(atlet=atlet).order_by('timestamp')[:8]
+            for r in riwayat:
+                score_labels.append(r.timestamp.strftime('%d/%m'))
+                score_data.append(float(r.total_skor))
+
+        if not score_data:
+            score_labels = ['-']
+            score_data   = [0]
+
+        l1_last = CorrectionAuditL1TKD.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
+        l2_last = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
+        l3_last = PowerAuditL3.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
+        l4_last = SpeedAgilityAuditL4.objects.filter(atlet=atlet).order_by('-timestamp').first() if atlet else None
+
+        scores_ada    = [s for s in [
+            l1_last.total_skor if l1_last else 0,
+            l2_last.total_skor if l2_last else 0,
+            l3_last.total_skor if l3_last else 0,
+            l4_last.total_skor if l4_last else 0,
+        ] if s > 0]
+        training_load = round((sum(scores_ada) / len(scores_ada)) * 10, 1) if scores_ada else 0
+
+        context = {
+            'atlet':         atlet,
+            'daftar_atlet':  daftar_atlet,
+            'total_atlet':   daftar_atlet.count(),
+            'score_labels':  json.dumps(score_labels),
+            'score_data':    json.dumps(score_data),
+            'training_load': training_load,
+            'l1': l1_last, 'l2': l2_last, 'l3': l3_last, 'l4': l4_last,
+        }
+        return render(request, self.template_name, context)
+
+
+# ══════════════════════════════════════════════════════════════════════
+# DAFTAR ATLET
+# ══════════════════════════════════════════════════════════════════════
+
+class DaftarAtletTaekwondoView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/daftar_atlet.html'
+
+    def get(self, request):
+        daftar_atlet = get_atlet_taekwondo(request.user).order_by('nama_atlet')
+        return render(request, self.template_name, {
+            'daftar_atlet': daftar_atlet,
+            'total_atlet':  daftar_atlet.count(),
+        })
+
+
+# ══════════════════════════════════════════════════════════════════════
+# L1 — CORRECTION (Taekwondo)
+# ══════════════════════════════════════════════════════════════════════
+
+class L1CorrectionTKDView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/l1_correction.html'
+
+    def get(self, request):
+        atlet_qs   = get_atlet_taekwondo(request.user)
+        history    = CorrectionAuditL1TKD.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
+        atlet_list = atlet_qs.order_by('nama_atlet')
+        return render(request, self.template_name, {
+            'history':    history,
+            'atlet_list': atlet_list,
+        })
+
+    def post(self, request):
+        try:
+            atlet_id = request.POST.get('atlet_id')
+            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='tkd') if atlet_id else None
+
+            def to_float(key):
+                val = request.POST.get(key)
+                try:
+                    return float(val) if val else None
+                except (ValueError, TypeError):
+                    return None
+
+            def to_int(key, default=1):
+                val = request.POST.get(key)
+                try:
+                    return int(val) if val else default
+                except (ValueError, TypeError):
+                    return default
+
+            audit = CorrectionAuditL1TKD(
+                atlet         = atlet,
+                atlet_name    = atlet.nama_atlet if atlet else request.POST.get('atlet_name', ''),
+                kategori_usia = request.POST.get('kategori_usia', 'ELITE'),
+                gender        = request.POST.get('gender', 'Putra'),
+                kelas_berat   = to_float('kelas_berat'),
+
+                hip_rotasi_internal_kanan  = to_float('hip_rotasi_internal_kanan'),
+                hip_rotasi_internal_kiri   = to_float('hip_rotasi_internal_kiri'),
+                hip_rotasi_eksternal_kanan = to_float('hip_rotasi_eksternal_kanan'),
+                hip_rotasi_eksternal_kiri  = to_float('hip_rotasi_eksternal_kiri'),
+                skor_neural_hip_rotasi     = to_int('skor_neural_hip_rotasi'),
+
+                balance_durasi_mata_terbuka  = to_float('balance_durasi_mata_terbuka'),
+                balance_durasi_mata_tertutup = to_float('balance_durasi_mata_tertutup'),
+                skor_neural_balance          = to_int('skor_neural_balance'),
+
+                ankle_dorsifleksi_kanan_cm = to_float('ankle_dorsifleksi_kanan_cm'),
+                ankle_dorsifleksi_kiri_cm  = to_float('ankle_dorsifleksi_kiri_cm'),
+                skor_neural_ankle          = to_int('skor_neural_ankle'),
+
+                thoracic_rotasi_kanan = to_float('thoracic_rotasi_kanan'),
+                thoracic_rotasi_kiri  = to_float('thoracic_rotasi_kiri'),
+                skor_neural_thoracic  = to_int('skor_neural_thoracic'),
+
+                asl_raise_kanan_derajat = to_float('asl_raise_kanan_derajat'),
+                asl_raise_kiri_derajat  = to_float('asl_raise_kiri_derajat'),
+                skor_neural_hamstring   = to_int('skor_neural_hamstring'),
+
+                hip_hinge_pass        = request.POST.get('hip_hinge_pass') == 'true',
+                skor_neural_hip_hinge = to_int('skor_neural_hip_hinge'),
+
+                core_hold_durasi_detik = to_float('core_hold_durasi_detik'),
+                skor_neural_core       = to_int('skor_neural_core'),
+
+                recovery_waktu_detik = to_float('recovery_waktu_detik'),
+                skor_neural_recovery = to_int('skor_neural_recovery'),
+
+                ai_confidence_score = to_float('ai_confidence_score'),
+            )
+            audit.save()
+
+            if audit.layak_naik:
+                messages.success(request, f'✅ {audit.atlet_name} — Skor {audit.total_skor} ({audit.predikat}). LAYAK naik ke L2!')
+            else:
+                messages.warning(request, f'⚠️ {audit.atlet_name} — Skor {audit.total_skor} ({audit.predikat}). Belum layak ke L2.')
+
+        except Exception as e:
+            messages.error(request, f'Error menyimpan data: {e}')
+
+        return redirect('taekwondo:l1_correction')
+
+
+def hapus_l1_tkd(request, pk):
+    audit = get_object_or_404(CorrectionAuditL1TKD, pk=pk)
+    nama  = audit.atlet_name
+    audit.delete()
+    messages.success(request, f'Data L1 {nama} berhasil dihapus.')
+    return redirect('taekwondo:l1_correction')
+
+
+def detail_l1_tkd(request, pk):
+    audit = get_object_or_404(CorrectionAuditL1TKD, pk=pk)
+    return JsonResponse({
+        'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
+        'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
+        'skor_neural_hip_rotasi': audit.skor_neural_hip_rotasi,
+        'skor_neural_balance': audit.skor_neural_balance,
+        'skor_neural_ankle': audit.skor_neural_ankle,
+        'skor_neural_thoracic': audit.skor_neural_thoracic,
+        'skor_neural_hamstring': audit.skor_neural_hamstring,
+        'skor_neural_hip_hinge': audit.skor_neural_hip_hinge,
+        'skor_neural_core': audit.skor_neural_core,
+        'skor_neural_recovery': audit.skor_neural_recovery,
+        'total_skor': audit.total_skor, 'predikat': audit.predikat,
+        'layak_naik': audit.layak_naik, 'item_terlemah': audit.item_terlemah,
+        'rekomendasi': audit.rekomendasi_auto,
+    })
+
+
+# ══════════════════════════════════════════════════════════════════════
+# L2 — STRENGTH (Taekwondo)
+# ══════════════════════════════════════════════════════════════════════
+
+class L2StrengthTKDView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/l2_strength.html'
+
+    def get(self, request):
+        atlet_qs      = get_atlet_taekwondo(request.user)
+        atlet_id      = request.GET.get('atlet_id')
+        selected_atlet = atlet_qs.filter(pk=atlet_id).first() if atlet_id else None
+        history       = StrengthAuditL2.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
+        return render(request, self.template_name, {
+            'history':        history,
+            'selected_atlet': selected_atlet,
+            'atlet_list':     atlet_qs.order_by('nama_atlet'),
+        })
+
+    def post(self, request):
+        try:
+            atlet_id = request.POST.get('atlet_id')
+            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='tkd') if atlet_id else None
+
+            def to_float(key):
+                val = request.POST.get(key)
+                return float(val) if val else None
+
+            def to_int(key):
+                val = request.POST.get(key)
+                return int(val) if val else None
+
+            audit = StrengthAuditL2(
+                atlet=atlet,
+                atlet_name=atlet.nama_atlet if atlet else request.POST.get('atlet_name', ''),
+                kategori_usia=request.POST.get('kategori_usia', 'Elite'),
+                gender=request.POST.get('gender', 'Putra'),
+                kelas_berat=to_float('kelas_berat'),
+                lower_5rm_beban=to_float('lower_5rm_beban'),
+                score_lower=float(request.POST.get('score_lower', 0)),
+                push_5rm_beban=to_float('push_5rm_beban'),
+                score_push=float(request.POST.get('score_push', 0)),
+                pull_reps=to_int('pull_reps'),
+                score_pull=float(request.POST.get('score_pull', 0)),
+                core_durasi_detik=to_int('core_durasi_detik'),
+                score_core=float(request.POST.get('score_core', 0)),
+                iso_durasi_detik=to_int('iso_durasi_detik'),
+                iso_tremor_onset_detik=to_int('iso_tremor_onset_detik'),
+                score_isometric=float(request.POST.get('score_isometric', 0)),
+                ai_confidence_score=to_float('ai_confidence_score'),
+            )
+            audit.save()
+
+            if audit.layak_naik:
+                messages.success(request, f'✅ {audit.atlet_name} — Skor {audit.total_skor} ({audit.predikat}). LAYAK naik ke L3!')
+            else:
+                messages.warning(request, f'⚠️ {audit.atlet_name} — Skor {audit.total_skor}. Belum layak ke L3.')
+
+        except Exception as e:
+            messages.error(request, f'Error menyimpan data: {e}')
+
+        return redirect('taekwondo:l2_strength')
+
+
+def hapus_l2_tkd(request, pk):
+    audit = get_object_or_404(StrengthAuditL2, pk=pk)
+    nama  = audit.atlet_name
+    audit.delete()
+    messages.success(request, f'Data L2 {nama} berhasil dihapus.')
+    return redirect('taekwondo:l2_strength')
+
+
+def detail_l2_tkd(request, pk):
+    audit = get_object_or_404(StrengthAuditL2, pk=pk)
+    return JsonResponse({
+        'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
+        'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
+        'score_lower': audit.score_lower, 'score_push': audit.score_push,
+        'score_pull': audit.score_pull, 'score_core': audit.score_core,
+        'score_isometric': audit.score_isometric, 'iso_tremor_rasio': audit.iso_tremor_rasio,
+        'total_skor': audit.total_skor, 'predikat': audit.predikat,
+        'layak_naik': audit.layak_naik, 'cns_status': audit.cns_status,
+        'rekomendasi': audit.rekomendasi_auto,
+    })
+
+
+# ══════════════════════════════════════════════════════════════════════
+# L3 — POWER (Taekwondo)
+# ══════════════════════════════════════════════════════════════════════
+
+class L3PowerTKDView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/l3_power.html'
+
+    def get(self, request):
+        atlet_qs      = get_atlet_taekwondo(request.user)
+        atlet_id      = request.GET.get('atlet_id')
+        selected_atlet = atlet_qs.filter(pk=atlet_id).first() if atlet_id else None
+        history       = PowerAuditL3.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
+        return render(request, self.template_name, {
+            'history':        history,
+            'selected_atlet': selected_atlet,
+            'atlet_list':     atlet_qs.order_by('nama_atlet'),
+        })
+
+    def post(self, request):
+        try:
+            atlet_id = request.POST.get('atlet_id')
+            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='tkd') if atlet_id else None
+
+            def to_float(key):
+                val = request.POST.get(key)
+                return float(val) if val else None
+
+            audit = PowerAuditL3(
+                atlet=atlet,
+                atlet_name=request.POST.get('atlet_name', ''),
+                kategori_usia=request.POST.get('kategori_usia', 'ELITE'),
+                gender=request.POST.get('gender', 'Putra'),
+                kelas_berat=to_float('kelas_berat'),
+                score_jump=float(request.POST.get('score_jump', 0)),
+                score_sprint=float(request.POST.get('score_sprint', 0)),
+                score_throw=float(request.POST.get('score_throw', 0)),
+                score_rsi=float(request.POST.get('score_rsi', 0)),
+                score_agility=float(request.POST.get('score_agility', 0)),
+                rsi_jump_height=to_float('rsi_jump_height'),
+                rsi_contact_time=to_float('rsi_contact_time'),
+                ai_confidence_score=to_float('ai_confidence_score'),
+                catatan=request.POST.get('catatan', ''),
+            )
+            audit.save()
+
+            if audit.layak_naik:
+                messages.success(request, f'🏆 {audit.atlet_name} — Skor {audit.total_skor}. LAYAK KOMPETISI!')
+            elif audit.layak_bertahan:
+                messages.info(request, f'ℹ️ {audit.atlet_name} — Layak bertahan di L3.')
+            else:
+                messages.warning(request, f'⚠️ {audit.atlet_name} — {audit.alasan_tidak_layak}')
+
+        except Exception as e:
+            messages.error(request, f'Error menyimpan data: {e}')
+
+        return redirect('taekwondo:l3_power')
+
+
+def hapus_l3_tkd(request, pk):
+    audit = get_object_or_404(PowerAuditL3, pk=pk)
+    nama  = audit.atlet_name
+    audit.delete()
+    messages.success(request, f'Data L3 {nama} berhasil dihapus.')
+    return redirect('taekwondo:l3_power')
+
+
+def detail_l3_tkd(request, pk):
+    audit = get_object_or_404(PowerAuditL3, pk=pk)
+    return JsonResponse({
+        'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
+        'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
+        'score_jump': audit.score_jump, 'score_sprint': audit.score_sprint,
+        'score_throw': audit.score_throw, 'score_rsi': audit.score_rsi,
+        'score_agility': audit.score_agility, 'rsi_value': audit.rsi_value,
+        'total_skor': audit.total_skor, 'predikat': audit.predikat,
+        'layak_naik': audit.layak_naik, 'layak_bertahan': audit.layak_bertahan,
+        'rekomendasi': audit.rekomendasi_auto,
+    })
+
+
+# ══════════════════════════════════════════════════════════════════════
+# L4 — SPEED & AGILITY (Taekwondo)
+# ══════════════════════════════════════════════════════════════════════
+
+class L4SpeedAgilityTKDView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/l4_speed_agility.html'
+
+    def get(self, request):
+        atlet_qs      = get_atlet_taekwondo(request.user)
+        atlet_id      = request.GET.get('atlet_id')
+        selected_atlet = atlet_qs.filter(pk=atlet_id).first() if atlet_id else None
+        history       = SpeedAgilityAuditL4.objects.filter(atlet__in=atlet_qs).order_by('-timestamp')[:50]
+        return render(request, self.template_name, {
+            'history':        history,
+            'selected_atlet': selected_atlet,
+            'atlet_list':     atlet_qs.order_by('nama_atlet'),
+        })
+
+    def post(self, request):
+        try:
+            atlet_id = request.POST.get('atlet_id')
+            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='tkd') if atlet_id else None
+
+            def to_float(key):
+                val = request.POST.get(key)
+                try: return float(val) if val else None
+                except: return None
+
+            def to_int(key):
+                val = request.POST.get(key)
+                try: return int(val) if val else None
+                except: return None
+
+            audit = SpeedAgilityAuditL4(
+                atlet=atlet,
+                atlet_name=request.POST.get('atlet_name', ''),
+                kategori_usia=request.POST.get('kategori_usia', 'ELITE'),
+                gender=request.POST.get('gender', 'Putra'),
+                kelas_berat=to_float('kelas_berat'),
+                hex_waktu_putaran1=to_float('hex_waktu_putaran1'),
+                hex_waktu_putaran2=to_float('hex_waktu_putaran2'),
+                hex_waktu_putaran3=to_float('hex_waktu_putaran3'),
+                score_hex=to_float('score_hex') or 0,
+                punch_freq_10s=to_int('punch_freq_10s'),
+                punch_postur_ok=request.POST.get('punch_postur_ok') == 'true',
+                punch_reaction_time_ms=to_float('punch_reaction_time_ms'),
+                score_punch=to_float('score_punch') or 0,
+                yoyo_level_tercapai=to_int('yoyo_level_tercapai'),
+                yoyo_shuttle_tercapai=to_int('yoyo_shuttle_tercapai'),
+                yoyo_total_jarak_m=to_float('yoyo_total_jarak_m'),
+                score_yoyo=to_float('score_yoyo') or 0,
+                kondisi_uji=request.POST.get('kondisi_uji', 'FRESH'),
+                catatan=request.POST.get('catatan', ''),
+            )
+            audit.save()
+
+            if audit.layak_kompetisi:
+                messages.success(request, f'✅ {audit.atlet_name} — LAYAK KOMPETISI!')
+            elif audit.layak_bertahan:
+                messages.info(request, f'ℹ️ {audit.atlet_name} — Layak bertahan di L4.')
+            else:
+                messages.warning(request, f'⚠️ {audit.atlet_name} — {audit.alasan_tidak_layak}')
+
+        except Exception as e:
+            messages.error(request, f'Error menyimpan data: {e}')
+
+        return redirect('taekwondo:l4_speed_agility')
+
+
+def hapus_l4_tkd(request, pk):
+    audit = get_object_or_404(SpeedAgilityAuditL4, pk=pk)
+    nama  = audit.atlet_name
+    audit.delete()
+    messages.success(request, f'Data L4 {nama} berhasil dihapus.')
+    return redirect('taekwondo:l4_speed_agility')
+
+
+def detail_l4_tkd(request, pk):
+    audit = get_object_or_404(SpeedAgilityAuditL4, pk=pk)
+    return JsonResponse({
+        'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
+        'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
+        'hex_waktu_rata': audit.hex_waktu_rata, 'score_hex': audit.score_hex,
+        'punch_freq_10s': audit.punch_freq_10s, 'score_punch': audit.score_punch,
+        'yoyo_total_jarak_m': audit.yoyo_total_jarak_m,
+        'yoyo_vo2max': audit.yoyo_vo2max_estimasi,
+        'score_yoyo': audit.score_yoyo, 'total_skor': audit.total_skor,
+        'predikat': audit.predikat, 'rekomendasi': audit.rekomendasi_auto,
+    })
+
+
+# ══════════════════════════════════════════════════════════════════════
+# REPORT CARD (Taekwondo)
+# ══════════════════════════════════════════════════════════════════════
+
+class ReportCardTKDView(LoginRequiredMixin, View):
+    template_name = 'taekwondo/report_card.html'
+
+    def get(self, request, atlet_id):
+        from django.utils import timezone
+        atlet = get_object_or_404(Atlet, pk=atlet_id, cabang='tkd')
+
+        l1 = CorrectionAuditL1TKD.objects.filter(atlet=atlet).order_by('-timestamp').first()
+        l2 = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first()
+        l3 = PowerAuditL3.objects.filter(atlet=atlet).order_by('-timestamp').first()
+        l4 = SpeedAgilityAuditL4.objects.filter(atlet=atlet).order_by('-timestamp').first()
+
+        s1 = round(l1.total_skor * 10, 1) if l1 else 0
+        s2 = round(l2.total_skor * 10, 1) if l2 else 0
+        s3 = round(l3.total_skor * 10, 1) if l3 else 0
+        s4 = round(l4.total_skor * 10, 1) if l4 else 0
+        overall = round((s1+s2+s3+s4) / max(sum([1 for x in [s1,s2,s3,s4] if x > 0]), 1), 1)
+
+        context = {
+            'atlet': atlet, 'l1': l1, 'l2': l2, 'l3': l3, 'l4': l4,
+            'readiness': overall,
+            'radar_data_json': json.dumps([s1, s2, s3, s4, s2, overall]),
+            'trend_data_json': json.dumps({
+                'power':       [s3*0.6, s3*0.7, s3*0.8, s3*0.85, s3*0.9, s3],
+                'readiness':   [overall*0.6, overall*0.7, overall*0.75, overall*0.8, overall*0.9, overall],
+                'athleticism': [s4*0.5, s4*0.6, s4*0.7, s4*0.8, s4*0.9, s4],
+            }),
+            'months_labels_json': json.dumps(['JAN','FEB','MAR','APR','MAY','JUN']),
+            'tanggal_cetak': timezone.now(),
+        }
+        return render(request, self.template_name, context)

@@ -1,0 +1,1013 @@
+[
+{
+  "model": "auth.group",
+  "fields": {
+    "name": "sakala",
+    "permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$hGDP4nus8ULAI71lbROPgS$PW6g9+fdG8l1i84fQPWbTkFoAngA3Ps69qpBNIUTN8c=",
+    "last_login": "2026-07-06T13:24:17.334Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-25T07:36:20.797Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$6e7f3dcVjjoqtsuYidJiAv$05ryAj8W5aTVAq1SJhT2J1raHLTNWXkMSrUkCO+hDdg=",
+    "last_login": "2026-07-06T07:28:26.558Z",
+    "is_superuser": true,
+    "username": "fanny",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-25T21:54:07.526Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$p7MmcrukolDereYPH7WXub$/hTCRdeiAftOftx1rkRqZdXnGAo9wIl1NJcczB6njpI=",
+    "last_login": "2026-06-22T10:29:03.198Z",
+    "is_superuser": false,
+    "username": "coach_test",
+    "first_name": "Budi",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-19T23:23:57.479Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$D4x5I3Nurb7W2eUYaB989b$GzdwRwY9MD28JFG00NYDvlXx9OxF9Tq7UT2FUtoiTok=",
+    "last_login": "2026-06-28T23:15:10.839Z",
+    "is_superuser": false,
+    "username": "coach_boby",
+    "first_name": "Boby",
+    "last_name": "Kapiah",
+    "email": "boby88@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-22T22:14:23.621Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$FDtcBxSxId9bSpweSRBvCr$3uds7M39ttgT6KqWv8VoEvqMs+m9tWvT4gfMUh479Po=",
+    "last_login": "2026-06-25T11:07:13.793Z",
+    "is_superuser": false,
+    "username": "as coach",
+    "first_name": "frabgky",
+    "last_name": "kapiah",
+    "email": "sakalahpcs@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-25T10:49:05.039Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "combat.profilpelatih",
+  "pk": 1,
+  "fields": {
+    "user": [
+      "coach_test"
+    ],
+    "cabang": "boxing",
+    "no_hp": "",
+    "email": "",
+    "foto": "",
+    "status": "approved",
+    "dibuat_pada": "2026-06-19T23:23:58.755Z"
+  }
+},
+{
+  "model": "combat.profilpelatih",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "coach_boby"
+    ],
+    "cabang": "boxing",
+    "no_hp": "08444455",
+    "email": "boby88@gmail.com",
+    "foto": "",
+    "status": "approved",
+    "dibuat_pada": "2026-06-22T22:14:24.615Z"
+  }
+},
+{
+  "model": "combat.profilpelatih",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "as coach"
+    ],
+    "cabang": "boxing",
+    "no_hp": "",
+    "email": "sakalahpcs@gmail.com",
+    "foto": "foto_pelatih/ChatGPT_Image_19_Jun_2026_11.39.45.png",
+    "status": "approved",
+    "dibuat_pada": "2026-06-25T10:49:06.238Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 1,
+  "fields": {
+    "nama_atlet": "Sofiel",
+    "kategori_umur": "YOUTH",
+    "gender": "Putra",
+    "kelas_berat": 35.0,
+    "tanggal_lahir": "2018-12-21",
+    "tinggi_badan": null,
+    "cabang": "boxing",
+    "tahap_ltad": "",
+    "pelatih": null,
+    "dibuat_pada": "2026-05-25T21:00:22.812Z",
+    "diupdate_pada": "2026-05-25T21:00:22.812Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 2,
+  "fields": {
+    "nama_atlet": "Benaya",
+    "kategori_umur": "JUNIOR",
+    "gender": "Putra",
+    "kelas_berat": 45.0,
+    "tanggal_lahir": "2021-11-16",
+    "tinggi_badan": null,
+    "cabang": "boxing",
+    "tahap_ltad": "",
+    "pelatih": [
+      "coach_test"
+    ],
+    "dibuat_pada": "2026-05-26T04:01:23.393Z",
+    "diupdate_pada": "2026-06-19T23:23:58.884Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 3,
+  "fields": {
+    "nama_atlet": "Faith",
+    "kategori_umur": "YOUTH",
+    "gender": "Putri",
+    "kelas_berat": 37.0,
+    "tanggal_lahir": "2016-07-27",
+    "tinggi_badan": null,
+    "cabang": "boxing",
+    "tahap_ltad": "",
+    "pelatih": [
+      "coach_boby"
+    ],
+    "dibuat_pada": "2026-06-02T09:59:37.803Z",
+    "diupdate_pada": "2026-06-24T07:09:26.589Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 4,
+  "fields": {
+    "nama_atlet": "felix",
+    "kategori_umur": "JUNIOR",
+    "gender": "Putra",
+    "kelas_berat": 40.0,
+    "tanggal_lahir": "2016-12-20",
+    "tinggi_badan": 130.0,
+    "cabang": "boxing",
+    "tahap_ltad": "fundamental",
+    "pelatih": [
+      "coach_boby"
+    ],
+    "dibuat_pada": "2026-06-28T23:26:06.797Z",
+    "diupdate_pada": "2026-06-28T23:26:06.797Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 5,
+  "fields": {
+    "nama_atlet": "Test Atlet MT",
+    "kategori_umur": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": 67.0,
+    "tanggal_lahir": null,
+    "tinggi_badan": null,
+    "cabang": "muaythai",
+    "tahap_ltad": "",
+    "pelatih": [
+      "admin"
+    ],
+    "dibuat_pada": "2026-06-29T12:12:48.695Z",
+    "diupdate_pada": "2026-06-29T12:12:48.695Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 6,
+  "fields": {
+    "nama_atlet": "flora",
+    "kategori_umur": "SENIOR",
+    "gender": "Putra",
+    "kelas_berat": 45.0,
+    "tanggal_lahir": "2000-06-03",
+    "tinggi_badan": 155.0,
+    "cabang": "muaythai",
+    "tahap_ltad": "train_win",
+    "pelatih": [
+      "fanny"
+    ],
+    "dibuat_pada": "2026-06-30T20:17:25.454Z",
+    "diupdate_pada": "2026-06-30T20:17:25.454Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 7,
+  "fields": {
+    "nama_atlet": "pedo",
+    "kategori_umur": "SENIOR",
+    "gender": "Putra",
+    "kelas_berat": 40.0,
+    "tanggal_lahir": "2016-12-24",
+    "tinggi_badan": 153.0,
+    "cabang": "boxing",
+    "tahap_ltad": "train_win",
+    "pelatih": [
+      "coach_boby"
+    ],
+    "dibuat_pada": "2026-07-01T09:00:57.804Z",
+    "diupdate_pada": "2026-07-01T09:00:57.804Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 8,
+  "fields": {
+    "nama_atlet": "mart",
+    "kategori_umur": "YOUTH",
+    "gender": "Putra",
+    "kelas_berat": 37.0,
+    "tanggal_lahir": "2019-05-02",
+    "tinggi_badan": 153.0,
+    "cabang": "boxing",
+    "tahap_ltad": "fundamental",
+    "pelatih": [
+      "coach_boby"
+    ],
+    "dibuat_pada": "2026-07-01T09:07:28.243Z",
+    "diupdate_pada": "2026-07-01T09:07:28.243Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 9,
+  "fields": {
+    "nama_atlet": "sena",
+    "kategori_umur": "JUNIOR",
+    "gender": "Putri",
+    "kelas_berat": 26.0,
+    "tanggal_lahir": "2018-09-23",
+    "tinggi_badan": 130.0,
+    "cabang": "boxing",
+    "tahap_ltad": "fundamental",
+    "pelatih": [
+      "admin"
+    ],
+    "dibuat_pada": "2026-07-01T12:25:38.268Z",
+    "diupdate_pada": "2026-07-01T12:25:38.268Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 10,
+  "fields": {
+    "nama_atlet": "utu",
+    "kategori_umur": "YOUTH",
+    "gender": "Putra",
+    "kelas_berat": 51.0,
+    "tanggal_lahir": "2009-03-03",
+    "tinggi_badan": 170.0,
+    "cabang": "boxing",
+    "tahap_ltad": "train_train",
+    "pelatih": [
+      "coach_boby"
+    ],
+    "dibuat_pada": "2026-07-01T23:25:36.293Z",
+    "diupdate_pada": "2026-07-01T23:25:36.293Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 11,
+  "fields": {
+    "nama_atlet": "sul",
+    "kategori_umur": "SENIOR",
+    "gender": "Putra",
+    "kelas_berat": 57.0,
+    "tanggal_lahir": "2000-02-20",
+    "tinggi_badan": 170.0,
+    "cabang": "muaythai",
+    "tahap_ltad": "active_life",
+    "pelatih": [
+      "fanny"
+    ],
+    "dibuat_pada": "2026-07-08T03:45:18.061Z",
+    "diupdate_pada": "2026-07-08T03:45:18.061Z"
+  }
+},
+{
+  "model": "combat.atlet",
+  "pk": 12,
+  "fields": {
+    "nama_atlet": "sul",
+    "kategori_umur": "SENIOR",
+    "gender": "Putra",
+    "kelas_berat": 57.0,
+    "tanggal_lahir": "2000-02-20",
+    "tinggi_badan": 170.0,
+    "cabang": "muaythai",
+    "tahap_ltad": "active_life",
+    "pelatih": [
+      "fanny"
+    ],
+    "dibuat_pada": "2026-07-08T03:45:20.014Z",
+    "diupdate_pada": "2026-07-08T03:45:20.014Z"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 3,
+  "fields": {
+    "atlet": 2,
+    "atlet_name": "Benaya",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 7.0,
+    "score_extension": 7.0,
+    "score_stability": 7.0,
+    "score_posture": 7.0,
+    "score_breathing": 7.0,
+    "ai_confidence_score": null,
+    "total_skor": 7.0,
+    "predikat": "READY",
+    "layak_naik": true,
+    "alasan_tidak_layak": "",
+    "catatan": null,
+    "timestamp": "2026-06-11T09:37:36.506Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 4,
+  "fields": {
+    "atlet": 1,
+    "atlet_name": "Sofiel",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 5.0,
+    "score_extension": 5.0,
+    "score_stability": 5.0,
+    "score_posture": 5.0,
+    "score_breathing": 5.0,
+    "ai_confidence_score": null,
+    "total_skor": 5.0,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 5.0 < 7.0. Pilar terendah: Rotasi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-06-11T09:46:01.624Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 5,
+  "fields": {
+    "atlet": 3,
+    "atlet_name": "Faith",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 5.0,
+    "score_extension": 3.0,
+    "score_stability": 1.5,
+    "score_posture": 3.0,
+    "score_breathing": 3.0,
+    "ai_confidence_score": null,
+    "total_skor": 3.1,
+    "predikat": "NOVICE",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 3.1 < 7.0. Pilar terendah: Stabilitas. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-06-11T09:46:55.740Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 6,
+  "fields": {
+    "atlet": 3,
+    "atlet_name": "Faith",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 6.5,
+    "score_extension": 5.0,
+    "score_stability": 5.5,
+    "score_posture": 5.0,
+    "score_breathing": 6.0,
+    "ai_confidence_score": null,
+    "total_skor": 5.6,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 5.6 < 7.0. Pilar terendah: Ekstensi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-06-12T04:18:19.573Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 7,
+  "fields": {
+    "atlet": 2,
+    "atlet_name": "Benaya",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 5.0,
+    "score_extension": 5.0,
+    "score_stability": 5.0,
+    "score_posture": 5.0,
+    "score_breathing": 5.0,
+    "ai_confidence_score": null,
+    "total_skor": 5.0,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 5.0 < 7.0. Pilar terendah: Rotasi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-06-12T04:18:47.904Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 8,
+  "fields": {
+    "atlet": 1,
+    "atlet_name": "Sofiel",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 7.0,
+    "score_extension": 7.0,
+    "score_stability": 7.0,
+    "score_posture": 7.0,
+    "score_breathing": 7.0,
+    "ai_confidence_score": null,
+    "total_skor": 7.0,
+    "predikat": "READY",
+    "layak_naik": true,
+    "alasan_tidak_layak": "",
+    "catatan": null,
+    "timestamp": "2026-06-12T04:35:25.673Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 9,
+  "fields": {
+    "atlet": 3,
+    "atlet_name": "Faith",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 9.0,
+    "score_extension": 9.0,
+    "score_stability": 9.0,
+    "score_posture": 9.0,
+    "score_breathing": 9.0,
+    "ai_confidence_score": null,
+    "total_skor": 9.0,
+    "predikat": "ELITE",
+    "layak_naik": true,
+    "alasan_tidak_layak": "",
+    "catatan": null,
+    "timestamp": "2026-06-13T08:34:50.765Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 10,
+  "fields": {
+    "atlet": 3,
+    "atlet_name": "Faith",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 6.0,
+    "score_extension": 5.0,
+    "score_stability": 7.0,
+    "score_posture": 5.0,
+    "score_breathing": 5.0,
+    "ai_confidence_score": null,
+    "total_skor": 5.6,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 5.6 < 7.0. Pilar terendah: Ekstensi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-06-19T03:28:30.428Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 12,
+  "fields": {
+    "atlet": 6,
+    "atlet_name": "flora",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 6.0,
+    "score_extension": 6.0,
+    "score_stability": 6.0,
+    "score_posture": 6.0,
+    "score_breathing": 6.0,
+    "ai_confidence_score": null,
+    "total_skor": 6.0,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 6.0 < 7.0. Pilar terendah: Rotasi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-06-30T20:27:14.627Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 13,
+  "fields": {
+    "atlet": 6,
+    "atlet_name": "flora",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 3.0,
+    "score_extension": 3.0,
+    "score_stability": 3.0,
+    "score_posture": 3.0,
+    "score_breathing": 3.0,
+    "ai_confidence_score": null,
+    "total_skor": 3.0,
+    "predikat": "NOVICE",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 3.0 < 7.0. Pilar terendah: Rotasi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-07-01T01:17:19.735Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 14,
+  "fields": {
+    "atlet": 6,
+    "atlet_name": "flora",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 6.0,
+    "score_extension": 6.0,
+    "score_stability": 6.0,
+    "score_posture": 6.0,
+    "score_breathing": 6.0,
+    "ai_confidence_score": null,
+    "total_skor": 6.0,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 6.0 < 7.0. Pilar terendah: Rotasi. Wajib program korektif sebelum loading.",
+    "catatan": null,
+    "timestamp": "2026-07-01T01:18:27.691Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 15,
+  "fields": {
+    "atlet": 6,
+    "atlet_name": "flora",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 9.5,
+    "score_extension": 10.0,
+    "score_stability": 10.0,
+    "score_posture": 10.0,
+    "score_breathing": 10.0,
+    "ai_confidence_score": null,
+    "total_skor": 9.9,
+    "predikat": "ELITE",
+    "layak_naik": true,
+    "alasan_tidak_layak": "",
+    "catatan": null,
+    "timestamp": "2026-07-01T01:22:23.891Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.correctionauditl1",
+  "pk": 16,
+  "fields": {
+    "atlet": 6,
+    "atlet_name": "flora",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_rotation": 9.5,
+    "score_extension": 10.0,
+    "score_stability": 10.0,
+    "score_posture": 10.0,
+    "score_breathing": 10.0,
+    "ai_confidence_score": null,
+    "total_skor": 9.9,
+    "predikat": "ELITE",
+    "layak_naik": true,
+    "alasan_tidak_layak": "",
+    "catatan": null,
+    "timestamp": "2026-07-01T01:24:04.226Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.strengthauditl2",
+  "pk": 6,
+  "fields": {
+    "atlet": 3,
+    "atlet_name": "Faith",
+    "kategori_usia": "Elite",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "lower_5rm_beban": 55.0,
+    "lower_5rm_bw_ratio": null,
+    "score_lower": 8.5,
+    "push_5rm_beban": 8.0,
+    "score_push": 7.0,
+    "pull_reps": 8,
+    "score_pull": 7.0,
+    "core_durasi_detik": 8,
+    "score_core": 3.0,
+    "iso_durasi_detik": 8,
+    "iso_tremor_onset_detik": 8,
+    "iso_tremor_rasio": 100.0,
+    "score_isometric": 3.0,
+    "ai_rep_count_lower": null,
+    "ai_rep_count_push": null,
+    "ai_rep_count_pull": null,
+    "ai_confidence_score": null,
+    "total_skor": 5.7,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 5.7 < 7.0",
+    "catatan": null,
+    "timestamp": "2026-06-13T07:42:11.350Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.strengthauditl2",
+  "pk": 7,
+  "fields": {
+    "atlet": 1,
+    "atlet_name": "Sofiel",
+    "kategori_usia": "Elite",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "lower_5rm_beban": 54.5,
+    "lower_5rm_bw_ratio": null,
+    "score_lower": 9.5,
+    "push_5rm_beban": 8.0,
+    "score_push": 7.0,
+    "pull_reps": 8,
+    "score_pull": 7.0,
+    "core_durasi_detik": 8,
+    "score_core": 3.0,
+    "iso_durasi_detik": 8,
+    "iso_tremor_onset_detik": 8,
+    "iso_tremor_rasio": 100.0,
+    "score_isometric": 3.0,
+    "ai_rep_count_lower": null,
+    "ai_rep_count_push": null,
+    "ai_rep_count_pull": null,
+    "ai_confidence_score": null,
+    "total_skor": 5.9,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 5.9 < 7.0",
+    "catatan": null,
+    "timestamp": "2026-06-13T07:46:24.711Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.strengthauditl2",
+  "pk": 8,
+  "fields": {
+    "atlet": 9,
+    "atlet_name": "sena",
+    "kategori_usia": "Elite",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "lower_5rm_beban": 7.0,
+    "lower_5rm_bw_ratio": null,
+    "score_lower": 3.0,
+    "push_5rm_beban": 7.0,
+    "score_push": 7.0,
+    "pull_reps": 7,
+    "score_pull": 5.5,
+    "core_durasi_detik": 7,
+    "score_core": 3.0,
+    "iso_durasi_detik": 7,
+    "iso_tremor_onset_detik": 7,
+    "iso_tremor_rasio": 100.0,
+    "score_isometric": 3.0,
+    "ai_rep_count_lower": null,
+    "ai_rep_count_push": null,
+    "ai_rep_count_pull": null,
+    "ai_confidence_score": null,
+    "total_skor": 4.3,
+    "predikat": "NOVICE",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor 4.3 < 7.0",
+    "catatan": null,
+    "timestamp": "2026-07-03T07:28:08.251Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.powerauditl3",
+  "pk": 1,
+  "fields": {
+    "atlet": 2,
+    "atlet_name": "Benaya",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_jump": 8.0,
+    "score_sprint": 10.0,
+    "score_throw": 10.0,
+    "score_rsi": 10.0,
+    "score_agility": 10.0,
+    "rsi_jump_height": 40.0,
+    "rsi_contact_time": 200.0,
+    "rsi_value": 0.2,
+    "ai_rep_count": null,
+    "ai_confidence_score": null,
+    "total_skor": 9.6,
+    "predikat": "ELITE",
+    "layak_naik": true,
+    "layak_bertahan": true,
+    "alasan_tidak_layak": "",
+    "catatan": "",
+    "timestamp": "2026-06-06T09:22:56.336Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.powerauditl3",
+  "pk": 2,
+  "fields": {
+    "atlet": 2,
+    "atlet_name": "Benaya",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_jump": 9.0,
+    "score_sprint": 7.0,
+    "score_throw": 8.0,
+    "score_rsi": 10.0,
+    "score_agility": 7.0,
+    "rsi_jump_height": 30.0,
+    "rsi_contact_time": 239.0,
+    "rsi_value": 0.126,
+    "ai_rep_count": null,
+    "ai_confidence_score": null,
+    "total_skor": 8.2,
+    "predikat": "READY",
+    "layak_naik": false,
+    "layak_bertahan": true,
+    "alasan_tidak_layak": "Skor 8.2 < 9.0. Pilar terlemah: Sprint.",
+    "catatan": "",
+    "timestamp": "2026-06-13T18:31:56.322Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.powerauditl3",
+  "pk": 3,
+  "fields": {
+    "atlet": 9,
+    "atlet_name": "sena",
+    "kategori_usia": "ELITE",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "score_jump": 8.0,
+    "score_sprint": 7.0,
+    "score_throw": 6.0,
+    "score_rsi": 10.0,
+    "score_agility": 10.0,
+    "rsi_jump_height": 7.0,
+    "rsi_contact_time": 7.0,
+    "rsi_value": 1.0,
+    "ai_rep_count": null,
+    "ai_confidence_score": null,
+    "total_skor": 8.2,
+    "predikat": "READY",
+    "layak_naik": false,
+    "layak_bertahan": true,
+    "alasan_tidak_layak": "Skor 8.2 < 9.0. Pilar terlemah: Throw.",
+    "catatan": "",
+    "timestamp": "2026-07-03T07:39:22.830Z",
+    "created_by": "Coach Fanny"
+  }
+},
+{
+  "model": "combat.speedagilityauditl4",
+  "pk": 1,
+  "fields": {
+    "atlet": 2,
+    "atlet_name": "Benaya",
+    "kategori_usia": "YOUTH",
+    "gender": "Putra",
+    "kelas_berat": 45.0,
+    "hex_waktu_putaran1": 8.0,
+    "hex_waktu_putaran2": 8.0,
+    "hex_waktu_putaran3": 8.0,
+    "hex_waktu_rata": 8.0,
+    "score_hex": 10.0,
+    "punch_freq_10s": 90,
+    "punch_postur_ok": true,
+    "punch_reaction_time_ms": 100.0,
+    "score_punch": 10.0,
+    "yoyo_level_tercapai": null,
+    "yoyo_shuttle_tercapai": null,
+    "yoyo_total_jarak_m": null,
+    "yoyo_vo2max_estimasi": null,
+    "score_yoyo": 0.0,
+    "kondisi_uji": "FRESH",
+    "catatan": "",
+    "timestamp": "2026-06-01T06:25:37.819Z",
+    "total_skor": 6.7,
+    "predikat": "DEVELOPING",
+    "layak_kompetisi": false,
+    "layak_bertahan": false,
+    "rekomendasi_auto": "Dalam Pengembangan. Prioritaskan Yo-Yo Training dan Hexagon drill setiap sesi. Cek recovery antara sesi — CNS dan metabolisme harus pulih sebelum beban ditambah.",
+    "alasan_tidak_layak": ""
+  }
+},
+{
+  "model": "combat.speedagilityauditl4",
+  "pk": 4,
+  "fields": {
+    "atlet": 9,
+    "atlet_name": "sena",
+    "kategori_usia": "JUNIOR",
+    "gender": "Putri",
+    "kelas_berat": null,
+    "hex_waktu_putaran1": null,
+    "hex_waktu_putaran2": null,
+    "hex_waktu_putaran3": null,
+    "hex_waktu_rata": null,
+    "score_hex": 9.0,
+    "punch_freq_10s": 70,
+    "punch_postur_ok": true,
+    "punch_reaction_time_ms": 30.0,
+    "score_punch": 10.0,
+    "yoyo_level_tercapai": 8,
+    "yoyo_shuttle_tercapai": 8,
+    "yoyo_total_jarak_m": 1280.0,
+    "yoyo_vo2max_estimasi": 47.2,
+    "score_yoyo": 5.0,
+    "kondisi_uji": "FRESH",
+    "catatan": "",
+    "timestamp": "2026-07-03T08:22:48.599Z",
+    "total_skor": 8.0,
+    "predikat": "READY",
+    "layak_kompetisi": false,
+    "layak_bertahan": true,
+    "rekomendasi_auto": "Kompeten. Target VO2 Max > 52 mL/kg/min dalam 8 minggu.",
+    "alasan_tidak_layak": ""
+  }
+},
+{
+  "model": "combat.speedagilityauditl4",
+  "pk": 5,
+  "fields": {
+    "atlet": 9,
+    "atlet_name": "sena",
+    "kategori_usia": "JUNIOR",
+    "gender": "Putri",
+    "kelas_berat": null,
+    "hex_waktu_putaran1": null,
+    "hex_waktu_putaran2": null,
+    "hex_waktu_putaran3": null,
+    "hex_waktu_rata": null,
+    "score_hex": 0.0,
+    "punch_freq_10s": 56,
+    "punch_postur_ok": true,
+    "punch_reaction_time_ms": 80.0,
+    "score_punch": 10.0,
+    "yoyo_level_tercapai": 29,
+    "yoyo_shuttle_tercapai": 9,
+    "yoyo_total_jarak_m": 30.0,
+    "yoyo_vo2max_estimasi": 36.7,
+    "score_yoyo": 10.0,
+    "kondisi_uji": "FRESH",
+    "catatan": "",
+    "timestamp": "2026-07-03T09:20:56.620Z",
+    "total_skor": 6.7,
+    "predikat": "DEVELOPING",
+    "layak_kompetisi": false,
+    "layak_bertahan": false,
+    "rekomendasi_auto": "Dalam Pengembangan. Prioritaskan Yo-Yo Training dan Hexagon drill.",
+    "alasan_tidak_layak": ""
+  }
+},
+{
+  "model": "muaythai.correctionauditl1mt",
+  "pk": 1,
+  "fields": {
+    "atlet": 6,
+    "atlet_name": "flora",
+    "kategori_usia": "SENIOR",
+    "gender": "Putra",
+    "kelas_berat": null,
+    "hip_rotasi_internal_kanan": 7.0,
+    "hip_rotasi_internal_kiri": 7.0,
+    "hip_rotasi_eksternal_kanan": 7.0,
+    "hip_rotasi_eksternal_kiri": 7.0,
+    "skor_neural_hip_rotasi": 2,
+    "balance_durasi_mata_terbuka": 7.0,
+    "balance_durasi_mata_tertutup": 7.0,
+    "skor_neural_balance": 2,
+    "ankle_dorsifleksi_kanan_cm": 7.0,
+    "ankle_dorsifleksi_kiri_cm": 7.0,
+    "skor_neural_ankle": 1,
+    "thoracic_rotasi_kanan": 7.0,
+    "thoracic_rotasi_kiri": 7.0,
+    "skor_neural_thoracic": 1,
+    "shoulder_fleksi_kanan": 7.0,
+    "shoulder_fleksi_kiri": 7.0,
+    "skor_neural_shoulder": 2,
+    "hip_hinge_pass": false,
+    "skor_neural_hip_hinge": 1,
+    "core_hold_durasi_detik": 8.0,
+    "skor_neural_core": 1,
+    "recovery_waktu_detik": 8.0,
+    "skor_neural_recovery": 1,
+    "ai_confidence_score": null,
+    "total_skor": 4.6,
+    "predikat": "DEVELOPING",
+    "layak_naik": false,
+    "alasan_tidak_layak": "Skor neural 4.6/10 (raw 11/24). Item terlemah: Ankle Dorsiflexion. Wajib program korektif mobility/stability sebelum lanjut.",
+    "catatan": null,
+    "timestamp": "2026-07-04T20:25:36.943Z",
+    "created_by": "Coach Fanny"
+  }
+}
+]

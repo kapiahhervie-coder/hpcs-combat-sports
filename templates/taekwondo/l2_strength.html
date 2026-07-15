@@ -1,0 +1,1263 @@
+{% extends "base_taekwondo.html" %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPCS L2 — Strength Audit</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    /* ═══════════════════════════════════════════════════════════════════
+       HPCS L2 — TEMA: Dark Forge (Amber-Iron) — Strength Identity
+       Filosofi: Baja panas + kekuatan berat — bukan wellness spa
+       Warna utama: Deep Navy + Amber/Forge Orange + Steel White
+    ════════════════════════════════════════════════════════════════════ */
+    :root {
+        --bg:        #0b0f14;
+        --bg2:       #13181f;
+        --bg3:       #1a2030;
+        --border:    #252d3a;
+        --border2:   #38465a;
+
+        /* ── PERUBAHAN UTAMA: Amber/Orange untuk karakter STRENGTH ── */
+        --accent:    #00e5b0;      /* amber — energi, kekuatan, api */
+        --accent2:   #fb923c;      /* orange — power eksplosif */
+        --accent-dim:#00a882;      /* amber gelap untuk border subtle */
+
+        /* ── Warna sekunder tetap untuk variasi komponen ── */
+        --teal:      #2dd4bf;      /* hanya untuk neuroscience/ISO info */
+        --sky:       #38bdf8;      /* info boxes */
+
+        --gold:      #00e5b0;
+        --red:       #f87171;
+        --text:      #e2e8f0;
+        --text-dim:  #94a3b8;
+        --text-faint:#3d4f62;
+        --success:   #00e5b0;
+        --warning:   #00e5b0;
+        --danger:    #f87171;
+        --info:      #60a5fa;
+
+        /* Glow berbasis amber */
+        --card-glow: rgba(0,229,176, 0.05);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', sans-serif;
+        min-height: 100vh;
+    }
+
+    /* ── Container utama — beri padding bawah agar sticky tidak overlap ── */
+    .l2-container {
+        padding-bottom: 4rem;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       TYPOGRAPHY — Lebih Elegan, Title Case bukan ALL CAPS
+    ══════════════════════════════════════════════════════ */
+    .header-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 2rem;
+        color: var(--accent);          /* amber — bukan teal */
+        letter-spacing: 0.5px;
+        line-height: 1.1;
+        /* Title Case — bukan text-transform uppercase */
+    }
+
+    .header-subtitle {
+        color: var(--text-dim);
+        font-size: 0.83rem;
+        letter-spacing: 0.03em;
+    }
+
+    .section-label {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: var(--accent);          /* amber */
+        border-left: 2px solid var(--accent);
+        padding-left: 10px;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       CARDS
+    ══════════════════════════════════════════════════════ */
+    .card-hpcs {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 22px;
+        height: 100%;
+        transition: border-color 0.3s;
+    }
+    .card-hpcs:hover { border-color: var(--border2); }
+
+    /* Panel tengah — amber subtle border */
+    .card-hpcs.highlight {
+        border-color: rgba(0,229,176, 0.2);
+        background: linear-gradient(160deg, var(--bg2) 0%, #16202a 100%);
+    }
+
+    /* Panel kanan — gold border */
+    .card-hpcs.result-panel {
+        border-color: rgba(0,229,176, 0.3);
+    }
+
+    /* ══════════════════════════════════════════════════════
+       STICKY PANELS — Solusi dead space saat scroll
+    ══════════════════════════════════════════════════════ */
+    .sticky-panel {
+        position: sticky;
+        top: 80px;          /* sesuaikan dengan tinggi topbar */
+        align-self: flex-start;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        /* Sembunyikan scrollbar tapi tetap bisa scroll */
+        scrollbar-width: thin;
+        scrollbar-color: var(--border2) transparent;
+    }
+    .sticky-panel::-webkit-scrollbar { width: 4px; }
+    .sticky-panel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+    /* ══════════════════════════════════════════════════════
+       FORM CONTROLS
+    ══════════════════════════════════════════════════════ */
+    .form-control, .form-select {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus, .form-select:focus {
+        background: #1c2535;
+        border-color: var(--accent);   /* amber focus ring */
+        color: var(--text);
+        box-shadow: 0 0 0 3px rgba(0,229,176, 0.12);
+    }
+    .form-control::placeholder { color: var(--text-faint); }
+
+    .input-group-text {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 0.8rem;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       PILAR CARDS — Exercise Input
+    ══════════════════════════════════════════════════════ */
+    .pilar-card {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        transition: border-color 0.2s;
+    }
+    .pilar-card:hover { border-color: rgba(0,229,176,0.4); }
+
+    .pilar-card .pilar-label {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+    }
+    .pilar-card .pilar-tag {
+        font-size: 0.68rem;
+        color: var(--text-faint);
+        font-style: italic;
+    }
+
+    /* Pilar icons — warna yang lebih selaras amber palette */
+    .icon-lower { color: var(--accent); }
+    .icon-push  { color: var(--accent2); }
+    .icon-pull  { color: var(--gold); }
+    .icon-core  { color: var(--success); }
+    .icon-iso   { color: var(--teal); }   /* teal hanya untuk neuroscience */
+
+    /* ══════════════════════════════════════════════════════
+       SCORE DISPLAY — Lebih impactful dengan ring
+    ══════════════════════════════════════════════════════ */
+    .total-score {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 5.5rem;
+        font-weight: 900;
+        color: var(--accent);          /* amber */
+        line-height: 1;
+        letter-spacing: -2px;
+        /* Score ring visual */
+        display: inline-block;
+        position: relative;
+    }
+
+    /* Ring dekoratif di belakang angka */
+    .score-ring-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+    }
+    .score-ring-wrap svg {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .score-ring-wrap .total-score {
+        font-size: 4rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .predikat-badge {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: 3px;
+        padding: 5px 20px;
+        border-radius: 50px;
+        border: 1.5px solid var(--border2);
+        display: inline-block;
+        margin-top: 8px;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       SCORE PILLS — Amber
+    ══════════════════════════════════════════════════════ */
+    .score-pill {
+        background: rgba(0,229,176,0.1);
+        border: 1px solid rgba(0,229,176,0.2);
+        border-radius: 5px;
+        padding: 2px 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--accent);
+    }
+    .tremor-pill {
+        background: rgba(45,212,191,0.1);
+        border: 1px solid rgba(45,212,191,0.2);
+        border-radius: 5px;
+        padding: 2px 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--teal);
+    }
+
+    /* ══════════════════════════════════════════════════════
+       RUBRIK PANEL
+    ══════════════════════════════════════════════════════ */
+    .rubrik-wrap {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 12px;
+    }
+    .rubrik-head {
+        background: linear-gradient(90deg, #064e3b, var(--accent));
+        color: #0b0f14;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 900;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 10px 14px;
+    }
+    .rubrik-row { border-bottom: 1px solid #1a2330; }
+    .rubrik-row:last-child { border-bottom: none; }
+    .rubrik-row:hover { background: rgba(0,229,176,0.03); }
+    .rubrik-head > div, .rubrik-row > div { flex: 0 0 20% !important; max-width: 20% !important; }
+    .val-red { background: rgba(239,68,68,0.12); color: #f87171; border-left: 3px solid #f87171; }
+    .aspek-box {
+        padding: 12px 14px;
+        border-right: 2px solid rgba(0,229,176,0.2);
+    }
+    .aspek-name {
+        color: var(--accent);
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 800;
+        font-size: 0.88rem;
+        display: block;
+    }
+    .aspek-sub { color: var(--text-faint); font-size: 0.68rem; text-transform: uppercase; }
+    .yt-link { color: #f87171 !important; font-size: 0.68rem; text-decoration: none !important; font-weight: 700; transition: color 0.2s; }
+    .yt-link:hover { color: #ef4444 !important; }
+    .score-col { padding: 10px 8px; font-size: 0.78rem; }
+    .val-box { border-radius: 5px; padding: 3px 8px; display: inline-block; font-weight: 600; font-size: 0.78rem; margin-bottom: 2px; width: 100%; border-left: 3px solid transparent; }
+    .val-green  { background: rgba(52,211,153,0.1); border-left-color: var(--success); color: var(--success); }
+    .val-blue   { background: rgba(96,165,250,0.1); border-left-color: var(--info);    color: var(--info); }
+    .val-yellow { background: rgba(0,229,176,0.1); border-left-color: var(--accent);  color: var(--accent); }
+
+    /* ══════════════════════════════════════════════════════
+       NEUROSCIENCE BOX — tetap teal (beda domain)
+    ══════════════════════════════════════════════════════ */
+    .neuro-box {
+        background: rgba(45,212,191,0.06);
+        border: 1px solid rgba(45,212,191,0.2);
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 0.8rem;
+        color: var(--teal);
+        margin-top: 8px;
+    }
+
+    /* Pilar isometric — border teal karena domain neuroscience */
+    .pilar-card.iso-card { border-color: rgba(45,212,191,0.2); }
+    .pilar-card.iso-card:hover { border-color: rgba(45,212,191,0.45); }
+
+    /* ══════════════════════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════════════════════ */
+    .btn-hpcs-primary {
+        background: linear-gradient(135deg, #00a882, var(--accent));
+        color: #0b0f14;
+        font-family: 'Barlow Condensed', sans-serif;
+        font-weight: 800;
+        font-size: 0.95rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 9px;
+        padding: 12px 20px;
+        transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-hpcs-primary:hover { opacity: 0.88; transform: translateY(-1px); color: #0b0f14; }
+    .btn-hpcs-primary:active { transform: translateY(0); }
+
+    .btn-print {
+        background: rgba(96,165,250,0.08);
+        color: var(--info);
+        border: 1px solid rgba(96,165,250,0.3);
+        border-radius: 7px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        transition: background 0.2s;
+    }
+    .btn-print:hover { background: rgba(96,165,250,0.18); color: var(--info); }
+
+    .btn-del {
+        background: rgba(248,113,113,0.07);
+        color: var(--red);
+        border: 1px solid rgba(248,113,113,0.22);
+        border-radius: 7px;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        transition: background 0.2s;
+    }
+    .btn-del:hover { background: rgba(248,113,113,0.16); color: var(--red); }
+
+    /* Nav buttons di header */
+    .btn-nav-dashboard {
+        background: rgba(255,255,255,0.05);
+        color: var(--text-dim);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        transition: all 0.2s;
+    }
+    .btn-nav-dashboard:hover { background: rgba(255,255,255,0.09); color: var(--text); border-color: var(--border2); }
+
+    .btn-camera {
+        background: rgba(0,229,176,0.1);
+        color: var(--accent);
+        border: 1px solid rgba(0,229,176,0.3);
+        border-radius: 7px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 6px 14px;
+        transition: all 0.2s;
+    }
+    .btn-camera:hover { background: rgba(0,229,176,0.18); color: var(--accent); }
+
+    /* ══════════════════════════════════════════════════════
+       HISTORY TABLE
+    ══════════════════════════════════════════════════════ */
+    .history-wrap {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 22px;
+        margin-top: 28px;
+    }
+    .tbl {
+        --bs-table-bg: transparent;
+        --bs-table-border-color: var(--border);
+        color: var(--text);
+    }
+    .tbl thead th {
+        color: var(--accent);
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-color: var(--border);
+        font-weight: 800;
+        white-space: nowrap;
+    }
+    .tbl tbody td {
+        border-color: #151d28;
+        font-size: 0.83rem;
+        vertical-align: middle;
+    }
+    .tbl tbody tr:hover { background: rgba(0,229,176,0.025); }
+
+    .badge-elite  { background: rgba(52,211,153,0.1); color: #00e5b0; border: 1px solid rgba(52,211,153,0.35); }
+    .badge-ready  { background: rgba(0,229,176,0.1); color: var(--accent); border: 1px solid rgba(0,229,176,0.35); }
+    .badge-dev    { background: rgba(251,191,36,0.1); color: #00e5b0; border: 1px solid rgba(251,191,36,0.35); }
+    .badge-novice { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }
+
+    /* ══════════════════════════════════════════════════════
+       REKOMENDASI PANEL
+    ══════════════════════════════════════════════════════ */
+    #rekomendasi_area {
+        background: rgba(0,229,176,0.05);
+        border: 1px solid rgba(0,229,176,0.12);
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 0.83rem;
+        display: none;
+        text-align: left;
+        margin-top: 12px;
+    }
+
+    /* ══════════════════════════════════════════════════════
+       CAMERA MODAL
+    ══════════════════════════════════════════════════════ */
+    .camera-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.9);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .camera-overlay.active { display: flex; }
+    .camera-box {
+        background: var(--bg2);
+        border: 1px solid rgba(0,229,176,0.35);
+        border-radius: 16px;
+        padding: 20px;
+        width: min(680px, 95vw);
+    }
+    #videoFeed { width: 100%; border-radius: 10px; background: #000; min-height: 300px; }
+    #canvasOutput { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; }
+    .video-wrap { position: relative; }
+    .rep-counter {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: var(--accent);
+        text-align: center;
+    }
+    .stage-badge {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        padding: 4px 14px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+    .stage-down { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid var(--red); }
+    .stage-up   { background: rgba(0,229,176,0.12); color: var(--accent); border: 1px solid rgba(0,229,176,0.4); }
+
+    /* ══════════════════════════════════════════════════════
+       PRINT STYLES
+    ══════════════════════════════════════════════════════ */
+    .print-only { display: none; }
+
+    @media print {
+        .no-print { display: none !important; }
+        .print-only { display: block !important; color: #000 !important; }
+        body { background: #fff !important; color: #000 !important; }
+        .card-hpcs { border: 1px solid #ddd !important; background: #fff !important; color: #000 !important; }
+        .header-title, .total-score { color: #00a882 !important; }
+        .history-wrap { display: none !important; }
+        #radarChart { display: block !important; }
+        #chartPrintImg { display: block !important; }
+        .section-label { color: #00a882 !important; border-left-color: #00a882 !important; }
+        .score-pill { background: #d1fae5 !important; color: #00a882 !important; }
+        .sticky-panel { position: static !important; max-height: none !important; overflow: visible !important; }
+    }
+<style>
+.auto-score-badge {
+    display:inline-block;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1.1rem;
+    font-weight:700;
+    color:#00e5b0;
+    background:rgba(0,229,176,0.1);
+    border:1px solid rgba(0,229,176,0.3);
+    border-radius:6px;
+    padding:2px 10px;
+    margin-top:4px;
+}
+.auto-score-label {
+    font-size:0.65rem;
+    color:#6b7280;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:2px;
+}
+</style>
+</style>
+
+<div class="container-fluid py-4 px-lg-5 l2-container"></i>
+            {{ msg }}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+        
+
+    <!-- ── HEADER — Title Case, Lebih Elegan ──────────────────────── -->
+    <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
+        <div>
+            <!-- UBAH: Title Case, bukan ALL CAPS -->
+            <h1 class="header-title mb-0">HPCS Level 2: Low Velocity Power</h1>
+            <p class="header-subtitle mb-1 no-print">Strength Audit — 5RM Protocol + CNS Tremor Analysis (Coach Fanny)</p>
+            <div class="no-print mt-2">
+                <a href="javascript:void(0)" onclick="toggleRubrik()" class="text-success small text-decoration-none fw-bold">
+                    <i class="bi bi-journal-medical me-1"></i>Lihat Standar Rubrik & Protokol
+                </a>
+                <div id="rubrikPanel" style="display:none;">
+                    <div class="rubrik-wrap mt-2">
+                        <div class="row g-0 rubrik-head">
+                            <div class="col-3">Aspek & Instrumen</div>
+                            <div class="col-3 text-center">Very Competent (9–10)</div>
+                            <div class="col-3 text-center">Competent (7–8)</div>
+                            <div class="col-3 text-center">Developing (5–6)</div>
+                            <div class="col-3 text-center">Novice (1–4)</div>
+                        </div>
+                        <div class="row g-0 rubrik-row">
+                            <div class="col-3 aspek-box">
+                                <span class="aspek-name">Lower Strength</span>
+                                <span class="aspek-sub">Single-Leg Box Squat (per kaki)</span>
+                                <a href="https://www.youtube.com/watch?v=Ffp3YwhDiMs" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">⚡ 5RM = Strength Murni. 1 Menit = Endurance (tidak dipakai di L2)</div>
+                            </div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-green">&ge; 15 Reps/kaki</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-blue">10-14 Reps/kaki</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">5-9 Reps/kaki</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-red">&lt; 5 Reps/kaki</div></div>
+                        </div>
+                        <div class="row g-0 rubrik-row">
+                            <div class="col-3 aspek-box">
+                                <span class="aspek-name">Upper Push</span>
+                                <span class="aspek-sub">Floor/Bench Press (Reps)</span>
+                                <a href="https://www.youtube.com/watch?v=erpQ8ssuzz4" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+                            </div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 12 Reps</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-blue">6–12 Reps</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">3–5 Reps</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-red">&lt; 3 Reps</div></div>
+                        </div>
+                        <div class="row g-0 rubrik-row">
+                            <div class="col-3 aspek-box">
+                                <span class="aspek-name">Upper Pull</span>
+                                <span class="aspek-sub">Clinch Neck Pull Test (rep/20 detik)</span>
+                                <a href="https://www.youtube.com/watch?v=MJk4oYhYh2M" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+                            </div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-green">&ge; 18 Rep/20dtk</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-blue">14-17 Rep/20dtk</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">9-13 Rep/20dtk</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-red">&lt; 9 Rep/20dtk</div></div>
+                        </div>
+                        <div class="row g-0 rubrik-row">
+                            <div class="col-3 aspek-box">
+                                <span class="aspek-name">Core Bracing</span>
+                                <span class="aspek-sub">Weighted Plank (Detik)</span>
+                                <a href="https://www.youtube.com/watch?v=0Mwk0RRUCxE" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+                            </div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 90 Detik</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-blue">60–90 Detik</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">30–60 Detik</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-red">&lt; 30 Detik</div></div>
+                        </div>
+                        <div class="row g-0 rubrik-row">
+                            <div class="col-3 aspek-box">
+                                <span class="aspek-name">Isometric</span>
+                                <span class="aspek-sub">Single-Leg Check Hold + Tremor</span>
+                                <a href="https://www.youtube.com/watch?v=ux_37AZky4w" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">🧠 Catat detik tremor muncul → data CNS Fatigue</div>
+                            </div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 60 Detik</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-blue">40–60 Detik</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">20–40 Detik</div></div>
+                            <div class="col-3 score-col text-center"><div class="val-box val-red">&lt; 20 Detik</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="no-print d-flex gap-2 flex-wrap">
+            <a href="/audit/corection/" class="btn btn-nav-dashboard btn-sm">
+                <i class="bi bi-house-fill me-1"></i>Dashboard
+            </a>
+            <button type="button" class="btn btn-camera btn-sm" onclick="openCamera()">
+                <i class="bi bi-camera-video-fill me-1"></i>AI Camera
+            </button>
+        </div>
+    </div>
+
+    <!-- ── MAIN FORM — 3 KOLOM ──────────────────────────────────────── -->
+    <form action="{% url 'taekwondo:l2_strength' %}" method="POST" id="mainForm">
+        {% csrf_token %}
+        <div class="row g-4 align-items-start">
+
+            <!-- ── KOLOM KIRI: Form Input (scroll bebas) ───────────── -->
+            <div class="col-lg-4">
+                <div class="card-hpcs">
+                    <span class="section-label"><i class="bi bi-person-badge"></i>Identitas Atlet</span>
+
+                    <div class="print-only mb-3">
+                        <div id="p_nama" style="font-size:1.5rem;font-weight:800;color:#00a882;">ATLET L2: —</div>
+                        <div id="p_detail" style="font-size:0.9rem;color:#555;">Kategori: — | Gender: — | BB: — kg</div>
+                    </div>
+
+                    <div class="no-print">
+                        <select id="select_atlet" class="form-select mb-2" onchange="onAtletChange(this)">
+                            <option value="">— Pilih Atlet —</option>
+                            {% for atlet in atlet_list %}
+                            <option value="{{ atlet.pk }}"
+                                data-nama="{{ atlet.nama_atlet }}"
+                                data-kategori="{{ atlet.kategori_umur }}"
+                                data-gender="{{ atlet.gender }}"
+                                data-berat="{{ atlet.kelas_berat }}">
+                                {{ atlet.nama_atlet }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" name="atlet_id" id="input_atlet_id">
+                        <input type="hidden" name="kategori_usia" id="h_kategori">
+                        <input type="hidden" name="gender" id="h_gender">
+                        <input type="hidden" name="kelas_berat" id="h_berat">
+                        <input type="hidden" name="atlet_name" id="input_nama"
+                               class="form-control mb-3"
+                               placeholder="Nama Lengkap Atlet"
+                               oninput="syncPrint()" required>
+<div style="display:none">                        <div style="display:none"><div class="row g-2 mb-3">
+                            <div class="col-4">
+                                <label class="small text-white-50 mb-1">Kategori</label>
+                                <select name="kategori_usia" id="usia_atlet" class="form-select" onchange="syncPrint()">
+                                    <option>Elite</option>
+                                    <option>Youth</option>
+                                    <option>Junior</option>
+                                    <option>Senior</option>
+                                </select>
+                            </div></div></div>
+                            <div class="col-4">
+                                <label class="small text-white-50 mb-1">Gender</label>
+                                <select name="gender" id="gender_atlet" class="form-select" onchange="syncPrint()">
+                                    <option>Putra</option>
+                                    <option>Putri</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label class="small text-white-50 mb-1">BB (kg)</label>
+                                <input type="number" name="kelas_berat" id="input_berat"
+                                       class="form-control" step="0.1" placeholder="70"
+                                       oninput="syncPrint(); calcBWRatio()" oninput="liveUpdate()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <span class="section-label mt-3"><i class="bi bi-bar-chart-steps"></i>Data Mentah Pilar L2</span>
+
+                    <!-- Lower -->
+                    <div class="pilar-card">
+                        <div class="pilar-label">
+                            <i class="bi bi-arrow-down-circle-fill me-1 icon-lower"></i>
+                            Lower — 5RM Goblet Squat
+                            <span class="pilar-tag d-block">Beban maks yang bisa diangkat 5× reps</span>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="lower_5rm_beban" id="lower_5rm_beban"
+                                           class="form-control" step="0.5" placeholder="Beban"
+                                           oninput="calcBWRatio()" oninput="liveUpdate()">
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" id="bw_ratio_display" class="form-control"
+                                           readonly placeholder="BW Ratio" style="color:var(--accent);">
+                                    <span class="input-group-text">×BW</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+
+                            <input type="hidden" name="score_lower" id="score_lower">
+                        </div>
+                    </div>
+
+                    <!-- Push -->
+                    <div class="pilar-card">
+                        <div class="pilar-label">
+                            <i class="bi bi-arrow-up-circle-fill me-1 icon-push"></i>
+                            Push — Floor/Bench Press
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="push_5rm_beban" id="push_5rm_beban"
+                                           class="form-control" step="0.5" placeholder="Beban" oninput="liveUpdate()">
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="score_push" id="score_push" type="hidden" style="display:none">
+                                    <span class="input-group-text" id="badge_push_display" style="color:#00e5b0;font-weight:700;">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pull -->
+                    <div class="pilar-card">
+                        <div class="pilar-label">
+                            <i class="bi bi-arrow-down-circle-fill me-1 icon-pull"></i>
+                            Pull — Weighted Pull Up
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="pull_reps" id="pull_reps"
+                                           class="form-control" placeholder="Reps" oninput="liveUpdate()">
+                                    <span class="input-group-text">reps</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <input type="hidden" name="score_pull" id="score_pull">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Core -->
+                    <div class="pilar-card">
+                        <div class="pilar-label">
+                            <i class="bi bi-shield-fill me-1 icon-core"></i>
+                            Core — Weighted Plank
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="core_durasi_detik" id="core_durasi"
+                                           class="form-control" placeholder="Detik" oninput="liveUpdate()">
+                                    <span class="input-group-text">dtk</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <input type="hidden" name="score_core" id="score_core">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Isometric -->
+                    <div class="pilar-card">
+                        <div class="pilar-label">
+                            <i class="bi bi-lightning-fill me-1 icon-iso"></i>
+                            Isometric — Split Squat Hold
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="iso_durasi_detik" id="iso_durasi"
+                                           class="form-control" placeholder="Total hold" oninput="liveUpdate()">
+                                    <span class="input-group-text">dtk</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="input-group input-group-sm">
+                                    <input type="number" name="iso_tremor_onset_detik" id="iso_tremor"
+                                           class="form-control" placeholder="Tremor onset" oninput="liveUpdate()">
+                                    <span class="input-group-text">dtk</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="score_isometric" id="score_iso">
+                    </div>
+
+                    <!-- Hidden AI fields -->
+                    <input type="hidden" name="ai_rep_count_lower" id="ai_rep_lower">
+                    <input type="hidden" name="ai_rep_count_push" id="ai_rep_push">
+                    <input type="hidden" name="ai_rep_count_pull" id="ai_rep_pull">
+                    <input type="hidden" name="ai_confidence_score" id="ai_confidence">
+                    <input type="hidden" name="catatan" id="catatan_hidden">
+
+                </div><!-- /card-hpcs -->
+            </div><!-- /col-lg-4 kiri -->
+
+            <!-- ── KOLOM TENGAH: Radar ── -->
+            <div class="col-lg-4">
+                <div class="card-hpcs text-center">
+                    <span class="section-label"><i class="bi bi-radar"></i>Strength Distribution Radar</span>
+                    <div style="height:320px;display:flex;align-items:center;justify-content:center;margin:8px 0;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap mt-2" style="font-size:10px;">
+                        <span id="badge_lower" class="score-pill">Lower: —</span>
+                        <span id="badge_push"  class="score-pill">Push: —</span>
+                        <span id="badge_pull"  class="score-pill">Pull: —</span>
+                        <span id="badge_core"  class="score-pill">Core: —</span>
+                        <span id="badge_iso"   class="score-pill">Iso: —</span>
+                    </div>
+
+                    <!-- Profil Kondisi Atlet -->
+                    <div id="narasi_panel" class="mt-3 text-start" style="display:none">
+                        <div class="section-label"><i class="bi bi-person-lines-fill"></i>Profil Kondisi Atlet</div>
+                        <div id="narasi_box" style="background:rgba(0,229,176,0.05);border:1px solid rgba(0,229,176,0.2);border-radius:10px;padding:12px 14px;font-size:11px;line-height:1.7;color:#cbd5e1;max-height:320px;overflow-y:auto;text-align:left;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── KOLOM KANAN: Result ── -->
+            <div class="col-lg-4">
+                <div class="card-hpcs sticky-panel text-center">
+                    <span class="section-label"><i class="bi bi-trophy-fill"></i>Audit Result</span>
+                    <div class="total-score" id="res_total">0.0</div>
+                    <div class="mt-2 mb-3">
+                        <span class="predikat-badge" id="res_predikat">Novice</span>
+                    </div>
+                    <button type="submit" class="btn btn-hpcs-primary w-100 mb-2">
+                        <i class="bi bi-save2-fill me-1"></i>SIMPAN DATA L2
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary w-100 btn-sm" onclick="handlePrint()">
+                        <i class="bi bi-printer-fill me-1"></i>Cetak PDF (Browser)
+                    </button>
+
+                    <div id="reko_panel" class="mt-3 text-start" style="display:none">
+                        <div class="section-label"><i class="bi bi-lightbulb-fill" style="color:#00e5b0"></i>Rekomendasi HPCS</div>
+                        <div id="reko_list"></div>
+                    </div>
+
+                    <!-- CNS Status -->
+                    <div id="cns_panel" class="mt-3" style="display:none">
+                        <div class="section-label"><i class="bi bi-activity"></i>CNS Tremor Analysis</div>
+                        <div id="cns_box" style="background:rgba(0,229,176,0.05);border:1px solid rgba(0,229,176,0.2);border-radius:8px;padding:10px;font-size:11px;color:#cbd5e1;text-align:left;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /row -->
+    </form>
+
+    <!-- ── HISTORY TABLE ── -->
+    <div class="history-wrap no-print mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="mb-0" style="color:#00e5b0;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
+                <i class="bi bi-clock-history me-1"></i>History Audit L2 — Strength
+            </h6>
+            <span class="badge" style="background:rgba(0,229,176,0.2);color:#00e5b0;">{{ history|length }} Record</span>
+        </div>
+
+        {% if history %}
+        <div class="table-responsive">
+            <table class="table tbl table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th><th>Tanggal</th><th>Atlet</th><th>Kategori</th>
+                        <th>Gender</th><th>BB</th>
+                        <th>Lower</th><th>Push</th><th>Pull</th><th>Core</th><th>Iso</th>
+                        <th>Tremor</th><th>Total</th><th>Predikat</th><th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <td class="text-white-50">{{ forloop.counter }}</td>
+                        <td class="text-white-50" style="font-size:0.75rem;white-space:nowrap;">{{ item.timestamp|date:"d/m/Y H:i" }}</td>
+                        <td class="fw-bold" style="color:#e5e7eb;">{{ item.atlet_name }}</td>
+                        <td>{{ item.kategori_usia }}</td>
+                        <td>{{ item.gender }}</td>
+                        <td><span style="color:{% if item.kelas_berat %}#9ca3af{% else %}#4b5563{% endif %}">{{ item.kelas_berat|default:"—" }} kg</span></td>
+                        <td><span class="score-pill">{{ item.score_lower }}</span></td>
+                        <td><span class="score-pill">{{ item.score_push }}</span></td>
+                        <td><span class="score-pill">{{ item.score_pull }}</span></td>
+                        <td><span class="score-pill">{{ item.score_core }}</span></td>
+                        <td><span class="score-pill">{{ item.score_isometric }}</span></td>
+                        <td>
+                            {% if item.iso_tremor_rasio %}
+                                <span class="tremor-pill">{{ item.iso_tremor_rasio }}%</span>
+                            {% else %}<span class="text-white-50">—</span>{% endif %}
+                        </td>
+                        <td><strong style="color:#00e5b0;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;">{{ item.total_skor }}</strong></td>
+                        <td><span style="font-size:0.75rem;padding:3px 10px;font-weight:700;border-radius:12px;background:rgba(0,229,176,0.15);color:#00e5b0;border:1px solid rgba(0,229,176,0.3);">{{ item.predikat }}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-danger py-0 px-2"
+                                    onclick="if(confirm('Hapus data {{ item.atlet_name }}?')) window.location='/combat/l2-strength/hapus/{{ item.pk }}/'">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="window.print()" title="Cetak PDF"><i class="bi bi-printer-fill"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5" style="color:#4b5563;">
+            <i class="bi bi-inbox fs-2 d-block mb-2"></i>Belum ada data. Simpan audit pertama.
+        </div>
+        {% endif %}
+    </div>
+
+</div><!-- /container -->
+
+<script>
+// ── Auto Scoring ──────────────────────────────────────────
+function calcScoreLower(beban, bb) {
+    if (!beban || !bb || bb <= 0) return 0;
+    var r = beban / bb;
+    if (r >= 1.5) return 9.5; if (r >= 1.25) return 8.5;
+    if (r >= 1.0) return 7.5; if (r >= 0.75) return 6.0;
+    if (r >= 0.6) return 5.0; return 3.0;
+}
+function calcScorePush(reps) {
+    if (!reps) return 0;
+    if (reps > 12) return 9.5; if (reps >= 10) return 8.5;
+    if (reps >= 6) return 7.0; if (reps >= 3) return 5.5; return 3.0;
+}
+function calcScorePull(reps) {
+    if (!reps) return 0;
+    if (reps > 15) return 9.5; if (reps >= 12) return 8.5;
+    if (reps >= 8) return 7.0; if (reps >= 4) return 5.5; return 3.0;
+}
+function calcScoreCore(d) {
+    if (!d) return 0;
+    if (d > 90) return 9.5; if (d >= 75) return 8.5;
+    if (d >= 60) return 7.0; if (d >= 30) return 5.5; return 3.0;
+}
+function calcScoreIso(d) {
+    if (!d) return 0;
+    if (d > 60) return 9.5; if (d >= 50) return 8.5;
+    if (d >= 40) return 7.0; if (d >= 20) return 5.5; return 3.0;
+}
+
+function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+function autoCalcScores() {
+    var bb = g('h_berat') || g('input_berat') || 70;
+    var sL = calcScoreLower(g('lower_5rm_beban'), bb);
+    var sP = calcScorePush(g('push_5rm_beban'));
+    var sPl = calcScorePull(g('pull_reps'));
+    var sC = calcScoreCore(g('core_durasi'));
+    var sI = calcScoreIso(g('iso_durasi'));
+    document.getElementById('score_lower').value = sL.toFixed(1);
+    document.getElementById('score_push').value  = sP.toFixed(1);
+    document.getElementById('score_pull').value  = sPl.toFixed(1);
+    document.getElementById('score_core').value  = sC.toFixed(1);
+    document.getElementById('score_iso').value   = sI.toFixed(1);
+    function badge(id, val) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = id.replace('badge_','').charAt(0).toUpperCase()+id.replace('badge_','').slice(1)+': '+val.toFixed(1);
+        el.style.color = val>=9?'#00e5b0':val>=7?'#38bdf8':val>=5?'#f59e0b':'#f87171';
+    }
+    badge('badge_lower',sL); badge('badge_push',sP);
+    badge('badge_pull',sPl); badge('badge_core',sC); badge('badge_iso',sI);
+    return [sL, sP, sPl, sC, sI];
+}
+
+function calcBWRatio() {
+    var bb = g('h_berat') || 70;
+    var beban = g('lower_5rm_beban');
+    var ratio = bb > 0 && beban > 0 ? (beban/bb).toFixed(2) : '—';
+    var el = document.getElementById('bw_ratio_display');
+    if (el) el.value = ratio;
+}
+
+var radarInst = null;
+function updateRadar(vals) {
+    var ctx = document.getElementById('radarChart').getContext('2d');
+    if (radarInst) radarInst.destroy();
+    radarInst = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Lower','Push','Pull','Core','Iso'],
+            datasets: [{
+                label: 'Atlet', data: vals, fill: true,
+                backgroundColor: 'rgba(0,229,176,0.12)',
+                borderColor: '#00e5b0', borderWidth: 2,
+                pointBackgroundColor: '#00e5b0', pointRadius: 4
+            },{
+                label: 'Elite', data: [9,9,9,9,9], fill: false,
+                borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                borderDash: [4,4], pointRadius: 2,
+                pointBackgroundColor: 'rgba(255,255,255,0.1)'
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { r: {
+                min: 0, max: 10,
+                ticks: { stepSize: 2, color: 'rgba(255,255,255,0.2)', font: { size: 9 }, backdropColor: 'transparent' },
+                grid: { color: 'rgba(255,255,255,0.06)' },
+                pointLabels: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } }
+            }}
+        }
+    });
+}
+updateRadar([0,0,0,0,0]);
+
+function liveUpdate() {
+    calcBWRatio();
+    var scores = autoCalcScores();
+    var filled = scores.filter(function(s){ return s > 0; });
+    var total = filled.length ? parseFloat((filled.reduce(function(a,b){return a+b;},0)/filled.length).toFixed(1)) : 0;
+    document.getElementById('res_total').textContent = total.toFixed(1);
+    var pred, col;
+    if (total >= 9.0) { pred='ELITE'; col='#00e5b0'; }
+    else if (total >= 7.5) { pred='READY'; col='#38bdf8'; }
+    else if (total >= 5.5) { pred='DEVELOPING'; col='#f59e0b'; }
+    else { pred='NOVICE'; col='#f87171'; }
+    var predEl = document.getElementById('res_predikat');
+    predEl.textContent = pred;
+    document.getElementById('res_total').style.color = col;
+    updateRadar(scores);
+    generateNarasiL2(scores, total, pred);
+    generateRekoL2([{nama:"Lower",val:scores[0]},{nama:"Push",val:scores[1]},{nama:"Pull",val:scores[2]},{nama:"Core",val:scores[3]},{nama:"Iso",val:scores[4]}]);
+}
+
+function generateNarasiL2(scores, total, pred) {
+    var panel = document.getElementById('narasi_panel');
+    var box = document.getElementById('narasi_box');
+    var filled = scores.filter(function(s){ return s > 0; });
+    if (!filled.length) { panel.style.display='none'; return; }
+    var namaEl = document.querySelector('select#select_atlet option:checked');
+    var nama = namaEl ? (namaEl.getAttribute('data-nama') || namaEl.text) : 'Atlet';
+    function wrn(v){ return v>=9?'#00e5b0':v>=7?'#38bdf8':v>=5?'#f59e0b':'#f87171'; }
+    function lbl(v){ return v>=9?'sangat baik':v>=7?'baik':v>=5?'cukup':'perlu perhatian'; }
+    var pilarNames = ['Lower','Push','Pull','Core','Iso'];
+    var pilarData = pilarNames.map(function(n,i){ return {nama:n, val:scores[i]||0}; }).filter(function(p){return p.val>0;});
+    var sorted = pilarData.slice().sort(function(a,b){return b.val-a.val;});
+    var kuat = sorted.slice(0,2);
+    var lemah = sorted.slice(-2).reverse();
+    var layak = total >= 7.5;
+    var min = Math.min.apply(null, pilarData.map(function(p){return p.val;}));
+    var max = Math.max.apply(null, pilarData.map(function(p){return p.val;}));
+    var prima = (max-min) <= 0.5 && min >= 8.5;
+    var kPred = {
+        ELITE: 'menunjukkan kapasitas kekuatan <strong style="color:#00e5b0">ELIT</strong> — siap program kompetisi.',
+        READY: 'berada di level <strong style="color:#38bdf8">SIAP (READY)</strong> — kekuatan solid, siap naik ke L3 Power.',
+        DEVELOPING: 'sedang <strong style="color:#f59e0b">BERKEMBANG</strong> — fondasi kekuatan mulai terbentuk.',
+        NOVICE: 'di level <strong style="color:#f87171">PEMULA</strong> — perlu program kekuatan dasar 6-8 minggu.'
+    };
+    var layakStr = layak
+        ? '<span style="color:#00e5b0;font-weight:700">&#9989; LAYAK naik ke L3 Power Assessment</span>'
+        : '<span style="color:#f87171;font-weight:700">&#9940; BELUM LAYAK ke L3 — lanjutkan program L2 Strength</span>';
+    var lemahHTML = prima
+        ? '<div style="padding:8px 10px;background:rgba(0,229,176,0.07);border-radius:6px;border:1px solid rgba(0,229,176,0.2);"><span style="color:#00e5b0;font-weight:600;">&#127942; Semua pilar kekuatan dalam kondisi prima!</span></div>'
+        : lemah.map(function(p){
+            return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
+                +'<div style="width:6px;height:6px;border-radius:50%;background:'+wrn(p.val)+';flex-shrink:0;"></div>'
+                +'<span><strong style="color:'+wrn(p.val)+'">'+p.nama+'</strong> — '+lbl(p.val)
+                +' <span style="color:'+wrn(p.val)+';font-weight:700;">('+p.val.toFixed(1)+'/10)</span>'
+                +(p.val<5.5?' : prioritas program korektif.':' : perlu peningkatan.')+'</span></div>';
+        }).join('');
+    box.innerHTML = '<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,229,176,0.1);">'
+        +'<span style="color:#00e5b0;font-weight:700;font-size:12px;">&#128170; '+nama+'</span> '+(kPred[pred]||'')
+        +' Total skor: <strong style="font-size:13px;color:'+wrn(total)+'">'+total.toFixed(1)+'/10</strong></div>'
+        +'<div style="margin-bottom:10px;"><div style="color:#6b7280;font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>'
+        +kuat.map(function(p){return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:6px;height:6px;border-radius:50%;background:#00e5b0;flex-shrink:0;"></div><span><strong style="color:#00e5b0">'+p.nama+'</strong> — '+lbl(p.val)+' <span style="color:'+wrn(p.val)+';font-weight:700;">('+p.val.toFixed(1)+'/10)</span></span></div>';}).join('')+'</div>'
+        +'<div style="margin-bottom:10px;"><div style="color:#6b7280;font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>'+lemahHTML+'</div>'
+        +'<div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">'
+        +'<div style="color:#6b7280;font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>'
+        +layakStr+'<br><span style="color:#9ca3af;font-size:10.5px;">'
+        +(prima?'Pertahankan semua pilar. Atlet siap L3 Power.':layak?'Fokus perkuat <strong>'+(lemah[0]?lemah[0].nama:'-')+'</strong> selama transisi ke L3.':'Lanjutkan L2 minimal 6 minggu, prioritas <strong>'+(lemah[0]?lemah[0].nama:'-')+'</strong>.')
+        +'</span></div>';
+    panel.style.display = 'block';
+}
+
+function onAtletChange(sel) {
+    var opt = sel.options[sel.selectedIndex];
+    document.getElementById('input_atlet_id').value = sel.value;
+    document.getElementById('input_nama').value = opt.getAttribute('data-nama') || opt.text.trim();
+    var kat = opt.getAttribute('data-kategori') || 'Elite';
+    var gen = opt.getAttribute('data-gender') || 'Putra';
+    var brt = opt.getAttribute('data-berat') || '';
+    var hKat = document.getElementById('h_kategori');
+    var hGen = document.getElementById('h_gender');
+    var hBrt = document.getElementById('h_berat');
+    if (hKat) hKat.value = kat;
+    if (hGen) hGen.value = gen;
+    if (hBrt) hBrt.value = brt;
+    liveUpdate();
+}
+
+function handlePrint() {
+    window.print();
+}
+function toggleRubrik() {
+    var rp = document.getElementById('rubrikPanel');
+    rp.style.display = rp.style.display === 'none' ? 'block' : 'none';
+}
+function syncPrint() {}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+var REKO_L2 = {
+  Lower:{
+    low:[
+      'Goblet Squat 4x8 dengan beban 40-50% BW — fokus teknik',
+      'Box Squat 3x10 untuk membangun pola gerak dasar',
+      'Romanian Deadlift 3x12 untuk posterior chain',
+      'Leg Press 4x12 sebagai alternatif beban terkontrol'
+    ],
+    mid:[
+      'Goblet Squat progresif: tambah 2.5kg tiap minggu',
+      'Pause Squat 3x6 untuk membangun kekuatan bottom position',
+      'Single Leg Squat (Bulgarian Split Squat) 3x8 tiap sisi'
+    ],
+    high:[
+      'Pertahankan volume: Goblet Squat 4x5 dengan beban maksimal',
+      'Tambahkan Tempo Squat (3-1-1) untuk hipertrofi',
+      'Variasi: Front Squat untuk keseimbangan quad-posterior'
+    ]
+  },
+  Push:{
+    low:[
+      'Push Up progresif: mulai dari incline, lanjut flat 3x10',
+      'Dumbbell Floor Press 4x12 dengan beban ringan',
+      'Wall Push Up ke Standard Push Up — 4 minggu program',
+      'Band-Assisted Bench Press untuk pola gerak benar'
+    ],
+    mid:[
+      'Floor Press 4x8 dengan beban 70% maks',
+      'Push Up variasi: Diamond, Wide, Archer 3x8',
+      'Dumbbell Bench Press 3x10 unilateral untuk keseimbangan'
+    ],
+    high:[
+      'Pertahankan dengan Volume Push: 4x12 bodyweight',
+      'Tambah Plyometric Push Up untuk power komponen',
+      'Medicine Ball Chest Pass 3x8 untuk explosive push'
+    ]
+  },
+  Pull:{
+    low:[
+      'Inverted Row (TRX/bar rendah) 4x10 sebagai dasar',
+      'Band-Assisted Pull Up 3x8 — kurangi band tiap 2 minggu',
+      'Lat Pulldown 4x12 untuk membangun kekuatan lats',
+      'Dumbbell Row 3x12 tiap sisi untuk upper back'
+    ],
+    mid:[
+      'Pull Up 4x6 dengan full ROM',
+      'Weighted Pull Up: tambah 2.5kg vest tiap 2 minggu',
+      'Chin Up superset dengan Row 3x8 tiap gerakan'
+    ],
+    high:[
+      'Weighted Pull Up 4x5 dengan beban tambahan',
+      'L-Sit Pull Up 3x5 untuk core integration',
+      'Muscle Up progression untuk athletic peak performance'
+    ]
+  },
+  Core:{
+    low:[
+      'Dead Bug 3x10 tiap sisi — anti-extension dasar',
+      'Plank progressi: 3x20 detik, tambah 5 dtk/minggu',
+      'Bird Dog 3x12 untuk lumbar stability',
+      'Hollow Body Hold 3x20 detik untuk bracing pattern'
+    ],
+    mid:[
+      'Weighted Plank 3x30 detik dengan plate 5kg di punggung',
+      'Ab Wheel Rollout 3x8 untuk anti-extension lanjut',
+      'Pallof Press 3x12 tiap sisi untuk anti-rotation'
+    ],
+    high:[
+      'Weighted Plank 3x60 detik — tambah beban tiap minggu',
+      'Dragon Flag progression 3x5',
+      'Barbell Rollout 3x8 untuk peak core strength'
+    ]
+  },
+  Iso:{
+    low:[
+      'Split Squat Hold 3x20 detik tiap sisi — tanpa beban',
+      'Wall Sit 3x30 detik untuk membangun durasi isometrik',
+      'Isometric Lunge Hold 3x20 detik — fokus postur tegak',
+      'Quad Set 3x30 detik untuk aktivasi awal'
+    ],
+    mid:[
+      'Spanish Squat Hold 3x40 detik dengan band',
+      'Single Leg Wall Sit 3x30 detik tiap sisi',
+      'Split Squat dengan beban ringan 3x40 detik'
+    ],
+    high:[
+      'Weighted Split Squat Hold 3x60 detik dengan dumbbell',
+      'Bulgarian Split Squat Isometric 3x45 detik tiap sisi',
+      'Pertahankan CNS Tremor Ratio > 65% sebagai standar'
+    ]
+  }
+};
+
+function generateRekoL2(pilars) {
+  var panel = document.getElementById('reko_panel');
+  var list  = document.getElementById('reko_list');
+  var filled = pilars.filter(function(p){ return p.val > 0; });
+  if (!filled.length) { panel.style.display='none'; return; }
+
+  var sorted  = filled.slice().sort(function(a,b){ return a.val-b.val; });
+  var weakest = sorted.slice(0,3);
+  var html = '';
+
+  weakest.forEach(function(p) {
+    var db = REKO_L2[p.nama];
+    if (!db) return;
+    var tips = p.val < 5.5 ? db.low : p.val < 7.5 ? db.mid : db.high;
+    var icon = p.val < 5.5 ? '&#128308;' : p.val < 7.5 ? '&#128993;' : '&#128994;';
+    var col  = p.val < 5.5 ? '#f87171' : p.val < 7.5 ? '#f59e0b' : '#00e5b0';
+    html += '<div style="margin-bottom:10px;padding:10px;background:rgba(0,229,176,0.04);border-radius:8px;border-left:3px solid '+col+';">'
+      + '<div style="font-size:10px;font-weight:700;color:'+col+';letter-spacing:1px;margin-bottom:6px;">'
+      + icon+' '+p.nama.toUpperCase()+' &mdash; '+p.val.toFixed(1)+'/10</div>';
+    tips.forEach(function(t) {
+      html += '<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;font-size:10.5px;color:#9ca3af;">'
+        +'<span style="color:'+col+';flex-shrink:0;margin-top:1px;">&#8594;</span><span>'+t+'</span></div>';
+    });
+    html += '</div>';
+  });
+
+  list.innerHTML = html;
+  panel.style.display = 'block';
+}
+
+window.addEventListener('load', function() {
+    updateRadar([0,0,0,0,0]);
+});
+</script>
+{% endblock %}
+</body>
+</html>ls

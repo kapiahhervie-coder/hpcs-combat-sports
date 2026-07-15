@@ -232,8 +232,8 @@ class CorrectionAuditL1(models.Model):
 
     class Meta:
         ordering            = ['-timestamp']
-        verbose_name        = 'Correction Audit L1'
-        verbose_name_plural = 'Correction Audit L1'
+        verbose_name        = 'L1 - Correction'
+        verbose_name_plural = 'L1 - Correction'
         db_table            = 'hpcs_correction_audit_l1'
 
     def __str__(self):
@@ -337,8 +337,8 @@ class StrengthAuditL2(models.Model):
 
     class Meta:
         ordering            = ['-timestamp']
-        verbose_name        = 'Strength Audit L2'
-        verbose_name_plural = 'Strength Audit L2'
+        verbose_name        = 'L2 - Strength'
+        verbose_name_plural = 'L2 - Strength'
         db_table            = 'hpcs_strength_audit_l2'
 
     def __str__(self):
@@ -442,8 +442,8 @@ class PowerAuditL3(models.Model):
 
     class Meta:
         ordering            = ['-timestamp']
-        verbose_name        = 'Power Audit L3'
-        verbose_name_plural = 'Power Audit L3'
+        verbose_name        = 'L3 - Power'
+        verbose_name_plural = 'L3 - Power'
         db_table            = 'hpcs_power_audit_l3'
 
     def __str__(self):
@@ -568,8 +568,8 @@ class SpeedAgilityAuditL4(models.Model):
     alasan_tidak_layak = models.TextField(blank=True)
 
     class Meta:
-        verbose_name        = 'Audit L4 — Speed & Agility'
-        verbose_name_plural = 'Audit L4 — Speed & Agility'
+        verbose_name        = 'L4 - Speed & Agility'
+        verbose_name_plural = 'L4 - Speed & Agility'
         ordering            = ['-timestamp']
 
     def __str__(self):

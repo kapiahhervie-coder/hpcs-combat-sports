@@ -76,7 +76,7 @@ class DashboardView(LoginRequiredMixin, View):
             },
             {
                 'cabor': {'nama': 'Taekwondo'},
-                'total': get_atlet_queryset(request.user).filter(cabang__iexact='taekwondo').count(),
+                'total': get_atlet_queryset(request.user).filter(cabang__iexact='tkd').count(),
                 'rata_level': '-',
                 'status': 'Cukup',
                 'pct_audit': 0,
@@ -98,6 +98,7 @@ class DashboardView(LoginRequiredMixin, View):
             'l3_layak':         l3_layak,
             'distribusi_cabor': distribusi_cabor,
             'total_atlet_muaythai': squad_atlet.filter(cabang__iexact='muaythai').count(),
+            'total_atlet_taekwondo': squad_atlet.filter(cabang__iexact='tkd').count(),
         }
         return render(request, self.template_name, context)
 

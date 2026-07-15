@@ -1,0 +1,819 @@
+{% extends "base_taekwondo.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+:root{--bg:#0f1117;--bg2:#171b25;--bg3:#1e2333;--border:#252d3d;--border2:#2f3a50;--amber:#f59e0b;--amber2:#fbbf24;--sky:#38bdf8;--green:#10b981;--red:#ef4444;--text:#cbd5e1;--text2:#94a3b8;--text3:#4b5e78;--white:#f1f5f9}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+.l3-wrap{max-width:1280px;margin:0 auto;padding:24px 20px}
+.l3-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:16px}
+.l3-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;margin-bottom:8px;text-transform:uppercase}
+.l3-badge::before{content:'';width:6px;height:6px;background:var(--amber);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.l3-title{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--white);letter-spacing:2px;line-height:1;margin-bottom:4px}
+.l3-title span{color:var(--amber)}
+.l3-subtitle{color:var(--text2);font-size:13px}
+.l3-header-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;text-decoration:none;transition:all .15s}
+.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
+.btn-outline{background:transparent;color:var(--amber);border:1px solid rgba(245,158,11,.35)}
+.btn-outline:hover{background:rgba(245,158,11,.08)}
+.btn-cam{background:rgba(56,189,248,.1);color:var(--sky);border:1px solid rgba(56,189,248,.35)}
+.btn-cam:hover{background:rgba(56,189,248,.15)}
+.rubrik-panel{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.rubrik-panel.open{display:block}
+.rubrik-head{display:grid;grid-template-columns: 1fr 1.4fr 1fr;background:rgba(245,158,11,.08);border-bottom:1px solid var(--border);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase}
+.rubrik-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:12px 16px;border-bottom:1px solid rgba(37,45,61,.5);font-size:12.5px}
+.rubrik-row:last-child{border-bottom:none}
+.rubrik-row:hover{background:rgba(245,158,11,.03)}
+.rubrik-label{color:var(--amber);font-weight:600;font-size:12px}
+.rubrik-sub{color:var(--text3);font-size:11px;margin-top:2px}
+.val{display:inline-block;padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500}
+.val-g{background:rgba(16,185,129,.1);color:#10b981}
+.val-b{background:rgba(56,189,248,.1);color:#38bdf8}
+.val-y{background:rgba(251,191,36,.1);color:#fbbf24}
+.val-r{background:rgba(239,68,68,.1);color:#f87171}
+.l3-grid{display:grid;grid-template-columns:340px 1fr 320px;gap:16px;margin-bottom:24px;align-items:start}
+@media(max-width:1100px){.l3-grid{grid-template-columns:1fr 1fr}.l3-col-right{grid-column:1/-1}}
+@media(max-width:700px){.l3-grid{grid-template-columns:1fr}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:11px;color:var(--text2);margin-bottom:5px}
+.form-control{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--white);border-radius:6px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13.5px;transition:border-color .15s;outline:none}
+.form-control:focus{border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+.form-control::placeholder{color:var(--text3)}
+select.form-control{cursor:pointer}
+.skor-auto{background:var(--bg)!important;border-color:rgba(245,158,11,.3)!important;color:var(--amber)!important;font-weight:700;font-family:'DM Mono',monospace}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pilar{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;transition:border-color .15s}
+.pilar:hover{border-color:rgba(245,158,11,.3)}
+.pilar-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--amber);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pilar-sub{font-size:10.5px;color:var(--text3);font-style:italic}
+.skor-bar{height:4px;border-radius:2px;background:var(--border);margin-top:6px;overflow:hidden}
+.skor-bar-fill{height:100%;border-radius:2px;background:var(--amber);transition:width .3s}
+.radar-wrap{display:flex;flex-direction:column;align-items:center;position:sticky;top:16px}
+.radar-canvas-wrap{position:relative;width:100%;height:340px}
+.score-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+.score-pill{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;padding:3px 9px;border-radius:20px}
+.result-score{font-family:'Bebas Neue',sans-serif;font-size:6rem;line-height:1;color:var(--amber);text-align:center;letter-spacing:2px}
+.result-badge{padding:6px 20px;border-radius:30px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;border:1.5px solid var(--border2);color:var(--text2);display:block;width:fit-content;margin:8px auto;text-align:center}
+.result-badge.elite{border-color:var(--green);color:var(--green);background:rgba(16,185,129,.08)}
+.result-badge.ready{border-color:var(--sky);color:var(--sky);background:rgba(56,189,248,.08)}
+.result-badge.developing{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.08)}
+.result-badge.novice{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08)}
+.rekomendasi{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.15);border-radius:8px;padding:12px;margin-top:14px;font-size:12.5px;color:var(--text2);display:none}
+.rekomendasi.show{display:block}
+.rekomendasi-title{font-weight:600;color:var(--amber);font-size:12px;margin-bottom:6px}
+.btn-save{width:100%;padding:12px;background:linear-gradient(135deg,#b45309,var(--amber));color:#000;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;border:none;border-radius:8px;cursor:pointer;margin-top:16px;transition:opacity .15s,transform .1s}
+.btn-save:hover{opacity:.9;transform:translateY(-1px)}
+.btn-print-sm{width:100%;margin-top:8px;padding:9px;background:transparent;color:var(--sky);border:1px solid rgba(56,189,248,.25);border-radius:8px;font-size:13px;cursor:pointer}
+.rsi-box{background:rgba(56,189,248,.05);border:1px solid rgba(56,189,248,.15);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--sky);margin-top:8px}
+.rsi-result{font-family:'DM Mono',monospace;font-size:1.4rem;font-weight:500;color:var(--amber)}
+.history-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+.history-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.history-count{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;padding:3px 10px;border-radius:20px}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 12px;text-align:left;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 12px;font-size:12.5px;border-bottom:1px solid rgba(37,45,61,.5);color:var(--text);vertical-align:middle}
+tbody tr:hover{background:rgba(245,158,11,.02)}
+tbody tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500}
+.badge-elite{background:rgba(16,185,129,.1);color:#10b981;border:1px solid #10b981}
+.badge-ready{background:rgba(56,189,248,.1);color:#38bdf8;border:1px solid #38bdf8}
+.badge-developing{background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid #f59e0b}
+.badge-novice{background:rgba(239,68,68,.1);color:#ef4444;border:1px solid #ef4444}
+.pill{background:rgba(245,158,11,.08);color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;padding:2px 7px;border-radius:4px}
+.btn-del-sm{background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.2);border-radius:5px;padding:4px 9px;font-size:12px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-del-sm:hover{background:rgba(239,68,68,.15);color:#ef4444}
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+.alert{padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;display:flex;align-items:center;gap:8px}
+.alert-success{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:#10b981}
+.alert-warning{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);color:var(--amber)}
+.alert-error{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#ef4444}
+/* AI Camera */
+.cam-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center}
+.cam-overlay.active{display:flex}
+.cam-box{background:var(--bg2);border:1px solid rgba(56,189,248,.3);border-radius:16px;padding:20px;width:520px;max-width:95vw}
+.cam-box-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-family:'DM Mono',monospace;font-size:12px;color:var(--sky);font-weight:600}
+.cam-video-wrap{position:relative;border-radius:10px;overflow:hidden;background:#000;aspect-ratio:4/3}
+.cam-video-wrap video,.cam-video-wrap canvas{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cam-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px;text-align:center}
+.cam-stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--amber);line-height:1}
+.cam-stat-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.cam-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.cam-btn{flex:1;padding:9px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s}
+.cam-btn-start{background:var(--green);color:#000}
+.cam-btn-use{background:var(--amber);color:#000}
+.cam-btn-stop{background:var(--red);color:#fff}
+.cam-btn:hover{opacity:.85}
+.stage-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase}
+.stage-up{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
+.stage-down{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid var(--amber)}
+.ex-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.ex-tab{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border2);color:var(--text3);background:var(--bg3);transition:.15s}
+.ex-tab.active{border-color:var(--sky);color:var(--sky);background:rgba(56,189,248,.1)}
+.cam-note{font-size:10px;color:var(--text3);margin-top:8px;text-align:center}
+@media print{.no-print{display:none!important}body{background:#fff;color:#000}.card,.history-section{border:1px solid #ddd;background:#fff}.l3-title,.result-score{color:#b45309}}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="l3-wrap">
+
+  {% if messages %}
+    {% for msg in messages %}
+    <div class="alert alert-{{ msg.tags }}">
+      <i class="bi bi-{% if 'success' in msg.tags %}check-circle-fill{% else %}exclamation-triangle-fill{% endif %}"></i>
+      {{ msg }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Header -->
+  <div class="l3-header no-print">
+    <div class="l3-title-block">
+      <div class="l3-badge">Level 3 — Explosive Power</div>
+      <h1 class="l3-title">HPCS <span>POWER</span> AUDIT</h1>
+      <p class="l3-subtitle">High Velocity Power · Stretch-Shortening Cycle · Reactive Strength · Coach Fanny</p>
+    </div>
+    <div class="l3-header-actions">
+      <a href="{% url 'combat:dashboard' %}" class="btn btn-ghost">
+        <i class="bi bi-house-fill"></i> Dashboard
+      </a>
+      <button type="button" class="btn btn-outline" onclick="toggleRubrik()">
+        <i class="bi bi-journal-medical"></i> Rubrik Standar L3
+      </button>
+      <button type="button" class="btn btn-cam" onclick="openCamera()">
+        <i class="bi bi-camera-video-fill"></i> AI Camera
+      </button>
+      <button type="button" class="btn btn-ghost" onclick="handlePrint()">
+        <i class="bi bi-printer-fill"></i> Print
+      </button>
+    </div>
+  </div>
+
+  <!-- Rubrik -->
+  <div class="rubrik-panel no-print" id="rubrikPanel">
+    <div class="rubrik-head">
+      <div>Aspek & Instrumen</div><div>Elite (9-10)</div><div>Ready (7-8)</div><div>Developing (5-6)</div><div>Novice (1-4)</div>
+    </div>
+    <div class="rubrik-row">
+      <div><div class="rubrik-label"><a href="https://youtu.be/zAtaTksraj8" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">VERTICAL JUMP — CMJ <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Elite &ge;55cm · Youth &ge;50cm · Junior &ge;45cm</div></div>
+      <div><span class="val val-g">&ge;55 cm</span></div><div><span class="val val-b">42–54 cm</span></div><div><span class="val val-y">30–41 cm</span></div><div><span class="val val-r">&lt; 30 cm</span></div>
+    </div>
+    <div class="rubrik-row">
+      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=FyGxyrfyBnM" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">5M EXPLOSIVE STEP-IN <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Makin cepat makin tinggi skor</div></div>
+      <div><span class="val val-g">&lt;1.0 dtk</span></div><div><span class="val val-b">1.0–1.2 dtk</span></div><div><span class="val val-y">1.3–1.5 dtk</span></div><div><span class="val val-r">&gt; 1.5 dtk</span></div>
+    </div>
+    <div class="rubrik-row">
+      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=pz9XDIDTu7M" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">ROTATIONAL MED BALL THROW <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Lempar rotasional, bola 3 kg (proxy power tendangan memutar)</div></div>
+      <div><span class="val val-g">&ge;9 m</span></div><div><span class="val val-b">7–8.9 m</span></div><div><span class="val val-y">5–6.9 m</span></div><div><span class="val val-r">&lt; 5 m</span></div>
+    </div>
+    <div class="rubrik-row">
+      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=nr4VC0ucs8U" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">RSI — REACTIVE STRENGTH <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">RSI = jump height (cm) / contact time (ms) × 1000</div></div>
+      <div><span class="val val-g">&ge;2.5</span></div><div><span class="val val-b">1.8–2.49</span></div><div><span class="val val-y">1.0–1.79</span></div><div><span class="val val-r">&lt; 1.0</span></div>
+    </div>
+    <div class="rubrik-row">
+      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=iap7btfj5XI" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">SWITCH-STANCE FOOTWORK <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Jumlah switch orthodox&harr;southpaw dalam 10 detik</div></div>
+      <div><span class="val val-g">&ge;16x</span></div><div><span class="val val-b">12-15x</span></div><div><span class="val val-y">8-11x</span></div><div><span class="val val-r">&lt; 8x</span></div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form action="{% url 'taekwondo:l3_power' %}" method="POST" id="mainForm">
+    {% csrf_token %}
+    <input type="hidden" name="atlet_id"    id="h_atlet_id">
+    <input type="hidden" name="atlet_name"  id="h_atlet_name">
+    <input type="hidden" name="score_jump"     id="h_score_jump">
+    <input type="hidden" name="score_sprint"   id="h_score_sprint">
+    <input type="hidden" name="score_throw"    id="h_score_throw">
+    <input type="hidden" name="score_rsi"      id="h_score_rsi">
+    <input type="hidden" name="score_agility"  id="h_score_agility">
+    <input type="hidden" name="rsi_value"      id="h_rsi_value">
+    <input type="hidden" name="rsi_jump_height"   id="h_rsi_jh">
+    <input type="hidden" name="rsi_contact_time"  id="h_rsi_ct">
+
+    <div class="l3-grid">
+      <!-- Kolom 1 -->
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title"><i class="bi bi-person-fill"></i> Identitas Atlet</div>
+          <div class="form-group">
+            <label class="form-label">Pilih Atlet</label>
+            <select class="form-control" id="sel_atlet" onchange="onAtletChange(this)">
+              <option value="">— Pilih Atlet —</option>
+              {% for atlet in atlet_list %}
+              <option value="{{ atlet.id }}"
+                      data-nama="{{ atlet.nama_atlet }}"
+                      data-kategori="{{ atlet.kategori_umur }}"
+                      data-gender="{{ atlet.gender }}"
+                      data-berat="{{ atlet.kelas_berat }}">
+                {{ atlet.nama_atlet }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div id="atlet_info" style="display:none;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text2)">
+            <span id="info_nama" style="color:var(--amber);font-weight:700"></span> &nbsp;·&nbsp;
+            <span id="info_kat"></span> &nbsp;·&nbsp;
+            <span id="info_gender"></span> &nbsp;·&nbsp;
+            <span id="info_berat"></span> kg
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><i class="bi bi-lightning-fill"></i> Data Pilar Power L3</div>
+
+          <!-- JUMP -->
+          <div class="pilar">
+            <div class="pilar-name">⬆ Vertical Jump — CMJ <span class="pilar-sub">Tanpa ayunan lengan</span></div>
+            <div class="form-group">
+              <label class="form-label">Tinggi Lompatan (cm)</label>
+              <input type="number" id="inp_jump" class="form-control" step="0.1" min="0" max="120" placeholder="mis. 52" oninput="calcJump()">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+              <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
+              <span id="disp_jump" style="font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--amber)">—</span>
+            </div>
+            <div class="skor-bar"><div class="skor-bar-fill" id="bar_jump" style="width:0%"></div></div>
+            
+          </div>
+
+          <!-- SPRINT -->
+          <div class="pilar">
+            <div class="pilar-name">⚡ Sprint 30m</div>
+            <div class="form-group">
+              <label class="form-label">Waktu 30m (detik)</label>
+              <input type="number" id="inp_sprint" class="form-control" step="0.01" min="0" max="10" placeholder="mis. 4.20" oninput="calcSprint()">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+              <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
+              <span id="disp_sprint" style="font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--amber)">—</span>
+            </div>
+            <div class="skor-bar"><div class="skor-bar-fill" id="bar_sprint" style="width:0%"></div></div>
+            
+          </div>
+
+          <!-- THROW -->
+          <div class="pilar">
+            <div class="pilar-name">🏐 Med Ball Throw <span class="pilar-sub">Bola 3 kg</span></div>
+            <div class="form-group">
+              <label class="form-label">Jarak Lemparan (meter)</label>
+              <input type="number" id="inp_throw" class="form-control" step="0.01" min="0" max="20" placeholder="mis. 7.5" oninput="calcThrow()">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+              <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
+              <span id="disp_throw" style="font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--amber)">—</span>
+            </div>
+            <div class="skor-bar"><div class="skor-bar-fill" id="bar_throw" style="width:0%"></div></div>
+          </div>
+
+          <!-- RSI -->
+          <div class="pilar">
+            <div class="pilar-name">🧠 RSI — Reactive Strength <span class="pilar-sub">Drop Jump 30cm</span></div>
+            <div class="row2">
+              <div class="form-group">
+                <label class="form-label">Jump Height (cm)</label>
+                <input type="number" id="inp_rsi_jh" class="form-control" step="0.1" placeholder="mis. 35" oninput="calcRSI()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Contact Time (ms)</label>
+                <input type="number" id="inp_rsi_ct" class="form-control" step="1" placeholder="mis. 220" oninput="calcRSI()">
+              </div>
+            </div>
+            <div class="rsi-box" id="rsi_display" style="display:none">
+              RSI = <span class="rsi-result" id="rsi_val">—</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:6px">
+              <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
+              <span id="disp_rsi" style="font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--amber)">—</span>
+            </div>
+            <div class="skor-bar"><div class="skor-bar-fill" id="bar_rsi" style="width:0%"></div></div>
+          </div>
+
+          <!-- AGILITY -->
+          <div class="pilar">
+            <div class="pilar-name">↕ Agility — T-Test / 505</div>
+            <div class="form-group">
+              <label class="form-label">Waktu T-Test (detik)</label>
+              <input type="number" id="inp_agility" class="form-control" step="0.01" min="0" max="20" placeholder="mis. 10.2" oninput="calcAgility()">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+              <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
+              <span id="disp_agility" style="font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--amber)">—</span>
+            </div>
+            <div class="skor-bar"><div class="skor-bar-fill" id="bar_agility" style="width:0%"></div></div>
+            
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Kolom 2: Radar -->
+      <div class="card radar-wrap">
+        <div class="card-title">Power Distribution Radar</div>
+        <div class="radar-canvas-wrap">
+          <canvas id="radarChart"></canvas>
+          <img id="chartPrintImg" alt="Radar" style="display:none;width:100%;max-width:400px">
+        </div>
+        <div class="score-pills">
+          <span class="score-pill" id="p_jump">Jump: —</span>
+          <span class="score-pill" id="p_sprint">Sprint: —</span>
+          <span class="score-pill" id="p_throw">Throw: —</span>
+          <span class="score-pill" id="p_rsi">RSI: —</span>
+          <span class="score-pill" id="p_agility">Agility: —</span>
+        </div>
+        <!-- Profil Kondisi Atlet di bawah radar -->
+        <div id="narasi_l3" style="display:none;margin-top:12px;text-align:left;">
+          <div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:1px;margin-bottom:6px;padding:0 4px;">
+            &#9889; PROFIL KONDISI ATLET
+          </div>
+          <div id="narasi_box_l3" style="
+            background:rgba(245,158,11,0.05);
+            border:1px solid rgba(245,158,11,0.2);
+            border-radius:10px;padding:12px;
+            font-size:11px;line-height:1.7;
+            color:#9ca3af;max-height:320px;
+            overflow-y:auto;text-align:left;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Kolom 3: Hasil -->
+      <div class="l3-col-right" style="position:sticky;top:16px;">
+        <div class="card" style="text-align:center">
+          <div class="card-title" style="justify-content:center">Audit Result</div>
+          <div class="result-score" id="res_total">0.0</div>
+          <div class="result-badge novice" id="res_badge">NOVICE</div>
+
+
+          <!-- Rekomendasi Latihan -->
+          <div class="rekomendasi" id="rekomendasi" style="text-align:left;">
+            <div class="rekomendasi-title">&#128203; Rekomendasi Pelatih:</div>
+            <div id="rekomendasi_text"></div>
+          </div>
+          <button type="submit" class="btn-save">
+            <i class="bi bi-save2-fill"></i> SIMPAN DATA L3
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- History -->
+  <div class="history-section no-print">
+    <div class="history-header">
+      <div class="card-title" style="margin-bottom:0"><i class="bi bi-clock-history"></i> History Audit L3 — Power</div>
+      <span class="history-count">{{ history|length }} Record</span>
+    </div>
+    {% if history %}
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Tanggal</th><th>Atlet</th><th>Kat.</th>
+            <th>Jump</th><th>Sprint</th><th>Throw</th><th>RSI</th><th>Agility</th>
+            <th>Total</th><th>Predikat</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in history %}
+          <tr>
+            <td style="color:var(--text3)">{{ forloop.counter }}</td>
+            <td style="color:var(--text3);font-size:11px;white-space:nowrap">{{ item.timestamp|date:"d/m/Y H:i" }}</td>
+            <td style="font-weight:600;color:var(--white)">{{ item.atlet_name }}</td>
+            <td style="font-size:11px">{{ item.kategori_usia }}</td>
+            <td><span class="pill">{{ item.score_jump }}</span></td>
+            <td><span class="pill">{{ item.score_sprint }}</span></td>
+            <td><span class="pill">{{ item.score_throw }}</span></td>
+            <td><span class="pill">{{ item.score_rsi }}</span></td>
+            <td><span class="pill">{{ item.score_agility }}</span></td>
+            <td style="font-family:'DM Mono',monospace;font-size:1.05rem;color:var(--amber);font-weight:600">{{ item.total_skor }}</td>
+            <td>
+              {% if item.predikat == 'ELITE' %}<span class="badge badge-elite">ELITE</span>
+              {% elif item.predikat == 'READY' %}<span class="badge badge-ready">READY</span>
+              {% elif item.predikat == 'DEVELOPING' %}<span class="badge badge-developing">DEVELOPING</span>
+              {% else %}<span class="badge badge-novice">NOVICE</span>{% endif %}
+            </td>
+            <td>
+              <a href="{% url 'taekwondo:hapus_l3_audit' item.pk %}" class="btn-del-sm"
+                 onclick="return confirm('Hapus data {{ item.atlet_name|escapejs }}?')">
+                <i class="bi bi-trash"></i>
+              </a>
+              <button onclick="window.print()" title="Cetak PDF"
+                style="background:transparent;border:1px solid rgba(245,158,11,0.4);
+                       color:#f59e0b;margin-left:4px;border-radius:6px;
+                       padding:4px 8px;cursor:pointer;font-size:12px;">
+                <i class="bi bi-printer-fill"></i>
+              </button>
+              
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><i class="bi bi-inbox"></i><br>Belum ada data L3 tersimpan.</div>
+    {% endif %}
+  </div>
+
+  <!-- ═══ AI CAMERA OVERLAY ═══ -->
+  <div class="cam-overlay" id="camOverlay">
+    <div class="cam-box">
+      <div class="cam-box-title">
+        <span><i class="bi bi-camera-video-fill"></i> AI Camera — Power Analysis</span>
+        <button onclick="closeCamera()" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer">✕</button>
+      </div>
+      <div class="ex-tabs" id="exTabs">
+        <button class="ex-tab active" data-ex="jump">⬆ Jump</button>
+        <button class="ex-tab" data-ex="sprint">⚡ Sprint</button>
+        <button class="ex-tab" data-ex="agility">↕ Agility</button>
+      </div>
+      <div class="cam-video-wrap">
+        <video id="camVideo" autoplay playsinline muted></video>
+        <canvas id="camCanvas"></canvas>
+      </div>
+      <div class="cam-stats">
+        <div>
+          <div class="cam-stat-val" id="camVal">0</div>
+          <div class="cam-stat-label" id="camValLabel">CM / DETIK</div>
+        </div>
+        <div>
+          <span class="stage-badge stage-up" id="camStage">SIAP</span>
+          <div class="cam-stat-label" style="margin-top:6px">FASE</div>
+        </div>
+        <div>
+          <div class="cam-stat-val" style="font-size:1.6rem" id="camConf">—</div>
+          <div class="cam-stat-label">CONFIDENCE</div>
+        </div>
+      </div>
+      <div class="cam-actions">
+        <button class="cam-btn cam-btn-start" id="btnCamStart" onclick="startCamera()">▶ Mulai</button>
+        <button class="cam-btn cam-btn-use"   onclick="applyCamera()">✓ Pakai</button>
+        <button class="cam-btn cam-btn-stop"  onclick="stopCamera()">■ Stop</button>
+      </div>
+      <div class="cam-note">MediaPipe Pose (Google) — semua analisis di perangkat lokal</div>
+    </div>
+  </div>
+
+  <!-- ═══ SCRIPTS ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+  <script>
+
+  // ── Scoring rubrik (berdasarkan rubrik HPCS) ──────────────────────
+  function scoringJump(cm) {
+    if (!cm || cm <= 0) return 0;
+    return cm >= 55 ? 10 : cm >= 50 ? 9 : cm >= 45 ? 8 : cm >= 42 ? 7 :
+           cm >= 38 ?  6 : cm >= 33 ? 5 : cm >= 28 ? 4 : 3;
+  }
+  function scoringSprint(t) {
+    if (!t || t <= 0) return 0;
+    return t < 3.8 ? 10 : t < 3.9 ? 9 : t < 4.0 ? 8 : t < 4.2 ? 7 :
+           t < 4.4 ?  6 : t < 4.6 ? 5 : t < 4.8 ? 4 : 3;
+  }
+  function scoringThrow(m) {
+    if (!m || m <= 0) return 0;
+    return m >= 8 ? 10 : m >= 7.5 ? 9 : m >= 7 ? 8 : m >= 6.5 ? 7 :
+           m >= 6 ?  6 : m >= 5   ? 5 : m >= 4  ? 4 : 3;
+  }
+  function scoringRSI(r) {
+    if (!r || r <= 0) return 0;
+    return r >= 2.5 ? 10 : r >= 2.2 ? 9 : r >= 2.0 ? 8 : r >= 1.8 ? 7 :
+           r >= 1.5 ?  6 : r >= 1.2 ? 5 : r >= 1.0 ? 4 : 3;
+  }
+  function scoringAgility(t) {
+    if (!t || t <= 0) return 0;
+    return t < 9.5 ? 10 : t < 9.8 ? 9 : t < 10.0 ? 8 : t < 10.5 ? 7 :
+           t < 10.8 ? 6 : t < 11.0 ? 5 : t < 11.5 ? 4 : 3;
+  }
+
+  // ── State skor ────────────────────────────────────────────────────
+  const scores = { jump:0, sprint:0, throw:0, rsi:0, agility:0 };
+
+  function setScore(key, val, dispId, barId) {
+    scores[key] = val;
+    const el = document.getElementById(dispId);
+    const bar = document.getElementById(barId);
+    if (el) {
+      el.textContent = val > 0 ? val.toFixed(1) : '—';
+      el.style.color = val >= 9 ? 'var(--green)' : val >= 7 ? 'var(--sky)' :
+                       val >= 5 ? 'var(--amber)' : val > 0 ? 'var(--red)' : 'var(--text3)';
+    }
+    if (bar) bar.style.width = (val * 10) + '%';
+    // Sync ke hidden field
+    const hid = document.getElementById('h_score_' + key);
+    if (hid) hid.value = val;
+    liveUpdate();
+  }
+
+  // ── Kalkulasi per pilar ───────────────────────────────────────────
+  function calcJump() {
+    const v = parseFloat(document.getElementById('inp_jump').value);
+    setScore('jump', scoringJump(v), 'disp_jump', 'bar_jump');
+  }
+  function calcSprint() {
+    const v = parseFloat(document.getElementById('inp_sprint').value);
+    setScore('sprint', scoringSprint(v), 'disp_sprint', 'bar_sprint');
+  }
+  function calcThrow() {
+    const v = parseFloat(document.getElementById('inp_throw').value);
+    setScore('throw', scoringThrow(v), 'disp_throw', 'bar_throw');
+  }
+  function calcRSI() {
+    const jh = parseFloat(document.getElementById('inp_rsi_jh').value);
+    const ct = parseFloat(document.getElementById('inp_rsi_ct').value);
+    if (!jh || !ct || ct === 0) return;
+    const rsi = (jh / ct * 1000);
+    document.getElementById('rsi_val').textContent = rsi.toFixed(3);
+    document.getElementById('rsi_display').style.display = 'block';
+    document.getElementById('h_rsi_value').value = rsi.toFixed(3);
+    document.getElementById('h_rsi_jh').value = jh;
+    document.getElementById('h_rsi_ct').value = ct;
+    setScore('rsi', scoringRSI(rsi), 'disp_rsi', 'bar_rsi');
+  }
+  function calcAgility() {
+    const v = parseFloat(document.getElementById('inp_agility').value);
+    setScore('agility', scoringAgility(v), 'disp_agility', 'bar_agility');
+  }
+
+  // ── Atlet dropdown ────────────────────────────────────────────────
+  function onAtletChange(sel) {
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.value) return;
+    const nama = opt.dataset.nama || '';
+    document.getElementById('h_atlet_id').value   = opt.value;
+    document.getElementById('h_atlet_name').value = nama;
+    document.getElementById('info_nama').textContent   = nama.toUpperCase();
+    document.getElementById('info_kat').textContent    = opt.dataset.kategori || '';
+    document.getElementById('info_gender').textContent = opt.dataset.gender   || '';
+    document.getElementById('info_berat').textContent  = opt.dataset.berat    || '—';
+    document.getElementById('atlet_info').style.display = 'block';
+  }
+
+  // ── Radar Chart ───────────────────────────────────────────────────
+  let radarChart = null;
+  document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    radarChart = new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: ['JUMP','SPRINT','THROW','RSI','AGILITY'],
+        datasets: [{
+          data: [0,0,0,0,0],
+          backgroundColor: 'rgba(245,158,11,0.12)',
+          borderColor: '#f59e0b', borderWidth: 2,
+          pointBackgroundColor: '#fbbf24', pointRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { r: {
+          min: 0, max: 10,
+          ticks: { display: false },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          angleLines: { color: 'rgba(255,255,255,0.05)' },
+          pointLabels: { color: '#94a3b8', font: { family:"'DM Mono',monospace", size:10 } }
+        }},
+        plugins: { legend: { display: false } }
+      }
+    });
+  });
+
+  // ── Live Update ───────────────────────────────────────────────────
+  function liveUpdate() {
+    const vals = [scores.jump, scores.sprint, scores.throw, scores.rsi, scores.agility];
+    const filled = vals.filter(v => v > 0);
+    const avg = filled.length ? (filled.reduce((a,b)=>a+b,0)/5).toFixed(1) : '0.0';
+
+    if (radarChart) { radarChart.data.datasets[0].data = vals; radarChart.update(); }
+
+    document.getElementById('res_total').textContent = avg;
+    document.getElementById('p_jump').textContent    = 'Jump: '    + (scores.jump    || '—');
+    document.getElementById('p_sprint').textContent  = 'Sprint: '  + (scores.sprint  || '—');
+    document.getElementById('p_throw').textContent   = 'Throw: '   + (scores.throw   || '—');
+    document.getElementById('p_rsi').textContent     = 'RSI: '     + (scores.rsi     || '—');
+    document.getElementById('p_agility').textContent = 'Agility: ' + (scores.agility || '—');
+
+    const a = parseFloat(avg);
+    const badge = document.getElementById('res_badge');
+    const rekT  = document.getElementById('rekomendasi_text');
+    document.getElementById('rekomendasi').classList.add('show');
+
+    if (a >= 9.0) {
+      badge.className = 'result-badge elite'; badge.textContent = 'ELITE';
+      rekT.innerHTML = '<b>Kapasitas Power Eksplosif Tinggi.</b> Atlet SIAP KOMPETISI. Pertahankan RSI > 2.5 dan sprint < 3.8 dtk.';
+    } else if (a >= 7.0) {
+      badge.className = 'result-badge ready'; badge.textContent = 'READY';
+      rekT.innerHTML = '<b>Kompeten.</b> Tingkatkan pilar terendah dengan plyometric progresif 2x/minggu. Target ELITE dalam 8 minggu.';
+    } else if (a >= 5.0) {
+      badge.className = 'result-badge developing'; badge.textContent = 'DEVELOPING';
+      rekT.innerHTML = '<b>Dalam Pengembangan.</b> Pastikan fondasi L2 solid sebelum menambah volume power. Fokus RSI dan sprint.';
+    } else {
+      badge.className = 'result-badge novice'; badge.textContent = 'NOVICE';
+      rekT.innerHTML = '<b>Power Dasar Lemah.</b> Kembali perkuat L2 Strength. Power tidak bisa dibangun tanpa fondasi kekuatan.';
+    }
+  }
+
+  // ── Rubrik & Print ────────────────────────────────────────────────
+  function toggleRubrik() { document.getElementById('rubrikPanel').classList.toggle('open'); }
+  function handlePrint() {
+    const c = document.getElementById('radarChart');
+    if (c) document.getElementById('chartPrintImg').src = c.toDataURL('image/png');
+    window.print();
+  }
+
+  // ── Validasi submit ───────────────────────────────────────────────
+  document.getElementById('mainForm').addEventListener('submit', function(e) {
+    if (!document.getElementById('h_atlet_id').value) {
+      e.preventDefault(); alert('Pilih atlet terlebih dahulu!'); return;
+    }
+    const allZero = Object.values(scores).every(v => v === 0);
+    if (allZero) {
+      e.preventDefault(); alert('Isi minimal satu data pilar sebelum menyimpan!');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // AI CAMERA — MediaPipe Pose
+  // ═══════════════════════════════════════════════════════════════════
+  let camExercise = 'jump';
+  let camStream   = null;
+  let mpPose      = null;
+  let mpCamera    = null;
+  let camRunning  = false;
+
+  // State per exercise
+  let jumpStage = null, jumpCount = 0;
+  let timerStart = null, timerVal = 0, timerInterval = null;
+
+  // Tab switching
+  document.getElementById('exTabs').addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-ex]');
+    if (!btn) return;
+    document.querySelectorAll('.ex-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    camExercise = btn.dataset.ex;
+    resetCamState();
+    updateCamUI();
+  });
+
+  function openCamera(ex) {
+    if (ex) {
+      camExercise = ex;
+      document.querySelectorAll('.ex-tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.ex === ex);
+      });
+    }
+    updateCamUI();
+    document.getElementById('camOverlay').classList.add('active');
+  }
+
+  function closeCamera() {
+    document.getElementById('camOverlay').classList.remove('active');
+    stopCamera();
+  }
+
+  function updateCamUI() {
+    const labels = { jump:'CM', sprint:'DETIK', agility:'DETIK' };
+    document.getElementById('camValLabel').textContent = labels[camExercise] || 'NILAI';
+    document.getElementById('camVal').textContent = '0';
+    document.getElementById('camStage').textContent = 'SIAP';
+    document.getElementById('camStage').className = 'stage-badge stage-up';
+  }
+
+  function resetCamState() {
+    jumpStage = null; jumpCount = 0; timerVal = 0;
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  }
+
+  async function startCamera() {
+    if (camRunning) return;
+    const video  = document.getElementById('camVideo');
+    const canvas = document.getElementById('camCanvas');
+    try {
+      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+      video.srcObject = camStream;
+
+      if (!mpPose) {
+        mpPose = new Pose({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}` });
+        mpPose.setOptions({ modelComplexity:1, smoothLandmarks:true, enableSegmentation:false,
+                            minDetectionConfidence:0.6, minTrackingConfidence:0.6 });
+        mpPose.onResults(onPoseResults);
+      }
+
+      mpCamera = new Camera(video, {
+        onFrame: async () => { await mpPose.send({ image: video }); },
+        width: 640, height: 480,
+      });
+      mpCamera.start();
+      camRunning = true;
+      resetCamState();
+
+      // Sprint / Agility: mulai timer otomatis
+      if (camExercise === 'sprint' || camExercise === 'agility') {
+        timerStart = Date.now();
+        timerInterval = setInterval(() => {
+          timerVal = ((Date.now() - timerStart) / 1000);
+          document.getElementById('camVal').textContent = timerVal.toFixed(2);
+        }, 50);
+      }
+    } catch (err) {
+      alert('Tidak bisa akses kamera: ' + err.message);
+    }
+  }
+
+  function stopCamera() {
+    if (mpCamera)    { mpCamera.stop(); mpCamera = null; }
+    if (camStream)   { camStream.getTracks().forEach(t => t.stop()); camStream = null; }
+    if (timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+    camRunning = false;
+  }
+
+  function applyCamera() {
+    const val = document.getElementById('camVal').textContent;
+    const num = parseFloat(val);
+    if (!num) { alert('Belum ada data dari kamera.'); return; }
+
+    if (camExercise === 'jump') {
+      document.getElementById('inp_jump').value = num;
+      calcJump();
+    } else if (camExercise === 'sprint') {
+      document.getElementById('inp_sprint').value = num;
+      calcSprint();
+    } else if (camExercise === 'agility') {
+      document.getElementById('inp_agility').value = num;
+      calcAgility();
+    }
+    closeCamera();
+  }
+
+  function onPoseResults(res) {
+    const canvas = document.getElementById('camCanvas');
+    const ctx2   = canvas.getContext('2d');
+    canvas.width  = res.image.width;
+    canvas.height = res.image.height;
+    ctx2.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!res.poseLandmarks) return;
+    if (window.drawConnectors) {
+      drawConnectors(ctx2, res.poseLandmarks, POSE_CONNECTIONS, { color:'rgba(245,158,11,0.5)', lineWidth:2 });
+      drawLandmarks(ctx2, res.poseLandmarks, { color:'#fbbf24', lineWidth:1, radius:3 });
+    }
+
+    const lm   = res.poseLandmarks;
+    const conf = Math.round((lm[0].visibility || 0) * 100);
+    document.getElementById('camConf').textContent = conf + '%';
+
+    if (camExercise === 'jump') analyzeJump(lm);
+  }
+
+  function angle3(a, b, c) {
+    const ab = { x: a.x-b.x, y: a.y-b.y };
+    const cb = { x: c.x-b.x, y: c.y-b.y };
+    const dot = ab.x*cb.x + ab.y*cb.y;
+    const mag = Math.sqrt(ab.x**2+ab.y**2) * Math.sqrt(cb.x**2+cb.y**2);
+    return Math.round(Math.acos(Math.min(1, dot/mag)) * 180 / Math.PI);
+  }
+
+  let baseHipY = null;
+
+  function analyzeJump(lm) {
+    const hipY       = (lm[23].y + lm[24].y) / 2;
+    const kneeAngle  = angle3(lm[24], lm[26], lm[28]);
+    const stageEl    = document.getElementById('camStage');
+
+    if (baseHipY === null) baseHipY = hipY;
+
+    if (kneeAngle < 100) {
+      jumpStage = 'crouch';
+      stageEl.textContent = 'JONGKOK'; stageEl.className = 'stage-badge stage-down';
+    } else if (jumpStage === 'crouch' && kneeAngle > 160) {
+      jumpStage = 'air';
+      stageEl.textContent = 'MELAYANG'; stageEl.className = 'stage-badge stage-up';
+      // Estimasi tinggi lompatan dari perpindahan hip (normalisasi ke cm)
+      const liftPct = Math.max(0, baseHipY - hipY);
+      const estCm   = Math.round(liftPct * 200); // estimasi kasar
+      jumpCount = Math.max(jumpCount, estCm);
+      document.getElementById('camVal').textContent = jumpCount;
+    } else if (jumpStage === 'air' && kneeAngle < 140) {
+      jumpStage = null;
+      stageEl.textContent = 'LANDING'; stageEl.className = 'stage-badge stage-up';
+      baseHipY = hipY;
+    }
+  }
+
+  </script>
+
+</div><!-- /l3-wrap -->
+{% endblock %}
