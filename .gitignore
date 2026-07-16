@@ -20,3 +20,12 @@ env/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Static files (di-generate otomatis, jangan commit)
+staticfiles/
+
+# File sementara/referensi kerja
+_muaythai_reference/
+*.zip
+data_backup.json
+muaythai_py_gabungan.txt
