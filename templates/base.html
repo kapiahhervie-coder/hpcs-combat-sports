@@ -227,6 +227,22 @@
     .sidebar.collapsed .user-name { display: none !important; }
     .sidebar.collapsed .sidebar-footer a { display: none !important; }
 
+    .mobile-menu-btn { display: none; }
+
+    @media (max-width: 768px) {
+      .sidebar.mobile-open { transform: translateX(0); }
+      .mobile-menu-btn {
+        display: flex; align-items: center; justify-content: center;
+        width: 32px; height: 32px; background: #ef4444; border-radius: 6px;
+        color: #fff; font-size: 16px; cursor: pointer; margin-right: 12px;
+      }
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,.5); z-index: 90;
+      }
+      .sidebar-overlay.active { display: block; }
+    }
+
 </style>
 
   {% block extra_css %}{% endblock %}
@@ -298,13 +314,17 @@
       </form>
     </div>
   </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
 
   <!-- Main -->
   <div class="main-wrapper">
 
     <!-- Topbar -->
     <header class="topbar">
-      <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      <div style="display:flex;align-items:center;">
+        <div class="mobile-menu-btn" onclick="toggleMobileSidebar()">&#9776;</div>
+        <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
       <div class="topbar-right">
         {% if user.is_authenticated %}
         <div class="topbar-user">
@@ -343,6 +363,12 @@ function toggleSidebar() {
     sb.classList.toggle('collapsed');
     if (mw) mw.style.marginLeft = sb.classList.contains('collapsed') ? '54px' : '230px';
     localStorage.setItem('sidebar_collapsed', sb.classList.contains('collapsed'));
+}
+function toggleMobileSidebar() {
+    var sb = document.querySelector('.sidebar');
+    var ov = document.getElementById('sidebarOverlay');
+    sb.classList.toggle('mobile-open');
+    ov.classList.toggle('active');
 }
 // Restore state
 window.addEventListener('DOMContentLoaded', function() {
