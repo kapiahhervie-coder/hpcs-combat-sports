@@ -30,6 +30,9 @@ ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
     default='localhost,127.0.0.1,.onrender.com',
 ).split(',')
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.up.railway.app',
+]
 
 
 # Application definition
