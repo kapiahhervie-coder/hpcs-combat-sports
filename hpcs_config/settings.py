@@ -167,5 +167,7 @@ DEFAULT_FROM_EMAIL = 'HPCS Combat Sports <sakalahpcs@gmail.com>'
 
 # Allow GET logout
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/combat/'
+
 
 
