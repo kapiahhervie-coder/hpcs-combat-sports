@@ -74,20 +74,30 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 .rubrik-toggle-btn{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);cursor:pointer;padding:5px 12px;border-radius:6px;border:1px solid var(--cyan);background:transparent;margin-top:8px;}
 .rubrik-l1-panel{display:none;margin-top:10px;border:1px solid #2a2d3e;border-radius:10px;overflow:hidden;background:#13151f;}
 .rubrik-l1-panel.open{display:block;}
-.rb1-head{display:grid;grid-template-columns:150px 1fr 1fr 1fr;background:linear-gradient(90deg,#0a1e35,#122d4a);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.rb1-head{display:grid;grid-template-columns:130px 1fr 1fr 1fr 1fr;background:linear-gradient(90deg,#0a1e35,#122d4a);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
 .rb1-head div{padding:8px 10px;}
-.rb1-row{display:grid;grid-template-columns:150px 1fr 1fr 1fr;border-top:1px solid #1a2330;font-size:10.5px;line-height:1.5;}
+.rb1-row{display:grid;grid-template-columns:130px 1fr 1fr 1fr 1fr;border-top:1px solid #1a2330;font-size:10.5px;line-height:1.5;}
 .rb1-row div{padding:8px 10px;}
 .rb1-name{font-weight:700;color:var(--cyan);}
 .rb1-c1{background:rgba(231,76,60,0.05);color:#e8a0a0;}
 .rb1-c2{background:rgba(245,166,35,0.05);color:#e8c870;}
-.rb1-c3{background:rgba(46,204,113,0.05);color:#a0e4bc;}
+.rb1-c3{background:rgba(52,152,219,0.05);color:#8ec4ea;}
+.rb1-c4{background:rgba(46,204,113,0.05);color:#a0e4bc;}
 .rb1-score{display:block;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:400;letter-spacing:0.5px;color:var(--text3);margin-top:2px;text-transform:none;}
+.rb1-std{list-style:none;margin:0 0 6px;padding:0;}
+.rb1-std li{padding:1px 0;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2px;}
+.rb1-desc{display:block;font-size:9.5px;color:var(--text3);font-style:italic;margin-top:4px;line-height:1.4;}
+.vid-link{display:inline-flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cyan);text-decoration:none;border:1px solid rgba(80,238,241,0.3);border-radius:5px;padding:2px 8px;margin-left:8px;transition:.15s;}
+.vid-link:hover{background:rgba(80,238,241,0.1);color:#fff;border-color:var(--cyan);}
+.rb1-name a{color:var(--cyan);text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.rb1-name a:hover{color:#fff;text-decoration:underline;}
+.rb1-name a i{font-size:11px;}
 .neural-select{display:flex;gap:6px;margin-top:8px}
 .neural-btn{flex:1;padding:6px 4px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;border-radius:6px;border:1px solid var(--border2);color:var(--text3);cursor:pointer;transition:.15s;background:transparent;}
 .neural-btn.active-1{background:rgba(231,76,60,0.15);border-color:var(--red);color:var(--red)}
 .neural-btn.active-2{background:rgba(245,166,35,0.15);border-color:var(--gold);color:var(--gold)}
-.neural-btn.active-3{background:rgba(46,204,113,0.15);border-color:var(--green);color:var(--green)}
+.neural-btn.active-3{background:rgba(52,152,219,0.15);border-color:var(--blue);color:var(--blue)}
+.neural-btn.active-4{background:rgba(46,204,113,0.15);border-color:var(--green);color:var(--green)}
 .no-print{display:block}
 @media print{
   .no-print,.btn,.topbar,.filter-bar{display:none!important}
@@ -129,57 +139,65 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 
   <div class="rubrik-l1-panel no-print" id="rubrikL1Panel">
     <div class="rb1-head">
-      <div>Pola Gerak</div><div>Cognitive (1)<span class="rb1-score">Skor: 0.0&ndash;3.3</span></div><div>Associative (2)<span class="rb1-score">Skor: 3.4&ndash;6.6</span></div><div>Autonomous (3)<span class="rb1-score">Skor: 6.7&ndash;10</span></div>
+      <div>Pola Gerak</div><div>Novice<span class="rb1-score">Skor: 1&ndash;4</span></div><div>Developing<span class="rb1-score">Skor: 5&ndash;6</span></div><div>Competent<span class="rb1-score">Skor: 7&ndash;8</span></div><div>Very Competent<span class="rb1-score">Skor: 9&ndash;10</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Hip Rotation</div>
-      <div class="rb1-c1">Kaku, ROM terbatas, sering kompensasi pakai punggung bawah</div>
-      <div class="rb1-c2">ROM meningkat, mulai konsisten, kadang masih perlu koreksi visual</div>
-      <div class="rb1-c3">Rotasi penuh & halus otomatis, stabil walau lelah</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=UYtAJ2ZCZ7w" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Hip Rotation</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &lt;50&deg;</li><li>Y: &lt;45&deg;</li><li>J: &lt;35&deg;</li></ul><span class="rb1-desc">Sangat kaku, ROM sangat terbatas, kompensasi berat pakai punggung bawah</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 50&ndash;70&deg;</li><li>Y: 45&ndash;60&deg;</li><li>J: 35&ndash;50&deg;</li></ul><span class="rb1-desc">Kaku, ROM terbatas, sering kompensasi pakai punggung bawah</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 70&ndash;85&deg;</li><li>Y: 60&ndash;75&deg;</li><li>J: 50&ndash;65&deg;</li></ul><span class="rb1-desc">ROM meningkat, mulai konsisten, kadang masih perlu koreksi visual</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &gt;85&deg;</li><li>Y: &gt;75&deg;</li><li>J: &gt;65&deg;</li></ul><span class="rb1-desc">Rotasi penuh &amp; halus otomatis, stabil walau lelah</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Balance</div>
-      <div class="rb1-c1">Goyah, sering injak lantai, mata terpaku 1 titik</div>
-      <div class="rb1-c2">Stabil statis, tapi goyah saat ditambah gerak tangan/kepala</div>
-      <div class="rb1-c3">Stabil sambil multitasking, cepat pulih dari gangguan</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=4HtOeds_vyw" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Balance</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &lt;15dtk</li><li>Y: &lt;12dtk</li><li>J: &lt;10dtk</li></ul><span class="rb1-desc">Sangat goyah, jatuh/injak lantai berulang, mata terpaku 1 titik</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 15&ndash;30dtk</li><li>Y: 12&ndash;25dtk</li><li>J: 10&ndash;20dtk</li></ul><span class="rb1-desc">Goyah, sering injak lantai, mata terpaku 1 titik</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 30&ndash;45dtk</li><li>Y: 25&ndash;35dtk</li><li>J: 20&ndash;30dtk</li></ul><span class="rb1-desc">Stabil statis, tapi goyah saat ditambah gerak tangan/kepala</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &gt;45dtk</li><li>Y: &gt;35dtk</li><li>J: &gt;30dtk</li></ul><span class="rb1-desc">Stabil sambil multitasking, cepat pulih dari gangguan</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Ankle Mobility</div>
-      <div class="rb1-c1">Tumit terangkat saat squat, butuh reminder terus</div>
-      <div class="rb1-c2">ROM cukup, sesekali tumit angkat di beban berat</div>
-      <div class="rb1-c3">ROM penuh otomatis, tumit nempel walau kombo cepat</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=kbzYML05Vac" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Ankle Mobility</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &lt;5cm</li><li>Y: &lt;4cm</li><li>J: &lt;3cm</li></ul><span class="rb1-desc">Tumit selalu terangkat saat squat, ROM sangat terbatas</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 5&ndash;9cm</li><li>Y: 4&ndash;7cm</li><li>J: 3&ndash;6cm</li></ul><span class="rb1-desc">Tumit terangkat saat squat, butuh reminder terus</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 9&ndash;12cm</li><li>Y: 7&ndash;10cm</li><li>J: 6&ndash;8cm</li></ul><span class="rb1-desc">ROM cukup, sesekali tumit angkat di beban berat</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &gt;12cm</li><li>Y: &gt;10cm</li><li>J: &gt;8cm</li></ul><span class="rb1-desc">ROM penuh otomatis, tumit nempel walau kombo cepat</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Thoracic Rotation</div>
-      <div class="rb1-c1">Dada & pinggul ikut muter bareng, gerakan patah-patah</div>
-      <div class="rb1-c2">Mulai bisa pisah rotasi dada-pinggul, belum konsisten</div>
-      <div class="rb1-c3">Separasi dada-pinggul otomatis & konsisten (basis power pukulan/tendangan)</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=yfl4qZAN5g8" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Thoracic Rotation</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &lt;30&deg;</li><li>Y: &lt;28&deg;</li><li>J: &lt;25&deg;</li></ul><span class="rb1-desc">Dada &amp; pinggul selalu muter bareng, gerakan sangat patah-patah</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 30&ndash;45&deg;</li><li>Y: 28&ndash;40&deg;</li><li>J: 25&ndash;35&deg;</li></ul><span class="rb1-desc">Dada &amp; pinggul ikut muter bareng, gerakan patah-patah</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 45&ndash;55&deg;</li><li>Y: 40&ndash;50&deg;</li><li>J: 35&ndash;45&deg;</li></ul><span class="rb1-desc">Mulai bisa pisah rotasi dada-pinggul, belum konsisten</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &gt;55&deg;</li><li>Y: &gt;50&deg;</li><li>J: &gt;45&deg;</li></ul><span class="rb1-desc">Separasi dada-pinggul otomatis &amp; konsisten (basis power pukulan/tendangan)</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Shoulder Mobility</div>
-      <div class="rb1-c1">ROM terbatas, kompensasi angkat bahu/lengkung punggung</div>
-      <div class="rb1-c2">ROM cukup, kadang kompensasi di rep terakhir/lelah</div>
-      <div class="rb1-c3">ROM penuh stabil, tanpa kompensasi meski lelah</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=GL6kBBMtWkY" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Shoulder Mobility</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &lt;145&deg;</li><li>Y: &lt;140&deg;</li><li>J: &lt;135&deg;</li></ul><span class="rb1-desc">ROM sangat terbatas, kompensasi berat angkat bahu/lengkung punggung</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 145&ndash;160&deg;</li><li>Y: 140&ndash;155&deg;</li><li>J: 135&ndash;150&deg;</li></ul><span class="rb1-desc">ROM terbatas, kompensasi angkat bahu/lengkung punggung</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 160&ndash;170&deg;</li><li>Y: 155&ndash;165&deg;</li><li>J: 150&ndash;160&deg;</li></ul><span class="rb1-desc">ROM cukup, kadang kompensasi di rep terakhir/lelah</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &gt;170&deg;</li><li>Y: &gt;165&deg;</li><li>J: &gt;160&deg;</li></ul><span class="rb1-desc">ROM penuh stabil, tanpa kompensasi meski lelah</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Hip Hinge</div>
-      <div class="rb1-c1">Pola squat (lutut maju dulu), punggung membulat</div>
-      <div class="rb1-c2">Hinge mulai terasa, punggung netral tapi belum otomatis</div>
-      <div class="rb1-c3">Hinge otomatis & konsisten, siap untuk clinch/throw</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=Jjh_dF9EGPw" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Hip Hinge</a></div>
+      <div class="rb1-c1">Pola squat dalam (lutut sangat maju dulu), punggung membulat parah</div>
+      <div class="rb1-c2">Pola squat (lutut maju dulu), punggung membulat</div>
+      <div class="rb1-c3">Hinge mulai terasa, punggung netral tapi belum otomatis</div>
+      <div class="rb1-c4">Hinge otomatis &amp; konsisten, siap untuk clinch/throw</div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Core (Bracing)</div>
-      <div class="rb1-c1">Perut kembung asal, core lepas kalau ada distraksi</div>
-      <div class="rb1-c2">Bracing bisa dilakukan sadar, belum otomatis saat kombinasi gerak</div>
-      <div class="rb1-c3">Bracing reflek otomatis saat kontak/impact</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=7Zy9gImUsQE" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Core (Bracing)</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &lt;25dtk</li><li>Y: &lt;20dtk</li><li>J: &lt;15dtk</li></ul><span class="rb1-desc">Perut kembung asal, core lepas total meski tanpa distraksi</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 25&ndash;44dtk</li><li>Y: 20&ndash;34dtk</li><li>J: 15&ndash;27dtk</li></ul><span class="rb1-desc">Perut kembung asal, core lepas kalau ada distraksi</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 45&ndash;59dtk</li><li>Y: 35&ndash;49dtk</li><li>J: 28&ndash;39dtk</li></ul><span class="rb1-desc">Bracing bisa dilakukan sadar, belum otomatis saat kombinasi gerak</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &ge;60dtk</li><li>Y: &ge;50dtk</li><li>J: &ge;40dtk</li></ul><span class="rb1-desc">Bracing reflek otomatis saat kontak/impact</span></div>
     </div>
     <div class="rb1-row">
-      <div class="rb1-name">Recovery/Breathing</div>
-      <div class="rb1-c1">Napas ngos-ngosan tak terkontrol, lama tenang</div>
-      <div class="rb1-c2">Mulai kontrol napas sadar, recovery lebih cepat</div>
-      <div class="rb1-c3">Kontrol napas otomatis di intensitas tinggi, recovery cepat</div>
+      <div class="rb1-name"><a href="https://www.youtube.com/watch?v=RMgH3RSgO3g" target="_blank" rel="noopener" title="Lihat video protokol tes"><i class="bi bi-play-circle-fill"></i> Recovery/Breathing</a></div>
+      <div class="rb1-c1"><ul class="rb1-std"><li>E: &gt;2.5dtk</li><li>Y: &gt;3.0dtk</li><li>J: &gt;3.5dtk</li></ul><span class="rb1-desc">Napas ngos-ngosan tak terkontrol total, sangat lama tenang</span></div>
+      <div class="rb1-c2"><ul class="rb1-std"><li>E: 1.5&ndash;2.5dtk</li><li>Y: 1.8&ndash;3.0dtk</li><li>J: 2.2&ndash;3.5dtk</li></ul><span class="rb1-desc">Napas ngos-ngosan tak terkontrol, lama tenang</span></div>
+      <div class="rb1-c3"><ul class="rb1-std"><li>E: 1.0&ndash;1.5dtk</li><li>Y: 1.2&ndash;1.8dtk</li><li>J: 1.5&ndash;2.2dtk</li></ul><span class="rb1-desc">Mulai kontrol napas sadar, recovery lebih cepat</span></div>
+      <div class="rb1-c4"><ul class="rb1-std"><li>E: &lt;1.0dtk</li><li>Y: &lt;1.2dtk</li><li>J: &lt;1.5dtk</li></ul><span class="rb1-desc">Kontrol napas otomatis di intensitas tinggi, recovery cepat</span></div>
     </div>
-    <div style="padding:8px 12px;font-size:9px;color:var(--text3);border-top:1px solid #1a2330;"><strong style="color:var(--cyan);">Ref:</strong> Fitts & Posner (1967) Three Stages of Motor Learning</div>
+    <div style="padding:8px 12px;font-size:9px;color:var(--text3);border-top:1px solid #1a2330;"><strong style="color:var(--cyan);">Ref:</strong> Fitts &amp; Posner (1967) Three Stages of Motor Learning &mdash; diperluas ke 4 pita skor gaya HPCS</div>
   </div>
   <form method="POST" action="{% url 'muaythai:l1_correction' %}" id="mainForm" class="mt-3">
     {% csrf_token %}
@@ -214,7 +232,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
           <div class="alert alert-warning py-2 small">Tidak ada atlet ditemukan.</div>
           {% endif %}
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-repeat"></i> 1. Hip Rotation ROM</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-repeat"></i> 1. Hip Rotation ROM <a href="https://www.youtube.com/watch?v=UYtAJ2ZCZ7w" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Prone/supine, hip fleksi 90°, ukur rotasi internal &amp; eksternal (derajat)</div>
             <div class="row g-2">
@@ -224,14 +242,15 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Eksternal Kiri</label><input type="number" name="hip_rotasi_eksternal_kiri" id="f_hip_ext_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="neural-select" data-target="skor_neural_hip_rotasi">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_hip_rotasi" id="n_hip_rotasi" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-person-standing"></i> 2. Single-Leg Balance</div>
+          <div class="card-title mt-2"><i class="bi bi-person-standing"></i> 2. Single-Leg Balance <a href="https://www.youtube.com/watch?v=4HtOeds_vyw" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Berdiri satu kaki, tangan di pinggang, maks 30 detik tiap kondisi</div>
             <div class="row g-2">
@@ -239,14 +258,15 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Mata Tertutup (dtk)</label><input type="number" name="balance_durasi_mata_tertutup" id="f_bal_tertutup" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="neural-select" data-target="skor_neural_balance">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_balance" id="n_balance" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-down-circle"></i> 3. Ankle Dorsiflexion</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-down-circle"></i> 3. Ankle Dorsiflexion <a href="https://www.youtube.com/watch?v=kbzYML05Vac" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Knee-to-wall test, jarak jempol kaki ke tembok (cm)</div>
             <div class="row g-2">
@@ -254,14 +274,15 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri (cm)</label><input type="number" name="ankle_dorsifleksi_kiri_cm" id="f_ankle_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="neural-select" data-target="skor_neural_ankle">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_ankle" id="n_ankle" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-left-right"></i> 4. Thoracic Rotation</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-left-right"></i> 4. Thoracic Rotation <a href="https://www.youtube.com/watch?v=yfl4qZAN5g8" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Quadruped, tangan di belakang kepala, rotasi trunk (derajat)</div>
             <div class="row g-2">
@@ -269,14 +290,15 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri</label><input type="number" name="thoracic_rotasi_kiri" id="f_thor_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="neural-select" data-target="skor_neural_thoracic">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_thoracic" id="n_thoracic" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 5. Shoulder Overhead Mobility</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 5. Shoulder Overhead Mobility <a href="https://www.youtube.com/watch?v=GL6kBBMtWkY" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Overhead reach test, fleksi bahu (derajat)</div>
             <div class="row g-2">
@@ -284,14 +306,15 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri</label><input type="number" name="shoulder_fleksi_kiri" id="f_shl_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="neural-select" data-target="skor_neural_shoulder">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_shoulder" id="n_shoulder" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-check2-square"></i> 6. Hip Hinge Pattern</div>
+          <div class="card-title mt-2"><i class="bi bi-check2-square"></i> 6. Hip Hinge Pattern <a href="https://www.youtube.com/watch?v=Jjh_dF9EGPw" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Bodyweight hip hinge, observasi kualitas pola tanpa cueing verbal</div>
             <div class="form-check form-switch">
@@ -300,35 +323,38 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             </div>
             <input type="hidden" name="hip_hinge_pass" id="input_hiphinge" value="false">
             <div class="neural-select" data-target="skor_neural_hip_hinge">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_hip_hinge" id="n_hiphinge" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-shield-check"></i> 7. Core Anti-Rotation</div>
+          <div class="card-title mt-2"><i class="bi bi-shield-check"></i> 7. Core Anti-Rotation <a href="https://www.youtube.com/watch?v=7Zy9gImUsQE" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Pallof Press hold dengan resistance band, durasi (detik)</div>
             <label class="cyan">Durasi Hold (detik)</label>
             <input type="number" name="core_hold_durasi_detik" id="f_core" class="form-control" step="0.1" oninput="liveUpdate()">
             <div class="neural-select" data-target="skor_neural_core">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_core" id="n_core" value="1">
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-lightning-charge"></i> 8. Dynamic Balance Recovery</div>
+          <div class="card-title mt-2"><i class="bi bi-lightning-charge"></i> 8. Dynamic Balance Recovery <a href="https://www.youtube.com/watch?v=RMgH3RSgO3g" target="_blank" rel="noopener" class="vid-link"><i class="bi bi-play-circle-fill"></i> Video Tes</a></div>
           <div class="item-card">
             <div class="item-sub">Simulasi tendangan ringan, waktu kembali stabil (detik)</div>
             <label class="gold">Recovery Time (detik)</label>
             <input type="number" name="recovery_waktu_detik" id="f_recovery" class="form-control" step="0.1" oninput="liveUpdate()">
             <div class="neural-select" data-target="skor_neural_recovery">
-              <button type="button" class="neural-btn" data-val="1">Cognitive</button>
-              <button type="button" class="neural-btn" data-val="2">Associative</button>
-              <button type="button" class="neural-btn" data-val="3">Autonomous</button>
+              <button type="button" class="neural-btn" data-val="1">Novice</button>
+              <button type="button" class="neural-btn" data-val="2">Developing</button>
+              <button type="button" class="neural-btn" data-val="3">Competent</button>
+              <button type="button" class="neural-btn" data-val="4">Very Competent</button>
             </div>
             <input type="hidden" name="skor_neural_recovery" id="n_recovery" value="1">
           </div>
@@ -434,7 +460,7 @@ document.querySelectorAll('.neural-select').forEach(function(group){
   group.querySelectorAll('.neural-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
       group.querySelectorAll('.neural-btn').forEach(function(b){
-        b.classList.remove('active-1','active-2','active-3');
+        b.classList.remove('active-1','active-2','active-3','active-4');
       });
       var val = btn.dataset.val;
       btn.classList.add('active-' + val);
@@ -479,8 +505,8 @@ document.addEventListener('DOMContentLoaded', function(){
     options: {
       responsive: true, maintainAspectRatio: false,
       scales: { r: {
-        min: 0, max: 3,
-        ticks: { stepSize: 1, display: false },
+        min: 0, max: 10,
+        ticks: { stepSize: 2, display: false },
         grid: { color: 'rgba(255,255,255,0.06)' },
         angleLines: { color: 'rgba(255,255,255,0.06)' },
         pointLabels: { color: '#8892a8', font: { family:"'JetBrains Mono',monospace", size:9 } }
@@ -498,46 +524,56 @@ const ITEM_LABELS = {
 
 const REKO_L1MT = {
   hip_rotasi: {
-    1: ['90/90 Hip Stretch 3x30 detik tiap sisi', 'Hip CARs (Controlled Articular Rotations) 2x5 tiap arah, sangat perlahan', 'Assisted Hip Rotation dengan band 3x10'],
-    2: ['Deep Squat Hold dengan rotasi hip 3x30 detik', 'Cossack Squat 3x8 tiap sisi untuk ROM dinamis', 'Hip CARs tanpa bantuan 3x5 tiap arah'],
-    3: ['Pertahankan dengan dynamic hip opener rutin sebelum latihan', 'Hip CARs sebagai warm-up harian', 'Mulai integrasi ke gerak spesifik (pivot kick) dengan pengawasan']
+    1: ['90/90 Hip Stretch 3x30 detik tiap sisi, sangat perlahan', 'Hip CARs (Controlled Articular Rotations) 2x5 tiap arah dengan bantuan', 'Assisted Hip Rotation dengan band 3x10'],
+    2: ['90/90 Hip Stretch 3x30 detik tanpa bantuan', 'Hip CARs mandiri 2x8 tiap arah', 'Deep Squat Hold dengan rotasi hip 3x20 detik'],
+    3: ['Deep Squat Hold dengan rotasi hip 3x30 detik', 'Cossack Squat 3x8 tiap sisi untuk ROM dinamis', 'Hip CARs tanpa bantuan 3x5 tiap arah'],
+    4: ['Pertahankan dengan dynamic hip opener rutin sebelum latihan', 'Hip CARs sebagai warm-up harian', 'Mulai integrasi ke gerak spesifik (pivot kick) dengan pengawasan']
   },
   balance: {
-    1: ['Single-Leg Stance dengan pegangan 3x20 detik tiap kaki', 'Double-Leg Balance di bosu/pad tidak stabil 3x30 detik', 'Static Balance dengan visual fokus tetap 3x20 detik'],
-    2: ['Single-Leg Stance tanpa pegangan 3x30 detik tiap kaki', 'Single-Leg Balance eyes-closed 3x15 detik', 'Single-Leg Reach (Y-Balance) 3x8 tiap arah'],
-    3: ['Single-Leg Balance eyes-closed di permukaan tidak stabil 3x20 detik', 'Perturbation Training (partner memberi dorongan ringan) 3x10', 'Integrasi ke pola tendangan dengan kontrol penuh']
+    1: ['Single-Leg Stance dengan pegangan penuh 3x20 detik tiap kaki', 'Double-Leg Balance di lantai stabil, fokus postur 3x20 detik', 'Static Balance dengan visual fokus tetap 3x20 detik'],
+    2: ['Single-Leg Stance dengan pegangan ringan 3x25 detik tiap kaki', 'Double-Leg Balance di bosu/pad tidak stabil 3x30 detik', 'Single-Leg Stance tanpa pegangan, percobaan singkat 3x10 detik'],
+    3: ['Single-Leg Stance tanpa pegangan 3x30 detik tiap kaki', 'Single-Leg Balance eyes-closed 3x15 detik', 'Single-Leg Reach (Y-Balance) 3x8 tiap arah'],
+    4: ['Single-Leg Balance eyes-closed di permukaan tidak stabil 3x20 detik', 'Perturbation Training (partner memberi dorongan ringan) 3x10', 'Integrasi ke pola tendangan dengan kontrol penuh']
   },
   ankle: {
     1: ['Ankle Mobilization dengan band 3x15 tiap sisi', 'Calf Stretch (gastrocnemius & soleus) 3x30 detik', 'Knee-to-Wall Drill submaksimal 3x10 tiap sisi'],
-    2: ['Weighted Ankle Mobilization (knee-to-wall dengan beban) 3x10', 'Ankle Circles + Dorsiflexion Hold 3x30 detik', 'Deep Squat dengan heel tetap menapak 3x8'],
-    3: ['Pertahankan dengan dynamic ankle prep sebelum latihan', 'Integrasi ke pivot roundhouse kick dengan pengawasan teknik', 'Single-Leg Ankle Mobilization dalam gerak dinamis']
+    2: ['Ankle Mobilization dengan band, tambah durasi 3x20 tiap sisi', 'Knee-to-Wall Drill jarak sedang 3x10 tiap sisi', 'Ankle Circles ringan 3x10 tiap arah'],
+    3: ['Weighted Ankle Mobilization (knee-to-wall dengan beban) 3x10', 'Ankle Circles + Dorsiflexion Hold 3x30 detik', 'Deep Squat dengan heel tetap menapak 3x8'],
+    4: ['Pertahankan dengan dynamic ankle prep sebelum latihan', 'Integrasi ke pivot roundhouse kick dengan pengawasan teknik', 'Single-Leg Ankle Mobilization dalam gerak dinamis']
   },
   thoracic: {
     1: ['Open Book Stretch 3x10 tiap sisi', 'Quadruped Thoracic Rotation submaksimal 3x10 tiap sisi', 'Cat-Cow dengan fokus rotasi ringan 3x10'],
-    2: ['Quadruped Thoracic Rotation full ROM 3x12 tiap sisi', 'Side-Lying Windmill 3x10 tiap sisi', 'Thoracic Rotation dengan band resistance ringan 3x10'],
-    3: ['Pertahankan dengan T-spine mobility drill sebagai warm-up', 'Integrasi rotasi ke shadow boxing/kick dengan kontrol penuh', 'Loaded Thoracic Rotation (light med ball) 3x10 tiap sisi']
+    2: ['Open Book Stretch dengan tahan lebih lama 3x12 tiap sisi', 'Quadruped Thoracic Rotation ROM sedang 3x10 tiap sisi', 'Cat-Cow dengan rotasi lebih dalam 3x12'],
+    3: ['Quadruped Thoracic Rotation full ROM 3x12 tiap sisi', 'Side-Lying Windmill 3x10 tiap sisi', 'Thoracic Rotation dengan band resistance ringan 3x10'],
+    4: ['Pertahankan dengan T-spine mobility drill sebagai warm-up', 'Integrasi rotasi ke shadow boxing/kick dengan kontrol penuh', 'Loaded Thoracic Rotation (light med ball) 3x10 tiap sisi']
   },
   shoulder: {
     1: ['Wall Slide 3x10 fokus teknik dasar', 'Band Pull-Apart 3x15 untuk mobilitas dasar', 'Passive Overhead Reach dengan bantuan 3x10'],
-    2: ['Overhead Reach aktif tanpa bantuan 3x10', 'Wall Slide dengan beban ringan (band) 3x12', 'Shoulder Dislocate dengan stick/band 3x10'],
-    3: ['Pertahankan dengan overhead mobility drill sebagai warm-up', 'Integrasi ke elbow strike/clinch dengan kontrol penuh', 'Loaded Overhead Carry ringan untuk stabilitas fungsional']
+    2: ['Wall Slide dengan tahan di puncak 3x10', 'Band Pull-Apart dengan resistensi sedang 3x15', 'Overhead Reach dengan bantuan minimal 3x10'],
+    3: ['Overhead Reach aktif tanpa bantuan 3x10', 'Wall Slide dengan beban ringan (band) 3x12', 'Shoulder Dislocate dengan stick/band 3x10'],
+    4: ['Pertahankan dengan overhead mobility drill sebagai warm-up', 'Integrasi ke elbow strike/clinch dengan kontrol penuh', 'Loaded Overhead Carry ringan untuk stabilitas fungsional']
   },
   hip_hinge: {
     1: ['Hip Hinge dengan cueing verbal (dowel di punggung) 3x10', 'Wall Hip Hinge (bokong menyentuh dinding) 3x10', 'Romanian Deadlift bodyweight submaksimal 3x10'],
-    2: ['Hip Hinge tanpa cueing, evaluasi ulang tiap sesi 3x10', 'Single-Leg Hip Hinge (assisted) 3x8 tiap sisi', 'Romanian Deadlift dengan beban ringan 3x10'],
-    3: ['Pertahankan pola dengan RDL/Good Morning terprogram', 'Single-Leg RDL tanpa bantuan untuk transfer ke knee strike', 'Integrasi hip hinge ke gerak clinch dengan kontrol penuh']
+    2: ['Hip Hinge dengan cueing minimal (dowel sesekali) 3x10', 'Wall Hip Hinge dengan jarak lebih jauh 3x10', 'Romanian Deadlift bodyweight ROM penuh 3x10'],
+    3: ['Hip Hinge tanpa cueing, evaluasi ulang tiap sesi 3x10', 'Single-Leg Hip Hinge (assisted) 3x8 tiap sisi', 'Romanian Deadlift dengan beban ringan 3x10'],
+    4: ['Pertahankan pola dengan RDL/Good Morning terprogram', 'Single-Leg RDL tanpa bantuan untuk transfer ke knee strike', 'Integrasi hip hinge ke gerak clinch dengan kontrol penuh']
   },
   core: {
     1: ['Pallof Press ringan (band) 3x8 tiap sisi, fokus tidak ada rotasi', 'Dead Bug 3x10 tiap sisi untuk anti-extension dasar', 'Plank Hold 3x20 detik'],
-    2: ['Pallof Press dengan beban sedang 3x10 tiap sisi', 'Pallof Press dengan langkah (half-kneeling to standing) 3x8', 'Anti-Rotation Chop/Lift dengan band 3x10 tiap sisi'],
-    3: ['Pallof Press dinamis (dengan gerak kaki) 3x10 tiap sisi', 'Pertahankan feedforward bracing sebagai bagian warm-up', 'Integrasi ke simulasi menerima clinch/dorongan dengan kontrol penuh']
+    2: ['Pallof Press ringan dengan tahan lebih lama 3x8 tiap sisi', 'Dead Bug dengan tempo lebih lambat 3x10 tiap sisi', 'Plank Hold 3x30 detik'],
+    3: ['Pallof Press dengan beban sedang 3x10 tiap sisi', 'Pallof Press dengan langkah (half-kneeling to standing) 3x8', 'Anti-Rotation Chop/Lift dengan band 3x10 tiap sisi'],
+    4: ['Pallof Press dinamis (dengan gerak kaki) 3x10 tiap sisi', 'Pertahankan feedforward bracing sebagai bagian warm-up', 'Integrasi ke simulasi menerima clinch/dorongan dengan kontrol penuh']
   },
   recovery: {
     1: ['Single-Leg Balance Recovery dari langkah kecil 3x10 tiap sisi', 'Step-Down Controlled dari box rendah 3x8', 'Static-to-Dynamic Balance Transition submaksimal 3x8'],
-    2: ['Simulasi tendangan ringan + recovery 3x8 tiap sisi', 'Lateral Bound dengan stick landing 3x6 tiap sisi', 'Single-Leg Hop dengan recovery terkontrol 3x8'],
-    3: ['Pertahankan dengan reactive balance drill sebagai bagian warm-up', 'Integrasi penuh ke kombinasi tendangan multi-arah', 'Perturbation Training dengan partner untuk simulasi kontak']
+    2: ['Single-Leg Balance Recovery dengan langkah sedang 3x10 tiap sisi', 'Step-Down Controlled dari box sedang 3x8', 'Static-to-Dynamic Balance Transition ROM penuh 3x8'],
+    3: ['Simulasi tendangan ringan + recovery 3x8 tiap sisi', 'Lateral Bound dengan stick landing 3x6 tiap sisi', 'Single-Leg Hop dengan recovery terkontrol 3x8'],
+    4: ['Pertahankan dengan reactive balance drill sebagai bagian warm-up', 'Integrasi penuh ke kombinasi tendangan multi-arah', 'Perturbation Training dengan partner untuk simulasi kontak']
   }
 };
+
+const TIER_SCORE = { 1: 2.5, 2: 5.5, 3: 7.5, 4: 9.5 };
 
 function liveUpdate() {
   const items = {
@@ -551,9 +587,9 @@ function liveUpdate() {
     recovery:   n('n_recovery'),
   };
 
-  const vals = Object.values(items);
-  const rawTotal = vals.reduce((a,b)=>a+b,0);
-  const total = +((rawTotal/24)*10).toFixed(1);
+  const tierVals = Object.values(items);
+  const scoreVals = tierVals.map(function(v){ return TIER_SCORE[v] || TIER_SCORE[1]; });
+  const total = +(scoreVals.reduce((a,b)=>a+b,0) / scoreVals.length).toFixed(1);
 
   document.getElementById('res_total').textContent = total.toFixed(1);
   let pred, col;
@@ -567,7 +603,7 @@ function liveUpdate() {
   document.getElementById('res_total').style.color = col;
 
   if (radarChart) {
-    radarChart.data.datasets[0].data = vals;
+    radarChart.data.datasets[0].data = scoreVals;
     radarChart.update();
   }
 
@@ -582,8 +618,9 @@ function generateNarasi(items, total, pred) {
   const namaEl = document.querySelector('#select-atlet option:checked');
   const namaAtlet = namaEl && namaEl.value ? namaEl.textContent.trim() : 'Atlet';
 
-  function lbl(v){ return v>=3?'otomatis penuh (Autonomous)':v>=2?'berkembang (Associative)':'tahap awal (Cognitive)'; }
-  function wrn(v){ return v>=3?'var(--green)':v>=2?'var(--gold)':'var(--red)'; }
+  function lbl(v){ return v>=4?'Very Competent':v===3?'Competent':v===2?'Developing':'Novice'; }
+  function wrn(v){ return v>=4?'var(--green)':v===3?'var(--blue)':v===2?'var(--gold)':'var(--red)'; }
+  function wrnTotal(t){ return t>=8.3?'var(--green)':t>=5.8?'var(--blue)':t>=4.2?'var(--gold)':'var(--red)'; }
 
   const entries = Object.entries(items).map(([key,val]) => ({key, nama: ITEM_LABELS[key], val}));
   const sorted = [...entries].sort((a,b) => b.val - a.val);
@@ -591,7 +628,7 @@ function generateNarasi(items, total, pred) {
   const lemah = sorted.slice(-2).reverse();
 
   const layak = pred === 'ELITE' || pred === 'READY';
-  const semuaPrima = entries.every(e => e.val === 3);
+  const semuaPrima = entries.every(e => e.val === 4);
 
   const kPred = {
     ELITE: 'menunjukkan efisiensi neural <strong style="color:var(--green)">AUTONOMOUS</strong> — kontrol motorik matang di hampir semua item.',
@@ -608,7 +645,7 @@ function generateNarasi(items, total, pred) {
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
       <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
       <span><strong style="color:var(--green)">${p.nama}</strong> — ${lbl(p.val)}
-      <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/3)</span></span>
+      <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/4)</span></span>
     </div>`).join('');
 
   const lemahHTML = semuaPrima
@@ -620,7 +657,7 @@ function generateNarasi(items, total, pred) {
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
       <div style="width:6px;height:6px;border-radius:50%;background:${wrn(p.val)};flex-shrink:0;"></div>
       <span><strong style="color:${wrn(p.val)}">${p.nama}</strong> — ${lbl(p.val)}
-      <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/3)</span>
+      <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/4)</span>
       ${p.val===1 ? ' : prioritas utama program korektif.' : ' : perlu perhatian dalam program latihan.'}</span>
     </div>`).join('');
 
@@ -633,7 +670,7 @@ function generateNarasi(items, total, pred) {
   box.innerHTML = `
     <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,210,255,0.1);">
       <span style="color:var(--cyan);font-weight:700;font-size:12px;">&#9889; ${namaAtlet}</span> ${kPred[pred] || ''}
-      Total skor: <strong style="font-size:13px;color:${wrn(total/3.33)}">${total.toFixed(1)}/10</strong>
+      Total skor: <strong style="font-size:13px;color:${wrnTotal(total)}">${total.toFixed(1)}/10</strong>
     </div>
     <div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>${kuatHTML}</div>
     <div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>${lemahHTML}</div>
@@ -657,8 +694,8 @@ function generateReko(items) {
     const db = REKO_L1MT[p.key];
     if (!db) return;
     const tips = db[p.val] || db[1];
-    const col = p.val === 1 ? 'var(--red)' : p.val === 2 ? 'var(--gold)' : 'var(--green)';
-    const icon = p.val === 1 ? '&#128308;' : p.val === 2 ? '&#128993;' : '&#128994;';
+    const col = p.val === 1 ? 'var(--red)' : p.val === 2 ? 'var(--gold)' : p.val === 3 ? 'var(--blue)' : 'var(--green)';
+    const icon = p.val === 1 ? '&#128308;' : p.val === 2 ? '&#128993;' : p.val === 3 ? '&#128309;' : '&#128994;';
     html += `<div style="margin-bottom:10px;padding:10px;background:rgba(80,238,241,0.04);border-radius:8px;border-left:3px solid ${col};">
       <div style="font-size:10px;font-weight:700;color:${col};letter-spacing:1px;margin-bottom:6px;">${icon} ${p.nama.toUpperCase()} — ${p.val}/3</div>`;
     tips.forEach(t => {
@@ -685,4 +722,3 @@ function toggleRubrikL1() {
 </script>
 </body>
 </html>
-
