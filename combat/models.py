@@ -36,9 +36,6 @@ CABANG_CHOICES = [
     ('boxing',  'Boxing'),
     ('muaythai', 'Muay Thai'),
     ('tkd',     'Taekwondo'),
-    ('karate',  'Karate'),
-    ('judo',    'Judo'),
-    ('mma',     'MMA'),
 ]
 
 LTAD_CHOICES = [
@@ -614,4 +611,5 @@ class SpeedAgilityAuditL4(models.Model):
         self.yoyo_vo2max_estimasi = self.hitung_vo2max()
         self.kalkulasi_skor()
         super().save(*args, **kwargs)
+
 

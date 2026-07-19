@@ -1,4 +1,4 @@
-"""
+﻿"""
 HPCS Combat Sports - Views
 TODO: Role-based access control akan diimplementasikan setelah Custom User Model dibuat
 """
@@ -27,10 +27,21 @@ from .permissions import get_atlet_queryset, is_admin
 # DASHBOARD UTAMA
 # ══════════════════════════════════════════════════════════════════════
 
+CABOR_DASHBOARD_URL = {
+    'boxing': 'combat:dashboard_boxing',
+    'muaythai': 'combat:dashboard_muaythai',
+    'tkd': 'taekwondo:dashboard',
+}
+
+
 class DashboardView(LoginRequiredMixin, View):
     template_name = 'combat/dashboard_combat.html'
 
     def get(self, request):
+        if not (request.user.is_superuser or request.user.is_staff):
+            profil = getattr(request.user, 'profil_pelatih', None)
+            if profil and profil.cabang in CABOR_DASHBOARD_URL:
+                return redirect(CABOR_DASHBOARD_URL[profil.cabang])
         squad_atlet = get_atlet_queryset(request.user)
         audit_l1    = CorrectionAuditL1.objects.all()
         audit_l2    = StrengthAuditL2.objects.all()
@@ -316,12 +327,12 @@ class DaftarCoachView(View):
             last_name=nama_parts[1] if len(nama_parts) > 1 else '',
             email=email,
         )
-        profil = ProfilPelatih(user=user, cabang=cabang, no_hp=no_hp, email=email, status='pending')
+        profil = ProfilPelatih(user=user, cabang=cabang, no_hp=no_hp, email=email, status='approved')
         if foto:
             profil.foto = foto
         profil.save()
         auth_login(request, user)
-        return redirect('combat:tunggu_approval')
+        return redirect(CABOR_DASHBOARD_URL.get(cabang, 'combat:dashboard'))
 
 
 class TungguApprovalView(LoginRequiredMixin, View):
@@ -494,3 +505,5 @@ class TambahAtletView(LoginRequiredMixin, View):
         except Exception as e:
             messages.error(request, f'Gagal menyimpan: {e}')
             return render(request, self.template_name)
+
+
