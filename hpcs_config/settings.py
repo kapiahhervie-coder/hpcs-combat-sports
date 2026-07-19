@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'combat.middleware.ApprovalRequiredMiddleware',
+    # 'combat.middleware.ApprovalRequiredMiddleware',  # sementara dinonaktifkan untuk debug
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -170,6 +170,7 @@ DEFAULT_FROM_EMAIL = 'HPCS Combat Sports <sakalahpcs@gmail.com>'
 # Allow GET logout
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/combat/'
+
 
 
 
