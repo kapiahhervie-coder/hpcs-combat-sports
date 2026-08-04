@@ -1,4 +1,4 @@
-{% extends "base_muaythai.html" %}
+{% extends "base_karate.html" %}
 {% load static %}
 
 {% block extra_css %}
@@ -179,7 +179,7 @@ tbody tr:last-child td{border-bottom:none}
   </div>
 
   <!-- Form -->
-  <form action="{% url 'muaythai:l3_power' %}" method="POST" id="mainForm">
+  <form action="{% url 'karate:l3_power' %}" method="POST" id="mainForm">
     {% csrf_token %}
     <input type="hidden" name="atlet_id"    id="h_atlet_id">
     <input type="hidden" name="atlet_name"  id="h_atlet_name">
@@ -396,7 +396,7 @@ tbody tr:last-child td{border-bottom:none}
               {% else %}<span class="badge badge-novice">NOVICE</span>{% endif %}
             </td>
             <td>
-              <a href="{% url 'muaythai:hapus_l3_audit' item.pk %}" class="btn-del-sm"
+              <a href="{% url 'karate:hapus_l3_audit' item.pk %}" class="btn-del-sm"
                  onclick="return confirm('Hapus data {{ item.atlet_name|escapejs }}?')">
                 <i class="bi bi-trash"></i>
               </a>

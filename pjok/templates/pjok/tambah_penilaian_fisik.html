@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Input Tes Fisik — {{ siswa.nama }}</h2>
+<p>Skor L1-L4 akan dihitung otomatis dari data di bawah ini.</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Simpan</button>
+  <a href="{% url 'pjok:detail_siswa' siswa.id %}">Batal</a>
+</form>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "base_taekwondo.html" %}
+{% extends "base_karate.html" %}
 {% load static %}
 
 {% block extra_css %}
@@ -275,7 +275,7 @@ tbody tr:last-child td { border-bottom: none; }
   </div>
 
   <!-- Form -->
-  <form action="{% url 'taekwondo:l4_speed_agility' %}" method="POST" id="mainForm">
+  <form action="{% url 'karate:l4_speed_agility' %}" method="POST" id="mainForm">
     {% csrf_token %}
     <div class="main-grid">
 
@@ -582,7 +582,7 @@ tbody tr:last-child td { border-bottom: none; }
               {% endif %}
             </td>
             <td>
-              <a href="{% url 'taekwondo:hapus_l4_audit' item.pk %}"
+              <a href="{% url 'karate:hapus_l4_audit' item.pk %}"
                  class="btn-del-sm"
                  onclick="return confirm('Hapus data {{ item.atlet_name }}?')">
                 <i class="bi bi-trash"></i>
@@ -765,7 +765,7 @@ function liveUpdate() {
 
   // Rekomendasi latihan lengkap
   var REKO_L4 = {
-    Hex:   {low:['Hexagon Drill 3x3 putaran — fokus teknik footwork','Ladder Drill 2-in 2-out 3x panjang','4-Corner Cone Drill 3x untuk koordinasi','Kembali ke L3 Agility drill dasar'],mid:['Hex Jump 4x3 putaran dengan target < 11 dtk','Reactive Hex dengan visual cue 3x3','Mini Hurdle Hop 3x6 untuk foot speed'],high:['Kompetitif Hex: 5x3 putaran dengan interval pendek','Sport-specific footwork taekwondo 3x1 menit']},
+    Hex:   {low:['Hexagon Drill 3x3 putaran — fokus teknik footwork','Ladder Drill 2-in 2-out 3x panjang','4-Corner Cone Drill 3x untuk koordinasi','Kembali ke L3 Agility drill dasar'],mid:['Hex Jump 4x3 putaran dengan target < 11 dtk','Reactive Hex dengan visual cue 3x3','Mini Hurdle Hop 3x6 untuk foot speed'],high:['Kompetitif Hex: 5x3 putaran dengan interval pendek','Sport-specific footwork karate 3x1 menit']},
     Combo: {low:['Shadow Sparring 3x1 menit fokus frekuensi tendangan','Speed Bag 3x2 menit untuk ritme tangan','Jab Combination Drill 4x30 detik','Double End Bag 3x1 menit'],mid:['10-Second Punch Burst 5x dengan istirahat','Combination Speed Drill 4x45 detik','Reactive Pad Work 3x2 menit'],high:['Competition Pace Pad Work 4x3 menit','Pertahankan dengan Speed Bag 3x/minggu']},
     YoYo:  {low:['Lari Aerobik 30 menit 3x/minggu di 65% HRmax','Walk-Jog Interval 20 menit untuk base aerobik','Kembali ke L3 dan tingkatkan VO2 Max base','Renang atau Sepeda 30 menit 3x/minggu'],mid:['Yo-Yo Interval Training Level 1 2x/minggu','HIIT 20 menit: 1 menit kerja, 1 menit rest','Fartlek Run 30 menit 2x/minggu'],high:['Yo-Yo IR1 monitoring bulanan','Supramaksimal Interval 3x/minggu','Sport-specific conditioning: round-based training']}
   };

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}HPCS Muay Thai{% endblock %}</title>
+  <title>{% block title %}HPCS Karate{% endblock %}</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,9 +100,9 @@
       --sb-line2: rgba(255,255,255,0.13);
       --sb-text-dim:#8b93a3;
       --sb-text-dim2:#4b5361;
-      --sb-accent:#f59e0b;
-      --sb-accent-dim:rgba(245,158,11,0.12);
-      --sb-accent-line:rgba(245,158,11,0.35);
+      --sb-accent:#a78bfa;
+      --sb-accent-dim:rgba(167,139,250,0.12);
+      --sb-accent-line:rgba(167,139,250,0.35);
     }
 
     .sidebar {
@@ -253,28 +253,28 @@
     <div class="sidebar-toggle" onclick="toggleSidebar()">&#9664;</div>
     <div class="sidebar-brand">
       <div class="brand-name">&#9889; <span>HPCS</span></div>
-      <div class="brand-sub">Muay Thai Division</div>
+      <div class="brand-sub">Karate Division</div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section" data-i18n="nav_dashboard">Dashboard</div>
-      <a href="{% url 'muaythai:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11L12 3L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20C5.5 20.5523 5.94772 21 6.5 21H9.5C10.0523 21 10.5 20.5523 10.5 20V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V20C13.5 20.5523 13.9477 21 14.5 21H17.5C18.0523 21 18.5 20.5523 18.5 20V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text">Muay Thai Division</span>
+      <a href="{% url 'karate:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11L12 3L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20C5.5 20.5523 5.94772 21 6.5 21H9.5C10.0523 21 10.5 20.5523 10.5 20V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V20C13.5 20.5523 13.9477 21 14.5 21H17.5C18.0523 21 18.5 20.5523 18.5 20V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text">Karate Division</span>
       </a>
       <a href="{% url 'combat:tambah_atlet' %}" class="nav-link {% if request.resolver_match.url_name == 'tambah_atlet' %}active{% endif %}">
         <span class="nav-icon">&#43;</span> <span class="nav-link-text">Tambah Atlet</span>
       </a>
       <div class="nav-divider"></div>
-      <div class="nav-section">Assessment Muay Thai</div>
-      <a href="{% url 'muaythai:l1_correction' %}" class="nav-link {% if request.resolver_match.url_name == 'l1_correction' %}active{% endif %}">
+      <div class="nav-section">Assessment Karate</div>
+      <a href="{% url 'karate:l1_correction' %}" class="nav-link {% if request.resolver_match.url_name == 'l1_correction' %}active{% endif %}">
         <span class="nav-round">1</span> <span class="nav-link-text">Level 1 (Correction)</span><span class="nav-badge">MOB</span>
       </a>
-      <a href="{% url 'muaythai:l2_strength' %}" class="nav-link {% if request.resolver_match.url_name == 'l2_strength' %}active{% endif %}">
+      <a href="{% url 'karate:l2_strength' %}" class="nav-link {% if request.resolver_match.url_name == 'l2_strength' %}active{% endif %}">
         <span class="nav-round">2</span> <span class="nav-link-text">Level 2 (Strength)</span><span class="nav-badge">STR</span>
       </a>
-      <a href="{% url 'muaythai:l3_power' %}" class="nav-link {% if request.resolver_match.url_name == 'l3_power' %}active{% endif %}">
+      <a href="{% url 'karate:l3_power' %}" class="nav-link {% if request.resolver_match.url_name == 'l3_power' %}active{% endif %}">
         <span class="nav-round">3</span> <span class="nav-link-text">Level 3 (Power)</span><span class="nav-badge">PWR</span>
       </a>
-      <a href="{% url 'muaythai:l4_speed_agility' %}" class="nav-link {% if request.resolver_match.url_name == 'l4_speed_agility' %}active{% endif %}">
+      <a href="{% url 'karate:l4_speed_agility' %}" class="nav-link {% if request.resolver_match.url_name == 'l4_speed_agility' %}active{% endif %}">
         <span class="nav-round">4</span> <span class="nav-link-text">Level 4 (Speed & Agility)</span><span class="nav-badge">SPD</span>
       </a>
       <div class="nav-divider"></div>

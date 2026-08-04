@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ siswa.nama }} — {{ siswa.kelas }}</h2>
+
+<p>
+  <a href="{% url 'pjok:tambah_penilaian_fisik' siswa.id %}">+ Input Tes Fisik</a>
+  &nbsp;|&nbsp;
+  <a href="{% url 'pjok:tambah_penilaian_teknik' siswa.id %}">+ Input Nilai Teknik</a>
+</p>
+
+<h3>Diagnosis Akar Masalah</h3>
+{% for item in diagnosis_per_materi %}
+  <div class="diagnosis-card">
+    <h4>{{ item.materi.nama_materi }}</h4>
+    <ul>
+      {% for baris in item.diagnosis %}
+      <li>{{ baris }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% empty %}
+  <p>Belum ada materi dengan skor di bawah ambang batas, atau data tes fisik belum diinput.</p>
+{% endfor %}
+{% endblock %}

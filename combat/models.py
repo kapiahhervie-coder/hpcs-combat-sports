@@ -36,6 +36,7 @@ CABANG_CHOICES = [
     ('boxing',  'Boxing'),
     ('muaythai', 'Muay Thai'),
     ('tkd',     'Taekwondo'),
+    ('krt',     'Karate'),
 ]
 
 LTAD_CHOICES = [

@@ -79,12 +79,12 @@ class DashboardView(LoginRequiredMixin, View):
                 'pct_audit': 0,
             },
             {
-                'cabor': {'nama': 'Karate'},
-                'total': get_atlet_queryset(request.user).filter(cabang__iexact='karate').count(),
-                'rata_level': '-',
-                'status': 'Cukup',
-                'pct_audit': 0,
-            },
+    'cabor': {'nama': 'Karate'},
+    'total': get_atlet_queryset(request.user).filter(cabang__iexact='krt').count(),
+    'rata_level': '-',
+    'status': 'Cukup',
+    'pct_audit': 0,
+},
             {
                 'cabor': {'nama': 'Taekwondo'},
                 'total': get_atlet_queryset(request.user).filter(cabang__iexact='tkd').count(),
@@ -110,6 +110,7 @@ class DashboardView(LoginRequiredMixin, View):
             'distribusi_cabor': distribusi_cabor,
             'total_atlet_muaythai': squad_atlet.filter(cabang__iexact='muaythai').count(),
             'total_atlet_taekwondo': squad_atlet.filter(cabang__iexact='tkd').count(),
+            'total_atlet_karate': squad_atlet.filter(cabang__iexact='krt').count(),
         }
         return render(request, self.template_name, context)
 
@@ -469,8 +470,19 @@ class TambahAtletView(LoginRequiredMixin, View):
     """Coach menambahkan atlet baru yang langsung jadi binaannya."""
     template_name = 'combat/tambah_atlet.html'
 
+    def get_back_url(self, request):
+        posted = request.POST.get('back_url')
+        if posted:
+            return posted
+        ref = request.META.get('HTTP_REFERER', '')
+        host = request.get_host()
+        if ref and host in ref:
+            from urllib.parse import urlparse
+            return urlparse(ref).path
+        return '/combat/'
+
     def get(self, request):
-        return render(request, self.template_name)
+        return render(request, self.template_name, {'back_url': self.get_back_url(request)})
 
     def post(self, request):
         try:
@@ -504,6 +516,6 @@ class TambahAtletView(LoginRequiredMixin, View):
 
         except Exception as e:
             messages.error(request, f'Gagal menyimpan: {e}')
-            return render(request, self.template_name)
+            return render(request, self.template_name, {'back_url': self.get_back_url(request)})
 
 

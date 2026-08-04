@@ -50,7 +50,10 @@ INSTALLED_APPS = [
     'combat.apps.CombatConfig',
     'muaythai',
     'boxing',
-     'taekwondo',
+    'taekwondo',
+    'karate',
+    'pjok',  
+     
     # Tambah cabang lain di sini: 'boxing', 'taekwondo', dst
 ]
 

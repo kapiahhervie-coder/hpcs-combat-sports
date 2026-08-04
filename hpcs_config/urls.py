@@ -14,4 +14,6 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page='/accounts/login/'), name='logout'),
     path('',lambda request: redirect('combat:dashboard')),
     path('taekwondo/', include('taekwondo.urls')),
+    path('karate/', include('karate.urls')),
+    path('pjok/', include('pjok.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

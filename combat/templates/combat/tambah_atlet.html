@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -47,7 +47,7 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
 
   <div class="header">
     <div class="logo"><span>HPCS</span> -- Tambah Atlet</div>
-    <a href="{% url 'boxing:dashboard' %}" class="back-btn">&#8592; Kembali</a>
+    <a href="{{ back_url|default:'/combat/' }}" class="back-btn">&#8592; Kembali</a>
   </div>
 
   {% if messages %}
@@ -70,6 +70,8 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
 
       <form method="post">
         {% csrf_token %}
+        <input type="hidden" name="back_url" value="{{ back_url|default:'/combat/' }}">
+        <input type="hidden" name="back_url" value="{{ back_url|default:'/combat/' }}">
 
         <div class="section-label">Identitas Atlet</div>
         <div class="form-group" style="margin-bottom:14px">
@@ -102,7 +104,7 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
               <option value="">-- Pilih --</option>
               <option value="boxing">Boxing</option>
               <option value="muaythai">Muay Thai</option>
-              <option value="karate">Karate</option>
+              <option value="krt">Karate</option>
               <option value="tkd">Taekwondo</option>
               <option value="judo">Judo</option>
               <option value="mma">MMA</option>
@@ -145,7 +147,7 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
         </div>
 
         <div class="btn-row">
-          <a href="{% url 'boxing:dashboard' %}" class="btn-cancel">Batal</a>
+          <a href="{{ back_url|default:'/combat/' }}" class="btn-cancel">Batal</a>
           <button type="submit" class="btn-submit">+ Simpan Atlet</button>
         </div>
       </form>

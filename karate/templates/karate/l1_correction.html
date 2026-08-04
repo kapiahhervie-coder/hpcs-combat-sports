@@ -92,7 +92,6 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 .rb-header div{padding:8px 10px;}
 .score-input-1to10{margin-top:8px;}
 .score-input-1to10 input[type="number"]{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;text-align:center;}
-
 .no-print{display:block}
 @media print{
   .no-print,.btn,.topbar,.filter-bar{display:none!important}
@@ -110,11 +109,11 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
     <div class="brand-mark">H</div>
     <div>
       <div class="brand-title">HPCS</div>
-      <div class="brand-sub">Muay Thai Division</div>
+      <div class="brand-sub">Karate Division</div>
     </div>
   </div>
   <div class="d-flex gap-2 align-items-center">
-    <a href="{% url 'muaythai:dashboard' %}" class="btn-dash"><i class="bi bi-grid-fill"></i> &larr; DASHBOARD</a>
+    <a href="{% url 'karate:dashboard' %}" class="btn-dash"><i class="bi bi-grid-fill"></i> &larr; DASHBOARD</a>
   </div>
 </header>
 
@@ -138,13 +137,13 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 <table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=sX7klnl6uks" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Single-Leg Balance <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;45 dtk</li><li>Y: &gt;30 dtk</li><li>J: &gt;20 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 30-45 dtk</li><li>Y: 20-30 dtk</li><li>J: 15-20 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 15-30 dtk</li><li>Y: 10-20 dtk</li><li>J: 8-15 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;15 dtk</li><li>Y: &lt;10 dtk</li><li>J: &lt;8 dtk</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Berdiri satu kaki, tangan di pinggang, mata tertutup, tahan selama mungkin sampai kaki lain menyentuh lantai atau goyah signifikan &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, permukaan datar</td></tr></tbody></table>
 <table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=Clutk_VsgUY" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Ankle Dorsiflexion <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &#8805;12 cm</li><li>Y: &#8805;10 cm</li><li>J: &#8805;9 cm</li></ul></td><td class="rb-td-ready"><ul><li>E: 9-11 cm</li><li>Y: 7-9 cm</li><li>J: 6-8 cm</li></ul></td><td class="rb-td-dev"><ul><li>E: 6-8 cm</li><li>Y: 5-6 cm</li><li>J: 4-5 cm</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;6 cm</li><li>Y: &lt;5 cm</li><li>J: &lt;4 cm</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Knee-to-Wall Test &mdash; berlutut menghadap tembok, dorong lutut ke depan hingga menyentuh tembok tanpa tumit terangkat, geser kaki mundur bertahap cari jarak maksimal &nbsp;&middot;&nbsp; <b>Alat:</b> Tembok/dinding rata, penggaris atau meteran</td></tr></tbody></table>
 <table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=QqZAIMLtlTc" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Thoracic Rotation <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;55&deg;</li><li>Y: &gt;45&deg;</li><li>J: &gt;40&deg;</li></ul></td><td class="rb-td-ready"><ul><li>E: 40-55&deg;</li><li>Y: 35-45&deg;</li><li>J: 30-40&deg;</li></ul></td><td class="rb-td-dev"><ul><li>E: 25-40&deg;</li><li>Y: 20-35&deg;</li><li>J: 18-30&deg;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;25&deg;</li><li>Y: &lt;20&deg;</li><li>J: &lt;18&deg;</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Posisi quadruped (merangkak), satu tangan di belakang kepala, putar dada ke atas &amp; bawah tanpa menggerakkan pinggul, ukur sudut rotasi maksimal &nbsp;&middot;&nbsp; <b>Alat:</b> Matras, goniometer atau observasi video</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=nSyG-cxJC1c" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Shoulder Mobility <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;170&deg;</li><li>Y: &gt;160&deg;</li><li>J: &gt;155&deg;</li></ul></td><td class="rb-td-ready"><ul><li>E: 150-170&deg;</li><li>Y: 145-160&deg;</li><li>J: 140-155&deg;</li></ul></td><td class="rb-td-dev"><ul><li>E: 130-149&deg;</li><li>Y: 125-144&deg;</li><li>J: 120-139&deg;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;130&deg;</li><li>Y: &lt;125&deg;</li><li>J: &lt;120&deg;</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Berdiri tegak menghadap samping tembok, angkat satu lengan lurus ke atas (fleksi bahu) semaksimal mungkin tanpa membungkukkan punggung, ukur sudut dari torso &nbsp;&middot;&nbsp; <b>Alat:</b> Goniometer atau aplikasi pengukur sudut di HP, dinding sebagai referensi postur</td></tr></tbody></table>
+<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=zyJf11ThX4g" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Hip Flexor/Hamstring Flexibility <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;90&deg;</li><li>Y: &gt;80&deg;</li><li>J: &gt;75&deg;</li></ul></td><td class="rb-td-ready"><ul><li>E: 75-90&deg;</li><li>Y: 65-80&deg;</li><li>J: 60-75&deg;</li></ul></td><td class="rb-td-dev"><ul><li>E: 60-75&deg;</li><li>Y: 50-65&deg;</li><li>J: 45-60&deg;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;60&deg;</li><li>Y: &lt;50&deg;</li><li>J: &lt;45&deg;</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Straight Leg Raise &mdash; berbaring telentang, angkat satu kaki lurus ke atas semaksimal mungkin, kaki lain tetap menempel lantai, ukur sudut elevasi &nbsp;&middot;&nbsp; <b>Alat:</b> Matras, goniometer atau aplikasi pengukur sudut di HP</td></tr></tbody></table>
 <table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=W_O65GVbLQM" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Hip Hinge Pattern <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: 5/5 sempurna</li><li>Y: 5/5 sempurna</li><li>J: 5/5 sempurna</li></ul></td><td class="rb-td-ready"><ul><li>E: 4/5</li><li>Y: 4/5</li><li>J: 3-4/5</li></ul></td><td class="rb-td-dev"><ul><li>E: 2-3/5</li><li>Y: 2-3/5</li><li>J: 2/5</li></ul></td><td class="rb-td-novice"><ul><li>E: &#8804;1/5</li><li>Y: &#8804;1/5</li><li>J: &#8804;1/5</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Berdiri dengan tongkat menempel di 3 titik (kepala, punggung atas, tulang ekor), lakukan hip hinge (dorong pinggul ke belakang, punggung lurus) 5x percobaan, hitung berapa kali 3 titik kontak tetap menempel &nbsp;&middot;&nbsp; <b>Alat:</b> Tongkat kayu/PVC pipe</td></tr></tbody></table>
 <table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=WImKWp7_OZs" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Core Anti-Rotation <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;20 dtk</li><li>Y: &gt;15 dtk</li><li>J: &gt;12 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 12-20 dtk</li><li>Y: 10-15 dtk</li><li>J: 8-12 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 6-12 dtk</li><li>Y: 5-10 dtk</li><li>J: 4-8 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;6 dtk</li><li>Y: &lt;5 dtk</li><li>J: &lt;4 dtk</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Posisi plank atau berdiri, minta atlet bracing (kencangkan perut), beri dorongan ringan tak terduga berulang di dada/punggung, ukur durasi bertahan sebelum postur runtuh &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, tidak perlu alat lain</td></tr></tbody></table>
 <table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=0Ua9bOsZTYg" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Dynamic Balance Recovery <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &lt;60 dtk</li><li>Y: &lt;90 dtk</li><li>J: &lt;120 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 60-90 dtk</li><li>Y: 90-120 dtk</li><li>J: 120-150 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 90-150 dtk</li><li>Y: 120-180 dtk</li><li>J: 150-210 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &gt;150 dtk</li><li>Y: &gt;180 dtk</li><li>J: &gt;210 dtk</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Setelah sesi intensitas tinggi (mis. 1 menit shadow sparring maksimal), ukur waktu denyut nadi kembali &lt;120 bpm atau napas kembali teratur &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, heart rate monitor atau aplikasi HP (opsional)</td></tr></tbody></table>
     <div style="padding:8px 12px;font-size:9px;color:var(--text3);border-top:1px solid #1a2330;"><strong style="color:var(--cyan);">Skor input:</strong> ketik angka 1-10 per item sesuai band di atas &nbsp;&middot;&nbsp; E=Elite, Y=Youth, J=Junior &nbsp;&middot;&nbsp; Standar awal &mdash; sesuaikan dengan data internal/rujukan Anda sendiri seiring waktu.</div>
   </div>
-  <form method="POST" action="{% url 'muaythai:l1_correction' %}" id="mainForm" class="mt-3">
+  <form method="POST" action="{% url 'karate:l1_correction' %}" id="mainForm" class="mt-3">
     {% csrf_token %}
     <input type="hidden" name="atlet_id" id="id_atlet_hidden">
     <input type="hidden" name="atlet_name" id="input_nama">
@@ -231,16 +230,16 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             </div>
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 5. Shoulder Overhead Mobility</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 5. Hip Flexor/Hamstring Flexibility</div>
           <div class="item-card">
-            <div class="item-sub">Overhead reach test, fleksi bahu (derajat)</div>
+            <div class="item-sub">Active Straight Leg Raise (ASLR), ukur sudut elevasi kaki dari lantai (derajat)</div>
             <div class="row g-2">
-              <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="shoulder_fleksi_kanan" id="f_shl_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-              <div class="col-6"><label class="gold">Kiri</label><input type="number" name="shoulder_fleksi_kiri" id="f_shl_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="asl_raise_kanan_derajat" id="f_asl_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Kiri</label><input type="number" name="asl_raise_kiri_derajat" id="f_asl_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="score-input-1to10">
               <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_shoulder" id="n_shoulder" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
+              <input type="number" name="skor_neural_hamstring" id="n_hamstring" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
             </div>
           </div>
 
@@ -348,7 +347,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             <td class="mono x-small" style="color:var(--gold)">{{ audit.item_terlemah }}</td>
             <td class="text-center">
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
-                      onclick="if(confirm('Hapus data {{ audit.atlet_name|escapejs }}?')) window.location='{% url 'muaythai:hapus_l1_audit' audit.pk %}'">
+                      onclick="if(confirm('Hapus data {{ audit.atlet_name|escapejs }}?')) window.location='{% url 'karate:hapus_l1_audit' audit.pk %}'">
                 <i class="bi bi-trash3-fill"></i>
               </button>
             </td>
@@ -393,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function(){
   radarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['HIP ROTATION','BALANCE','ANKLE','THORACIC','SHOULDER','HIP HINGE','CORE','RECOVERY'],
+      labels: ['HIP ROTATION','BALANCE','ANKLE','THORACIC','HAMSTRING','HIP HINGE','CORE','RECOVERY'],
       datasets: [{
         data: [0,0,0,0,0,0,0,0],
         backgroundColor: 'rgba(80,238,241,0.12)',
@@ -417,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 const ITEM_LABELS = {
   hip_rotasi: 'Hip Rotation', balance: 'Single-Leg Balance', ankle: 'Ankle Dorsiflexion',
-  thoracic: 'Thoracic Rotation', shoulder: 'Shoulder Mobility', hip_hinge: 'Hip Hinge Pattern',
+  thoracic: 'Thoracic Rotation', hamstring: 'Hip Flexor/Hamstring Flexibility', hip_hinge: 'Hip Hinge Pattern',
   core: 'Core Anti-Rotation', recovery: 'Dynamic Balance Recovery'
 };
 
@@ -442,10 +441,10 @@ const REKO_L1MT = {
     2: ['Quadruped Thoracic Rotation full ROM 3x12 tiap sisi', 'Side-Lying Windmill 3x10 tiap sisi', 'Thoracic Rotation dengan band resistance ringan 3x10'],
     3: ['Pertahankan dengan T-spine mobility drill sebagai warm-up', 'Integrasi rotasi ke shadow boxing/kick dengan kontrol penuh', 'Loaded Thoracic Rotation (light med ball) 3x10 tiap sisi']
   },
-  shoulder: {
-    1: ['Wall Slide 3x10 fokus teknik dasar', 'Band Pull-Apart 3x15 untuk mobilitas dasar', 'Passive Overhead Reach dengan bantuan 3x10'],
-    2: ['Overhead Reach aktif tanpa bantuan 3x10', 'Wall Slide dengan beban ringan (band) 3x12', 'Shoulder Dislocate dengan stick/band 3x10'],
-    3: ['Pertahankan dengan overhead mobility drill sebagai warm-up', 'Integrasi ke elbow strike/clinch dengan kontrol penuh', 'Loaded Overhead Carry ringan untuk stabilitas fungsional']
+  hamstring: {
+    1: ['Passive Hamstring Stretch (strap-assisted) 3x30 detik tiap sisi', 'Active Straight Leg Raise submaksimal 3x8 tiap sisi', 'Standing Hamstring Stretch dengan bantuan dinding 3x30 detik'],
+    2: ['PNF Hamstring Stretch (contract-relax) 3x20 detik tiap sisi', 'Active Straight Leg Raise dengan band resistance 3x10 tiap sisi', 'Dynamic Leg Swing (front-back) 3x12 tiap sisi'],
+    3: ['Pertahankan dengan dynamic leg swing sebagai warm-up harian', 'Integrasi ke tendangan tinggi (dolyo/ap chagi) dengan kontrol penuh', 'Loaded ASLR / Nordic-style hamstring work untuk kekuatan di ROM penuh']
   },
   hip_hinge: {
     1: ['Hip Hinge dengan cueing verbal (dowel di punggung) 3x10', 'Wall Hip Hinge (bokong menyentuh dinding) 3x10', 'Romanian Deadlift bodyweight submaksimal 3x10'],
@@ -470,7 +469,7 @@ function liveUpdate() {
     balance:    n('n_balance'),
     ankle:      n('n_ankle'),
     thoracic:   n('n_thoracic'),
-    shoulder:   n('n_shoulder'),
+    hamstring:  n('n_hamstring'),
     hip_hinge:  n('n_hiphinge'),
     core:       n('n_core'),
     recovery:   n('n_recovery'),
@@ -581,6 +580,7 @@ function generateReko(items) {
   weakest.forEach(p => {
     const db = REKO_L1MT[p.key];
     if (!db) return;
+    // Peta skor 1-10 baru ke 3 tingkat lama (1=Novice/Developing rendah, 2=Developing/Competent, 3=Very Competent) supaya konten rekomendasi lama tetap terpakai
     const tier = p.val <= 4 ? 1 : (p.val <= 7 ? 2 : 3);
     const tips = db[tier] || db[1];
     const col = tier === 1 ? 'var(--red)' : tier === 2 ? 'var(--gold)' : 'var(--green)';

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard PJOK — Fase {{ fase }} ({{ jenjang }})</h2>
+<p>Guru: {{ profile.nama_lengkap }} — {{ profile.sekolah }}</p>
+
+<h3>Daftar Siswa</h3>
+<p><a href="{% url 'pjok:tambah_siswa' %}">+ Tambah Siswa</a></p>
+<table>
+  <thead>
+    <tr><th>Nama</th><th>Kelas</th><th>Aksi</th></tr>
+  </thead>
+  <tbody>
+    {% for siswa in siswa_list %}
+    <tr>
+      <td>{{ siswa.nama }}</td>
+      <td>{{ siswa.kelas }}</td>
+      <td><a href="{% url 'pjok:detail_siswa' siswa.id %}">Lihat detail & diagnosis</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">Belum ada siswa terdaftar.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

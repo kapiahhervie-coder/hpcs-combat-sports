@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Input Nilai Teknik — {{ siswa.nama }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Simpan</button>
+  <a href="{% url 'pjok:detail_siswa' siswa.id %}">Batal</a>
+</form>
+{% endblock %}
