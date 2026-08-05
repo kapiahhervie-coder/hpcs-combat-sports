@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — HPCS Combat Sports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-wrapper {
+      width: 100%;
+      max-width: 400px;
+      padding: 1rem;
+    }
+    .login-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .login-brand .brand-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .login-brand h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .login-brand p {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-top: 4px;
+    }
+    .login-card {
+      background: #fff;
+      border: 0.5px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 0.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .form-group input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.1);
+    }
+    .btn-login {
+      width: 100%;
+      padding: 10px;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background .15s;
+    }
+    .btn-login:hover { background: #1f2937; }
+    .error-msg {
+      background: #FCEBEB;
+      color: #A32D2D;
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .login-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <div class="login-brand">
+      <div class="brand-icon">⚔</div>
+      <h1>HPCS</h1>
+      <p>High Performance Combat Sports</p>
+    </div>
+
+    <div class="login-card">
+      <form method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="error-msg">
+          Username atau password salah. Silakan coba lagi.
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="error-msg">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="id_username">Username</label>
+          <input type="text" name="username" id="id_username"
+            autofocus autocomplete="username"
+            value="{{ form.username.value|default:'' }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="id_password">Password</label>
+          <input type="password" name="password" id="id_password"
+            autocomplete="current-password" />
+        </div>
+
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% endif %}
+
+        <button type="submit" class="btn-login">Masuk</button>
+      </form>
+    </div>
+
+    <div class="login-footer">
+      Lupa password? Hubungi administrator sistem.
+    </div>
+  </div>
+
+</body>
+</html>
