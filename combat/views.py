@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.views.generic import View
 from django.http import JsonResponse
 import json
-
+from pjok.models import GuruProfile
 from .models import (
     Atlet,
     CorrectionAuditL1,
@@ -31,11 +31,13 @@ CABOR_DASHBOARD_URL = {
     'boxing': 'combat:dashboard_boxing',
     'muaythai': 'combat:dashboard_muaythai',
     'tkd': 'taekwondo:dashboard',
+    'krt': 'karate:dashboard',
 }
 
 
 class DashboardView(LoginRequiredMixin, View):
     template_name = 'combat/dashboard_combat.html'
+    
 
     def get(self, request):
         if not (request.user.is_superuser or request.user.is_staff):
