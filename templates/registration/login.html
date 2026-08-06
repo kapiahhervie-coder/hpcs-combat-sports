@@ -1,23 +1,217 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Login HPCS</title>
-  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:sans-serif;background:#f3f4f6;min-height:100vh;display:flex;align-items:center;justify-content:center}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem;width:380px}.brand{text-align:center;margin-bottom:1.5rem}h1{font-size:20px;font-weight:600}label{display:block;font-size:12px;color:#6b7280;margin-bottom:4px}input{width:100%;padding:9px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;margin-bottom:1rem}.btn{width:100%;padding:10px;background:#111827;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer}.error{background:#FCEBEB;color:#A32D2D;font-size:13px;padding:10px;border-radius:8px;margin-bottom:1rem}</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — HPCS Combat Sports</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-wrapper {
+      width: 100%;
+      max-width: 400px;
+      padding: 1rem;
+    }
+    .login-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .login-brand .brand-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+    .login-brand h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .login-brand p {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-top: 4px;
+    }
+    .login-card {
+      background: #fff;
+      border: 0.5px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 0.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: #111827;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .form-group input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,.1);
+    }
+    .pw-field-wrap {
+      position: relative;
+    }
+    .pw-field-wrap input {
+      padding-right: 42px;
+    }
+    .pw-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+    }
+    .pw-toggle:hover { color: #111827; }
+    .pw-toggle svg { width: 18px; height: 18px; }
+    .btn-login {
+      width: 100%;
+      padding: 10px;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background .15s;
+    }
+    .btn-login:hover { background: #1f2937; }
+    .error-msg {
+      background: #FCEBEB;
+      color: #A32D2D;
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .login-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .register-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .register-link a {
+      color: #111827;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .register-link a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
-<div class="card">
-  <div class="brand"><div style="font-size:32px">⚔</div><h1>HPCS</h1><p style="font-size:11px;color:#9ca3af">High Performance Combat Sports</p></div>
-  <form method="post">
-    {% csrf_token %}
-    {% if form.errors %}<div class="error">Username atau password salah.</div>{% endif %}
-    <label>Username</label>
-    <input type="text" name="username" autofocus value="{{ form.username.value|default:'' }}">
-    <label>Password</label>
-    <input type="password" name="password">
-    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-    <button type="submit" class="btn">Masuk</button>
-  </form>
-</div>
+
+  <div class="login-wrapper">
+    <div class="login-brand">
+      <div class="brand-icon">⚔</div>
+      <h1>HPCS</h1>
+      <p>High Performance Combat Sports</p>
+    </div>
+
+    <div class="login-card">
+      <form method="post">
+        {% csrf_token %}
+
+        {% if form.errors %}
+        <div class="error-msg">
+          Username atau password salah. Silakan coba lagi.
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="error-msg">
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="id_username">Username</label>
+          <input type="text" name="username" id="id_username"
+            autofocus autocomplete="username"
+            value="{{ form.username.value|default:'' }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="id_password">Password</label>
+          <div class="pw-field-wrap">
+            <input type="password" name="password" id="id_password"
+              autocomplete="current-password" />
+            <button type="button" class="pw-toggle" onclick="togglePw()" aria-label="Lihat password">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% endif %}
+
+        <button type="submit" class="btn-login">Masuk</button>
+      </form>
+
+      <div class="register-link">
+        Belum punya akun? <a href="{% url 'combat:daftar_coach' %}">Daftar di sini</a>
+      </div>
+    </div>
+
+    <div class="login-footer">
+      Lupa password? Hubungi administrator sistem.
+    </div>
+  </div>
+
+<script>
+function togglePw() {
+  var field = document.getElementById('id_password');
+  var icon = document.getElementById('eyeIcon');
+  if (field.type === 'password') {
+    field.type = 'text';
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    field.type = 'password';
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+</script>
+
 </body>
 </html>
