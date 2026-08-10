@@ -90,6 +90,9 @@ class ProfilPelatih(models.Model):
     foto        = models.ImageField(upload_to='foto_pelatih/', blank=True, null=True, verbose_name='Foto Profil')
     status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     dibuat_pada = models.DateTimeField(auto_now_add=True)
+    bio         = models.TextField(blank=True, verbose_name='Bio Singkat')
+    sertifikasi = models.TextField(blank=True, verbose_name='Sertifikasi & Lisensi',
+                                    help_text='Satu baris per sertifikasi')
 
     class Meta:
         verbose_name        = 'Profil Pelatih'

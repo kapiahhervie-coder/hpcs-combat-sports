@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% block title %}Global Dashboard &mdash; HPCS Intelligence{% endblock %}
 
@@ -102,7 +102,9 @@ body {
   gap: 12px;
   margin-bottom: 20px;
 }
-@media (min-width: 900px) { .sport-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; } }
+@media (min-width: 900px) { .sport-grid { grid-template-columns: repeat(5, 1fr); gap: 14px; } }
+.sport-card.pjok { grid-column: 1 / -1; }
+@media (min-width: 900px) { .sport-card.pjok { grid-column: auto; } }
 
 .sport-card {
   border-radius: 12px;
@@ -332,6 +334,14 @@ body {
       <span class="meta">{{ total_atlet_taekwondo|default:0 }} Atlet Terdaftar</span>
       <div class="sport-bar"><div class="sport-bar-fill" style="width:60%;background:var(--green);"></div></div>
     </a>
+    {% if is_guru_pjok %}
+    <a href="{{ pjok_url }}" class="sport-card pjok" style="text-decoration:none;opacity:1;">
+      <span class="code">PJOK</span>
+      <h3>PJOK</h3>
+      <span class="meta">Buka Dashboard PJOK</span>
+      <div class="sport-bar"><div class="sport-bar-fill" style="width:100%;background:var(--amber);"></div></div>
+    </a>
+    {% endif %}
   </div>
 
   <!-- Main Layout -->

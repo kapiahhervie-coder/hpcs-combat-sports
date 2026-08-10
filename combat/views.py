@@ -1,8 +1,9 @@
-﻿"""
+"""
 HPCS Combat Sports - Views
 TODO: Role-based access control akan diimplementasikan setelah Custom User Model dibuat
 """
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -23,9 +24,9 @@ from .permissions import get_atlet_queryset, is_admin
 
 
 
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 # DASHBOARD UTAMA
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 
 CABOR_DASHBOARD_URL = {
     'boxing': 'combat:dashboard_boxing',
@@ -40,6 +41,15 @@ class DashboardView(LoginRequiredMixin, View):
     
 
     def get(self, request):
+        # Guru PJOK: tampilkan tombol ke dashboard PJOK, jangan paksa redirect kalau superuser/staff
+        guru_profile = getattr(request.user, 'guruprofile', None)
+        is_guru_pjok = guru_profile is not None
+        pjok_url = None
+        if is_guru_pjok:
+            pjok_url = reverse('pjok:dashboard_fase', kwargs={'fase': guru_profile.fase})
+            if not (request.user.is_superuser or request.user.is_staff):
+                return redirect(pjok_url)
+
         if not (request.user.is_superuser or request.user.is_staff):
             profil = getattr(request.user, 'profil_pelatih', None)
             if profil and profil.cabang in CABOR_DASHBOARD_URL:
@@ -113,13 +123,15 @@ class DashboardView(LoginRequiredMixin, View):
             'total_atlet_muaythai': squad_atlet.filter(cabang__iexact='muaythai').count(),
             'total_atlet_taekwondo': squad_atlet.filter(cabang__iexact='tkd').count(),
             'total_atlet_karate': squad_atlet.filter(cabang__iexact='krt').count(),
+            'is_guru_pjok': is_guru_pjok,
+            'pjok_url': pjok_url,
         }
         return render(request, self.template_name, context)
 
 
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 # ATHLETE INTELLIGENCE REPORT (NEW REPORT CARD)
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 
 class AthleteIntelligenceReportView(LoginRequiredMixin, View):
     template_name = 'combat/athlete_report.html'
@@ -288,9 +300,9 @@ class ReportCenterView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 # COACH REGISTRATION & MANAGEMENT
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 
 from django.contrib.auth import login as auth_login
 
@@ -424,9 +436,9 @@ Tim HPCS Combat Sports""",
         return redirect('combat:admin_coach')
 
 
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 # ASSIGN ATLET KE COACH
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 
 class AssignAtletCoachView(LoginRequiredMixin, View):
     """Admin assign/unassign atlet ke coach tertentu."""
@@ -460,9 +472,9 @@ class AssignAtletCoachView(LoginRequiredMixin, View):
         return redirect('combat:admin_coach')
 
 
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 # TAMBAH ATLET (oleh Coach)
-# ══════════════════════════════════════════════════════════════════════
+# ----------------------------------------------------------------------
 # CATATAN: sebelumnya class ini terduplikasi 3x berturut-turut di file asli
 # (identik persis). Hanya definisi terakhir yang pernah benar-benar dipakai
 # Python (definisi sebelumnya jadi dead code tertimpa). Di sini disisakan
