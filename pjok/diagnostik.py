@@ -93,3 +93,75 @@ def diagnosa_akar_masalah(siswa, materi, ambang_batas=AMBANG_BATAS_DEFAULT):
             "kemungkinan masalah ada di teknik/koordinasi gerak, bukan kondisi fisik."
         )
     return masalah
+
+
+def rubrik_label(skor):
+    """Ubah skor 0-100 jadi label rubrik + kelas warna untuk tampilan."""
+    if skor is None:
+        return {'label': 'Belum ada data', 'kelas': 'netral'}
+    if skor >= 85:
+        return {'label': 'Sangat Baik', 'kelas': 'baik'}
+    if skor >= 70:
+        return {'label': 'Baik', 'kelas': 'baik'}
+    if skor >= 55:
+        return {'label': 'Cukup', 'kelas': 'cukup'}
+    return {'label': 'Perlu Perhatian', 'kelas': 'kurang'}
+
+
+# Rekomendasi latihan konkret per komponen L1-L4 yang rendah.
+# Ditujukan untuk guru praktikkan langsung di lapangan — bukan istilah teknis.
+REKOMENDASI_LATIHAN = {
+    'l1': [
+        "Latihan plank progresif — 3 set x 15-30 detik",
+        "Peregangan dinamis sebelum aktivitas inti (5-10 menit)",
+        "Latihan keseimbangan satu kaki (single-leg stand) — 3 set x 20 detik per kaki",
+    ],
+    'l2': [
+        "Push-up dengan modifikasi (bertumpu lutut/dinding) — 3 set x 8-12 repetisi",
+        "Sit-up terpandu atau plank variasi — 3 set x 10-15 repetisi",
+        "Latihan resistance band ringan untuk penguatan otot dasar",
+    ],
+    'l3': [
+        "Lompat kotak rendah (box jump) — 3 set x 8 repetisi",
+        "Lempar bola medicine ringan — 3 set x 10 repetisi",
+        "Skipping / lompat tali — 3 set x 30 detik",
+    ],
+    'l4': [
+        "Lari zig-zag antar cone — 4 set x 10 meter",
+        "Ladder drill kecepatan kaki — 3 pola gerakan berbeda",
+        "Permainan kejar-kejaran terstruktur (tag games) — 10 menit",
+    ],
+}
+
+KOMPONEN_LABEL = {
+    'l1': 'Core & Mobility',
+    'l2': 'Strength',
+    'l3': 'Power',
+    'l4': 'Speed & Agility',
+}
+
+
+def rekomendasi_perbaikan(penilaian_fisik, ambang_batas=AMBANG_BATAS_DEFAULT):
+    """
+    Susun daftar rekomendasi latihan konkret untuk guru, berdasarkan
+    komponen L1-L4 mana saja yang skornya di bawah ambang batas.
+    """
+    if penilaian_fisik is None:
+        return []
+
+    skor_map = {
+        'l1': penilaian_fisik.skor_l1,
+        'l2': penilaian_fisik.skor_l2,
+        'l3': penilaian_fisik.skor_l3,
+        'l4': penilaian_fisik.skor_l4,
+    }
+
+    hasil = []
+    for kode, skor in skor_map.items():
+        if skor is not None and skor < ambang_batas:
+            hasil.append({
+                'komponen': KOMPONEN_LABEL[kode],
+                'skor': skor,
+                'latihan': REKOMENDASI_LATIHAN[kode],
+            })
+    return hasil

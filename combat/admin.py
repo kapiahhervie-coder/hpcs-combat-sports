@@ -11,6 +11,7 @@ from .models import (
     PowerAuditL3,
     SpeedAgilityAuditL4,
     RekomendasiProgram,
+    ProfilPelatih,
 )
 from django.http import HttpResponse
 import openpyxl
@@ -437,3 +438,25 @@ class RekomendasiProgramAdmin(admin.ModelAdmin):
     list_filter   = ['audit_level', 'sudah_dijalankan']
     search_fields = ['atlet__nama_atlet']
     fields        = ['atlet', 'audit_level', 'tanggal', 'isi_rekomendasi', 'durasi_minggu', 'sudah_dijalankan']
+
+
+# ══════════════════════════════════════════════════════════════════════
+# PROFIL PELATIH — supaya admin utama bisa lihat semua pelatih yang daftar
+# ══════════════════════════════════════════════════════════════════════
+
+@admin.register(ProfilPelatih)
+class ProfilPelatihAdmin(admin.ModelAdmin):
+    list_display  = ['user', 'get_nama_lengkap', 'cabang', 'get_status', 'no_hp', 'email', 'dibuat_pada']
+    list_filter   = ['cabang', 'status']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'email', 'no_hp']
+    ordering      = ['-dibuat_pada']
+
+    def get_nama_lengkap(self, obj):
+        return obj.user.get_full_name() or obj.user.username
+    get_nama_lengkap.short_description = 'Nama Lengkap'
+
+    def get_status(self, obj):
+        warna = {'approved': '#34d399', 'pending': '#fbbf24', 'rejected': '#f87171'}
+        c = warna.get(obj.status, '#888')
+        return format_html('<strong style="color:{};">{}</strong>', c, obj.get_status_display())
+    get_status.short_description = 'Status'

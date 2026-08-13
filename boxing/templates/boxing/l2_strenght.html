@@ -546,64 +546,96 @@
                     <i class="bi bi-journal-medical me-1"></i>Lihat Standar Rubrik & Protokol
                 </a>
                 <div id="rubrikPanel" style="display:none;">
+                    <div class="mt-2 mb-2 d-flex gap-2 flex-wrap">
+                        <select id="rubrikKategoriSel" class="form-select form-select-sm w-auto" onchange="renderRubrikL2()">
+                            <option value="YOUTH">Youth (&lt;13 thn)</option>
+                            <option value="JUNIOR">Junior (13–17 thn)</option>
+                            <option value="SENIOR" selected>Senior / Elite (18–35 thn)</option>
+                        </select>
+                        <select id="rubrikGenderSel" class="form-select form-select-sm w-auto" onchange="renderRubrikL2()">
+                            <option value="Putra">Laki-Laki</option>
+                            <option value="Putri">Perempuan</option>
+                        </select>
+                    </div>
                     <div class="rubrik-wrap mt-2">
                         <div class="row g-0 rubrik-head">
-                            <div class="col-3">Aspek & Instrumen</div>
-                            <div class="col-3 text-center">Very Competent (9–10)</div>
-                            <div class="col-3 text-center">Competent (7–8)</div>
-                            <div class="col-3 text-center">Developing (5–6)</div>
+                            <div class="col-2">Aspek & Instrumen</div>
+                            <div class="col text-center">Novice</div>
+                            <div class="col text-center">Fair</div>
+                            <div class="col text-center">Good</div>
+                            <div class="col text-center">Excellent</div>
+                            <div class="col text-center">Superior</div>
                         </div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Lower Strength</span>
-                                <span class="aspek-sub">5RM Goblet Squat</span>
-                                <a href="https://www.youtube.com/watch?v=k_EhLGvM8TQ" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">? 5RM = Strength Murni. 1 Menit = Endurance (tidak dipakai di L2)</div>
+                        <div id="rubrikL2Body"></div>
+                    </div>
+                    <div class="mt-2" style="font-size:0.68rem;color:var(--text-faint);">
+                        Norma NSCA/ACSM — SOP L2 Strength HPCS. Kategori <strong>Youth</strong> tidak memakai ambang
+                        angka dewasa (skor kualitatif/non-gating). Kategori <strong>Elite</strong> memakai tabel Senior.
+                        Pull-Up Senior diapproksimasi pakai reps (belum menangkap beban tambahan %BW).
+                    </div>
+
+                    <!-- SOP Protokol per Pilar (dari Panduan_SOP_Rubrik_Asesmen_L2_HPCS.pdf) -->
+                    <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+                        <div class="section-label mb-2"><i class="bi bi-clipboard2-pulse"></i> SOP & Protokol Pelaksanaan</div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">1</span>Lower — 5RM Goblet Squat</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan absolut & ketahanan beban ekstremitas bawah.<br>
+                                <strong>Target Otot:</strong> Quadriceps, Gluteus, Adductor, Core.<br>
+                                <strong>Alat:</strong> Dumbbell/Kettlebell, Kursi/Box target, Timbangan badan.<br>
+                                <strong>Cara Pelaksanaan:</strong> Peluk beban rapat di dada. Lakukan squat hingga bokong menyentuh ringan box/paralel. Cari beban terberat yang hanya mampu diangkat 5 repetisi sah.<br>
+                                <strong>Data Input:</strong> Beban Maksimal (kg) → Rasio BB (×BW).
                             </div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-green">= 1.5× BW</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-blue">1.0–1.49× BW</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">0.6–0.99× BW</div></div>
                         </div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Upper Push</span>
-                                <span class="aspek-sub">Floor/Bench Press (Reps)</span>
-                                <a href="https://www.youtube.com/watch?v=erpQ8ssuzz4" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">2</span>Push — Floor / Bench Press</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan dorong horizontal tubuh bagian atas.<br>
+                                <strong>Target Otot:</strong> Pectoralis Major, Anterior Deltoid, Triceps.<br>
+                                <strong>Alat:</strong> Barbell + Piringan Beban / Dumbbell, Bench / Matras.<br>
+                                <strong>Cara Pelaksanaan:</strong> Berbaring telentang, dorong beban dari dada hingga siku lurus sempurna. Pantat dan punggung wajib tetap menempel.<br>
+                                <strong>Data Input:</strong> Beban Maksimal (kg).
                             </div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 12 Reps</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-blue">6–12 Reps</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">3–5 Reps</div></div>
                         </div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Upper Pull</span>
-                                <span class="aspek-sub">Weighted Pull Up</span>
-                                <a href="https://www.youtube.com/watch?v=QZue7F_Zk3A" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">3</span>Pull — Weighted Pull Up</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan tarik vertikal relatif terhadap berat badan.<br>
+                                <strong>Target Otot:</strong> Latissimus Dorsi, Rhomboids, Biceps.<br>
+                                <strong>Alat:</strong> Tiang Pull-Up, Dip Belt / Dumbbell tambahan.<br>
+                                <strong>Cara Pelaksanaan:</strong> Menggantung lurus, tarik badan hingga dagu melewati tiang tanpa ayunan kaki (no kipping).<br>
+                                <strong>Data Input:</strong> Repetisi sah (reps) & Beban Tambahan (kg).
                             </div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 15 Reps</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-blue">8–15 Reps</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">4–7 Reps</div></div>
                         </div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Core Bracing</span>
-                                <span class="aspek-sub">Weighted Plank (Detik)</span>
-                                <a href="https://www.youtube.com/watch?v=0Mwk0RRUCxE" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">4</span>Core — Weighted Plank</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur ketahanan stabilitas panggul-lumbal (anti-extension).<br>
+                                <strong>Target Otot:</strong> Transverse Abdominis, Rectus Abdominis, Obliques.<br>
+                                <strong>Alat:</strong> Matras, Piringan Beban (Plates), Stopwatch.<br>
+                                <strong>Cara Pelaksanaan:</strong> Posisi plank siku, beban ditaruh di punggung bawah. Tahan posisi tubuh lurus sempurna. Stop jika pinggul turun/runtuh.<br>
+                                <strong>Data Input:</strong> Durasi Tahan Sempurna (detik).
                             </div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 90 Detik</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-blue">60–90 Detik</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">30–60 Detik</div></div>
                         </div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Isometric</span>
-                                <span class="aspek-sub">Split Squat Hold + Tremor</span>
-                                <a href="https://www.youtube.com/watch?v=sh3RO6QYvew" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">?? Catat detik tremor muncul ? data CNS Fatigue</div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">5</span>Isometric — Split Squat Hold</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan isometrik tungkai tunggal & ketahanan saraf/tendon.<br>
+                                <strong>Target Otot:</strong> Quadriceps, Gluteus, Ankle Stabilizers.<br>
+                                <strong>Alat:</strong> Stopwatch, Matras.<br>
+                                <strong>Cara Pelaksanaan:</strong> Posisi split stance sudut 90° pada lutut depan & belakang. Tahan posisi diam.<br>
+                                <strong>Data Input:</strong> Awal Tremor (detik saat kaki mulai bergetar pertama) & Total Tahan (detik total hingga atlet runtuh/bergeser).
                             </div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-green">&gt; 60 Detik</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-blue">40–60 Detik</div></div>
-                            <div class="col-3 score-col text-center"><div class="val-box val-yellow">20–40 Detik</div></div>
+                        </div>
+
+                        <div class="mt-2 p-2" style="background:rgba(0,229,176,0.06);border-left:3px solid var(--accent);border-radius:6px;font-size:0.76rem;color:var(--text-dim);">
+                            <strong style="color:var(--accent);">Catatan Operasional Pelatih:</strong>
+                            Gunakan rekaman video HP (posisi samping 90°) untuk validasi gerakan sah. Berikan istirahat 2–3 menit antar percobaan.
                         </div>
                     </div>
                 </div>
@@ -928,49 +960,162 @@
 </div><!-- /container -->
 
 <script>
-// -- Auto Scoring ------------------------------------------
-function calcScoreLower(beban, bb) {
-    if (!beban || !bb || bb <= 0) return 0;
-    var r = beban / bb;
-    if (r >= 1.5) return 9.5; if (r >= 1.25) return 8.5;
-    if (r >= 1.0) return 7.5; if (r >= 0.75) return 6.0;
-    if (r >= 0.6) return 5.0; return 3.0;
+// -- Auto Scoring (preview only — nilai final tetap dihitung ulang di
+//    server dari RUBRIK_L2 di boxing/views.py; lihat komentar di sana) ----
+// Rubrik NSCA/ACSM L2 Strength — SOP Agustus 2026. Skor tingkat: Novice 1.5,
+// Fair 3.5, Good 5.5, Excellent 7.5, Superior 9.5. HARUS identik dengan
+// RUBRIK_L2 di boxing/views.py agar preview & hasil simpan konsisten.
+var RUBRIK_L2 = {
+    JUNIOR: {
+        Putra: {
+            lower: [[0.85,9.5],[0.70,7.5],[0.55,5.5],[0.40,3.5]],
+            push:  [[1.10,9.5],[0.90,7.5],[0.70,5.5],[0.50,3.5]],
+            pull:  [[18,9.5],[13,7.5],[8,5.5],[3,3.5]],
+            core:  [[120,9.5],[90,7.5],[60,5.5],[30,3.5]],
+            iso:   [[120,9.5],[90,7.5],[60,5.5],[45,3.5]]
+        },
+        Putri: {
+            lower: [[0.75,9.5],[0.60,7.5],[0.45,5.5],[0.30,3.5]],
+            push:  [[0.80,9.5],[0.65,7.5],[0.50,5.5],[0.35,3.5]],
+            pull:  [[11,9.5],[7,7.5],[3,5.5],[1,3.5]],
+            core:  [[90,9.5],[75,7.5],[45,5.5],[30,3.5]],
+            iso:   [[105,9.5],[75,7.5],[50,5.5],[35,3.5]]
+        }
+    },
+    SENIOR: {
+        Putra: {
+            lower: [[1.05,9.5],[0.90,7.5],[0.70,5.5],[0.50,3.5]],
+            push:  [[1.50,9.5],[1.25,7.5],[1.00,5.5],[0.75,3.5]],
+            pull:  [[21,9.5],[16,7.5],[11,5.5],[6,3.5]], // approksimasi reps, lihat catatan di views.py
+            core:  [[120,9.5],[90,7.5],[60,5.5],[45,3.5]],
+            iso:   [[150,9.5],[120,7.5],[90,5.5],[60,3.5]]
+        },
+        Putri: {
+            lower: [[0.85,9.5],[0.70,7.5],[0.55,5.5],[0.40,3.5]],
+            push:  [[1.00,9.5],[0.85,7.5],[0.65,5.5],[0.50,3.5]],
+            pull:  [[11,9.5],[8,7.5],[4,5.5],[1,3.5]],
+            core:  [[120,9.5],[90,7.5],[60,5.5],[45,3.5]],
+            iso:   [[135,9.5],[105,7.5],[75,5.5],[45,3.5]]
+        }
+    }
+};
+RUBRIK_L2.ELITE = RUBRIK_L2.SENIOR;
+
+function skorDariAmbang(value, tabelAmbang) {
+    if (!value) return 0;
+    for (var i = 0; i < tabelAmbang.length; i++) {
+        if (value >= tabelAmbang[i][0]) return tabelAmbang[i][1];
+    }
+    return 1.5; // Novice
 }
-function calcScorePush(reps) {
-    if (!reps) return 0;
-    if (reps > 12) return 9.5; if (reps >= 10) return 8.5;
-    if (reps >= 6) return 7.0; if (reps >= 3) return 5.5; return 3.0;
+
+function skorPilarL2(pilar, nilaiMentah, kategoriUsia, gender, bb) {
+    var kategori = (kategoriUsia || 'ELITE').toUpperCase();
+    if (kategori === 'YOUTH') {
+        return nilaiMentah ? 7.0 : 0; // non-gating/kualitatif untuk atlet muda
+    }
+    var tabelKategori = RUBRIK_L2[kategori] || RUBRIK_L2.SENIOR;
+    var tabelGender = tabelKategori[gender] || tabelKategori.Putra;
+    var ambang = tabelGender[pilar] || [];
+    if (pilar === 'lower' || pilar === 'push') {
+        if (!nilaiMentah || !bb || bb <= 0) return 0;
+        return skorDariAmbang(nilaiMentah / bb, ambang);
+    }
+    return skorDariAmbang(nilaiMentah, ambang);
 }
-function calcScorePull(reps) {
-    if (!reps) return 0;
-    if (reps > 15) return 9.5; if (reps >= 12) return 8.5;
-    if (reps >= 8) return 7.0; if (reps >= 4) return 5.5; return 3.0;
-}
-function calcScoreCore(d) {
-    if (!d) return 0;
-    if (d > 90) return 9.5; if (d >= 75) return 8.5;
-    if (d >= 60) return 7.0; if (d >= 30) return 5.5; return 3.0;
-}
-function calcScoreIso(d) {
-    if (!d) return 0;
-    if (d > 60) return 9.5; if (d >= 50) return 8.5;
-    if (d >= 40) return 7.0; if (d >= 20) return 5.5; return 3.0;
+
+// -- Data tampilan rubrik (string rentang, sesuai teks SOP PDF) -----------
+var RUBRIK_L2_DISPLAY = {
+    JUNIOR: {
+        Putra: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.40 ×BW','0.40–0.54 ×BW','0.55–0.69 ×BW','0.70–0.85 ×BW','> 0.85 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.50 ×BW','0.50–0.69 ×BW','0.70–0.89 ×BW','0.90–1.10 ×BW','> 1.10 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (Reps)', vals:['< 3 reps','3–7 reps','8–12 reps','13–17 reps','> 17 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [5–10kg]', vals:['< 30 dtk','30–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 45 dtk','45–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] }
+        },
+        Putri: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.30 ×BW','0.30–0.44 ×BW','0.45–0.59 ×BW','0.60–0.75 ×BW','> 0.75 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.35 ×BW','0.35–0.49 ×BW','0.50–0.64 ×BW','0.65–0.80 ×BW','> 0.80 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (Reps)', vals:['0 reps','1–2 reps','3–6 reps','7–10 reps','> 10 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [2.5–5kg]', vals:['< 30 dtk','30–44 dtk','45–74 dtk','75–89 dtk','≥ 90 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 35 dtk','35–49 dtk','50–74 dtk','75–104 dtk','≥ 105 dtk'] }
+        }
+    },
+    SENIOR: {
+        Putra: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.50 ×BW','0.50–0.69 ×BW','0.70–0.89 ×BW','0.90–1.05 ×BW','> 1.05 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.75 ×BW','0.75–0.99 ×BW','1.00–1.24 ×BW','1.25–1.49 ×BW','≥ 1.50 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (approx. reps*)', vals:['< 6 reps','6–10 reps','11–15 reps','16–20 reps','> 20 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [10–15kg]', vals:['< 45 dtk','45–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 60 dtk','60–89 dtk','90–119 dtk','120–149 dtk','≥ 150 dtk'] }
+        },
+        Putri: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.40 ×BW','0.40–0.54 ×BW','0.55–0.69 ×BW','0.70–0.85 ×BW','> 0.85 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.50 ×BW','0.50–0.64 ×BW','0.65–0.84 ×BW','0.85–0.99 ×BW','≥ 1.00 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (approx. reps*)', vals:['0 reps','1–3 reps','4–7 reps','8–10 reps','> 10 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [5–10kg]', vals:['< 45 dtk','45–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 45 dtk','45–74 dtk','75–104 dtk','105–134 dtk','≥ 135 dtk'] }
+        }
+    }
+};
+
+// Youth (<13 thn): non-gating/kualitatif — tidak pakai ambang angka dewasa
+var RUBRIK_L2_YOUTH_NOTE = 'Kategori Youth tidak memakai norma angka orang dewasa. '
+    + 'Penilaian bersifat kualitatif: fokus pada penguasaan teknik gerak yang benar '
+    + '(bukan beban maksimal), dan atlet tidak digagalkan hanya karena angka di bawah standar dewasa. '
+    + 'Setiap pilar yang datanya terisi otomatis dianggap "Berkembang Sesuai Tahap".';
+
+function renderRubrikL2() {
+    var kat = document.getElementById('rubrikKategoriSel').value;
+    var genderSel = document.getElementById('rubrikGenderSel');
+    var body = document.getElementById('rubrikL2Body');
+
+    if (kat === 'YOUTH') {
+        genderSel.style.display = 'none';
+        body.innerHTML = '<div class="row g-0 rubrik-row"><div class="col-12 p-3" style="font-size:0.8rem;color:var(--text-dim);">'
+            + RUBRIK_L2_YOUTH_NOTE + '</div></div>';
+        return;
+    }
+    genderSel.style.display = '';
+
+    var gen = genderSel.value;
+    var data = RUBRIK_L2_DISPLAY[kat][gen];
+    var urutan = ['lower','push','pull','core','iso'];
+    var html = '';
+    urutan.forEach(function(pilar) {
+        var d = data[pilar];
+        html += '<div class="row g-0 rubrik-row">'
+            + '<div class="col-2 aspek-box"><span class="aspek-name">'+d.nama+'</span><span class="aspek-sub">'+d.sub+'</span></div>'
+            + d.vals.map(function(v, i) {
+                var cls = i===0 ? 'val-box' : i===4 ? 'val-box val-green' : i>=2 ? 'val-box val-blue' : 'val-box val-yellow';
+                return '<div class="col score-col text-center"><div class="'+cls+'">'+v+'</div></div>';
+            }).join('')
+            + '</div>';
+    });
+    body.innerHTML = html;
 }
 
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
 function autoCalcScores() {
     var bb = g('h_berat') || g('input_berat') || 70;
-    var sL = calcScoreLower(g('lower_5rm_beban'), bb);
-    var sP = calcScorePush(g('push_5rm_beban'));
-    var sPl = calcScorePull(g('pull_reps'));
-    var sC = calcScoreCore(g('core_durasi'));
-    var sI = calcScoreIso(g('iso_durasi'));
+    var kat = (document.getElementById('h_kategori') || {}).value || 'ELITE';
+    var gen = (document.getElementById('h_gender') || {}).value || 'Putra';
+
+    var sL = skorPilarL2('lower', g('lower_5rm_beban'), kat, gen, bb);
+    var sP = skorPilarL2('push', g('push_5rm_beban'), kat, gen, bb);
+    var sPl = skorPilarL2('pull', g('pull_reps'), kat, gen);
+    var sC = skorPilarL2('core', g('core_durasi'), kat, gen);
+    var sI = skorPilarL2('iso', g('iso_durasi'), kat, gen);
+
     document.getElementById('score_lower').value = sL.toFixed(1);
     document.getElementById('score_push').value  = sP.toFixed(1);
     document.getElementById('score_pull').value  = sPl.toFixed(1);
     document.getElementById('score_core').value  = sC.toFixed(1);
     document.getElementById('score_iso').value   = sI.toFixed(1);
+    var badgePush = document.getElementById('badge_push_display');
+    if (badgePush) badgePush.textContent = sP.toFixed(1);
     function badge(id, val) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -1114,7 +1259,9 @@ function handlePrint() {
 }
 function toggleRubrik() {
     var rp = document.getElementById('rubrikPanel');
-    rp.style.display = rp.style.display === 'none' ? 'block' : 'none';
+    var akanTampil = rp.style.display === 'none';
+    rp.style.display = akanTampil ? 'block' : 'none';
+    if (akanTampil) renderRubrikL2();
 }
 function syncPrint() {}
 </script>

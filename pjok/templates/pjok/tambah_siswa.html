@@ -1,10 +1,89 @@
 {% extends "base_pjok.html" %}
 {% block content %}
-<h2>Tambah Siswa — Fase {{ fase }} ({{ jenjang }})</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Simpan</button>
-  <a href="{% url 'pjok:dashboard_fase' fase %}">Batal</a>
-</form>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --red:#0f766e; --red-bright:#14b8a6; --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:640px;
+  }
+  .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:32px;margin:0 0 14px;line-height:1.15;}
+  .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:26px;border-radius:2px;}
+
+  .pjok-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:28px;}
+  .pjok-card::before,.pjok-card::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;opacity:.85;}
+  .pjok-card::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-top-left-radius:6px;}
+  .pjok-card::after{top:-1px;right:-1px;border-width:2px 2px 0 0;border-top-right-radius:6px;}
+
+  .pjok-field{margin-bottom:18px;}
+  .pjok-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:7px;}
+  .pjok-field input, .pjok-field select{
+    width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;
+    padding:11px 14px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;
+    outline:none;transition:border-color .15s;
+  }
+  .pjok-field input:focus, .pjok-field select:focus{border-color:var(--gold);}
+  .pjok-field select option{background:var(--surface-2);}
+  .pjok-field-error{color:var(--danger);font-size:12px;margin-top:6px;}
+  .pjok-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:480px){.pjok-row-2{grid-template-columns:1fr;}}
+
+  .pjok-actions{display:flex;gap:12px;margin-top:8px;}
+  .pjok-btn{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.03em;text-decoration:none;padding:11px 22px;border-radius:4px;background:var(--red);color:#fff;border:1px solid var(--red);cursor:pointer;transition:all .15s ease;}
+  .pjok-btn:hover{background:var(--red-bright);border-color:var(--red-bright);}
+  .pjok-btn.secondary{background:transparent;color:var(--text-dim);border-color:var(--border);}
+  .pjok-btn.secondary:hover{border-color:var(--text-faint);color:var(--text);}
+
+  .pjok-non-field-error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:var(--danger);border-radius:6px;padding:10px 14px;font-size:12.5px;margin-bottom:18px;}
+</style>
+
+<div class="pjok-scope">
+  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
+  <h2 class="pjok-title">Tambah Siswa</h2>
+  <div class="pjok-rule"></div>
+
+  <div class="pjok-card">
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="pjok-non-field-error">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="pjok-field">
+        <label for="{{ form.nama.id_for_label }}">Nama Lengkap</label>
+        {{ form.nama }}
+        {% if form.nama.errors %}<div class="pjok-field-error">{{ form.nama.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="pjok-row-2">
+        <div class="pjok-field">
+          <label for="{{ form.kelas.id_for_label }}">Kelas</label>
+          {{ form.kelas }}
+          {% if form.kelas.errors %}<div class="pjok-field-error">{{ form.kelas.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="pjok-field">
+          <label for="{{ form.jenis_kelamin.id_for_label }}">Jenis Kelamin</label>
+          {{ form.jenis_kelamin }}
+          {% if form.jenis_kelamin.errors %}<div class="pjok-field-error">{{ form.jenis_kelamin.errors.0 }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="pjok-field">
+        <label for="{{ form.tanggal_lahir.id_for_label }}">Tanggal Lahir</label>
+        {{ form.tanggal_lahir }}
+        {% if form.tanggal_lahir.errors %}<div class="pjok-field-error">{{ form.tanggal_lahir.errors.0 }}</div>{% endif %}
+      </div>
+
+      <div class="pjok-actions">
+        <button type="submit" class="pjok-btn">Simpan Siswa</button>
+        <a href="{% url 'pjok:dashboard_fase' fase %}" class="pjok-btn secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}

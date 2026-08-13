@@ -5,7 +5,7 @@
 <style>
   .pjok-scope{
     --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
-    --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --gold:#a78bfa; --gold-dim:#7c5fd6;
     --ok:#22c55e; --warn:#f59e0b; --danger:#f87171;
     --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
     font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:1180px;
@@ -23,12 +23,12 @@
   .audit-panel::after{top:-1px;right:-1px;border-width:2px 2px 0 0;border-top-right-radius:6px;}
   .audit-panel-head{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:16px;}
 
-  .materi-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto;}
-  .materi-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .15s ease;}
-  .materi-item:hover{border-color:var(--gold-dim);}
-  .materi-item input[type=radio]{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;}
-  .materi-item.selected{border-color:var(--gold);background:rgba(56,189,248,.08);}
-  .materi-nama{font-size:14px;color:var(--text);}
+  .aspek-list{display:flex;flex-direction:column;gap:8px;}
+  .aspek-item{display:flex;align-items:center;gap:10px;padding:14px;border-radius:6px;border:1px solid var(--border);background:var(--surface-2);cursor:pointer;transition:all .15s ease;}
+  .aspek-item:hover{border-color:var(--gold-dim);}
+  .aspek-item input[type=radio]{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;}
+  .aspek-item.selected{border-color:var(--gold);background:rgba(167,139,250,.10);}
+  .aspek-nama{font-size:14px;color:var(--text);font-weight:600;}
 
   .field-group{margin-top:20px;}
   .field-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
@@ -41,7 +41,7 @@
   .skor-tier{display:inline-block;margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:5px 16px;border-radius:20px;border:1px solid var(--gold-dim);color:var(--gold);}
 
   .btn-row{display:flex;gap:10px;margin-top:24px;}
-  .btn-save{flex:1;background:linear-gradient(90deg,#0f766e,#14b8a6);border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;padding:13px;border-radius:6px;cursor:pointer;text-align:center;text-decoration:none;}
+  .btn-save{flex:1;background:linear-gradient(90deg,#7c5fd6,#a78bfa);border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;padding:13px;border-radius:6px;cursor:pointer;text-align:center;text-decoration:none;}
   .btn-cancel{padding:13px 20px;border-radius:6px;border:1px solid var(--border);color:var(--text-dim);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:center;}
   .btn-cancel:hover{border-color:var(--danger);color:var(--danger);}
 
@@ -51,29 +51,25 @@
 
 {% block content %}
 <div class="pjok-scope">
-  <div class="audit-title">Input Nilai Teknik</div>
-  <div class="audit-sub">Elemen Keterampilan Gerak &mdash; Siswa: <strong>{{ siswa.nama }}</strong> ({{ siswa.kelas }})</div>
+  <div class="audit-title">Input Nilai Karakter</div>
+  <div class="audit-sub">Elemen Pengembangan Karakter &mdash; Siswa: <strong>{{ siswa.nama }}</strong> ({{ siswa.kelas }})</div>
 
-  <form method="post" id="formTeknik">
+  <form method="post" id="formKarakter">
     {% csrf_token %}
 
     <div class="audit-grid">
       <div class="audit-panel">
-        <div class="audit-panel-head">Pilih Materi</div>
+        <div class="audit-panel-head">Pilih Aspek</div>
 
-        {% if form.materi.field.queryset.count == 0 %}
-          <p style="color:var(--text-faint);font-size:13px;">Belum ada materi untuk fase ini. Tambahkan materi lewat Panel Admin terlebih dahulu.</p>
-        {% endif %}
-
-        <div class="materi-list">
-          {% for radio in form.materi %}
-          <label class="materi-item">
+        <div class="aspek-list">
+          {% for radio in form.aspek %}
+          <label class="aspek-item">
             {{ radio.tag }}
-            <div class="materi-nama">{{ radio.choice_label }}</div>
+            <div class="aspek-nama">{{ radio.choice_label }}</div>
           </label>
           {% endfor %}
         </div>
-        {% if form.materi.errors %}<ul class="errorlist">{{ form.materi.errors }}</ul>{% endif %}
+        {% if form.aspek.errors %}<ul class="errorlist">{{ form.aspek.errors }}</ul>{% endif %}
 
         <div class="field-group">
           <label class="field-label">Catatan (opsional)</label>
@@ -107,15 +103,15 @@
 
 {% block extra_js %}
 <script>
-document.querySelectorAll('.materi-item input[type=radio]').forEach(function(r){
+document.querySelectorAll('.aspek-item input[type=radio]').forEach(function(r){
   r.addEventListener('change', function(){
-    document.querySelectorAll('.materi-item').forEach(function(el){ el.classList.remove('selected'); });
-    this.closest('.materi-item').classList.add('selected');
+    document.querySelectorAll('.aspek-item').forEach(function(el){ el.classList.remove('selected'); });
+    this.closest('.aspek-item').classList.add('selected');
   });
-  if (r.checked) r.closest('.materi-item').classList.add('selected');
+  if (r.checked) r.closest('.aspek-item').classList.add('selected');
 });
 
-var skorInput = document.querySelector('#formTeknik input[name=skor]');
+var skorInput = document.querySelector('#formKarakter input[name=skor]');
 var skorPreview = document.getElementById('skorPreview');
 var tierPreview = document.getElementById('tierPreview');
 function updatePreview(){
@@ -133,6 +129,6 @@ if (skorInput) {
   skorInput.addEventListener('input', updatePreview);
   updatePreview();
 }
-document.querySelectorAll('#formTeknik textarea').forEach(function(el){ el.classList.add('field-input'); });
+document.querySelectorAll('#formKarakter textarea').forEach(function(el){ el.classList.add('field-input'); });
 </script>
 {% endblock %}

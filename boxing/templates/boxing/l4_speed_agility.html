@@ -48,8 +48,8 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .rubrik-toggle { margin-bottom: 20px; }
 .rubrik-panel { display: none; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 10px; }
 .rubrik-panel.open { display: block; }
-.rub-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; background: rgba(6,182,212,0.06); border-bottom: 1px solid var(--border); padding: 10px 16px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--cyan); text-transform: uppercase; }
-.rub-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 16px; border-bottom: 1px solid rgba(37,45,61,0.5); font-size: 12.5px; transition: background 0.15s; }
+.rub-head { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr 1fr; background: rgba(6,182,212,0.06); border-bottom: 1px solid var(--border); padding: 10px 16px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--cyan); text-transform: uppercase; }
+.rub-row { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 16px; border-bottom: 1px solid rgba(37,45,61,0.5); font-size: 12.5px; transition: background 0.15s; }
 .rub-row:last-child { border-bottom: none; }
 .rub-row:hover { background: rgba(6,182,212,0.02); }
 .rub-label { color: var(--cyan); font-weight: 600; font-size: 12px; }
@@ -241,42 +241,60 @@ tbody tr:last-child td { border-bottom: none; }
   <!-- Rubrik -->
   <div class="rubrik-toggle no-print">
     <div class="rubrik-panel" id="rubrikPanel">
+      <div style="padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);">
+        <select id="rubrikKategoriSelL4" class="fc" style="width:auto;" onchange="renderRubrikL4()">
+          <option value="YOUTH">Anak-anak (6–12 thn)</option>
+          <option value="JUNIOR">Junior (13–17 thn)</option>
+          <option value="SENIOR" selected>Senior / Elite (18–35 thn)</option>
+        </select>
+        <select id="rubrikGenderSelL4" class="fc" style="width:auto;" onchange="renderRubrikL4()">
+          <option value="Putra">Laki-Laki</option>
+          <option value="Putri">Perempuan</option>
+        </select>
+      </div>
       <div class="rub-head">
-        <div>Instrumen & Protokol</div>
-        <div>Elite (9–10)</div>
-        <div>Ready (7–8)</div>
-        <div>Developing (5–6)</div>
-        <div>Novice (1–4)</div>
+        <div>Instrumen & Protokol</div><div>Superior</div><div>Excellent</div><div>Good</div><div>Fair</div><div>Novice</div>
       </div>
-      <div class="rub-row">
-        <div>
-          <div class="rub-label"><a href="https://www.youtube.com/watch?v=OkN5Ht4PjGo" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">HEXAGON JUMP TEST <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div>
-          <div class="rub-sub">3 putaran penuh searah jarum jam, tanpa pause, rerata waktu</div>
-        </div>
-        <div><span class="val vg">&lt; 10.0 dtk</span></div>
-        <div><span class="val vb">10.0–12.0 dtk</span></div>
-        <div><span class="val vy">12.1–14.0 dtk</span></div>
-        <div><span class="val vr">&ge; 14.0 dtk</span></div>
+      <div id="rubrikL4Body"></div>
+      <div style="padding:10px 16px;font-size:10.5px;color:var(--text3, #7d8598);border-top:1px solid var(--border);">
+        Norma NSCA/ACSM Specialist Combat — SOP L4 Speed/Agility HPCS. Kategori <strong>Elite</strong> memakai tabel Senior.
+        VO2 Max referensi: Elite Putra &gt;55 mL/kg/min, Elite Putri &gt;48 mL/kg/min · Amatir Putra 50–55, Amatir Putri 44–50.
       </div>
-      <div class="rub-row">
-        <div>
-          <div class="rub-label">10-SECOND PUNCH FREQUENCY</div>
-          <div class="rub-sub">Pukulan lurus maksimal 10 detik, postur tinju harus tetap benar</div>
+
+      <!-- SOP Protokol per Pilar -->
+      <div style="padding:14px 16px;border-top:1px solid var(--border);">
+        <div style="color:var(--cyan);font-weight:700;font-size:12px;margin-bottom:10px;"><i class="bi bi-clipboard2-pulse"></i> SOP & Protokol Pelaksanaan</div>
+
+        <div style="margin-bottom:12px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Pilar 1. Hexagon Jump Test</strong><br>
+          <strong>Fungsi:</strong> Mengukur kelincahan footwork multi-arah 360°, kecepatan reaksi kaki, dan stabilitas pergelangan kaki.<br>
+          <strong>Target Otot:</strong> Ankle Stabilizers, Gastrocnemius, Quadriceps, Core.<br>
+          <strong>Alat:</strong> Pola Heksagon (Sisi 60cm, Sudut 120°), Lakban/Markah, Stopwatch.<br>
+          <strong>Cara Pelaksanaan:</strong> Berdiri di tengah heksagon. Melompat dengan dua kaki keluar dan kembali ke tengah mengikuti 6 sisi berturut-turut. Lakukan 3 putaran penuh secepat mungkin tanpa menyentuh garis.<br>
+          <strong>Data Input:</strong> Waktu Tempuh Rerata (detik) untuk 3 Putaran.
         </div>
-        <div><span class="val vg">&ge; 22 pukulan</span></div>
-        <div><span class="val vb">18–21 pukulan</span></div>
-        <div><span class="val vy">14–17 pukulan</span></div>
-        <div><span class="val vr">&lt; 14 pukulan</span></div>
-      </div>
-      <div class="rub-row">
-        <div>
-          <div class="rub-label"><a href="https://www.youtube.com/watch?v=nkOk_P5VnOA" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">YO-YO IR TEST LEVEL 1 <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div>
-          <div class="rub-sub">Estimasi VO2 Max: Elite Putra &gt; 55, Elite Putri &gt; 48 mL/kg/min</div>
+
+        <div style="margin-bottom:12px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Pilar 2. 10-Second Punch Frequency</strong><br>
+          <strong>Fungsi:</strong> Mengukur hand speed spesifik, frekuensi pukulan maksimum, dan rate of force development (RFD) lengan.<br>
+          <strong>Target Otot:</strong> Deltoids, Pectoralis Major, Triceps, Core Rotators.<br>
+          <strong>Alat:</strong> Heavy Bag / Target Pad dengan Sensor / Video Timer HP 240fps.<br>
+          <strong>Cara Pelaksanaan:</strong> Berdiri dalam posisi fight stance. Saat aba-aba "Ya", lontarkan pukulan lurus (Jab-Cross) eksplosif penuh sebanyak mungkin pada target selama 10 detik.<br>
+          <strong>Data Input:</strong> Total Jumlah Pukulan Sah (10 dtk) & Waktu Reaksi (ms).
         </div>
-        <div><span class="val vg">VO2 &gt; 55</span></div>
-        <div><span class="val vb">50–54.9</span></div>
-        <div><span class="val vy">45–49.9</span></div>
-        <div><span class="val vr">VO2 &lt; 45</span></div>
+
+        <div style="margin-bottom:4px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Pilar 3. Yo-Yo Intermittent Recovery Test (Level 1)</strong><br>
+          <strong>Fungsi:</strong> Mengukur kapasitas pemulihan anaerobik berulang & estimasi VO2 Max spesifik karakter ronder.<br>
+          <strong>Target Otot:</strong> Cardiovascular System, Quadriceps, Hamstrings, Calves.<br>
+          <strong>Alat:</strong> Audio Beep Test Yo-Yo IR1, Cones (Lintasan 20m & Area Recovery 5m), Meteran.<br>
+          <strong>Cara Pelaksanaan:</strong> Lari bolak-balik 2×20m mengikuti sinyal beep. Di setiap selang 40m, atlet melakukan active recovery berjalan/jogging 5m selama 10 detik. Tes selesai jika gagal memenuhi sinyal 2 kali berturut-turut.<br>
+          <strong>Data Input:</strong> Level & Shuttle Terdaftar / Total Jarak (meter).
+        </div>
+
+        <div style="margin-top:10px;padding:10px 12px;background:rgba(6,182,212,.06);border-left:3px solid var(--cyan);border-radius:6px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Catatan Operasional Pelatih:</strong> Gunakan rekaman video HP untuk menghitung pukulan yang valid (ekstensi penuh). Berikan istirahat 5–8 menit antar tes pilar untuk memastikan pemulihan sistem energi ATP-PC.
+        </div>
       </div>
     </div>
   </div>
@@ -311,7 +329,7 @@ tbody tr:last-child td { border-bottom: none; }
           <div class="r3">
             <div class="fg">
               <label class="fl">Kategori</label>
-              <select name="kategori_usia" class="fc">
+              <select name="kategori_usia" class="fc" onchange="syncKatGenManual()">
                 <option value="ELITE">Elite</option>
                 <option value="YOUTH">Youth</option>
                 <option value="JUNIOR">Junior</option>
@@ -320,7 +338,7 @@ tbody tr:last-child td { border-bottom: none; }
             </div>
             <div class="fg">
               <label class="fl">Gender</label>
-              <select name="gender" class="fc">
+              <select name="gender" class="fc" onchange="syncKatGenManual()">
                 <option value="Putra">Putra</option>
                 <option value="Putri">Putri</option>
               </select>
@@ -670,6 +688,20 @@ function onAtletChange(sel) {
   if (hGen) hGen.value = opt.dataset.gender   || 'Putra';
   if (hBb)  hBb.value  = opt.dataset.berat    || '';
   if (bb)  bb.value  = opt.dataset.berat;
+  calcHex(); autoScorePunch(); calcYoYo();
+}
+
+// Kalau pelatih ubah manual dropdown Kategori/Gender, sinkronkan ke hidden
+// field yang beneran dikirim ke server (dulu tidak sinkron -> data yang
+// tersimpan bisa beda dari yang dipilih pelatih di layar).
+function syncKatGenManual() {
+  const kat = document.querySelector('select[name="kategori_usia"]');
+  const gen = document.querySelector('select[name="gender"]');
+  const hKat = document.getElementById('h_kat_l4');
+  const hGen = document.getElementById('h_gen_l4');
+  if (kat && hKat) hKat.value = kat.value;
+  if (gen && hGen) hGen.value = gen.value;
+  calcHex(); autoScorePunch(); calcYoYo();
 }
 
 // ── Live Update ──
@@ -794,6 +826,31 @@ function liveUpdate() {
   rekT.innerHTML = rekoHTML4;
 }
 
+// ── Rubrik NSCA/ACSM L4 (harus identik dengan RUBRIK_L4 di boxing/views.py
+//    agar preview & hasil simpan konsisten) ──
+var RUBRIK_L4 = {
+    YOUTH: {
+        Putra: { hex:[[12.00,9.5],[14.00,7.5],[16.00,5.5],[18.00,3.5]], punch:[[59,9.5],[51,7.5],[43,5.5],[35,3.5]], yoyo:[[920,9.5],[680,7.5],[440,5.5],[240,3.5]] },
+        Putri: { hex:[[13.50,9.5],[15.50,7.5],[17.50,5.5],[19.50,3.5]], punch:[[53,9.5],[46,7.5],[38,5.5],[30,3.5]], yoyo:[[760,9.5],[560,7.5],[360,5.5],[160,3.5]] }
+    },
+    JUNIOR: {
+        Putra: { hex:[[10.50,9.5],[12.00,7.5],[13.50,5.5],[15.00,3.5]], punch:[[75,9.5],[65,7.5],[55,5.5],[45,3.5]], yoyo:[[1640,9.5],[1240,7.5],[880,5.5],[560,3.5]] },
+        Putri: { hex:[[11.60,9.5],[13.20,7.5],[14.80,5.5],[16.50,3.5]], punch:[[66,9.5],[58,7.5],[49,5.5],[40,3.5]], yoyo:[[1320,9.5],[1000,7.5],[680,5.5],[400,3.5]] }
+    },
+    SENIOR: {
+        Putra: { hex:[[8.80,9.5],[10.00,7.5],[11.50,5.5],[13.00,3.5]], punch:[[90,9.5],[79,7.5],[67,5.5],[55,3.5]], yoyo:[[2080,9.5],[1640,7.5],[1200,5.5],[800,3.5]] },
+        Putri: { hex:[[9.80,9.5],[11.20,7.5],[12.80,5.5],[14.50,3.5]], punch:[[79,9.5],[69,7.5],[59,5.5],[48,3.5]], yoyo:[[1640,9.5],[1280,7.5],[920,5.5],[600,3.5]] }
+    }
+};
+RUBRIK_L4.ELITE = RUBRIK_L4.SENIOR;
+
+function kategoriGenderL4() {
+    var kat = (document.getElementById('h_kat_l4').value || 'ELITE').toUpperCase();
+    var gen = document.getElementById('h_gen_l4').value || 'Putra';
+    var tabelKat = RUBRIK_L4[kat] || RUBRIK_L4.SENIOR;
+    return tabelKat[gen] || tabelKat.Putra;
+}
+
 // ── Hexagon Auto-Score ──
 function calcHex() {
   const v = [
@@ -806,7 +863,9 @@ function calcHex() {
   document.getElementById('hex_avg').innerText = avg;
   document.getElementById('hex_result').style.display = 'block';
   const t = parseFloat(avg);
-  let s = t < 10 ? 10 : t < 10.5 ? 9 : t < 11 ? 8 : t < 11.5 ? 7 : t < 12 ? 6 : t < 13 ? 5 : t < 14 ? 4 : 3;
+  const ambang = kategoriGenderL4().hex;
+  let s = 1.5;
+  for (var i = 0; i < ambang.length; i++) { if (t <= ambang[i][0]) { s = ambang[i][1]; break; } }
   document.getElementById('score_hex').value = s;
   liveUpdate();
 }
@@ -816,8 +875,10 @@ function autoScorePunch() {
   const p = parseInt(document.getElementById('punch_freq').value);
   const posturOk = document.getElementById('punch_postur_ok').value === 'true';
   if (!p) return;
-  let s = p >= 25 ? 10 : p >= 22 ? 9 : p >= 20 ? 8 : p >= 18 ? 7 : p >= 16 ? 6 : p >= 14 ? 5 : p >= 12 ? 4 : 3;
-  if (!posturOk) s = Math.max(0, s - 1);
+  const ambang = kategoriGenderL4().punch;
+  let s = 1.5;
+  for (var i = 0; i < ambang.length; i++) { if (p >= ambang[i][0]) { s = ambang[i][1]; break; } }
+  if (!posturOk) s = Math.max(1.5, Math.round((s - 1) * 10) / 10);
   document.getElementById('score_punch').value = s;
   liveUpdate();
 }
@@ -855,8 +916,10 @@ function calcVO2Max() {
   const vo2 = ((jarak * 0.0084) + 36.4).toFixed(1);
   document.getElementById('vo2_val').innerText = vo2;
   document.getElementById('vo2_result').style.display = 'block';
-  const v = parseFloat(vo2);
-  let s = v >= 60 ? 10 : v >= 57 ? 9 : v >= 55 ? 8 : v >= 52 ? 7 : v >= 50 ? 6 : v >= 47 ? 5 : v >= 44 ? 4 : 3;
+  // Skor dari JARAK (bukan VO2) sesuai rubrik NSCA/ACSM per kategori & gender
+  const ambang = kategoriGenderL4().yoyo;
+  let s = 1.5;
+  for (var i = 0; i < ambang.length; i++) { if (jarak >= ambang[i][0]) { s = ambang[i][1]; break; } }
   document.getElementById('score_yoyo').value = s;
   liveUpdate();
 }
@@ -881,8 +944,69 @@ function setPosetur(val, btn) {
   autoScorePunch();
 }
 
+// ── Data tampilan rubrik (rentang string, sesuai teks SOP PDF) ──
+var RUBRIK_L4_DISPLAY = {
+    YOUTH: {
+        Putra: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 12.00 dtk','12.01–14.00 dtk','14.01–16.00 dtk','16.01–18.00 dtk','> 18.00 dtk']},
+            punch:{nama:'10-Sec Punch Frequency', sub:'jumlah pukulan', vals:['≥ 59 pukulan','51–58 pukulan','43–50 pukulan','35–42 pukulan','< 35 pukulan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 920 m','680–880 m','440–640 m','240–400 m','< 240 m']}
+        },
+        Putri: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 13.50 dtk','13.51–15.50 dtk','15.51–17.50 dtk','17.51–19.50 dtk','> 19.50 dtk']},
+            punch:{nama:'10-Sec Punch Frequency', sub:'jumlah pukulan', vals:['≥ 53 pukulan','46–52 pukulan','38–45 pukulan','30–37 pukulan','< 30 pukulan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 760 m','560–720 m','360–520 m','160–320 m','< 160 m']}
+        }
+    },
+    JUNIOR: {
+        Putra: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 10.50 dtk','10.51–12.00 dtk','12.01–13.50 dtk','13.51–15.00 dtk','> 15.00 dtk']},
+            punch:{nama:'10-Sec Punch Frequency', sub:'jumlah pukulan', vals:['≥ 75 pukulan','65–74 pukulan','55–64 pukulan','45–54 pukulan','< 45 pukulan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 1640 m','1240–1600 m','880–1200 m','560–840 m','< 560 m']}
+        },
+        Putri: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 11.60 dtk','11.61–13.20 dtk','13.21–14.80 dtk','14.81–16.50 dtk','> 16.50 dtk']},
+            punch:{nama:'10-Sec Punch Frequency', sub:'jumlah pukulan', vals:['≥ 66 pukulan','58–65 pukulan','49–57 pukulan','40–48 pukulan','< 40 pukulan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 1320 m','1000–1280 m','680–960 m','400–640 m','< 400 m']}
+        }
+    },
+    SENIOR: {
+        Putra: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 8.80 dtk','8.81–10.00 dtk','10.01–11.50 dtk','11.51–13.00 dtk','> 13.00 dtk']},
+            punch:{nama:'10-Sec Punch Frequency', sub:'jumlah pukulan', vals:['≥ 90 pukulan','79–89 pukulan','67–78 pukulan','55–66 pukulan','< 55 pukulan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 2080 m','1640–2040 m','1200–1600 m','800–1160 m','< 800 m']}
+        },
+        Putri: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 9.80 dtk','9.81–11.20 dtk','11.21–12.80 dtk','12.81–14.50 dtk','> 14.50 dtk']},
+            punch:{nama:'10-Sec Punch Frequency', sub:'jumlah pukulan', vals:['≥ 79 pukulan','69–78 pukulan','59–68 pukulan','48–58 pukulan','< 48 pukulan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 1640 m','1280–1600 m','920–1240 m','600–880 m','< 600 m']}
+        }
+    }
+};
+
+function renderRubrikL4() {
+    var kat = document.getElementById('rubrikKategoriSelL4').value;
+    var gen = document.getElementById('rubrikGenderSelL4').value;
+    var data = RUBRIK_L4_DISPLAY[kat][gen];
+    var urutan = ['hex','punch','yoyo'];
+    var html = '';
+    urutan.forEach(function(pilar) {
+        var d = data[pilar];
+        html += '<div class="rub-row"><div><div class="rub-label">'+d.nama+'</div><div class="rub-sub">'+d.sub+'</div></div>'
+            + d.vals.map(function(v,i){
+                var cls = i===0?'vg':i<=2?'vb':i===3?'vy':'vr';
+                return '<div><span class="val '+cls+'">'+v+'</span></div>';
+            }).join('')
+            + '</div>';
+    });
+    document.getElementById('rubrikL4Body').innerHTML = html;
+}
+
 function toggleRubrik() {
-  document.getElementById('rubrikPanel').classList.toggle('open');
+  var rp = document.getElementById('rubrikPanel');
+  var akanTampil = !rp.classList.contains('open');
+  rp.classList.toggle('open');
+  if (akanTampil) renderRubrikL4();
 }
 </script>
-{% endblock %}s
+{% endblock %}

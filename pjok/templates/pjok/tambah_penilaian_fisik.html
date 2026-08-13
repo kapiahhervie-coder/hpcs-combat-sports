@@ -1,11 +1,175 @@
 {% extends "base_pjok.html" %}
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --gold:#4ade80; --gold-dim:#2f9e5c;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:1180px;
+  }
+  .audit-title{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.02em;font-size:28px;color:var(--gold);margin-bottom:4px;}
+  .audit-sub{color:var(--text-faint);font-size:13px;margin-bottom:20px;}
+  .audit-sub strong{color:var(--text);}
+
+  .audit-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;align-items:start;}
+  @media (max-width:900px){.audit-grid{grid-template-columns:1fr;}}
+
+  .audit-panel{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px;margin-bottom:14px;}
+  .audit-panel::before,.audit-panel::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;opacity:.85;}
+  .audit-panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-top-left-radius:6px;}
+  .audit-panel::after{top:-1px;right:-1px;border-width:2px 2px 0 0;border-top-right-radius:6px;}
+
+  .level-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:12px;}
+  .lvl-l1 .level-tag{background:rgba(56,189,248,.15);color:#38bdf8;}
+  .lvl-l2 .level-tag{background:rgba(74,222,128,.15);color:#4ade80;}
+  .lvl-l3 .level-tag{background:rgba(251,146,60,.15);color:#fb923c;}
+  .lvl-l4 .level-tag{background:rgba(244,114,182,.15);color:#f472b6;}
+
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:500px){.field-row{grid-template-columns:1fr;}}
+  .field-group{margin-bottom:0;}
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
+  .field-input{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-size:14px;box-sizing:border-box;}
+  .field-input:focus{outline:none;border-color:var(--gold);}
+  .errorlist{color:var(--danger);font-size:12px;margin:4px 0 0;padding:0;list-style:none;}
+
+  .radar-wrap{position:relative;height:280px;}
+  .btn-row{display:flex;gap:10px;margin-top:14px;}
+  .btn-save{flex:1;background:linear-gradient(90deg,#166534,#4ade80);border:none;color:#08130a;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;padding:13px;border-radius:6px;cursor:pointer;text-align:center;text-decoration:none;}
+  .btn-cancel{padding:13px 20px;border-radius:6px;border:1px solid var(--border);color:var(--text-dim);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:center;}
+  .btn-cancel:hover{border-color:var(--danger);color:var(--danger);}
+  .hint{color:var(--text-faint);font-size:11.5px;margin-top:14px;line-height:1.5;}
+</style>
+{% endblock %}
+
 {% block content %}
-<h2>Input Tes Fisik — {{ siswa.nama }}</h2>
-<p>Skor L1-L4 akan dihitung otomatis dari data di bawah ini.</p>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Simpan</button>
-  <a href="{% url 'pjok:detail_siswa' siswa.id %}">Batal</a>
-</form>
+<div class="pjok-scope">
+  <div class="audit-title">Input Tes Fisik</div>
+  <div class="audit-sub">Elemen Pemanfaatan Gerak (L1-L4, adaptasi TKJI) &mdash; Siswa: <strong>{{ siswa.nama }}</strong> ({{ siswa.kelas }})</div>
+
+  <form method="post" id="formFisik">
+    {% csrf_token %}
+
+    <div class="audit-grid">
+      <div>
+        <div class="audit-panel lvl-l1">
+          <div class="level-tag">L1 &middot; Core &amp; Mobility</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Plank Hold (detik)</label>
+              {{ form.plank_hold_detik }}
+              {% if form.plank_hold_detik.errors %}<ul class="errorlist">{{ form.plank_hold_detik.errors }}</ul>{% endif %}
+            </div>
+            <div class="field-group">
+              <label class="field-label">Sit and Reach (cm)</label>
+              {{ form.sit_and_reach_cm }}
+              {% if form.sit_and_reach_cm.errors %}<ul class="errorlist">{{ form.sit_and_reach_cm.errors }}</ul>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="audit-panel lvl-l2">
+          <div class="level-tag">L2 &middot; Strength</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Gantung Siku Tekuk (detik)</label>
+              {{ form.gantung_durasi_tercapai_detik }}
+              {% if form.gantung_durasi_tercapai_detik.errors %}<ul class="errorlist">{{ form.gantung_durasi_tercapai_detik.errors }}</ul>{% endif %}
+            </div>
+            <div class="field-group">
+              <label class="field-label">Sit Up (repetisi)</label>
+              {{ form.sit_up_repetisi }}
+              {% if form.sit_up_repetisi.errors %}<ul class="errorlist">{{ form.sit_up_repetisi.errors }}</ul>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="audit-panel lvl-l3">
+          <div class="level-tag">L3 &middot; Power</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Vertical Jump (cm)</label>
+              {{ form.vertical_jump_cm }}
+              {% if form.vertical_jump_cm.errors %}<ul class="errorlist">{{ form.vertical_jump_cm.errors }}</ul>{% endif %}
+            </div>
+            <div class="field-group">
+              <label class="field-label">Standing Broad Jump (cm)</label>
+              {{ form.standing_broad_jump_cm }}
+              {% if form.standing_broad_jump_cm.errors %}<ul class="errorlist">{{ form.standing_broad_jump_cm.errors }}</ul>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="audit-panel lvl-l4">
+          <div class="level-tag">L4 &middot; Speed &amp; Agility</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Lari Cepat (detik)</label>
+              {{ form.lari_cepat_detik }}
+              {% if form.lari_cepat_detik.errors %}<ul class="errorlist">{{ form.lari_cepat_detik.errors }}</ul>{% endif %}
+            </div>
+            <div class="field-group">
+              <label class="field-label">Lari Menengah (detik)</label>
+              {{ form.lari_menengah_detik }}
+              {% if form.lari_menengah_detik.errors %}<ul class="errorlist">{{ form.lari_menengah_detik.errors }}</ul>{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="audit-panel">
+          <div class="level-tag" style="background:rgba(255,255,255,.06);color:var(--text-dim);">Preview Radar</div>
+          <div class="radar-wrap"><canvas id="radarFisik"></canvas></div>
+          <p class="hint">Radar akan terisi otomatis setelah data disimpan &mdash; skor L1-L4 dihitung sistem dari data mentah di sebelah kiri, bukan diinput manual.</p>
+          <div class="btn-row">
+            <a href="{% url 'pjok:detail_siswa' siswa.id %}" class="btn-cancel">Batal</a>
+            <button type="submit" class="btn-save">Simpan Tes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('#formFisik input[type=number], #formFisik input[type=text]').forEach(function(el){
+  el.classList.add('field-input');
+});
+
+var ctx = document.getElementById('radarFisik').getContext('2d');
+new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: ['Core & Mobility', 'Strength', 'Power', 'Speed & Agility'],
+    datasets: [{
+      label: 'Preview',
+      data: [0, 0, 0, 0],
+      borderColor: '#4ade80',
+      backgroundColor: 'rgba(74,222,128,0.15)',
+      pointBackgroundColor: '#4ade80',
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      r: {
+        min: 0, max: 100,
+        grid: { color: 'rgba(255,255,255,0.08)' },
+        angleLines: { color: 'rgba(255,255,255,0.08)' },
+        pointLabels: { color: '#a89f8f', font: { size: 10 } },
+        ticks: { display: false, stepSize: 25 }
+      }
+    }
+  }
+});
+</script>
 {% endblock %}

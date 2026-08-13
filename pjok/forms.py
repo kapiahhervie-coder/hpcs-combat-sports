@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianTeknik, Siswa
+from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, Siswa, TINGKAT_CHOICES
 
 
 class GuruProfileForm(forms.ModelForm):
@@ -33,10 +33,46 @@ class PenilaianFisikForm(forms.ModelForm):
 class PenilaianTeknikForm(forms.ModelForm):
     class Meta:
         model = PenilaianTeknik
-        fields = ['materi', 'skor', 'catatan']
+        fields = ['materi', 'tingkat', 'catatan']
+        widgets = {
+            'materi': forms.RadioSelect,
+            'tingkat': forms.RadioSelect,
+            'catatan': forms.Textarea(attrs={'rows': 3}),
+        }
 
     def __init__(self, *args, fase=None, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['tingkat'].choices = TINGKAT_CHOICES
         if fase:
             # Guru hanya bisa pilih materi yang sesuai fase-nya sendiri
             self.fields['materi'].queryset = MateriFase.objects.filter(fase=fase)
+
+
+class PenilaianKarakterForm(forms.ModelForm):
+    class Meta:
+        model = PenilaianKarakter
+        fields = ['aspek', 'tingkat', 'catatan']
+        widgets = {
+            'aspek': forms.RadioSelect,
+            'tingkat': forms.RadioSelect,
+            'catatan': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tingkat'].choices = TINGKAT_CHOICES
+        self.fields['aspek'].choices = PenilaianKarakter.ASPEK_CHOICES
+
+
+class PenilaianPengetahuanForm(forms.ModelForm):
+    class Meta:
+        model = PenilaianPengetahuan
+        fields = ['tingkat', 'catatan']
+        widgets = {
+            'tingkat': forms.RadioSelect,
+            'catatan': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tingkat'].choices = TINGKAT_CHOICES

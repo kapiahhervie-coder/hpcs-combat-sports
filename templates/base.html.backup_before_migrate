@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}HPCS Karate{% endblock %}</title>
+  <title>{% block title %}HPCS Combat Sports{% endblock %}</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
       min-height: 100vh;
     }
 
-/* ── Main area ── */
+/* -- Main area -- */
     .main-wrapper {
       margin-left: 240px;
       transition: margin-left .25s ease;
@@ -31,7 +31,7 @@
       flex-direction: column;
     }
 
-    /* ── Topbar ── */
+    /* -- Topbar -- */
     .topbar {
       background: #fff;
       border-bottom: 0.5px solid #e5e7eb;
@@ -74,13 +74,13 @@
       justify-content: center;
     }
 
-    /* ── Page content ── */
+    /* -- Page content -- */
     .page-content {
       flex: 1;
       padding: 24px;
     }
 
-    /* ── Messages / alerts ── */
+    /* -- Messages / alerts -- */
     .messages { list-style: none; margin-bottom: 1rem; }
     .messages li {
       padding: 10px 16px;
@@ -93,16 +93,16 @@
     .messages .warning { background: #FAEEDA; color: #854F0B; }
     .messages .info    { background: #E6F1FB; color: #185FA5; }
 
-    /* ══════ Sidebar — unified design system ══════ */
+    /* ------ Sidebar � unified design system ------ */
     :root{
       --sb-panel:#0d1017;
       --sb-line: rgba(255,255,255,0.07);
       --sb-line2: rgba(255,255,255,0.13);
       --sb-text-dim:#8b93a3;
       --sb-text-dim2:#4b5361;
-      --sb-accent:#a78bfa;
-      --sb-accent-dim:rgba(167,139,250,0.12);
-      --sb-accent-line:rgba(167,139,250,0.35);
+      --sb-accent:#ef4444;
+      --sb-accent-dim:rgba(239,68,68,0.12);
+      --sb-accent-line:rgba(239,68,68,0.35);
     }
 
     .sidebar {
@@ -223,7 +223,7 @@
     .main-content { transition: margin-left .25s ease; }
     .main-content.expanded { margin-left: 56px; }
 
-    /* ── Responsive ── */
+    /* -- Responsive -- */
     .mobile-menu-btn { display: none; }
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%) !important; }
@@ -253,29 +253,29 @@
     <div class="sidebar-toggle" onclick="toggleSidebar()">&#9664;</div>
     <div class="sidebar-brand">
       <div class="brand-name">&#9889; <span>HPCS</span></div>
-      <div class="brand-sub">Karate Division</div>
+      <div class="brand-sub" data-i18n="brand_sub">High Performance Combat Sports</div>
     </div>
     <nav class="sidebar-nav">
       <div class="nav-section" data-i18n="nav_dashboard">Dashboard</div>
-      <a href="{% url 'karate:dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11L12 3L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20C5.5 20.5523 5.94772 21 6.5 21H9.5C10.0523 21 10.5 20.5523 10.5 20V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V20C13.5 20.5523 13.9477 21 14.5 21H17.5C18.0523 21 18.5 20.5523 18.5 20V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text">Karate Division</span>
+      <a href="{% url 'combat:dashboard_boxing' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard_boxing' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 11L12 3L21 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 9.5V20C5.5 20.5523 5.94772 21 6.5 21H9.5C10.0523 21 10.5 20.5523 10.5 20V15C10.5 14.4477 10.9477 14 11.5 14H12.5C13.0523 14 13.5 14.4477 13.5 15V20C13.5 20.5523 13.9477 21 14.5 21H17.5C18.0523 21 18.5 20.5523 18.5 20V9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text" data-i18n="nav_boxing">Boxing Division</span>
       </a>
       <a href="{% url 'combat:tambah_atlet' %}" class="nav-link {% if request.resolver_match.url_name == 'tambah_atlet' %}active{% endif %}">
         <span class="nav-icon">&#43;</span> <span class="nav-link-text">Tambah Atlet</span>
       </a>
       <div class="nav-divider"></div>
-      <div class="nav-section">Assessment Karate</div>
-      <a href="{% url 'karate:l1_correction' %}" class="nav-link {% if request.resolver_match.url_name == 'l1_correction' %}active{% endif %}">
-        <span class="nav-round">1</span> <span class="nav-link-text">Level 1 (Correction)</span><span class="nav-badge">MOB</span>
+      <div class="nav-section" data-i18n="nav_assessment">Assessment</div>
+      <a href="{% url 'combat:l1_correction' %}" class="nav-link {% if request.resolver_match.url_name == 'l1_correction' %}active{% endif %}">
+        <span class="nav-round">1</span> <span class="nav-link-text" data-i18n="nav_l1">Level 1 (Correction)</span><span class="nav-badge">MOB</span>
       </a>
-      <a href="{% url 'karate:l2_strength' %}" class="nav-link {% if request.resolver_match.url_name == 'l2_strength' %}active{% endif %}">
-        <span class="nav-round">2</span> <span class="nav-link-text">Level 2 (Strength)</span><span class="nav-badge">STR</span>
+      <a href="{% url 'combat:l2_strength' %}" class="nav-link {% if request.resolver_match.url_name == 'l2_strength' %}active{% endif %}">
+        <span class="nav-round">2</span> <span class="nav-link-text" data-i18n="nav_l2">Level 2 (Strength)</span><span class="nav-badge">STR</span>
       </a>
-      <a href="{% url 'karate:l3_power' %}" class="nav-link {% if request.resolver_match.url_name == 'l3_power' %}active{% endif %}">
-        <span class="nav-round">3</span> <span class="nav-link-text">Level 3 (Power)</span><span class="nav-badge">PWR</span>
+      <a href="{% url 'combat:l3_power' %}" class="nav-link {% if request.resolver_match.url_name == 'l3_power' %}active{% endif %}">
+        <span class="nav-round">3</span> <span class="nav-link-text" data-i18n="nav_l3">Level 3 (Power)</span><span class="nav-badge">PWR</span>
       </a>
-      <a href="{% url 'karate:l4_speed_agility' %}" class="nav-link {% if request.resolver_match.url_name == 'l4_speed_agility' %}active{% endif %}">
-        <span class="nav-round">4</span> <span class="nav-link-text">Level 4 (Speed & Agility)</span><span class="nav-badge">SPD</span>
+      <a href="{% url 'combat:l4_speed_agility' %}" class="nav-link {% if request.resolver_match.url_name == 'l4_speed_agility' %}active{% endif %}">
+        <span class="nav-round">4</span> <span class="nav-link-text" data-i18n="nav_l4">Level 4 (Speed & Agility)</span><span class="nav-badge">SPD</span>
       </a>
       <div class="nav-divider"></div>
       <div class="nav-section" data-i18n="nav_system">Sistem</div>
@@ -292,7 +292,7 @@
       <span class="user-name">{{ request.user.username }}</span>
       <div class="lang-switcher" style="display:flex;gap:4px;margin-top:6px;">
         <button onclick="setLang('id')" id="btn_id"
-          style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.3);
+          style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);
                  color:#9ca3af;border-radius:4px;padding:2px 7px;font-size:10px;
                  cursor:pointer;font-weight:600;transition:all 0.15s;">
           &#127470;&#127465; ID
@@ -306,7 +306,7 @@
       </div>
       <form method="post" action="{% url 'logout' %}" style="display:inline">
         {% csrf_token %}
-        <button type="submit" style="background:none;border:none;color:#38bdf8;font-size:11px;cursor:pointer;padding:0" title="Logout">
+        <button type="submit" style="background:none;border:none;color:#ef4444;font-size:11px;cursor:pointer;padding:0" title="Logout">
           <span class="nav-link-text logout-link">&#9747; Logout</span>
         </button>
       </form>
@@ -386,10 +386,10 @@ var TRANSLATIONS = {
     nav_dashboard:  'Dashboard',
     nav_boxing:     'Divisi Boxing',
     nav_assessment: 'Asesmen',
-    nav_l1:         'L1 — Koreksi',
-    nav_l2:         'L2 — Kekuatan',
-    nav_l3:         'L3 — Power',
-    nav_l4:         'L4 — Kecepatan & Kelincahan',
+    nav_l1:         'Level 1 (Koreksi)',
+    nav_l2:         'Level 2 (Kekuatan)',
+    nav_l3:         'Level 3 (Power)',
+    nav_l4:         'Level 4 (Kecepatan & Kelincahan)',
     nav_system:     'Sistem',
     nav_admin:      'Panel Admin',
     nav_report:     'Pusat Laporan',
@@ -397,9 +397,9 @@ var TRANSLATIONS = {
     brand_sub:      'Olahraga Tempur Performa Tinggi',
     logout:         'Keluar',
     stat_total_atlet: 'Total Atlet',
-    stat_l1:          'Audit L1 • Correction',
-    stat_l2:          'Audit L2 • Strength',
-    stat_l3:          'Audit L3 • Power',
+    stat_l1:          'Audit L1 — Correction',
+    stat_l2:          'Audit L2 — Strength',
+    stat_l3:          'Audit L3 — Power',
     level_1:          'LEVEL 1',
     level_2:          'LEVEL 2',
     level_3:          'LEVEL 3',
@@ -511,10 +511,10 @@ var TRANSLATIONS = {
     nav_dashboard:  'Dashboard',
     nav_boxing:     'Boxing Division',
     nav_assessment: 'Assessment',
-    nav_l1:         'L1 — Correction',
-    nav_l2:         'L2 — Strength',
-    nav_l3:         'L3 — Power',
-    nav_l4:         'L4 — Speed & Agility',
+    nav_l1:         'Level 1 (Correction)',
+    nav_l2:         'Level 2 (Strength)',
+    nav_l3:         'Level 3 (Power)',
+    nav_l4:         'Level 4 (Speed & Agility)',
     nav_system:     'System',
     nav_admin:      'Admin Panel',
     nav_report:     'Report Center',
@@ -522,9 +522,9 @@ var TRANSLATIONS = {
     brand_sub:      'High Performance Combat Sports',
     logout:         'Logout',
     stat_total_atlet: 'Total Athletes',
-    stat_l1:          'Audit L1 • Correction',
-    stat_l2:          'Audit L2 • Strength',
-    stat_l3:          'Audit L3 • Power',
+    stat_l1:          'Audit L1 — Correction',
+    stat_l2:          'Audit L2 — Strength',
+    stat_l3:          'Audit L3 — Power',
     level_1:          'LEVEL 1',
     level_2:          'LEVEL 2',
     level_3:          'LEVEL 3',
@@ -534,6 +534,7 @@ var TRANSLATIONS = {
 
 function applyLang(lang) {
   var t = TRANSLATIONS[lang] || TRANSLATIONS['id'];
+  document.body.classList.toggle('lang-en', lang === 'en');
   // Translate sidebar
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
@@ -599,6 +600,9 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
+
+
+
 
 
 

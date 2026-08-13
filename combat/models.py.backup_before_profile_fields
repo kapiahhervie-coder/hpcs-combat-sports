@@ -90,9 +90,6 @@ class ProfilPelatih(models.Model):
     foto        = models.ImageField(upload_to='foto_pelatih/', blank=True, null=True, verbose_name='Foto Profil')
     status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     dibuat_pada = models.DateTimeField(auto_now_add=True)
-    bio         = models.TextField(blank=True, verbose_name='Bio Singkat')
-    sertifikasi = models.TextField(blank=True, verbose_name='Sertifikasi & Lisensi',
-                                    help_text='Satu baris per sertifikasi')
 
     class Meta:
         verbose_name        = 'Profil Pelatih'
@@ -412,11 +409,6 @@ class PowerAuditL3(models.Model):
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_USIA_CHOICES, default='ELITE')
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True)
-    jump_height_cm      = models.FloatField(null=True, blank=True, verbose_name='Tinggi Lompatan (cm)')
-    sprint_30m_detik    = models.FloatField(null=True, blank=True, verbose_name='Sprint 30M (detik)')
-    throw_jarak_m       = models.FloatField(null=True, blank=True, verbose_name='Jarak Lempar (m)')
-    agility_ttest_detik = models.FloatField(null=True, blank=True, verbose_name='Agility T-Test (detik)')
-
 
     # ── Skor 5 Pilar ─────────────────────────────────────────────────
     score_jump    = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])

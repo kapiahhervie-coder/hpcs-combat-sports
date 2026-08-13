@@ -1,14 +1,9 @@
-{% extends 'base_taekwondo.html' %}
-{% block title %}HPCS - Taekwondo Performance Profile{% endblock %}
-{% block page_title %}Taekwondo Dashboard{% endblock %}
-
-{% block extra_css %}
 ﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HPCS - Digital Performance Profile (Taekwondo)</title>
+    <title>HPCS - Digital Performance Profile (Muay Thai)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -134,15 +129,6 @@
             line-height: 1; opacity: 1;
             color: rgba(56,189,248,0.12);
         }
-
-        @media (max-width: 768px) {
-            .level-grid-card { padding: 16px 18px; margin-bottom: 4px; }
-            .level-huge-num { font-size: 1.7rem; }
-            .level-grid-card h5 { font-size: 1.05rem; margin-bottom: 5px; }
-            .level-grid-card p.text-secondary { font-size: 12.5px; line-height: 1.4; }
-            .level-tag { font-size: 11px; padding: 3px 10px; }
-            .btn-action-audit { padding: 9px 12px !important; font-size: 13px; }
-        }
         .level-grid-card:nth-child(1) .level-huge-num { color: rgba(56,189,248,0.15); }
         .level-grid-card:nth-child(2) .level-huge-num { color: rgba(0,255,136,0.15); }
         .level-grid-card:nth-child(3) .level-huge-num { color: rgba(255,179,0,0.15); }
@@ -171,10 +157,8 @@
             box-shadow: 0 4px 12px rgba(56,189,248,0.3);
         }
     </style>
-
-{% endblock %}
-
-{% block content %}
+</head>
+<body>
 <div class="container py-4" style="padding-top:2.5rem!important;">
 
     <!-- -- TOP NAV -- -->
@@ -182,12 +166,12 @@
         <div>
             <h5 class="fw-bold mb-0">
                 <span style="color:#00d2ff;font-weight:900;letter-spacing:2px;font-size:1.2em;">HPCS</span>
-                <span style="color:#e8f4ff;font-weight:400;letter-spacing:1px;font-size:0.85em;"> TAEKWONDO PANEL</span>
+                <span style="color:#e8f4ff;font-weight:400;letter-spacing:1px;font-size:0.85em;"> MUAY THAI PANEL</span>
             </h5>
             <small class="text-secondary">Pelatih Kepala: <strong>Coach Fanny H. Kapiah, S.Pd</strong></small>
         </div>
-        <a href="{% url 'taekwondo:daftar_atlet' %}" class="btn btn-sm btn-outline-info">
-            <i class="fa-solid fa-users me-2"></i>Daftar Atlet Taekwondo
+        <a href="{% url 'muaythai:daftar_atlet' %}" class="btn btn-sm btn-outline-info">
+            <i class="fa-solid fa-users me-2"></i>Daftar Atlet Muay Thai
         </a>
     </div>
 
@@ -213,7 +197,7 @@
 
                 <!-- Tombol Report Card - buka report atlet yang sedang tampil -->
                 {% if atlet %}
-                <a href="{% url 'taekwondo:report_card' atlet.pk %}"
+                <a href="{% url 'muaythai:report_card' atlet.pk %}"
                    target="_blank" class="btn-report">
                     Report Card
                 </a>
@@ -312,7 +296,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 1</h5>
                     <p class="text-secondary small mb-0">Correction, Mobility, Stability &amp; Anatomi Sendi.</p>
                 </div>
-                <a href="{% url 'taekwondo:l1_correction' %}?atlet_id={{ atlet.id }}"
+                <a href="{% url 'muaythai:l1_correction' %}?atlet_id={{ atlet.id }}"
                    class="btn btn-action-audit w-100 mt-3 py-2">
                    Audit Level 1 - Correction
                 </a>
@@ -330,7 +314,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 2</h5>
                     <p class="text-secondary small mb-0">Maximum Strength &amp; Pengkondisian Dinding Core.</p>
                 </div>
-                <a href="{% url 'taekwondo:l2_strength' %}"
+                <a href="{% url 'muaythai:l2_strength' %}"
                    class="btn btn-action-audit w-100 mt-3 py-2">Audit Level 2</a>
             </div>
         </div>
@@ -346,7 +330,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 3</h5>
                     <p class="text-secondary small mb-0">Power &amp; RFD (Kecepatan Transfer Energi Pukulan/Tendangan).</p>
                 </div>
-                <a href="{% url 'taekwondo:l3_power' %}"
+                <a href="{% url 'muaythai:l3_power' %}"
                    class="btn btn-action-audit w-100 mt-3 py-2">Audit Level 3</a>
             </div>
         </div>
@@ -362,7 +346,7 @@
                     <h5 class="fw-bold mb-1">LEVEL 4</h5>
                     <p class="text-secondary small mb-0">Reactive Speed, Agility, &amp; Metabolic Yo-Yo Test.</p>
                 </div>
-                <a href="{% url 'taekwondo:l4_speed_agility' %}"
+                <a href="{% url 'muaythai:l4_speed_agility' %}"
                    class="btn btn-action-audit w-100 mt-3 py-2"
                    >Audit Level 4</a>
             </div>
@@ -372,15 +356,11 @@
 </div>
 
 <!-- -- SCRIPT -- -->
-
-{% endblock %}
-
-{% block extra_js %}
 <script>
 // Ganti atlet: reload halaman dengan atlet_id baru
 function gantiAtlet(atletId) {
     if (!atletId) return;
-    window.location.href = '{% url "taekwondo:dashboard" %}?atlet_id=' + atletId;
+    window.location.href = '{% url "muaythai:dashboard" %}?atlet_id=' + atletId;
 }
 
 // Chart progression dengan gradient fill + placeholder
@@ -471,4 +451,8 @@ if (validData.length < 2) {
 }
 </script>
 
-{% endblock %}
+</body>
+</html>
+
+
+

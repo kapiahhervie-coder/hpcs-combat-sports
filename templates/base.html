@@ -22,7 +22,7 @@
       min-height: 100vh;
     }
 
-/* ── Main area ── */
+/* -- Main area -- */
     .main-wrapper {
       margin-left: 240px;
       transition: margin-left .25s ease;
@@ -31,7 +31,7 @@
       flex-direction: column;
     }
 
-    /* ── Topbar ── */
+    /* -- Topbar -- */
     .topbar {
       background: #fff;
       border-bottom: 0.5px solid #e5e7eb;
@@ -74,13 +74,13 @@
       justify-content: center;
     }
 
-    /* ── Page content ── */
+    /* -- Page content -- */
     .page-content {
       flex: 1;
       padding: 24px;
     }
 
-    /* ── Messages / alerts ── */
+    /* -- Messages / alerts -- */
     .messages { list-style: none; margin-bottom: 1rem; }
     .messages li {
       padding: 10px 16px;
@@ -93,7 +93,7 @@
     .messages .warning { background: #FAEEDA; color: #854F0B; }
     .messages .info    { background: #E6F1FB; color: #185FA5; }
 
-    /* ══════ Sidebar — unified design system ══════ */
+    /* ------ Sidebar � unified design system ------ */
     :root{
       --sb-panel:#0d1017;
       --sb-line: rgba(255,255,255,0.07);
@@ -223,7 +223,7 @@
     .main-content { transition: margin-left .25s ease; }
     .main-content.expanded { margin-left: 56px; }
 
-    /* ── Responsive ── */
+    /* -- Responsive -- */
     .mobile-menu-btn { display: none; }
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%) !important; }
@@ -279,10 +279,10 @@
       </a>
       <div class="nav-divider"></div>
       <div class="nav-section" data-i18n="nav_system">Sistem</div>
+      {% if request.user.is_superuser or request.user.is_staff %}
       <a href="{% url 'admin:index' %}" class="nav-link">
         <span class="nav-icon">&#9881;</span> <span class="nav-link-text" data-i18n="nav_admin">Admin Panel</span>
       </a>
-      {% if request.user.is_superuser or request.user.is_staff %}
       <a href="{% url 'combat:admin_coach' %}" class="nav-link {% if request.resolver_match.url_name == 'admin_coach' %}active{% endif %}">
         <span class="nav-icon">&#128101;</span> <span class="nav-link-text">Manajemen Coach</span>
       </a>
@@ -397,9 +397,9 @@ var TRANSLATIONS = {
     brand_sub:      'Olahraga Tempur Performa Tinggi',
     logout:         'Keluar',
     stat_total_atlet: 'Total Atlet',
-    stat_l1:          'Audit L1 • Correction',
-    stat_l2:          'Audit L2 • Strength',
-    stat_l3:          'Audit L3 • Power',
+    stat_l1:          'Audit L1 — Correction',
+    stat_l2:          'Audit L2 — Strength',
+    stat_l3:          'Audit L3 — Power',
     level_1:          'LEVEL 1',
     level_2:          'LEVEL 2',
     level_3:          'LEVEL 3',
@@ -522,9 +522,9 @@ var TRANSLATIONS = {
     brand_sub:      'High Performance Combat Sports',
     logout:         'Logout',
     stat_total_atlet: 'Total Athletes',
-    stat_l1:          'Audit L1 • Correction',
-    stat_l2:          'Audit L2 • Strength',
-    stat_l3:          'Audit L3 • Power',
+    stat_l1:          'Audit L1 — Correction',
+    stat_l2:          'Audit L2 — Strength',
+    stat_l3:          'Audit L3 — Power',
     level_1:          'LEVEL 1',
     level_2:          'LEVEL 2',
     level_3:          'LEVEL 3',
@@ -534,6 +534,8 @@ var TRANSLATIONS = {
 
 function applyLang(lang) {
   var t = TRANSLATIONS[lang] || TRANSLATIONS['id'];
+  document.body.classList.toggle('lang-en', lang === 'en');
+  if (typeof applyCustomI18n === 'function') { applyCustomI18n(lang); }
   // Translate sidebar
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');

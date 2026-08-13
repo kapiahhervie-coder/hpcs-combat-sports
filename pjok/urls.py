@@ -12,4 +12,6 @@ urlpatterns = [
     path('siswa/<int:siswa_id>/', views.detail_siswa, name='detail_siswa'),
     path('siswa/<int:siswa_id>/tambah-fisik/', views.tambah_penilaian_fisik, name='tambah_penilaian_fisik'),
     path('siswa/<int:siswa_id>/tambah-teknik/', views.tambah_penilaian_teknik, name='tambah_penilaian_teknik'),
+    path('siswa/<int:siswa_id>/tambah-karakter/', views.tambah_penilaian_karakter, name='tambah_penilaian_karakter'),
+    path('siswa/<int:siswa_id>/tambah-pengetahuan/', views.tambah_penilaian_pengetahuan, name='tambah_penilaian_pengetahuan'),
 ]

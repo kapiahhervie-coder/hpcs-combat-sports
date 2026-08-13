@@ -35,6 +35,15 @@ JENJANG_PER_FASE = {
     'E': 'SMA', 'F': 'SMA',
 }
 
+# 4 tingkat pencapaian sesuai Rubrik Penilaian PJOK Kurikulum Merdeka
+TINGKAT_CHOICES = [
+    (1, 'Perlu Bimbingan'),
+    (2, 'Cukup'),
+    (3, 'Baik'),
+    (4, 'Sangat Baik'),
+]
+TINGKAT_KE_SKOR = {1: 25, 2: 50, 3: 75, 4: 100}
+
 
 class GuruProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -100,12 +109,35 @@ class PenilaianTeknik(models.Model):
     """Elemen Keterampilan Gerak."""
     siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='penilaian_teknik')
     materi = models.ForeignKey(MateriFase, on_delete=models.CASCADE, related_name='penilaian_teknik')
-    skor = models.FloatField()
+    tingkat = models.IntegerField(choices=TINGKAT_CHOICES, null=True, blank=True)
+    skor = models.FloatField(editable=False, null=True, blank=True)
     catatan = models.TextField(blank=True)
     tanggal = models.DateField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if self.tingkat:
+            self.skor = TINGKAT_KE_SKOR.get(self.tingkat)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.siswa.nama} - {self.materi.nama_materi}: {self.skor}"
+
+
+class PenilaianPengetahuan(models.Model):
+    """Elemen Pengetahuan Gerak — pemahaman prosedur pola gerak dasar."""
+    siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='penilaian_pengetahuan')
+    tingkat = models.IntegerField(choices=TINGKAT_CHOICES)
+    skor = models.FloatField(editable=False, null=True, blank=True)
+    catatan = models.TextField(blank=True)
+    tanggal = models.DateField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.tingkat:
+            self.skor = TINGKAT_KE_SKOR.get(self.tingkat)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.siswa.nama} - Pengetahuan Gerak: {self.skor}"
 
 
 # ---------------------------------------------------------------------------
@@ -192,9 +224,15 @@ class PenilaianKarakter(models.Model):
     ]
     siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='penilaian_karakter')
     aspek = models.CharField(max_length=30, choices=ASPEK_CHOICES)
-    skor = models.FloatField()
+    tingkat = models.IntegerField(choices=TINGKAT_CHOICES, null=True, blank=True)
+    skor = models.FloatField(editable=False, null=True, blank=True)
     catatan = models.TextField(blank=True)
     tanggal = models.DateField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.tingkat:
+            self.skor = TINGKAT_KE_SKOR.get(self.tingkat)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.siswa.nama} - {self.get_aspek_display()}: {self.skor}"

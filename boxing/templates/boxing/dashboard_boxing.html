@@ -1,467 +1,1047 @@
-﻿<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block title %}HPCS - Digital Performance Profile{% endblock %}
+{% block page_title %}Boxing Dashboard{% endblock %}
+
+{% block extra_css %}
+<!DOCTYPE html>
+
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>HPCS - Digital Performance Profile</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
+
         :root {
+
             --bg-dark: #060b13;
+
             --bg-panel: #0d1726;
+
             --neon-blue: #38bdf8;
+
             --neon-green: #4ade80;
+
             --border-panel: rgba(56, 189, 248, 0.25);
+
             --text-gray: #94a3b8;
+
         }
+
         body { background-color: var(--bg-dark); color: #ffffff; font-family: 'Segoe UI', Roboto, sans-serif; }
 
+
+
         .digital-profile-card {
+
             background: linear-gradient(180deg, #0b1a30 0%, #060d1a 100%);
+
             border: 2px solid var(--neon-blue);
+
             border-radius: 12px;
+
             padding: 24px;
+
             box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+
         }
+
         .panel-main-title {
+
             font-size: 1.4rem; font-weight: 800; letter-spacing: 2px;
+
             color: #fff; text-transform: uppercase;
+
             background: linear-gradient(90deg, #0d2a4a, transparent);
+
             padding: 8px 16px; border-radius: 6px;
+
             border-left: 3px solid var(--neon-blue);
+
         }
+
         .sub-panel {
+
             background: rgba(13,23,38,0.6);
+
             border: 1px solid rgba(56,189,248,0.15);
+
             border-radius: 8px; padding: 16px; height: 100%;
+
         }
+
         .sub-panel-header {
+
             font-size: 0.75rem; font-weight: 700; letter-spacing: 1px;
+
             color: var(--text-gray); margin-bottom: 12px; text-transform: uppercase;
+
         }
+
         .avatar-frame {
+
             width: 85px; height: 105px;
+
             border: 2px solid var(--neon-blue);
+
             background: rgba(56,189,248,0.05);
+
             display: flex; align-items: center; justify-content: center;
+
             border-radius: 6px; flex-shrink: 0;
+
         }
+
         .id-number {
+
             font-family: 'Courier New', monospace;
+
             color: var(--neon-blue); font-weight: bold;
+
             font-size: 1.1rem; letter-spacing: 1px;
+
         }
+
         .load-bar { background: #1e293b; height: 8px; border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
+
         .load-fill { background: var(--neon-blue); height: 100%; }
+
         .trophy-group i {
+
             color: #f59e0b; font-size: 1.8rem; margin-right: 6px;
+
             filter: drop-shadow(0 0 8px rgba(245,158,11,0.5));
+
         }
+
+
 
         /* Dropdown pilih atlet */
+
         .atlet-select {
+
             font-size: 11px; padding: 6px 10px;
+
             background: #0d1525; color: #e8f4ff;
+
             border: 1px solid rgba(56,189,248,0.3);
+
             border-radius: 8px; cursor: pointer; outline: none;
+
             min-width: 140px;
+
         }
+
         .atlet-select:focus { border-color: var(--neon-blue); }
 
+
+
         /* Tombol Report Card */
+
         .btn-report {
+
             font-size: 11px; padding: 7px 14px;
+
             background: linear-gradient(90deg, #b35c00, #f59e0b);
+
             color: #fff; border-radius: 8px; text-decoration: none;
+
             font-weight: 700; display: inline-flex; align-items: center; gap: 6px;
+
             border: none; cursor: pointer; white-space: nowrap;
+
             box-shadow: 0 4px 12px rgba(245,158,11,0.25);
+
             transition: opacity 0.2s;
+
         }
+
         .btn-report:hover { opacity: 0.85; color: #fff; }
 
+
+
         /* Level cards */
+
         .level-menu-title {
+
             margin-top: 36px; font-weight: 700;
+
             color: var(--neon-blue); text-transform: uppercase;
+
             font-size: 1rem; letter-spacing: 1px;
+
         }
+
         .level-grid-card {
+
             background: var(--bg-panel);
+
             border: 1px solid rgba(255,255,255,0.05);
+
             border-radius: 12px; padding: 20px;
+
             transition: all 0.3s ease; height: 100%;
+
             display: flex; flex-direction: column; justify-content: space-between;
+
         }
+
         .level-grid-card:hover {
+
             transform: translateY(-4px);
+
         }
+
         .level-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+
         .level-tag {
+
             font-size: 0.75rem; padding: 3px 10px;
+
             border-radius: 12px; font-weight: 600;
+
         }
+
+
 
         /* Warna per level sesuai karakter */
-        /* L1 - Fondasi Gerak - Cyan/Biru Medis */
+
+        /* L1 - <span class="i18n-custom" data-id="Fondasi Gerak" data-en="Movement Foundation">Fondasi Gerak</span> - Cyan/Biru Medis */
+
         .level-card-l1 {
+
             border-color: rgba(56,189,248,0.3);
+
             background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(56,189,248,0.01) 100%);
+
         }
+
         .level-card-l1:hover { border-color: #38bdf8; box-shadow: 0 8px 24px rgba(56,189,248,0.2); }
+
         .level-card-l1 .level-tag { background: rgba(56,189,248,0.12); color: #38bdf8; }
+
         .level-card-l1 .level-huge-num { color: rgba(56,189,248,0.18); }
+
         .level-card-l1 .btn-action-audit { border-color: rgba(56,189,248,0.4); color: #38bdf8; }
+
         .level-card-l1:hover .btn-action-audit { background: #38bdf8; color: #060b13; box-shadow: 0 4px 14px rgba(56,189,248,0.35); }
 
-        /* L2 - Kekuatan Otot - Hijau Power */
+
+
+        /* L2 - <span class="i18n-custom" data-id="Kekuatan Otot" data-en="Muscular Strength">Kekuatan Otot</span> - Hijau Power */
+
         .level-card-l2 {
+
             border-color: rgba(74,222,128,0.3);
+
             background: linear-gradient(135deg, rgba(74,222,128,0.06) 0%, rgba(74,222,128,0.01) 100%);
+
         }
+
         .level-card-l2:hover { border-color: #4ade80; box-shadow: 0 8px 24px rgba(74,222,128,0.2); }
+
         .level-card-l2 .level-tag { background: rgba(74,222,128,0.12); color: #4ade80; }
+
         .level-card-l2 .level-huge-num { color: rgba(74,222,128,0.18); }
+
         .level-card-l2 h5 { color: #4ade80; }
+
         .level-card-l2 .btn-action-audit { border-color: rgba(74,222,128,0.4); color: #4ade80; }
+
         .level-card-l2:hover .btn-action-audit { background: #4ade80; color: #060b13; box-shadow: 0 4px 14px rgba(74,222,128,0.35); }
 
-        /* L3 - Daya Ledak - Oranye Eksplosif */
+
+
+        /* L3 - <span class="i18n-custom" data-id="Daya Ledak" data-en="Explosive Power">Daya Ledak</span> - Oranye Eksplosif */
+
         .level-card-l3 {
+
             border-color: rgba(251,146,60,0.3);
+
             background: linear-gradient(135deg, rgba(251,146,60,0.06) 0%, rgba(251,146,60,0.01) 100%);
+
         }
+
         .level-card-l3:hover { border-color: #fb923c; box-shadow: 0 8px 24px rgba(251,146,60,0.2); }
+
         .level-card-l3 .level-tag { background: rgba(251,146,60,0.12); color: #fb923c; }
+
         .level-card-l3 .level-huge-num { color: rgba(251,146,60,0.18); }
+
         .level-card-l3 h5 { color: #fb923c; }
+
         .level-card-l3 .btn-action-audit { border-color: rgba(251,146,60,0.4); color: #fb923c; }
+
         .level-card-l3:hover .btn-action-audit { background: #fb923c; color: #060b13; box-shadow: 0 4px 14px rgba(251,146,60,0.35); }
 
-        /* L4 - Spesifik Ring - Pink Agresif */
+
+
+        /* L4 - <span class="i18n-custom" data-id="Spesifik Ring" data-en="Ring-Specific">Spesifik Ring</span> - Pink Agresif */
+
         .level-card-l4 {
+
             border-color: rgba(244,114,182,0.3);
+
             background: linear-gradient(135deg, rgba(244,114,182,0.06) 0%, rgba(244,114,182,0.01) 100%);
+
         }
+
         .level-card-l4:hover { border-color: #f472b6; box-shadow: 0 8px 24px rgba(244,114,182,0.2); }
+
         .level-card-l4 .level-tag { background: rgba(244,114,182,0.12); color: #f472b6; }
+
         .level-card-l4 .level-huge-num { color: rgba(244,114,182,0.18); }
+
         .level-card-l4 h5 { color: #f472b6; }
+
         .level-card-l4 .btn-action-audit { border-color: rgba(244,114,182,0.4); color: #f472b6; }
+
         .level-card-l4:hover .btn-action-audit { background: #f472b6; color: #060b13; box-shadow: 0 4px 14px rgba(244,114,182,0.35); }
 
+
+
         /* Angka besar */
+
         .level-huge-num {
+
             font-size: 2.2rem; font-weight: 900; line-height: 1;
+
         }
+
+
 
         /* Deskripsi level */
+
         .level-grid-card p.text-secondary {
+
             line-height: 1.55; font-size: 0.82rem; min-height: 38px;
+
         }
+
+
 
         /* Tombol audit base */
+
         .btn-action-audit {
+
             background: transparent;
+
             font-weight: 600; border-radius: 6px;
+
             transition: all 0.2s; font-size: 0.85rem;
+
             border-width: 1px; border-style: solid;
+
         }
+        /* ===== TOOLTIP DWIBAHASA ===== */
+        .info-tip { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.6); font-size: 0.65rem; font-weight: 700; margin-left: 6px; cursor: help; position: relative; flex-shrink: 0; }
+        .info-tip:hover, .info-tip.active { border-color: #fff; color: #fff; }
+        .info-tip .tip-box { display: none; position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); width: 240px; background: #0d1420; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 10px 12px; font-size: 0.75rem; font-weight: 400; line-height: 1.4; color: #cbd5e1; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 50; text-transform: none; }
+        .info-tip:hover .tip-box, .info-tip.active .tip-box { display: block; }
+        .info-tip .tip-box::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: #0d1420; }
+        #langToggle { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.75rem; font-weight: 700; color: #cbd5e1; cursor: pointer; }
+        #langToggle span { padding: 2px 6px; border-radius: 5px; }
+        #langToggle span.active { background: #38bdf8; color: #060b13; }
+        body.lang-en .lang-id-only { display: none !important; }
+        body:not(.lang-en) .lang-en-only { display: none !important; }
     </style>
-</head>
-<body>
+
+{% endblock %}
+
+{% block content %}
 <div class="container py-4" style="padding-top:2.5rem!important;">
 
-    <!-- ── TOP NAV ── -->
+
+
+    <!-- -- TOP NAV -- -->
+
     <div class="d-flex justify-content-between align-items-center mb-4">
+
         <div>
+
             <h5 class="fw-bold mb-0">
+
                 <span style="color:#00d2ff;font-weight:900;letter-spacing:2px;font-size:1.2em;">HPCS</span>
+
                 <span style="color:#e8f4ff;font-weight:400;letter-spacing:1px;font-size:0.85em;"> EXPERT PANEL</span>
+
             </h5>
-            <small class="text-secondary">Pelatih Kepala: <strong>Coach Fanny H. Kapiah, S.Pd</strong></small>
+
+            <small class="text-secondary"><span class="i18n-custom" data-id="Pelatih Kepala:" data-en="Head Coach:">Pelatih Kepala:</span> <strong>Coach Fanny H. Kapiah, S.Pd</strong></small>
+
         </div>
+
         <a href="{% url 'combat:tambah_atlet' %}" class="btn btn-sm btn-outline-info">
-            <i class="fa-solid fa-users me-2"></i>Daftar Atlet Sasana
+
+            <i class="fa-solid fa-users me-2"></i><span class="i18n-custom" data-id="Daftar Atlet Sasana" data-en="Register Gym Athlete">Daftar Atlet Sasana</span>
+
         </a>
+
     </div>
 
-    <!-- ── DIGITAL PERFORMANCE PROFILE ── -->
+
+
+    <!-- -- DIGITAL PERFORMANCE PROFILE -- -->
+
     <div class="digital-profile-card">
 
+
+
         <!-- Header: Judul + Pilih Atlet + Tombol Report -->
+
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+
             <div class="panel-main-title">Digital Performance Profile</div>
+
             <div class="d-flex align-items-center gap-2">
 
+
+
                 <!-- Dropdown: ganti atlet di halaman ini (bukan buka tab baru) -->
+
                 <select id="selAtlet" class="atlet-select"
+
                         onchange="gantiAtlet(this.value)">
-                    <option value="">👤 Pilih Atlet...</option>
+
+                    <option value=""><span class="i18n-custom" data-id="Pilih Atlet..." data-en="Select Athlete...">Pilih Atlet...</span></option>
+
                     {% for a in daftar_atlet %}
+
                     <option value="{{ a.pk }}"
+
                         {% if a.pk == atlet.pk %}selected{% endif %}>
+
                         {{ a.nama_atlet }}
+
                     </option>
+
                     {% endfor %}
+
                 </select>
 
-                <!-- Tombol Report Card — buka report atlet yang sedang tampil -->
+
+
+                <!-- Tombol Report Card - buka report atlet yang sedang tampil -->
+
                 {% if atlet %}
+
                 <a href="{% url 'combat:report_card' atlet.pk %}"
+
                    target="_blank" class="btn-report">
-                    📋 Report Card
+
+                    <i class="fa-solid fa-file-lines"></i> Report Card
+
                 </a>
+
                 {% else %}
-                <span class="btn-report" style="opacity:0.4;cursor:not-allowed;">📋 Report Card</span>
+
+                <span class="btn-report" style="opacity:0.4;cursor:not-allowed;"><i class="fa-solid fa-file-lines"></i> Report Card</span>
+
                 {% endif %}
+
             </div>
+
         </div>
+
+
 
         <!-- Sub-panels -->
+
         <div class="row g-3">
 
+
+
             <!-- ATHLETE ID -->
+
             <div class="col-md-4">
+
                 <div class="sub-panel d-flex align-items-center gap-3">
+
                     <div class="avatar-frame">
+
                         <i class="fa-solid fa-user-ninja text-secondary fs-1"></i>
+
                     </div>
+
                     <div>
+
                         <div class="sub-panel-header">Athlete ID</div>
+
                         <h5 class="fw-bold mb-1 text-white" id="namaAtlet">
-                            {{ atlet.nama_atlet|default:"—" }}
+
+                            {{ atlet.nama_atlet|default:"-" }}
+
                         </h5>
+
                         <div class="id-number mb-1">
+
                             INA-{{ atlet.id|stringformat:"04d" }}
+
                         </div>
+
                         <small class="text-secondary">
-                            BB: {{ atlet.kelas_berat|default:"—" }} kg
+
+                            BB: {{ atlet.kelas_berat|default:"-" }} kg
+
                         </small>
+
                     </div>
+
                 </div>
+
             </div>
+
+
 
             <!-- PERFORMA PROGRESSION -->
+
             <div class="col-md-4">
+
                 <div class="sub-panel">
+
                     <div class="sub-panel-header">Performa Progression</div>
+
                     <div style="height:100px;position:relative">
+
                         <canvas id="canvasProgression"></canvas>
+
                     </div>
+
                 </div>
+
             </div>
+
+
 
             <!-- TRAINING LOAD & ACHIEVEMENT -->
+
             <div class="col-md-4">
+
                 <div class="sub-panel">
+
                     <div class="row h-100 align-items-center">
+
                         <div class="col-7 border-end border-secondary border-opacity-25">
-                            <div class="sub-panel-header">Training Load</div>
+
+                            <div class="sub-panel-header">
+
+                                Training Load
+
+                                <span class="info-tip">?
+
+                                    <span class="tip-box">
+
+                                        <span class="lang-id-only">Menunjukkan seberapa berat total latihan atlet minggu ini dibanding kapasitas idealnya — supaya tidak overtraining atau kurang latihan.</span>
+
+                                        <span class="lang-en-only">Represents cumulative training stress relative to the athlete's optimal load capacity, used to monitor overtraining risk.</span>
+
+                                    </span>
+
+                                </span>
+
+                            </div>
+
                             <div class="d-flex align-items-center gap-2">
+
                                 <div style="font-size:1.6rem;font-weight:900;color:#fff;min-width:44px">
+
                                     {{ training_load|default:0 }}%
+
                                 </div>
+
                                 <div class="flex-grow-1">
+
                                     <div class="load-bar">
+
                                         <div class="load-fill" style="width:{{ training_load|default:0 }}%"></div>
+
                                     </div>
+
                                     <div class="load-bar">
+
                                         <div class="load-fill" style="width:60%;background:#4ade80"></div>
+
                                     </div>
+
                                 </div>
+
                             </div>
+
                         </div>
+
                         <div class="col-5 ps-3">
+
                             <div class="sub-panel-header">Achievement</div>
+
                             <div class="trophy-group d-flex">
+
                                 <i class="fa-solid fa-trophy"></i>
+
                                 <i class="fa-solid fa-trophy"></i>
+
                                 <i class="fa-solid fa-trophy"></i>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
 
+
+
         </div>
+
     </div>
 
-    <!-- ── MODUL EVALUASI LEVEL ── -->
+
+
+    <!-- -- MODUL EVALUASI LEVEL -- -->
+
     <div class="level-menu-title mt-4">
-        <i class="fa-solid fa-network-wired me-2"></i>Modul Evaluasi Tingkat Performa
+
+        <i class="fa-solid fa-network-wired me-2"></i><span class="i18n-custom" data-id="Modul Evaluasi Tingkat Performa" data-en="Performance Level Evaluation Module">Modul Evaluasi Tingkat Performa</span>
+
     </div>
+
+
 
     <div class="row g-3 mt-1">
 
+
+
         <!-- LEVEL 1 -->
+
         <div class="col-12 col-md-6 col-lg-3">
+
             <div class="level-grid-card level-card-l1">
+
                 <div>
+
                     <div class="level-top-row">
+
                         <span class="level-tag">Fondasi Gerak</span>
+
                         <div class="level-huge-num">01</div>
+
                     </div>
-                    <h5 class="fw-bold mb-1">LEVEL 1</h5>
-                    <p class="text-secondary small mb-0">Correction, Mobility, Stability &amp; Anatomi Sendi.</p>
+
+                    <h5 class="fw-bold mb-1">
+
+                        LEVEL 1
+
+                        <span class="info-tip">?
+
+                            <span class="tip-box">
+
+                                <span class="lang-id-only">Mengecek gerakan dasar &amp; kelenturan tubuh atlet — memastikan tidak ada masalah postur sebelum latihan berat dimulai.</span>
+
+                                <span class="lang-en-only">Movement screening for mobility, stability, and joint corrective assessment prior to progressive loading.</span>
+
+                            </span>
+
+                        </span>
+
+                    </h5>
+
+                    <p class="text-secondary small mb-0"><span class="i18n-custom" data-id="Correction, Mobility, Stability &amp; Anatomi Sendi." data-en="Correction, Mobility, Stability &amp; Joint Anatomy.">Correction, Mobility, Stability &amp; Anatomi Sendi.</span></p>
+
                 </div>
+
                 <a href="{% url 'boxing:l1_correction' %}?atlet_id={{ atlet.id }}"
+
                    class="btn btn-action-audit w-100 mt-3 py-2">
-                   Audit Level 1 — Correction
+
+                   Audit Level 1 - Correction
+
                 </a>
+
             </div>
+
         </div>
+
+
 
         <!-- LEVEL 2 -->
+
         <div class="col-12 col-md-6 col-lg-3">
+
             <div class="level-grid-card level-card-l2">
+
                 <div>
+
                     <div class="level-top-row">
+
                         <span class="level-tag">Kekuatan Otot</span>
+
                         <div class="level-huge-num">02</div>
+
                     </div>
-                    <h5 class="fw-bold mb-1">LEVEL 2</h5>
-                    <p class="text-secondary small mb-0">Maximum Strength &amp; Pengkondisian Dinding Core.</p>
+
+                    <h5 class="fw-bold mb-1">
+
+                        LEVEL 2
+
+                        <span class="info-tip">?
+
+                            <span class="tip-box">
+
+                                <span class="lang-id-only">Mengukur seberapa kuat otot atlet mengangkat beban maksimal, dan seberapa stabil bagian tengah tubuh (core) saat bergerak.</span>
+
+                                <span class="lang-en-only">Assessment of maximal strength output and core stability under progressive resistance loading.</span>
+
+                            </span>
+
+                        </span>
+
+                    </h5>
+
+                    <p class="text-secondary small mb-0"><span class="i18n-custom" data-id="Maximum Strength &amp; Pengkondisian Dinding Core." data-en="Maximum Strength &amp; Core Wall Conditioning.">Maximum Strength &amp; Pengkondisian Dinding Core.</span></p>
+
                 </div>
+
                 <a href="{% url 'boxing:l2_strength' %}"
+
                    class="btn btn-action-audit w-100 mt-3 py-2">Audit Level 2</a>
+
             </div>
+
         </div>
+
+
 
         <!-- LEVEL 3 -->
+
         <div class="col-12 col-md-6 col-lg-3">
+
             <div class="level-grid-card level-card-l3">
+
                 <div>
+
                     <div class="level-top-row">
+
                         <span class="level-tag">Daya Ledak</span>
+
                         <div class="level-huge-num">03</div>
+
                     </div>
-                    <h5 class="fw-bold mb-1">LEVEL 3</h5>
+
+                    <h5 class="fw-bold mb-1">
+
+                        LEVEL 3
+
+                        <span class="info-tip">?
+
+                            <span class="tip-box">
+
+                                <span class="lang-id-only">Mengukur kecepatan otot menghasilkan tenaga secara eksplosif — penting untuk pukulan yang cepat dan kuat.</span>
+
+                                <span class="lang-en-only">Measures Rate of Force Development (RFD) — explosive power output critical for punching velocity and force transfer.</span>
+
+                            </span>
+
+                        </span>
+
+                    </h5>
+
                     <p class="text-secondary small mb-0">Power &amp; RFD (Kecepatan Transfer Energi Pukulan).</p>
+
                 </div>
+
                 <a href="{% url 'boxing:l3_power' %}"
+
                    class="btn btn-action-audit w-100 mt-3 py-2">Audit Level 3</a>
+
             </div>
+
         </div>
+
+
 
         <!-- LEVEL 4 -->
+
         <div class="col-12 col-md-6 col-lg-3">
+
             <div class="level-grid-card level-card-l4">
+
                 <div>
+
                     <div class="level-top-row">
+
                         <span class="level-tag">Spesifik Ring</span>
+
                         <div class="level-huge-num">04</div>
+
                     </div>
-                    <h5 class="fw-bold mb-1">LEVEL 4</h5>
+
+                    <h5 class="fw-bold mb-1">
+
+                        LEVEL 4
+
+                        <span class="info-tip">?
+
+                            <span class="tip-box">
+
+                                <span class="lang-id-only">Menguji kecepatan reaksi, kelincahan gerak kaki, dan daya tahan jantung-paru khas pertandingan tinju.</span>
+
+                                <span class="lang-en-only">Assesses reactive speed, footwork agility, and match-specific cardiorespiratory endurance (Yo-Yo Intermittent Recovery Test).</span>
+
+                            </span>
+
+                        </span>
+
+                    </h5>
+
                     <p class="text-secondary small mb-0">Reactive Speed, Agility, &amp; Metabolic Yo-Yo Test.</p>
+
                 </div>
+
                 <a href="{% url 'boxing:l4_speed_agility' %}"
+
                    class="btn btn-action-audit w-100 mt-3 py-2"
+
                    >Audit Level 4</a>
+
             </div>
+
         </div>
 
+
+
     </div>
+
 </div>
 
-<!-- ── SCRIPT ── -->
+
+
+<!-- -- SCRIPT -- -->
+
+
+{% endblock %}
+
+{% block extra_js %}
 <script>
+
 // Ganti atlet: reload halaman dengan atlet_id baru
+
 function gantiAtlet(atletId) {
+
     if (!atletId) return;
+
     window.location.href = '{% url "boxing:dashboard" %}?atlet_id=' + atletId;
+
 }
+
+
 
 // Chart progression dengan gradient fill + placeholder
+
 const ctxProgress = document.getElementById('canvasProgression').getContext('2d');
+
 const scoreData = {{ score_data|safe }};
+
 const scoreLabels = {{ score_labels|safe }};
 
+
+
 // Cek apakah data cukup (minimal 2 titik dengan nilai > 0)
+
 const validData = scoreData.filter(v => v > 0);
 
+
+
 if (validData.length < 2) {
+
     // Tampilkan placeholder text jika data kurang
+
     ctxProgress.canvas.style.opacity = '0.3';
+
     ctxProgress.font = 'bold 11px sans-serif';
+
     ctxProgress.fillStyle = '#38bdf8';
+
     ctxProgress.textAlign = 'center';
+
     ctxProgress.textBaseline = 'middle';
+
     ctxProgress.fillText(
+
         validData.length === 0
-            ? 'Belum ada data audit'
+
+            ? '<span class="i18n-custom" data-id="Belum ada data audit" data-en="No audit data yet">Belum ada data audit</span>'
+
             : 'Data tren muncul setelah minimal 2x audit',
+
         ctxProgress.canvas.width / 2,
+
         ctxProgress.canvas.height / 2
+
     );
+
     ctxProgress.font = '10px sans-serif';
+
     ctxProgress.fillStyle = '#445566';
+
     ctxProgress.fillText(
+
         'Lakukan audit L1-L4 untuk melihat perkembangan',
+
         ctxProgress.canvas.width / 2,
+
         ctxProgress.canvas.height / 2 + 20
+
     );
+
 } else {
+
     // Gradient fill
+
     const gradientFill = ctxProgress.createLinearGradient(0, 0, 0, ctxProgress.canvas.height);
+
     gradientFill.addColorStop(0, 'rgba(56,189,248,0.3)');
+
     gradientFill.addColorStop(1, 'rgba(56,189,248,0.0)');
 
+
+
     new Chart(ctxProgress, {
+
         type: 'line',
+
         data: {
+
             labels: scoreLabels,
+
             datasets: [{
+
                 label: 'Total Skor',
+
                 data: scoreData,
+
                 borderColor: '#38bdf8',
+
                 borderWidth: 2.5,
+
                 pointBackgroundColor: '#00e5ff',
+
                 pointBorderColor: '#060f1e',
+
                 pointBorderWidth: 2,
+
                 pointRadius: 5,
+
                 pointHoverRadius: 7,
+
                 fill: true,
+
                 backgroundColor: gradientFill,
+
                 tension: 0.4
+
             }]
+
         },
+
         options: {
+
             responsive: true,
+
             maintainAspectRatio: false,
+
             animation: { duration: 1000, easing: 'easeInOutQuart' },
+
             plugins: {
+
                 legend: { display: false },
+
                 tooltip: {
+
                     backgroundColor: '#0d1525',
+
                     borderColor: 'rgba(56,189,248,0.3)',
+
                     borderWidth: 1,
+
                     titleColor: '#38bdf8',
+
                     bodyColor: '#e8f4ff',
+
                     padding: 10,
+
                     callbacks: {
+
                         label: ctx => ' Skor: ' + ctx.parsed.y.toFixed(1)
+
                     }
+
                 }
+
             },
+
             scales: {
+
                 x: {
+
                     grid: { display: false },
+
                     ticks: { color: '#445566', font: { size: 9 } }
+
                 },
+
                 y: {
+
                     min: 0, max: 10,
+
                     grid: { color: 'rgba(255,255,255,0.04)' },
+
                     ticks: { color: '#445566', font: { size: 9 }, stepSize: 2 }
+
                 }
+
             }
+
         }
+
+    });
+
+}
+
+</script>
+<script>
+function applyCustomI18n(lang) {
+    document.querySelectorAll('.i18n-custom').forEach(el => {
+        const val = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-id');
+        if (val) el.textContent = val;
     });
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('hpcs_lang') || 'id';
+    applyCustomI18n(savedLang);
+    document.querySelectorAll('.info-tip').forEach(tip => {
+        tip.addEventListener('click', e => {
+            e.stopPropagation();
+            document.querySelectorAll('.info-tip.active').forEach(t => t !== tip && t.classList.remove('active'));
+            tip.classList.toggle('active');
+        });
+    });
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.info-tip.active').forEach(t => t.classList.remove('active'));
+    });
+});
 </script>
 
-</body>
-</html
-
+{% endblock %}
