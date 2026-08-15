@@ -1,37 +1,43 @@
+"""
+combat/urls.py — PERBAIKAN
+
+Hanya berisi view yang benar-benar ada di combat/views.py.
+Semua path Taekwondo (dashboard, l2, l3, l4, report) SUDAH DIPINDAH
+ke taekwondo/urls.py (app terpisah) — JANGAN didefinisikan lagi di sini,
+karena `views` di file ini merujuk ke combat/views.py, bukan
+taekwondo/views.py. Itulah penyebab AttributeError sebelumnya.
+
+Kalau nanti ada boxing/urls.py, muaythai/urls.py, karate/urls.py
+masing-masing sebagai app terpisah, jangan juga didefinisikan di sini —
+cukup di-include lewat hpcs_config/urls.py (lihat catatan di bawah file
+ini).
+"""
+
 from django.urls import path
-from django.shortcuts import redirect
 from . import views
 
 app_name = 'combat'
 
 urlpatterns = [
+    # Dashboard utama (combat, bukan per-cabor)
     path('', views.DashboardView.as_view(), name='dashboard'),
-    path('dashboard_combat/', views.DashboardView.as_view(), name='dashboard_combat'),
+   
 
-    # Boxing — redirect ke app boxing yang baru (backward compat)
-    path('dashboard_boxing/', lambda r: redirect('boxing:dashboard'), name='dashboard_boxing'),
-    path('l1-correction/', lambda r: redirect('boxing:l1_correction'), name='l1_correction'),
-    path('l1-correction/hapus/<int:pk>/', lambda r, pk: redirect('boxing:hapus_l1_audit', pk=pk), name='hapus_l1_audit'),
-    path('l1-correction/detail/<int:pk>/', lambda r, pk: redirect('boxing:detail_l1_audit', pk=pk), name='detail_l1_audit'),
-    path('l2-strength/', lambda r: redirect('boxing:l2_strength'), name='l2_strength'),
-    path('l2-strength/hapus/<int:pk>/', lambda r, pk: redirect('boxing:hapus_l2_audit', pk=pk), name='hapus_l2_audit'),
-    path('l2-strength/detail/<int:pk>/', lambda r, pk: redirect('boxing:detail_l2_audit', pk=pk), name='detail_l2_audit'),
-    path('l3-power/', lambda r: redirect('boxing:l3_power'), name='l3_power'),
-    path('l3-power/hapus/<int:pk>/', lambda r, pk: redirect('boxing:hapus_l3_audit', pk=pk), name='hapus_l3_audit'),
-    path('l3-power/detail/<int:pk>/', lambda r, pk: redirect('boxing:detail_l3_audit', pk=pk), name='detail_l3_audit'),
-    path('l4-speed-agility/', lambda r: redirect('boxing:l4_speed_agility'), name='l4_speed_agility'),
-    path('l4-speed-agility/hapus/<int:pk>/', lambda r, pk: redirect('boxing:hapus_l4_audit', pk=pk), name='hapus_l4_audit'),
-    path('l4-speed-agility/detail/<int:pk>/', lambda r, pk: redirect('boxing:detail_l4_audit', pk=pk), name='detail_l4_audit'),
+    # Athlete Intelligence Report (report card baru)
+    path('athlete-report/<int:atlet_id>/', views.AthleteIntelligenceReportView.as_view(), name='athlete_report'),
 
-    # Muay Thai — redirect ke app muaythai yang baru (backward compat)
-    path('dashboard_muaythai/', lambda r: redirect('muaythai:dashboard'), name='dashboard_muaythai'),
+    # Report Card (lama)
+    path('report-card/<int:atlet_id>/', views.ReportCardView.as_view(), name='report_card'),
 
+    # Report Center (rekap semua atlet lintas cabor)
+    path('report-center/', views.ReportCenterView.as_view(), name='report_center'),
+
+    # Registrasi & approval coach
     path('daftar-coach/', views.DaftarCoachView.as_view(), name='daftar_coach'),
     path('tunggu-approval/', views.TungguApprovalView.as_view(), name='tunggu_approval'),
     path('admin-coach/', views.AdminCoachView.as_view(), name='admin_coach'),
-    path('admin-coach/assign/', views.AssignAtletCoachView.as_view(), name='assign_atlet_coach'),
-    path('tambah-atlet/', views.TambahAtletView.as_view(), name='tambah_atlet'),
+    path('assign-atlet-coach/', views.AssignAtletCoachView.as_view(), name='assign_atlet_coach'),
 
-    path('report-card/<int:atlet_id>/', views.ReportCardView.as_view(), name='report_card'),
-    path('report-center/', views.ReportCenterView.as_view(), name='report_center'),
+    # Tambah atlet (oleh coach)
+    path('tambah-atlet/', views.TambahAtletView.as_view(), name='tambah_atlet'),
 ]

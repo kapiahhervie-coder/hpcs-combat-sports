@@ -39,17 +39,19 @@
   .pjok-btn.secondary:hover{border-color:var(--text-faint);color:var(--text);}
 
   .pjok-non-field-error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);color:var(--danger);border-radius:6px;padding:10px 14px;font-size:12.5px;margin-bottom:18px;}
+  .pjok-warn{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);color:#f59e0b;border-radius:6px;padding:10px 14px;font-size:12px;margin-bottom:18px;line-height:1.5;}
 </style>
 
 <div class="pjok-scope">
-  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
-  <h2 class="pjok-title">Tambah Siswa</h2>
+  <p class="pjok-eyebrow">Edit Data Siswa</p>
+  <h2 class="pjok-title">{{ siswa.nama }}</h2>
   <div class="pjok-rule"></div>
 
   <div class="pjok-card">
+    <div class="pjok-warn">&#9888; Mengubah <strong>Fase</strong> akan memindahkan siswa ini ke dashboard fase yang baru. Riwayat penilaian (Fisik, Teknik, Pengetahuan, Karakter) tetap tersimpan dan tidak hilang.</div>
+
     <form method="post" novalidate>
       {% csrf_token %}
-      <input type="hidden" name="fase" value="{{ fase }}">
 
       {% if form.non_field_errors %}
       <div class="pjok-non-field-error">{{ form.non_field_errors }}</div>
@@ -74,15 +76,22 @@
         </div>
       </div>
 
-      <div class="pjok-field">
-        <label for="{{ form.tanggal_lahir.id_for_label }}">Tanggal Lahir</label>
-        {{ form.tanggal_lahir }}
-        {% if form.tanggal_lahir.errors %}<div class="pjok-field-error">{{ form.tanggal_lahir.errors.0 }}</div>{% endif %}
+      <div class="pjok-row-2">
+        <div class="pjok-field">
+          <label for="{{ form.tanggal_lahir.id_for_label }}">Tanggal Lahir</label>
+          {{ form.tanggal_lahir }}
+          {% if form.tanggal_lahir.errors %}<div class="pjok-field-error">{{ form.tanggal_lahir.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="pjok-field">
+          <label for="{{ form.fase.id_for_label }}">Fase</label>
+          {{ form.fase }}
+          {% if form.fase.errors %}<div class="pjok-field-error">{{ form.fase.errors.0 }}</div>{% endif %}
+        </div>
       </div>
 
       <div class="pjok-actions">
-        <button type="submit" class="pjok-btn">Simpan Siswa</button>
-        <a href="{% url 'pjok:dashboard_fase' fase %}" class="pjok-btn secondary">Batal</a>
+        <button type="submit" class="pjok-btn">Simpan Perubahan</button>
+        <a href="{% url 'pjok:dashboard_fase' siswa.fase %}" class="pjok-btn secondary">Batal</a>
       </div>
     </form>
   </div>

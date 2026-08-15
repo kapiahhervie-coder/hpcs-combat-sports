@@ -12,11 +12,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* -------------------------------------------------------------------
        HPCS L2 — TEMA: Dark Forge (Amber-Iron) — Strength Identity
        Filosofi: Baja panas + kekuatan berat — bukan wellness spa
        Warna utama: Deep Navy + Amber/Forge Orange + Steel White
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    -------------------------------------------------------------------- */
     :root {
         --bg:        #0b0f14;
         --bg2:       #13181f;
@@ -24,12 +24,12 @@
         --border:    #252d3a;
         --border2:   #38465a;
 
-        /* â”€â”€ PERUBAHAN UTAMA: Amber/Orange untuk karakter STRENGTH â”€â”€ */
+        /* -- PERUBAHAN UTAMA: Amber/Orange untuk karakter STRENGTH -- */
         --accent:    #00e5b0;      /* amber — energi, kekuatan, api */
         --accent2:   #fb923c;      /* orange — power eksplosif */
         --accent-dim:#00a882;      /* amber gelap untuk border subtle */
 
-        /* â”€â”€ Warna sekunder tetap untuk variasi komponen â”€â”€ */
+        /* -- Warna sekunder tetap untuk variasi komponen -- */
         --teal:      #2dd4bf;      /* hanya untuk neuroscience/ISO info */
         --sky:       #38bdf8;      /* info boxes */
 
@@ -56,14 +56,14 @@
         min-height: 100vh;
     }
 
-    /* â”€â”€ Container utama — beri padding bawah agar sticky tidak overlap â”€â”€ */
+    /* -- Container utama — beri padding bawah agar sticky tidak overlap -- */
     .l2-container {
         padding-bottom: 4rem;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        TYPOGRAPHY — Lebih Elegan, Title Case bukan ALL CAPS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .header-title {
         font-family: 'Barlow Condensed', sans-serif;
         font-weight: 900;
@@ -95,9 +95,9 @@
         gap: 6px;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        CARDS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .card-hpcs {
         background: var(--bg2);
         border: 1px solid var(--border);
@@ -119,9 +119,9 @@
         border-color: rgba(0,229,176, 0.3);
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        STICKY PANELS — Solusi dead space saat scroll
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .sticky-panel {
         position: sticky;
         top: 80px;          /* sesuaikan dengan tinggi topbar */
@@ -135,9 +135,9 @@
     .sticky-panel::-webkit-scrollbar { width: 4px; }
     .sticky-panel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        FORM CONTROLS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .form-control, .form-select {
         background: var(--bg3);
         border: 1px solid var(--border);
@@ -162,9 +162,9 @@
         font-size: 0.8rem;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        PILAR CARDS — Exercise Input
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .pilar-card {
         background: var(--bg3);
         border: 1px solid var(--border);
@@ -197,9 +197,9 @@
     .icon-core  { color: var(--success); }
     .icon-iso   { color: var(--teal); }   /* teal hanya untuk neuroscience */
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        SCORE DISPLAY — Lebih impactful dengan ring
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .total-score {
         font-family: 'Barlow Condensed', sans-serif;
         font-size: 5.5rem;
@@ -246,9 +246,9 @@
         margin-top: 8px;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        SCORE PILLS — Amber
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .score-pill {
         background: rgba(0,229,176,0.1);
         border: 1px solid rgba(0,229,176,0.2);
@@ -268,9 +268,9 @@
         color: var(--teal);
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        RUBRIK PANEL
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .rubrik-wrap {
         background: var(--bg2);
         border: 1px solid var(--border);
@@ -291,8 +291,6 @@
     .rubrik-row { border-bottom: 1px solid #1a2330; }
     .rubrik-row:last-child { border-bottom: none; }
     .rubrik-row:hover { background: rgba(0,229,176,0.03); }
-    .rubrik-head > div, .rubrik-row > div { flex: 0 0 20% !important; max-width: 20% !important; }
-    .val-red { background: rgba(239,68,68,0.12); color: #f87171; border-left: 3px solid #f87171; }
     .aspek-box {
         padding: 12px 14px;
         border-right: 2px solid rgba(0,229,176,0.2);
@@ -309,16 +307,13 @@
     .yt-link:hover { color: #ef4444 !important; }
     .score-col { padding: 10px 8px; font-size: 0.78rem; }
     .val-box { border-radius: 5px; padding: 3px 8px; display: inline-block; font-weight: 600; font-size: 0.78rem; margin-bottom: 2px; width: 100%; border-left: 3px solid transparent; }
-    .val-box ul { list-style: none; margin: 0; padding: 0; text-align: left; font-size: 0.68rem; line-height: 1.6; }
-    .rubrik-howto { padding: 8px 16px; font-size: 0.68rem; color: var(--text3, #6b7280); background: rgba(255,255,255,0.02); }
-    .rubrik-howto b { color: var(--text2, #9ca3af); }
     .val-green  { background: rgba(52,211,153,0.1); border-left-color: var(--success); color: var(--success); }
     .val-blue   { background: rgba(96,165,250,0.1); border-left-color: var(--info);    color: var(--info); }
     .val-yellow { background: rgba(0,229,176,0.1); border-left-color: var(--accent);  color: var(--accent); }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        NEUROSCIENCE BOX — tetap teal (beda domain)
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .neuro-box {
         background: rgba(45,212,191,0.06);
         border: 1px solid rgba(45,212,191,0.2);
@@ -333,9 +328,9 @@
     .pilar-card.iso-card { border-color: rgba(45,212,191,0.2); }
     .pilar-card.iso-card:hover { border-color: rgba(45,212,191,0.45); }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        BUTTONS
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .btn-hpcs-primary {
         background: linear-gradient(135deg, #00a882, var(--accent));
         color: #0b0f14;
@@ -400,9 +395,9 @@
     }
     .btn-camera:hover { background: rgba(0,229,176,0.18); color: var(--accent); }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        HISTORY TABLE
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .history-wrap {
         background: var(--bg2);
         border: 1px solid var(--border);
@@ -437,9 +432,9 @@
     .badge-dev    { background: rgba(251,191,36,0.1); color: #00e5b0; border: 1px solid rgba(251,191,36,0.35); }
     .badge-novice { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        REKOMENDASI PANEL
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     #rekomendasi_area {
         background: rgba(0,229,176,0.05);
         border: 1px solid rgba(0,229,176,0.12);
@@ -451,9 +446,9 @@
         margin-top: 12px;
     }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        CAMERA MODAL
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .camera-overlay {
         position: fixed; inset: 0;
         background: rgba(0,0,0,0.9);
@@ -493,9 +488,9 @@
     .stage-down { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid var(--red); }
     .stage-up   { background: rgba(0,229,176,0.12); color: var(--accent); border: 1px solid rgba(0,229,176,0.4); }
 
-    /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+    /* ------------------------------------------------------
        PRINT STYLES
-    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+    ------------------------------------------------------ */
     .print-only { display: none; }
 
     @media print {
@@ -540,7 +535,7 @@
         </div>
         
 
-    <!-- â”€â”€ HEADER — Title Case, Lebih Elegan â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- -- HEADER — Title Case, Lebih Elegan ------------------------ -->
     <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
         <div>
             <!-- UBAH: Title Case, bukan ALL CAPS -->
@@ -551,46 +546,97 @@
                     <i class="bi bi-journal-medical me-1"></i>Lihat Standar Rubrik & Protokol
                 </a>
                 <div id="rubrikPanel" style="display:none;">
+                    <div class="mt-2 mb-2 d-flex gap-2 flex-wrap">
+                        <select id="rubrikKategoriSel" class="form-select form-select-sm w-auto" onchange="renderRubrikL2()">
+                            <option value="YOUTH">Youth (&lt;13 thn)</option>
+                            <option value="JUNIOR">Junior (13–17 thn)</option>
+                            <option value="SENIOR" selected>Senior / Elite (18–35 thn)</option>
+                        </select>
+                        <select id="rubrikGenderSel" class="form-select form-select-sm w-auto" onchange="renderRubrikL2()">
+                            <option value="Putra">Laki-Laki</option>
+                            <option value="Putri">Perempuan</option>
+                        </select>
+                    </div>
                     <div class="rubrik-wrap mt-2">
                         <div class="row g-0 rubrik-head">
-                            <div class="col-3">Aspek & Instrumen</div>
-                            <div class="col-3 text-center">Very Competent (9–10)</div>
-                            <div class="col-3 text-center">Competent (7–8)</div>
-                            <div class="col-3 text-center">Developing (5–6)</div>
-                            <div class="col-3 text-center">Novice (1–4)</div>
+                            <div class="col-2">Aspek & Instrumen</div>
+                            <div class="col text-center">Novice</div>
+                            <div class="col text-center">Fair</div>
+                            <div class="col text-center">Good</div>
+                            <div class="col text-center">Excellent</div>
+                            <div class="col text-center">Superior</div>
                         </div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Lower Strength</span>
-                                <span class="aspek-sub">Single-Leg Box Squat (per kaki)</span>
-                                <a href="https://www.youtube.com/watch?v=Ffp3YwhDiMs" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">âš¡ 5RM = Strength Murni. 1 Menit = Endurance (tidak dipakai di L2)</div>
-                            </div><div class="col-3 score-col text-center"><div class="val-box val-green"><ul><li>E: &ge; 15 Reps/kaki</li><li>Y: &ge; 13 Reps/kaki</li><li>J: &ge; 11 Reps/kaki</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-blue"><ul><li>E: 10-14 Reps/kaki</li><li>Y: 8-12 Reps/kaki</li><li>J: 7-10 Reps/kaki</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-yellow"><ul><li>E: 5-9 Reps/kaki</li><li>Y: 4-7 Reps/kaki</li><li>J: 3-6 Reps/kaki</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-red"><ul><li>E: &lt; 5 Reps/kaki</li><li>Y: &lt; 4 Reps/kaki</li><li>J: &lt; 3 Reps/kaki</li></ul></div></div></div><div class="row g-0"><div class="col-12 rubrik-howto">&#128295; <b>Cara:</b> Berdiri satu kaki di depan box/bangku setinggi lutut, turunkan badan (squat satu kaki) sampai duduk ringan di box lalu berdiri lagi tanpa bantuan kaki lain, hitung repetisi maksimal per kaki &nbsp;&middot;&nbsp; <b>Alat:</b> Box/bangku setinggi lutut, stopwatch (opsional)</div></div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Upper Push</span>
-                                <span class="aspek-sub">Floor/Bench Press (Reps)</span>
-                                <a href="https://www.youtube.com/watch?v=erpQ8ssuzz4" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                            </div><div class="col-3 score-col text-center"><div class="val-box val-green"><ul><li>E: &gt; 12 Reps</li><li>Y: &gt; 10 Reps</li><li>J: &gt; 8 Reps</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-blue"><ul><li>E: 6&ndash;12 Reps</li><li>Y: 5&ndash;10 Reps</li><li>J: 4&ndash;8 Reps</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-yellow"><ul><li>E: 3&ndash;5 Reps</li><li>Y: 2&ndash;4 Reps</li><li>J: 2&ndash;3 Reps</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-red"><ul><li>E: &lt; 3 Reps</li><li>Y: &lt; 2 Reps</li><li>J: &lt; 2 Reps</li></ul></div></div></div><div class="row g-0"><div class="col-12 rubrik-howto">&#128295; <b>Cara:</b> Push-up standar (lantai) atau bench press beban submaksimal, hitung repetisi maksimal dengan ROM penuh &amp; postur benar &nbsp;&middot;&nbsp; <b>Alat:</b> Matras (push-up) atau bench + barbel (bench press)</div></div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Upper Pull</span>
-                                <span class="aspek-sub">Clinch Neck Pull Test (rep/20 detik)</span>
-                                <a href="https://www.youtube.com/watch?v=MJk4oYhYh2M" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                            </div><div class="col-3 score-col text-center"><div class="val-box val-green"><ul><li>E: &ge; 18 Rep/20dtk</li><li>Y: &ge; 15 Rep/20dtk</li><li>J: &ge; 13 Rep/20dtk</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-blue"><ul><li>E: 14-17 Rep/20dtk</li><li>Y: 11-14 Rep/20dtk</li><li>J: 9-12 Rep/20dtk</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-yellow"><ul><li>E: 9-13 Rep/20dtk</li><li>Y: 7-10 Rep/20dtk</li><li>J: 6-8 Rep/20dtk</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-red"><ul><li>E: &lt; 9 Rep/20dtk</li><li>Y: &lt; 7 Rep/20dtk</li><li>J: &lt; 6 Rep/20dtk</li></ul></div></div></div><div class="row g-0"><div class="col-12 rubrik-howto">&#128295; <b>Cara:</b> Posisi clinch (pegang leher/tengkuk partner atau resistance band), tarik ke arah dada berulang selama 20 detik, hitung repetisi &nbsp;&middot;&nbsp; <b>Alat:</b> Resistance band atau partner latihan, stopwatch</div></div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Core Bracing</span>
-                                <span class="aspek-sub">Weighted Plank (Detik)</span>
-                                <a href="https://www.youtube.com/watch?v=0Mwk0RRUCxE" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                            </div><div class="col-3 score-col text-center"><div class="val-box val-green"><ul><li>E: &gt; 90 Detik</li><li>Y: &gt; 70 Detik</li><li>J: &gt; 55 Detik</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-blue"><ul><li>E: 60&ndash;90 Detik</li><li>Y: 45&ndash;70 Detik</li><li>J: 35&ndash;55 Detik</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-yellow"><ul><li>E: 30&ndash;60 Detik</li><li>Y: 25&ndash;45 Detik</li><li>J: 20&ndash;35 Detik</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-red"><ul><li>E: &lt; 30 Detik</li><li>Y: &lt; 25 Detik</li><li>J: &lt; 20 Detik</li></ul></div></div></div><div class="row g-0"><div class="col-12 rubrik-howto">&#128295; <b>Cara:</b> Posisi plank dengan beban tambahan di punggung (plate/weight vest), tahan postur netral (tidak melorot/naik) selama mungkin, hitung durasi sampai postur runtuh &nbsp;&middot;&nbsp; <b>Alat:</b> Matras, plate beban atau weight vest, stopwatch</div></div>
-                        <div class="row g-0 rubrik-row">
-                            <div class="col-3 aspek-box">
-                                <span class="aspek-name">Isometric</span>
-                                <span class="aspek-sub">Single-Leg Check Hold + Tremor</span>
-                                <a href="https://www.youtube.com/watch?v=ux_37AZky4w" target="_blank" class="yt-link d-block mt-1"><i class="bi bi-youtube"></i> Tutorial</a>
-                                <div class="neuro-box mt-1" style="font-size:0.65rem; padding:4px 8px;">ðŸ§  Catat detik tremor muncul â†’ data CNS Fatigue</div>
-                            </div><div class="col-3 score-col text-center"><div class="val-box val-green"><ul><li>E: &gt; 60 Detik</li><li>Y: &gt; 45 Detik</li><li>J: &gt; 35 Detik</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-blue"><ul><li>E: 40&ndash;60 Detik</li><li>Y: 30&ndash;45 Detik</li><li>J: 22&ndash;35 Detik</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-yellow"><ul><li>E: 20&ndash;40 Detik</li><li>Y: 15&ndash;30 Detik</li><li>J: 12&ndash;22 Detik</li></ul></div></div><div class="col-3 score-col text-center"><div class="val-box val-red"><ul><li>E: &lt; 20 Detik</li><li>Y: &lt; 15 Detik</li><li>J: &lt; 12 Detik</li></ul></div></div></div><div class="row g-0"><div class="col-12 rubrik-howto">&#128295; <b>Cara:</b> Berdiri satu kaki dalam posisi menahan tendangan (check kick), tahan selama mungkin, catat detik saat tremor otot mulai muncul &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, observasi visual pelatih</div></div>
+                        <div id="rubrikL2Body"></div>
+                    </div>
+                    <div class="mt-2" style="font-size:0.68rem;color:var(--text-faint);">
+                        Norma NSCA/ACSM — SOP L2 Strength HPCS. Kategori <strong>Youth</strong> tidak memakai ambang
+                        angka dewasa (skor kualitatif/non-gating). Kategori <strong>Elite</strong> memakai tabel Senior.
+                        Pull-Up Senior diapproksimasi pakai reps (belum menangkap beban tambahan %BW).
+                    </div>
+
+                    <!-- SOP Protokol per Pilar (dari Panduan_SOP_Rubrik_Asesmen_L2_HPCS.pdf) -->
+                    <div class="mt-3 pt-3" style="border-top:1px solid var(--border);">
+                        <div class="section-label mb-2"><i class="bi bi-clipboard2-pulse"></i> SOP & Protokol Pelaksanaan</div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">1</span>Lower — 5RM Goblet Squat</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan absolut & ketahanan beban ekstremitas bawah.<br>
+                                <strong>Target Otot:</strong> Quadriceps, Gluteus, Adductor, Core.<br>
+                                <strong>Alat:</strong> Dumbbell/Kettlebell, Kursi/Box target, Timbangan badan.<br>
+                                <strong>Cara Pelaksanaan:</strong> Peluk beban rapat di dada. Lakukan squat hingga bokong menyentuh ringan box/paralel. Cari beban terberat yang hanya mampu diangkat 5 repetisi sah.<br>
+                                <strong>Data Input:</strong> Beban Maksimal (kg) → Rasio BB (×BW).
+                            </div>
+                        </div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">2</span>Push — Floor / Bench Press</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan dorong horizontal tubuh bagian atas.<br>
+                                <strong>Target Otot:</strong> Pectoralis Major, Anterior Deltoid, Triceps.<br>
+                                <strong>Alat:</strong> Barbell + Piringan Beban / Dumbbell, Bench / Matras.<br>
+                                <strong>Cara Pelaksanaan:</strong> Berbaring telentang, dorong beban dari dada hingga siku lurus sempurna. Pantat dan punggung wajib tetap menempel.<br>
+                                <strong>Data Input:</strong> Beban Maksimal (kg).
+                            </div>
+                        </div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">3</span>Pull — Weighted Pull Up</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan tarik vertikal relatif terhadap berat badan.<br>
+                                <strong>Target Otot:</strong> Latissimus Dorsi, Rhomboids, Biceps.<br>
+                                <strong>Alat:</strong> Tiang Pull-Up, Dip Belt / Dumbbell tambahan.<br>
+                                <strong>Cara Pelaksanaan:</strong> Menggantung lurus, tarik badan hingga dagu melewati tiang tanpa ayunan kaki (no kipping).<br>
+                                <strong>Data Input:</strong> Repetisi sah (reps) & Beban Tambahan (kg).
+                            </div>
+                        </div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">4</span>Core — Weighted Plank</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur ketahanan stabilitas panggul-lumbal (anti-extension).<br>
+                                <strong>Target Otot:</strong> Transverse Abdominis, Rectus Abdominis, Obliques.<br>
+                                <strong>Alat:</strong> Matras, Piringan Beban (Plates), Stopwatch.<br>
+                                <strong>Cara Pelaksanaan:</strong> Posisi plank siku, beban ditaruh di punggung bawah. Tahan posisi tubuh lurus sempurna. Stop jika pinggul turun/runtuh.<br>
+                                <strong>Data Input:</strong> Durasi Tahan Sempurna (detik).
+                            </div>
+                        </div>
+
+                        <div class="pilar-card">
+                            <div class="pilar-label"><span class="badge bg-secondary me-1">5</span>Isometric — Split Squat Hold</div>
+                            <div style="font-size:0.78rem;color:var(--text-dim);">
+                                <strong>Fungsi:</strong> Mengukur kekuatan isometrik tungkai tunggal & ketahanan saraf/tendon.<br>
+                                <strong>Target Otot:</strong> Quadriceps, Gluteus, Ankle Stabilizers.<br>
+                                <strong>Alat:</strong> Stopwatch, Matras.<br>
+                                <strong>Cara Pelaksanaan:</strong> Posisi split stance sudut 90° pada lutut depan & belakang. Tahan posisi diam.<br>
+                                <strong>Data Input:</strong> Awal Tremor (detik saat kaki mulai bergetar pertama) & Total Tahan (detik total hingga atlet runtuh/bergeser).
+                            </div>
+                        </div>
+
+                        <div class="mt-2 p-2" style="background:rgba(0,229,176,0.06);border-left:3px solid var(--accent);border-radius:6px;font-size:0.76rem;color:var(--text-dim);">
+                            <strong style="color:var(--accent);">Catatan Operasional Pelatih:</strong>
+                            Gunakan rekaman video HP (posisi samping 90°) untuk validasi gerakan sah. Berikan istirahat 2–3 menit antar percobaan.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -605,12 +651,12 @@
         </div>
     </div>
 
-    <!-- â”€â”€ MAIN FORM — 3 KOLOM â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+    <!-- -- MAIN FORM — 3 KOLOM ---------------------------------------- -->
     <form action="{% url 'muaythai:l2_strength' %}" method="POST" id="mainForm">
         {% csrf_token %}
         <div class="row g-4 align-items-start">
 
-            <!-- â”€â”€ KOLOM KIRI: Form Input (scroll bebas) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+            <!-- -- KOLOM KIRI: Form Input (scroll bebas) ------------- -->
             <div class="col-lg-4">
                 <div class="card-hpcs">
                     <span class="section-label"><i class="bi bi-person-badge"></i>Identitas Atlet</span>
@@ -689,7 +735,7 @@
                                 <div class="input-group input-group-sm">
                                     <input type="text" id="bw_ratio_display" class="form-control"
                                            readonly placeholder="BW Ratio" style="color:var(--accent);">
-                                    <span class="input-group-text">×BW</span>
+                                    <span class="input-group-text">—BW</span>
                                 </div>
                             </div>
                         </div>
@@ -797,7 +843,7 @@
                 </div><!-- /card-hpcs -->
             </div><!-- /col-lg-4 kiri -->
 
-            <!-- â”€â”€ KOLOM TENGAH: Radar â”€â”€ -->
+            <!-- -- KOLOM TENGAH: Radar -- -->
             <div class="col-lg-4">
                 <div class="card-hpcs text-center">
                     <span class="section-label"><i class="bi bi-radar"></i>Strength Distribution Radar</span>
@@ -820,7 +866,7 @@
                 </div>
             </div>
 
-            <!-- â”€â”€ KOLOM KANAN: Result â”€â”€ -->
+            <!-- -- KOLOM KANAN: Result -- -->
             <div class="col-lg-4">
                 <div class="card-hpcs sticky-panel text-center">
                     <span class="section-label"><i class="bi bi-trophy-fill"></i>Audit Result</span>
@@ -851,7 +897,7 @@
         </div><!-- /row -->
     </form>
 
-    <!-- â”€â”€ HISTORY TABLE â”€â”€ -->
+    <!-- -- HISTORY TABLE -- -->
     <div class="history-wrap no-print mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="mb-0" style="color:#00e5b0;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">
@@ -877,8 +923,8 @@
                         <td class="text-white-50">{{ forloop.counter }}</td>
                         <td class="text-white-50" style="font-size:0.75rem;white-space:nowrap;">{{ item.timestamp|date:"d/m/Y H:i" }}</td>
                         <td class="fw-bold" style="color:#e5e7eb;">{{ item.atlet_name }}</td>
-                        <td>{{ item.kategori_usia }}</td>
-                        <td>{{ item.gender }}</td>
+                        <td style="color:#9ca3af;">{{ item.kategori_usia }}</td>
+                        <td style="color:#9ca3af;">{{ item.gender }}</td>
                         <td><span style="color:{% if item.kelas_berat %}#9ca3af{% else %}#4b5563{% endif %}">{{ item.kelas_berat|default:"—" }} kg</span></td>
                         <td><span class="score-pill">{{ item.score_lower }}</span></td>
                         <td><span class="score-pill">{{ item.score_push }}</span></td>
@@ -894,7 +940,7 @@
                         <td><span style="font-size:0.75rem;padding:3px 10px;font-weight:700;border-radius:12px;background:rgba(0,229,176,0.15);color:#00e5b0;border:1px solid rgba(0,229,176,0.3);">{{ item.predikat }}</span></td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-danger py-0 px-2"
-                                    onclick="if(confirm('Hapus data {{ item.atlet_name }}?')) window.location='/combat/l2-strength/hapus/{{ item.pk }}/'">
+                                    onclick="if(confirm('Hapus data {{ item.atlet_name }}?')) window.location='{% url 'muaythai:hapus_l2_audit' item.pk %}'">
                                 <i class="bi bi-trash3-fill"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="window.print()" title="Cetak PDF"><i class="bi bi-printer-fill"></i></button>
@@ -914,49 +960,162 @@
 </div><!-- /container -->
 
 <script>
-// â”€â”€ Auto Scoring â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function calcScoreLower(beban, bb) {
-    if (!beban || !bb || bb <= 0) return 0;
-    var r = beban / bb;
-    if (r >= 1.5) return 9.5; if (r >= 1.25) return 8.5;
-    if (r >= 1.0) return 7.5; if (r >= 0.75) return 6.0;
-    if (r >= 0.6) return 5.0; return 3.0;
+// -- Auto Scoring (preview only — nilai final tetap dihitung ulang di
+//    server dari RUBRIK_L2 di muaythai/views.py; lihat komentar di sana) ----
+// Rubrik NSCA/ACSM L2 Strength — SOP Agustus 2026. Skor tingkat: Novice 1.5,
+// Fair 3.5, Good 5.5, Excellent 7.5, Superior 9.5. HARUS identik dengan
+// RUBRIK_L2 di muaythai/views.py agar preview & hasil simpan konsisten.
+var RUBRIK_L2 = {
+    JUNIOR: {
+        Putra: {
+            lower: [[0.85,9.5],[0.70,7.5],[0.55,5.5],[0.40,3.5]],
+            push:  [[1.10,9.5],[0.90,7.5],[0.70,5.5],[0.50,3.5]],
+            pull:  [[18,9.5],[13,7.5],[8,5.5],[3,3.5]],
+            core:  [[120,9.5],[90,7.5],[60,5.5],[30,3.5]],
+            iso:   [[120,9.5],[90,7.5],[60,5.5],[45,3.5]]
+        },
+        Putri: {
+            lower: [[0.75,9.5],[0.60,7.5],[0.45,5.5],[0.30,3.5]],
+            push:  [[0.80,9.5],[0.65,7.5],[0.50,5.5],[0.35,3.5]],
+            pull:  [[11,9.5],[7,7.5],[3,5.5],[1,3.5]],
+            core:  [[90,9.5],[75,7.5],[45,5.5],[30,3.5]],
+            iso:   [[105,9.5],[75,7.5],[50,5.5],[35,3.5]]
+        }
+    },
+    SENIOR: {
+        Putra: {
+            lower: [[1.05,9.5],[0.90,7.5],[0.70,5.5],[0.50,3.5]],
+            push:  [[1.50,9.5],[1.25,7.5],[1.00,5.5],[0.75,3.5]],
+            pull:  [[21,9.5],[16,7.5],[11,5.5],[6,3.5]], // approksimasi reps, lihat catatan di views.py
+            core:  [[120,9.5],[90,7.5],[60,5.5],[45,3.5]],
+            iso:   [[150,9.5],[120,7.5],[90,5.5],[60,3.5]]
+        },
+        Putri: {
+            lower: [[0.85,9.5],[0.70,7.5],[0.55,5.5],[0.40,3.5]],
+            push:  [[1.00,9.5],[0.85,7.5],[0.65,5.5],[0.50,3.5]],
+            pull:  [[11,9.5],[8,7.5],[4,5.5],[1,3.5]],
+            core:  [[120,9.5],[90,7.5],[60,5.5],[45,3.5]],
+            iso:   [[135,9.5],[105,7.5],[75,5.5],[45,3.5]]
+        }
+    }
+};
+RUBRIK_L2.ELITE = RUBRIK_L2.SENIOR;
+
+function skorDariAmbang(value, tabelAmbang) {
+    if (!value) return 0;
+    for (var i = 0; i < tabelAmbang.length; i++) {
+        if (value >= tabelAmbang[i][0]) return tabelAmbang[i][1];
+    }
+    return 1.5; // Novice
 }
-function calcScorePush(reps) {
-    if (!reps) return 0;
-    if (reps > 12) return 9.5; if (reps >= 10) return 8.5;
-    if (reps >= 6) return 7.0; if (reps >= 3) return 5.5; return 3.0;
+
+function skorPilarL2(pilar, nilaiMentah, kategoriUsia, gender, bb) {
+    var kategori = (kategoriUsia || 'ELITE').toUpperCase();
+    if (kategori === 'YOUTH') {
+        return nilaiMentah ? 7.0 : 0; // non-gating/kualitatif untuk atlet muda
+    }
+    var tabelKategori = RUBRIK_L2[kategori] || RUBRIK_L2.SENIOR;
+    var tabelGender = tabelKategori[gender] || tabelKategori.Putra;
+    var ambang = tabelGender[pilar] || [];
+    if (pilar === 'lower' || pilar === 'push') {
+        if (!nilaiMentah || !bb || bb <= 0) return 0;
+        return skorDariAmbang(nilaiMentah / bb, ambang);
+    }
+    return skorDariAmbang(nilaiMentah, ambang);
 }
-function calcScorePull(reps) {
-    if (!reps) return 0;
-    if (reps > 15) return 9.5; if (reps >= 12) return 8.5;
-    if (reps >= 8) return 7.0; if (reps >= 4) return 5.5; return 3.0;
-}
-function calcScoreCore(d) {
-    if (!d) return 0;
-    if (d > 90) return 9.5; if (d >= 75) return 8.5;
-    if (d >= 60) return 7.0; if (d >= 30) return 5.5; return 3.0;
-}
-function calcScoreIso(d) {
-    if (!d) return 0;
-    if (d > 60) return 9.5; if (d >= 50) return 8.5;
-    if (d >= 40) return 7.0; if (d >= 20) return 5.5; return 3.0;
+
+// -- Data tampilan rubrik (string rentang, sesuai teks SOP PDF) -----------
+var RUBRIK_L2_DISPLAY = {
+    JUNIOR: {
+        Putra: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.40 ×BW','0.40–0.54 ×BW','0.55–0.69 ×BW','0.70–0.85 ×BW','> 0.85 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.50 ×BW','0.50–0.69 ×BW','0.70–0.89 ×BW','0.90–1.10 ×BW','> 1.10 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (Reps)', vals:['< 3 reps','3–7 reps','8–12 reps','13–17 reps','> 17 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [5–10kg]', vals:['< 30 dtk','30–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 45 dtk','45–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] }
+        },
+        Putri: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.30 ×BW','0.30–0.44 ×BW','0.45–0.59 ×BW','0.60–0.75 ×BW','> 0.75 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.35 ×BW','0.35–0.49 ×BW','0.50–0.64 ×BW','0.65–0.80 ×BW','> 0.80 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (Reps)', vals:['0 reps','1–2 reps','3–6 reps','7–10 reps','> 10 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [2.5–5kg]', vals:['< 30 dtk','30–44 dtk','45–74 dtk','75–89 dtk','≥ 90 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 35 dtk','35–49 dtk','50–74 dtk','75–104 dtk','≥ 105 dtk'] }
+        }
+    },
+    SENIOR: {
+        Putra: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.50 ×BW','0.50–0.69 ×BW','0.70–0.89 ×BW','0.90–1.05 ×BW','> 1.05 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.75 ×BW','0.75–0.99 ×BW','1.00–1.24 ×BW','1.25–1.49 ×BW','≥ 1.50 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (approx. reps*)', vals:['< 6 reps','6–10 reps','11–15 reps','16–20 reps','> 20 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [10–15kg]', vals:['< 45 dtk','45–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 60 dtk','60–89 dtk','90–119 dtk','120–149 dtk','≥ 150 dtk'] }
+        },
+        Putri: {
+            lower: { nama:'Lower Strength', sub:'5RM Goblet Squat', vals:['< 0.40 ×BW','0.40–0.54 ×BW','0.55–0.69 ×BW','0.70–0.85 ×BW','> 0.85 ×BW'] },
+            push:  { nama:'Upper Push', sub:'Floor / Bench Press', vals:['< 0.50 ×BW','0.50–0.64 ×BW','0.65–0.84 ×BW','0.85–0.99 ×BW','≥ 1.00 ×BW'] },
+            pull:  { nama:'Upper Pull', sub:'Weighted Pull Up (approx. reps*)', vals:['0 reps','1–3 reps','4–7 reps','8–10 reps','> 10 reps'] },
+            core:  { nama:'Core Bracing', sub:'Weighted Plank [5–10kg]', vals:['< 45 dtk','45–59 dtk','60–89 dtk','90–119 dtk','≥ 120 dtk'] },
+            iso:   { nama:'Isometric', sub:'Split Squat Hold', vals:['< 45 dtk','45–74 dtk','75–104 dtk','105–134 dtk','≥ 135 dtk'] }
+        }
+    }
+};
+
+// Youth (<13 thn): non-gating/kualitatif — tidak pakai ambang angka dewasa
+var RUBRIK_L2_YOUTH_NOTE = 'Kategori Youth tidak memakai norma angka orang dewasa. '
+    + 'Penilaian bersifat kualitatif: fokus pada penguasaan teknik gerak yang benar '
+    + '(bukan beban maksimal), dan atlet tidak digagalkan hanya karena angka di bawah standar dewasa. '
+    + 'Setiap pilar yang datanya terisi otomatis dianggap "Berkembang Sesuai Tahap".';
+
+function renderRubrikL2() {
+    var kat = document.getElementById('rubrikKategoriSel').value;
+    var genderSel = document.getElementById('rubrikGenderSel');
+    var body = document.getElementById('rubrikL2Body');
+
+    if (kat === 'YOUTH') {
+        genderSel.style.display = 'none';
+        body.innerHTML = '<div class="row g-0 rubrik-row"><div class="col-12 p-3" style="font-size:0.8rem;color:var(--text-dim);">'
+            + RUBRIK_L2_YOUTH_NOTE + '</div></div>';
+        return;
+    }
+    genderSel.style.display = '';
+
+    var gen = genderSel.value;
+    var data = RUBRIK_L2_DISPLAY[kat][gen];
+    var urutan = ['lower','push','pull','core','iso'];
+    var html = '';
+    urutan.forEach(function(pilar) {
+        var d = data[pilar];
+        html += '<div class="row g-0 rubrik-row">'
+            + '<div class="col-2 aspek-box"><span class="aspek-name">'+d.nama+'</span><span class="aspek-sub">'+d.sub+'</span></div>'
+            + d.vals.map(function(v, i) {
+                var cls = i===0 ? 'val-box' : i===4 ? 'val-box val-green' : i>=2 ? 'val-box val-blue' : 'val-box val-yellow';
+                return '<div class="col score-col text-center"><div class="'+cls+'">'+v+'</div></div>';
+            }).join('')
+            + '</div>';
+    });
+    body.innerHTML = html;
 }
 
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
 function autoCalcScores() {
     var bb = g('h_berat') || g('input_berat') || 70;
-    var sL = calcScoreLower(g('lower_5rm_beban'), bb);
-    var sP = calcScorePush(g('push_5rm_beban'));
-    var sPl = calcScorePull(g('pull_reps'));
-    var sC = calcScoreCore(g('core_durasi'));
-    var sI = calcScoreIso(g('iso_durasi'));
+    var kat = (document.getElementById('h_kategori') || {}).value || 'ELITE';
+    var gen = (document.getElementById('h_gender') || {}).value || 'Putra';
+
+    var sL = skorPilarL2('lower', g('lower_5rm_beban'), kat, gen, bb);
+    var sP = skorPilarL2('push', g('push_5rm_beban'), kat, gen, bb);
+    var sPl = skorPilarL2('pull', g('pull_reps'), kat, gen);
+    var sC = skorPilarL2('core', g('core_durasi'), kat, gen);
+    var sI = skorPilarL2('iso', g('iso_durasi'), kat, gen);
+
     document.getElementById('score_lower').value = sL.toFixed(1);
     document.getElementById('score_push').value  = sP.toFixed(1);
     document.getElementById('score_pull').value  = sPl.toFixed(1);
     document.getElementById('score_core').value  = sC.toFixed(1);
     document.getElementById('score_iso').value   = sI.toFixed(1);
+    var badgePush = document.getElementById('badge_push_display');
+    if (badgePush) badgePush.textContent = sP.toFixed(1);
     function badge(id, val) {
         var el = document.getElementById(id);
         if (!el) return;
@@ -1100,7 +1259,9 @@ function handlePrint() {
 }
 function toggleRubrik() {
     var rp = document.getElementById('rubrikPanel');
-    rp.style.display = rp.style.display === 'none' ? 'block' : 'none';
+    var akanTampil = rp.style.display === 'none';
+    rp.style.display = akanTampil ? 'block' : 'none';
+    if (akanTampil) renderRubrikL2();
 }
 function syncPrint() {}
 </script>
@@ -1238,5 +1399,4 @@ window.addEventListener('load', function() {
 </script>
 {% endblock %}
 </body>
-</html>ls
-
+</html>

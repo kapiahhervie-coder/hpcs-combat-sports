@@ -539,11 +539,20 @@ class SpeedAgilityAuditL4(models.Model):
     hex_waktu_rata     = models.FloatField(null=True, blank=True)
     score_hex          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 2: Punch Frequency ──────────────────────────────────────
+    # ── Pilar 2: Punch Frequency (Boxing / Muay Thai / Karate) ────────
     punch_freq_10s         = models.IntegerField(null=True, blank=True)
     punch_postur_ok        = models.BooleanField(default=True)
     punch_reaction_time_ms = models.FloatField(null=True, blank=True)
     score_punch            = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+
+    # ── Pilar 2 (alternatif): Kick Frequency (Taekwondo) ───────────────
+    # Field terpisah dari punch_* karena instrumen berbeda (tendangan,
+    # bukan pukulan). Cabang 'tkd' mengisi kick_*, cabang lain (boxing/
+    # muaythai/karate) tetap mengisi punch_* seperti semula.
+    kick_freq_10s         = models.IntegerField(null=True, blank=True)
+    kick_postur_ok        = models.BooleanField(default=True)
+    kick_reaction_time_ms = models.FloatField(null=True, blank=True)
+    score_kick            = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # ── Pilar 3: Yo-Yo IR ─────────────────────────────────────────────
     yoyo_level_tercapai  = models.IntegerField(null=True, blank=True)
@@ -590,8 +599,24 @@ class SpeedAgilityAuditL4(models.Model):
             return round((self.yoyo_total_jarak_m * 0.0084) + 36.4, 1)
         return None
 
+    @property
+    def is_taekwondo(self):
+        return bool(self.atlet_id and self.atlet.cabang == 'tkd')
+
+    @property
+    def score_pilar2(self):
+        """Skor Pilar 2 (frekuensi serangan) — otomatis pilih score_kick untuk
+        cabang Taekwondo ('tkd'), score_punch untuk cabang lain (Boxing/Muay
+        Thai/Karate). Dipakai di kalkulasi_skor() agar total_skor selalu benar
+        tanpa peduli field mana yang diisi form."""
+        return self.score_kick if self.is_taekwondo else self.score_punch
+
+    @property
+    def pilar2_label(self):
+        return 'Kick' if self.is_taekwondo else 'Punch'
+
     def kalkulasi_skor(self):
-        scores = [self.score_hex, self.score_punch, self.score_yoyo]
+        scores = [self.score_hex, self.score_pilar2, self.score_yoyo]
         self.total_skor = round(sum(scores) / len(scores), 1)
         if self.total_skor >= 9.0:
             self.predikat       = 'ELITE'
@@ -620,5 +645,3 @@ class SpeedAgilityAuditL4(models.Model):
         self.yoyo_vo2max_estimasi = self.hitung_vo2max()
         self.kalkulasi_skor()
         super().save(*args, **kwargs)
-
-

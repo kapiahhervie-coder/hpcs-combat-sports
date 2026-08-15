@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, Siswa, TINGKAT_CHOICES
+from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES
 
 
 class GuruProfileForm(forms.ModelForm):
@@ -13,6 +13,15 @@ class SiswaForm(forms.ModelForm):
     class Meta:
         model = Siswa
         fields = ['nama', 'kelas', 'jenis_kelamin', 'tanggal_lahir']
+        widgets = {
+            'tanggal_lahir': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class EditSiswaForm(forms.ModelForm):
+    class Meta:
+        model = Siswa
+        fields = ['nama', 'kelas', 'jenis_kelamin', 'tanggal_lahir', 'fase']
         widgets = {
             'tanggal_lahir': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -76,3 +85,25 @@ class PenilaianPengetahuanForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['tingkat'].choices = TINGKAT_CHOICES
+
+class RencanaMingguanForm(forms.ModelForm):
+    class Meta:
+        model = RencanaMingguan
+        fields = ['minggu_ke', 'materi', 'nama_materi_bebas', 'alokasi_jp', 'keterangan']
+
+    def __init__(self, *args, fase=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if fase:
+            self.fields['materi'].queryset = MateriFase.objects.filter(fase=fase)
+        self.fields['materi'].required = False
+
+class RencanaMingguanForm(forms.ModelForm):
+    class Meta:
+        model = RencanaMingguan
+        fields = ['minggu_ke', 'materi', 'nama_materi_bebas', 'alokasi_jp', 'keterangan']
+
+    def __init__(self, *args, fase=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if fase:
+            self.fields['materi'].queryset = MateriFase.objects.filter(fase=fase)
+        self.fields['materi'].required = False

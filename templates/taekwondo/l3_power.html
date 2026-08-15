@@ -8,7 +8,7 @@
 :root{--bg:#0f1117;--bg2:#171b25;--bg3:#1e2333;--border:#252d3d;--border2:#2f3a50;--amber:#f59e0b;--amber2:#fbbf24;--sky:#38bdf8;--green:#10b981;--red:#ef4444;--text:#cbd5e1;--text2:#94a3b8;--text3:#4b5e78;--white:#f1f5f9}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
-.l3-wrap{max-width:1280px;margin:0 auto;padding:24px 20px}
+.l3-wrap{max-width:1600px;margin:0 auto;padding:24px 28px}
 .l3-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:16px}
 .l3-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:var(--amber);font-family:'DM Mono',monospace;font-size:11px;font-weight:500;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;margin-bottom:8px;text-transform:uppercase}
 .l3-badge::before{content:'';width:6px;height:6px;background:var(--amber);border-radius:50%;animation:pulse 2s infinite}
@@ -26,8 +26,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .btn-cam:hover{background:rgba(56,189,248,.15)}
 .rubrik-panel{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
 .rubrik-panel.open{display:block}
-.rubrik-head{display:grid;grid-template-columns: 1fr 1.4fr 1fr;background:rgba(245,158,11,.08);border-bottom:1px solid var(--border);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase}
-.rubrik-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:12px 16px;border-bottom:1px solid rgba(37,45,61,.5);font-size:12.5px}
+.rubrik-head{display:grid;grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr 1fr;background:rgba(245,158,11,.08);border-bottom:1px solid var(--border);padding:10px 16px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--amber);text-transform:uppercase}
+.rubrik-row{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1fr 1fr;padding:12px 16px;border-bottom:1px solid rgba(37,45,61,.5);font-size:12.5px;align-items:center}
 .rubrik-row:last-child{border-bottom:none}
 .rubrik-row:hover{background:rgba(245,158,11,.03)}
 .rubrik-label{color:var(--amber);font-weight:600;font-size:12px}
@@ -36,10 +36,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .val-g{background:rgba(16,185,129,.1);color:#10b981}
 .val-b{background:rgba(56,189,248,.1);color:#38bdf8}
 .val-y{background:rgba(251,191,36,.1);color:#fbbf24}
-.val-r{background:rgba(239,68,68,.1);color:#f87171}
-.val ul{list-style:none;margin:0;padding:0;font-size:10px;line-height:1.6;text-align:left}
-.rubrik-howto{grid-column:1/-1;padding:8px 16px;font-size:10.5px;color:var(--text3);background:rgba(255,255,255,.02);border-top:1px solid rgba(37,45,61,.5)}
-.rubrik-howto b{color:var(--text2)}
 .l3-grid{display:grid;grid-template-columns:340px 1fr 320px;gap:16px;margin-bottom:24px;align-items:start}
 @media(max-width:1100px){.l3-grid{grid-template-columns:1fr 1fr}.l3-col-right{grid-column:1/-1}}
 @media(max-width:700px){.l3-grid{grid-template-columns:1fr}}
@@ -146,7 +142,7 @@ tbody tr:last-child td{border-bottom:none}
       <p class="l3-subtitle">High Velocity Power · Stretch-Shortening Cycle · Reactive Strength · Coach Fanny</p>
     </div>
     <div class="l3-header-actions">
-      <a href="{% url 'combat:dashboard' %}" class="btn btn-ghost">
+      <a href="{% url 'taekwondo:dashboard' %}" class="btn btn-ghost">
         <i class="bi bi-house-fill"></i> Dashboard
       </a>
       <button type="button" class="btn btn-outline" onclick="toggleRubrik()">
@@ -163,19 +159,78 @@ tbody tr:last-child td{border-bottom:none}
 
   <!-- Rubrik -->
   <div class="rubrik-panel no-print" id="rubrikPanel">
-    <div class="rubrik-head">
-      <div>Aspek & Instrumen</div><div>Elite (9-10)</div><div>Ready (7-8)</div><div>Developing (5-6)</div><div>Novice (1-4)</div>
+    <div style="padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);">
+      <select id="rubrikKategoriSelL3" class="form-control" style="width:auto;" onchange="renderRubrikL3()">
+        <option value="YOUTH">Anak-anak (6–12 thn)</option>
+        <option value="JUNIOR">Junior (13–17 thn)</option>
+        <option value="SENIOR" selected>Senior / Elite (18–35 thn)</option>
+      </select>
+      <select id="rubrikGenderSelL3" class="form-control" style="width:auto;" onchange="renderRubrikL3()">
+        <option value="Putra">Laki-Laki</option>
+        <option value="Putri">Perempuan</option>
+      </select>
     </div>
-    <div class="rubrik-row">
-      <div><div class="rubrik-label"><a href="https://youtu.be/zAtaTksraj8" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">VERTICAL JUMP — CMJ <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Elite &ge;55cm · Youth &ge;50cm · Junior &ge;45cm</div></div><div><span class="val val-g"><ul><li>E: &ge;55 cm</li><li>Y: &ge;48 cm</li><li>J: &ge;42 cm</li></ul></span></div><div><span class="val val-b"><ul><li>E: 42&ndash;54 cm</li><li>Y: 36&ndash;47 cm</li><li>J: 30&ndash;41 cm</li></ul></span></div><div><span class="val val-y"><ul><li>E: 30&ndash;41 cm</li><li>Y: 25&ndash;35 cm</li><li>J: 20&ndash;29 cm</li></ul></span></div><div><span class="val val-r"><ul><li>E: &lt; 30 cm</li><li>Y: &lt; 25 cm</li><li>J: &lt; 20 cm</li></ul></span></div></div><div class="rubrik-row"><div class="rubrik-howto">&#128295; <b>Cara:</b> Berdiri tegak, turun cepat (counter-movement) lalu lompat vertikal maksimal, ukur tinggi lompatan &nbsp;&middot;&nbsp; <b>Alat:</b> Vertec/jump mat, atau aplikasi HP (mis. My Jump 2) untuk estimasi tinggi lompat</div></div>
-    <div class="rubrik-row">
-      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=FyGxyrfyBnM" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">5M EXPLOSIVE STEP-IN <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Makin cepat makin tinggi skor</div></div><div><span class="val val-g"><ul><li>E: &lt;1.0 dtk</li><li>Y: &lt;1.15 dtk</li><li>J: &lt;1.3 dtk</li></ul></span></div><div><span class="val val-b"><ul><li>E: 1.0&ndash;1.2 dtk</li><li>Y: 1.15&ndash;1.35 dtk</li><li>J: 1.3&ndash;1.5 dtk</li></ul></span></div><div><span class="val val-y"><ul><li>E: 1.3&ndash;1.5 dtk</li><li>Y: 1.36&ndash;1.6 dtk</li><li>J: 1.51&ndash;1.8 dtk</li></ul></span></div><div><span class="val val-r"><ul><li>E: &gt; 1.5 dtk</li><li>Y: &gt; 1.6 dtk</li><li>J: &gt; 1.8 dtk</li></ul></span></div></div><div class="rubrik-row"><div class="rubrik-howto">&#128295; <b>Cara:</b> Dari posisi siap (stance bertarung), lakukan step-in eksplosif menempuh jarak 5 meter secepat mungkin, ukur waktu tempuh &nbsp;&middot;&nbsp; <b>Alat:</b> Meteran, stopwatch atau timing gate</div></div>
-    <div class="rubrik-row">
-      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=pz9XDIDTu7M" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">ROTATIONAL MED BALL THROW <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Lempar rotasional, bola 3 kg (proxy power tendangan memutar)</div></div><div><span class="val val-g"><ul><li>E: &ge;9 m</li><li>Y: &ge;7.5 m</li><li>J: &ge;6.5 m</li></ul></span></div><div><span class="val val-b"><ul><li>E: 7&ndash;8.9 m</li><li>Y: 6&ndash;7.4 m</li><li>J: 5&ndash;6.4 m</li></ul></span></div><div><span class="val val-y"><ul><li>E: 5&ndash;6.9 m</li><li>Y: 4&ndash;5.9 m</li><li>J: 3.5&ndash;4.9 m</li></ul></span></div><div><span class="val val-r"><ul><li>E: &lt; 5 m</li><li>Y: &lt; 4 m</li><li>J: &lt; 3.5 m</li></ul></span></div></div><div class="rubrik-row"><div class="rubrik-howto">&#128295; <b>Cara:</b> Berdiri menyamping, lempar medicine ball 3kg secara rotasional (meniru gerak tendangan memutar) sejauh mungkin, ukur jarak jatuh &nbsp;&middot;&nbsp; <b>Alat:</b> Medicine ball 3kg, meteran</div></div>
-    <div class="rubrik-row">
-      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=nr4VC0ucs8U" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">RSI — REACTIVE STRENGTH <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">RSI = jump height (cm) / contact time (ms) × 1000</div></div><div><span class="val val-g"><ul><li>E: &ge;2.5</li><li>Y: &ge;2.1</li><li>J: &ge;1.8</li></ul></span></div><div><span class="val val-b"><ul><li>E: 1.8&ndash;2.49</li><li>Y: 1.5&ndash;2.09</li><li>J: 1.3&ndash;1.79</li></ul></span></div><div><span class="val val-y"><ul><li>E: 1.0&ndash;1.79</li><li>Y: 0.8&ndash;1.49</li><li>J: 0.7&ndash;1.29</li></ul></span></div><div><span class="val val-r"><ul><li>E: &lt; 1.0</li><li>Y: &lt; 0.8</li><li>J: &lt; 0.7</li></ul></span></div></div><div class="rubrik-row"><div class="rubrik-howto">&#128295; <b>Cara:</b> Depth jump dari box 30-40cm, begitu mendarat langsung lompat vertikal maksimal secepat mungkin (kontak tanah minimal), ukur tinggi lompat &amp; waktu kontak &nbsp;&middot;&nbsp; <b>Alat:</b> Box/bangku 30-40cm, jump mat atau aplikasi HP (My Jump 2)</div></div>
-    <div class="rubrik-row">
-      <div><div class="rubrik-label"><a href="https://www.youtube.com/watch?v=iap7btfj5XI" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">SWITCH-STANCE FOOTWORK <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div><div class="rubrik-sub">Jumlah switch orthodox&harr;southpaw dalam 10 detik</div></div><div><span class="val val-g"><ul><li>E: &ge;16x</li><li>Y: &ge;13x</li><li>J: &ge;11x</li></ul></span></div><div><span class="val val-b"><ul><li>E: 12-15x</li><li>Y: 10-12x</li><li>J: 8-10x</li></ul></span></div><div><span class="val val-y"><ul><li>E: 8-11x</li><li>Y: 6-9x</li><li>J: 5-7x</li></ul></span></div><div><span class="val val-r"><ul><li>E: &lt; 8x</li><li>Y: &lt; 6x</li><li>J: &lt; 5x</li></ul></span></div></div><div class="rubrik-row"><div class="rubrik-howto">&#128295; <b>Cara:</b> Dari stance bertarung, lakukan switch orthodox&harr;southpaw secepat mungkin selama 10 detik, hitung jumlah switch sempurna &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, observasi visual pelatih</div></div>
+    <div class="rubrik-head">
+      <div>Aspek & Instrumen</div><div>Superior</div><div>Excellent</div><div>Good</div><div>Fair</div><div>Novice</div>
+    </div>
+    <div id="rubrikL3Body"></div>
+    <div style="padding:10px 16px;font-size:10.5px;color:var(--text3);border-top:1px solid var(--border);">
+      Norma NSCA/ACSM — SOP L3 Power HPCS. Kategori <strong>Elite</strong> memakai tabel Senior.
+    </div>
+
+    <!-- SOP Protokol per Pilar -->
+    <div style="padding:14px 16px;border-top:1px solid var(--border);">
+      <div style="color:var(--amber);font-weight:700;font-size:12px;margin-bottom:10px;"><i class="bi bi-clipboard2-pulse"></i> SOP & Protokol Pelaksanaan</div>
+
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--amber);">1. Vertical Jump — CMJ</strong><br>
+        <strong>Fungsi:</strong> Mengukur daya ledak vertikal murni (pure vertical power) dari ekstremitas bawah.<br>
+        <strong>Target Otot:</strong> Quadriceps, Gluteus, Hamstrings, Gastrocnemius.<br>
+        <strong>Alat:</strong> Jump Mat / Vertec / Timing Mat.<br>
+        <strong>Cara Pelaksanaan:</strong> Tangan wajib bertolak di pinggang (hands on hips). Tekuk lutut cepat (eccentric load) lalu lompat setinggi mungkin secara eksplosif. Mendarat seimbang.<br>
+        <strong>Data Input:</strong> Tinggi Lompatan Terbaik (cm).
+      </div>
+
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--amber);">2. Sprint 30M</strong><br>
+        <strong>Fungsi:</strong> Mengukur akselerasi awal & daya ledak sprint horizontal.<br>
+        <strong>Target Otot:</strong> Hip Extensors, Quadriceps, Calves, Core.<br>
+        <strong>Alat:</strong> Timing Gates / Electronic Sensor / Stopwatch, Cone, Meteran.<br>
+        <strong>Cara Pelaksanaan:</strong> Berdiri di belakang garis start (high start). Saat siap, lari secepat mungkin menembus sensor finish 30 meter.<br>
+        <strong>Data Input:</strong> Waktu Tempuh Tercepat (detik).
+      </div>
+
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--amber);">3. Med Ball Throw (Bola 3kg / 2kg)</strong><br>
+        <strong>Fungsi:</strong> Mengukur daya ledak dada & transfer rantai kinetik upper body.<br>
+        <strong>Target Otot:</strong> Pectoralis Major, Anterior Deltoid, Triceps, Core.<br>
+        <strong>Alat:</strong> Medicine Ball 3 kg (Dewasa/Remaja) / 2 kg (Anak-Anak), Meteran, Dinding.<br>
+        <strong>Cara Pelaksanaan:</strong> Duduk bersandar rapat pada dinding. Pegang bola di depan dada, dorong eksplosif ke depan sejauh mungkin (chest pass).<br>
+        <strong>Data Input:</strong> Jarak Lemparan Pendaratan Pertama (meter).
+      </div>
+
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--amber);">4. RSI — Reactive Strength Index (Drop Jump)</strong><br>
+        <strong>Fungsi:</strong> Mengukur efisiensi Stretch-Shortening Cycle (SSC) cepat & kekakuan tendon (tendon stiffness).<br>
+        <strong>Target Otot:</strong> Tendon Achilles, Plantar Flexors, Quadriceps.<br>
+        <strong>Alat:</strong> Plyo Box 30cm (20cm Anak), Jump Mat / Contact Mat.<br>
+        <strong>Cara Pelaksanaan:</strong> Melangkah turun dari box ke atas matras. Saat menyentuh tanah, langsung lompat ke atas secepat dan setinggi mungkin (minimal contact time).<br>
+        <strong>Data Input:</strong> Tinggi Lompatan (cm) & Contact Time (ms) [Rumus: Height(m) / ContactTime(s)].
+      </div>
+
+      <div style="margin-bottom:4px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--amber);">5. Agility — T-Test / 505</strong><br>
+        <strong>Fungsi:</strong> Mengukur kelincahan, deceleration (pengereman), dan Change of Direction (COD).<br>
+        <strong>Target Otot:</strong> Multidirectional Leg Stabilizers, Adductors, Core.<br>
+        <strong>Alat:</strong> 4 Cone / Kerucut, Stopwatch / Timing Gate.<br>
+        <strong>Cara Pelaksanaan:</strong> Lari dari A ke B (9.14m), shuffle samping ke C (4.57m), shuffle ke D (9.14m), shuffle ke B (4.57m), lalu lari mundur ke A.<br>
+        <strong>Data Input:</strong> Total Waktu Tempuh T-Test (detik).
+      </div>
+
+      <div style="margin-top:10px;padding:10px 12px;background:rgba(245,158,11,.06);border-left:3px solid var(--amber);border-radius:6px;font-size:12px;color:var(--text2);">
+        <strong style="color:var(--amber);">Catatan Operasional Pelatih:</strong> Gunakan rekaman video HP (posisi samping 90°) untuk validasi gerakan sah. Berikan istirahat 2–3 menit antar percobaan. Pastikan pemanasan spesifik plyometric ramp-up sebelum tes.
+      </div>
+    </div>
   </div>
 
   <!-- Form -->
@@ -191,6 +246,9 @@ tbody tr:last-child td{border-bottom:none}
     <input type="hidden" name="rsi_value"      id="h_rsi_value">
     <input type="hidden" name="rsi_jump_height"   id="h_rsi_jh">
     <input type="hidden" name="rsi_contact_time"  id="h_rsi_ct">
+    <input type="hidden" name="kategori_usia" id="h_kategori_usia_l3" value="ELITE">
+    <input type="hidden" name="gender"        id="h_gender_l3" value="Putra">
+    <input type="hidden" name="kelas_berat"   id="h_kelas_berat_l3">
 
     <div class="l3-grid">
       <!-- Kolom 1 -->
@@ -228,7 +286,7 @@ tbody tr:last-child td{border-bottom:none}
             <div class="pilar-name">⬆ Vertical Jump — CMJ <span class="pilar-sub">Tanpa ayunan lengan</span></div>
             <div class="form-group">
               <label class="form-label">Tinggi Lompatan (cm)</label>
-              <input type="number" id="inp_jump" class="form-control" step="0.1" min="0" max="120" placeholder="mis. 52" oninput="calcJump()">
+              <input type="number" id="inp_jump" name="jump_height_cm" class="form-control" step="0.1" min="0" max="120" placeholder="mis. 52" oninput="calcJump()">
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
               <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
@@ -243,7 +301,7 @@ tbody tr:last-child td{border-bottom:none}
             <div class="pilar-name">⚡ Sprint 30m</div>
             <div class="form-group">
               <label class="form-label">Waktu 30m (detik)</label>
-              <input type="number" id="inp_sprint" class="form-control" step="0.01" min="0" max="10" placeholder="mis. 4.20" oninput="calcSprint()">
+              <input type="number" id="inp_sprint" name="sprint_30m_detik" class="form-control" step="0.01" min="0" max="10" placeholder="mis. 4.20" oninput="calcSprint()">
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
               <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
@@ -258,7 +316,7 @@ tbody tr:last-child td{border-bottom:none}
             <div class="pilar-name">🏐 Med Ball Throw <span class="pilar-sub">Bola 3 kg</span></div>
             <div class="form-group">
               <label class="form-label">Jarak Lemparan (meter)</label>
-              <input type="number" id="inp_throw" class="form-control" step="0.01" min="0" max="20" placeholder="mis. 7.5" oninput="calcThrow()">
+              <input type="number" id="inp_throw" name="throw_jarak_m" class="form-control" step="0.01" min="0" max="20" placeholder="mis. 7.5" oninput="calcThrow()">
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
               <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
@@ -295,7 +353,7 @@ tbody tr:last-child td{border-bottom:none}
             <div class="pilar-name">↕ Agility — T-Test / 505</div>
             <div class="form-group">
               <label class="form-label">Waktu T-Test (detik)</label>
-              <input type="number" id="inp_agility" class="form-control" step="0.01" min="0" max="20" placeholder="mis. 10.2" oninput="calcAgility()">
+              <input type="number" id="inp_agility" name="agility_ttest_detik" class="form-control" step="0.01" min="0" max="20" placeholder="mis. 10.2" oninput="calcAgility()">
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
               <span style="font-size:11px;color:var(--text3)">Skor otomatis:</span>
@@ -464,32 +522,43 @@ tbody tr:last-child td{border-bottom:none}
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
   <script>
 
-  // ── Scoring rubrik (berdasarkan rubrik HPCS) ──────────────────────
-  function scoringJump(cm) {
-    if (!cm || cm <= 0) return 0;
-    return cm >= 55 ? 10 : cm >= 50 ? 9 : cm >= 45 ? 8 : cm >= 42 ? 7 :
-           cm >= 38 ?  6 : cm >= 33 ? 5 : cm >= 28 ? 4 : 3;
+  // ── Scoring rubrik (NSCA/ACSM — SOP L3 Power HPCS, harus identik dengan
+  //    RUBRIK_L3 di taekwondo/views.py agar preview & hasil simpan konsisten) ──
+  var RUBRIK_L3 = {
+      YOUTH: { // Anak-anak 6-12 thn
+          Putra: { jump:[[42,9.5],[35,7.5],[28,5.5],[20,3.5]], sprint:[[4.60,9.5],[5.00,7.5],[5.40,5.5],[5.80,3.5]], throw:[[6.6,9.5],[5.4,7.5],[4.2,5.5],[3.0,3.5]], rsi:[[1.50,9.5],[1.20,7.5],[0.90,5.5],[0.60,3.5]], agility:[[10.50,9.5],[11.50,7.5],[12.50,5.5],[13.50,3.5]] },
+          Putri: { jump:[[36,9.5],[29,7.5],[23,5.5],[16,3.5]], sprint:[[5.00,9.5],[5.40,7.5],[5.80,5.5],[6.20,3.5]], throw:[[5.5,9.5],[4.5,7.5],[3.5,5.5],[2.5,3.5]], rsi:[[1.25,9.5],[1.00,7.5],[0.75,5.5],[0.50,3.5]], agility:[[11.50,9.5],[12.50,7.5],[13.50,5.5],[14.50,3.5]] }
+      },
+      JUNIOR: {
+          Putra: { jump:[[60,9.5],[50,7.5],[40,5.5],[30,3.5]], sprint:[[3.90,9.5],[4.20,7.5],[4.50,5.5],[4.80,3.5]], throw:[[9.0,9.5],[7.5,7.5],[6.0,5.5],[4.5,3.5]], rsi:[[2.20,9.5],[1.80,7.5],[1.40,5.5],[1.00,3.5]], agility:[[9.50,9.5],[10.10,7.5],[10.80,5.5],[11.50,3.5]] },
+          Putri: { jump:[[45,9.5],[37,7.5],[30,5.5],[22,3.5]], sprint:[[4.30,9.5],[4.60,7.5],[4.90,5.5],[5.20,3.5]], throw:[[6.5,9.5],[5.5,7.5],[4.5,5.5],[3.5,3.5]], rsi:[[1.80,9.5],[1.50,7.5],[1.20,5.5],[0.80,3.5]], agility:[[10.30,9.5],[11.00,7.5],[11.80,5.5],[12.50,3.5]] }
+      },
+      SENIOR: {
+          Putra: { jump:[[70,9.5],[60,7.5],[50,5.5],[40,3.5]], sprint:[[3.70,9.5],[3.90,7.5],[4.20,5.5],[4.50,3.5]], throw:[[10.0,9.5],[8.5,7.5],[7.0,5.5],[5.5,3.5]], rsi:[[2.50,9.5],[2.10,7.5],[1.60,5.5],[1.20,3.5]], agility:[[8.60,9.5],[9.20,7.5],[9.80,5.5],[10.50,3.5]] },
+          Putri: { jump:[[50,9.5],[43,7.5],[35,5.5],[28,3.5]], sprint:[[4.00,9.5],[4.30,7.5],[4.60,5.5],[4.90,3.5]], throw:[[8.0,9.5],[6.5,7.5],[5.2,5.5],[4.0,3.5]], rsi:[[2.00,9.5],[1.70,7.5],[1.30,5.5],[1.00,3.5]], agility:[[9.40,9.5],[10.10,7.5],[10.80,5.5],[11.50,3.5]] }
+      }
+  };
+  RUBRIK_L3.ELITE = RUBRIK_L3.SENIOR;
+  var ARAH_L3 = { jump:'tinggi', sprint:'rendah', throw:'tinggi', rsi:'tinggi', agility:'rendah' };
+
+  function skorL3(pilar, nilai) {
+      var kat = (document.getElementById('h_kategori_usia_l3').value || 'ELITE').toUpperCase();
+      var gen = document.getElementById('h_gender_l3').value || 'Putra';
+      if (!nilai || nilai <= 0) return 0;
+      var tabelKat = RUBRIK_L3[kat] || RUBRIK_L3.SENIOR;
+      var ambang = (tabelKat[gen] || tabelKat.Putra)[pilar];
+      if (ARAH_L3[pilar] === 'rendah') {
+          for (var i = 0; i < ambang.length; i++) { if (nilai <= ambang[i][0]) return ambang[i][1]; }
+      } else {
+          for (var j = 0; j < ambang.length; j++) { if (nilai >= ambang[j][0]) return ambang[j][1]; }
+      }
+      return 1.5; // Novice
   }
-  function scoringSprint(t) {
-    if (!t || t <= 0) return 0;
-    return t < 3.8 ? 10 : t < 3.9 ? 9 : t < 4.0 ? 8 : t < 4.2 ? 7 :
-           t < 4.4 ?  6 : t < 4.6 ? 5 : t < 4.8 ? 4 : 3;
-  }
-  function scoringThrow(m) {
-    if (!m || m <= 0) return 0;
-    return m >= 8 ? 10 : m >= 7.5 ? 9 : m >= 7 ? 8 : m >= 6.5 ? 7 :
-           m >= 6 ?  6 : m >= 5   ? 5 : m >= 4  ? 4 : 3;
-  }
-  function scoringRSI(r) {
-    if (!r || r <= 0) return 0;
-    return r >= 2.5 ? 10 : r >= 2.2 ? 9 : r >= 2.0 ? 8 : r >= 1.8 ? 7 :
-           r >= 1.5 ?  6 : r >= 1.2 ? 5 : r >= 1.0 ? 4 : 3;
-  }
-  function scoringAgility(t) {
-    if (!t || t <= 0) return 0;
-    return t < 9.5 ? 10 : t < 9.8 ? 9 : t < 10.0 ? 8 : t < 10.5 ? 7 :
-           t < 10.8 ? 6 : t < 11.0 ? 5 : t < 11.5 ? 4 : 3;
-  }
+  function scoringJump(cm) { return skorL3('jump', cm); }
+  function scoringSprint(t) { return skorL3('sprint', t); }
+  function scoringThrow(m) { return skorL3('throw', m); }
+  function scoringRSI(r) { return skorL3('rsi', r); }
+  function scoringAgility(t) { return skorL3('agility', t); }
 
   // ── State skor ────────────────────────────────────────────────────
   const scores = { jump:0, sprint:0, throw:0, rsi:0, agility:0 };
@@ -552,6 +621,10 @@ tbody tr:last-child td{border-bottom:none}
     document.getElementById('info_gender').textContent = opt.dataset.gender   || '';
     document.getElementById('info_berat').textContent  = opt.dataset.berat    || '—';
     document.getElementById('atlet_info').style.display = 'block';
+    document.getElementById('h_kategori_usia_l3').value = opt.dataset.kategori || 'ELITE';
+    document.getElementById('h_gender_l3').value        = opt.dataset.gender   || 'Putra';
+    document.getElementById('h_kelas_berat_l3').value   = opt.dataset.berat    || '';
+    calcJump(); calcSprint(); calcThrow(); calcRSI(); calcAgility();
   }
 
   // ── Radar Chart ───────────────────────────────────────────────────
@@ -600,26 +673,240 @@ tbody tr:last-child td{border-bottom:none}
 
     const a = parseFloat(avg);
     const badge = document.getElementById('res_badge');
-    const rekT  = document.getElementById('rekomendasi_text');
     document.getElementById('rekomendasi').classList.add('show');
 
-    if (a >= 9.0) {
-      badge.className = 'result-badge elite'; badge.textContent = 'ELITE';
-      rekT.innerHTML = '<b>Kapasitas Power Eksplosif Tinggi.</b> Atlet SIAP KOMPETISI. Pertahankan RSI > 2.5 dan sprint < 3.8 dtk.';
-    } else if (a >= 7.0) {
-      badge.className = 'result-badge ready'; badge.textContent = 'READY';
-      rekT.innerHTML = '<b>Kompeten.</b> Tingkatkan pilar terendah dengan plyometric progresif 2x/minggu. Target ELITE dalam 8 minggu.';
-    } else if (a >= 5.0) {
-      badge.className = 'result-badge developing'; badge.textContent = 'DEVELOPING';
-      rekT.innerHTML = '<b>Dalam Pengembangan.</b> Pastikan fondasi L2 solid sebelum menambah volume power. Fokus RSI dan sprint.';
-    } else {
-      badge.className = 'result-badge novice'; badge.textContent = 'NOVICE';
-      rekT.innerHTML = '<b>Power Dasar Lemah.</b> Kembali perkuat L2 Strength. Power tidak bisa dibangun tanpa fondasi kekuatan.';
+    let pred;
+    if (a >= 9.0)      { badge.className = 'result-badge elite';      badge.textContent = 'ELITE';      pred = 'ELITE'; }
+    else if (a >= 7.0) { badge.className = 'result-badge ready';      badge.textContent = 'READY';      pred = 'READY'; }
+    else if (a >= 5.0) { badge.className = 'result-badge developing'; badge.textContent = 'DEVELOPING'; pred = 'DEVELOPING'; }
+    else               { badge.className = 'result-badge novice';     badge.textContent = 'NOVICE';     pred = 'NOVICE'; }
+
+    const pilarDataL3 = [
+      { nama: 'Jump',    val: scores.jump },
+      { nama: 'Sprint',  val: scores.sprint },
+      { nama: 'Throw',   val: scores.throw },
+      { nama: 'RSI',     val: scores.rsi },
+      { nama: 'Agility', val: scores.agility }
+    ];
+    generateNarasiL3(pilarDataL3, a, pred);
+    generateRekoL3(pilarDataL3);
+  }
+
+  // ── Profil Kondisi Atlet (deskripsi otomatis berdasarkan hasil tes) ──
+  function generateNarasiL3(pilars, total, pred) {
+    const panel = document.getElementById('narasi_l3');
+    const box   = document.getElementById('narasi_box_l3');
+    const filled = pilars.filter(p => p.val > 0);
+    if (!filled.length) { panel.style.display = 'none'; return; }
+
+    const namaEl = document.getElementById('sel_atlet');
+    const opt = namaEl ? namaEl.options[namaEl.selectedIndex] : null;
+    let nama = opt && opt.dataset ? (opt.dataset.nama || opt.textContent) : 'Atlet';
+    nama = (nama || 'Atlet').trim();
+    if (!nama || nama.includes('Pilih')) nama = 'Atlet';
+
+    function wrn(v){ return v>=9?'var(--green)':v>=7?'var(--sky)':v>=5?'var(--amber)':'var(--red)'; }
+    function lbl(v){ return v>=9?'sangat baik':v>=7?'baik':v>=5?'cukup':'perlu perhatian khusus'; }
+
+    const sorted = filled.slice().sort((a,b) => b.val - a.val);
+    const kuat   = sorted.slice(0, 2);
+    const lemah  = sorted.slice(-2).reverse();
+    const layak  = total >= 7.5;
+
+    const minV = Math.min(...filled.map(p => p.val));
+    const maxV = Math.max(...filled.map(p => p.val));
+    const prima = (maxV - minV) <= 0.5 && minV >= 8.5;
+
+    const kPred = {
+      ELITE:      'menunjukkan kapasitas power eksplosif <strong style="color:var(--green)">ELIT</strong> — siap kompetisi penuh dengan output speed-power maksimal.',
+      READY:      'berada di level <strong style="color:var(--sky)">SIAP (READY)</strong> — fondasi power solid, tinggal optimasi detail teknis.',
+      DEVELOPING: 'sedang <strong style="color:var(--amber)">BERKEMBANG</strong> — power eksplosif mulai terbentuk namun beberapa pilar masih perlu penguatan.',
+      NOVICE:     'berada di level <strong style="color:var(--red)">PEMULA (NOVICE)</strong> — power dasar masih lemah, perlu kembali memperkuat fondasi L2 Strength.'
+    };
+
+    const layakStr = layak
+      ? '<span style="color:var(--green);font-weight:700">&#9989; LAYAK lanjut ke L4 Speed &amp; Agility</span>'
+      : '<span style="color:var(--red);font-weight:700">&#9940; BELUM LAYAK ke L4 — perkuat power dasar terlebih dahulu</span>';
+
+    const kuatHTML = kuat.map(p => `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>
+        <span><strong style="color:var(--green)">${p.nama}</strong> — ${lbl(p.val)}
+        <span style="color:${wrn(p.val)};font-weight:700;">(${p.val.toFixed(1)}/10)</span>
+        ${p.val>=9 ? ' : pilar unggulan, pertahankan.' : p.val>=7 ? ' : aset power eksplosif.' : ' : menunjukkan perkembangan positif.'}</span>
+      </div>`).join('');
+
+    const lemahHTML = prima
+      ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(16,185,129,0.07);border-radius:6px;border:1px solid rgba(16,185,129,0.2);">
+          <span style="font-size:16px;">&#127942;</span>
+          <span style="color:var(--green);font-weight:600;">Semua pilar power dalam kondisi prima — tidak ada kelemahan signifikan.</span>
+        </div>`
+      : lemah.map(p => {
+          const catatan = p.val<5.5 ? ' : prioritas utama program korektif.' : p.val<7.5 ? ' : perlu perhatian dalam program latihan.' : ' : jaga konsistensi, masih bisa ditingkatkan.';
+          return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:${wrn(p.val)};flex-shrink:0;"></div>
+            <span><strong style="color:${wrn(p.val)}">${p.nama}</strong> — ${lbl(p.val)}
+            <span style="color:${wrn(p.val)};font-weight:700;">(${p.val.toFixed(1)}/10)</span>${catatan}</span>
+          </div>`;
+        }).join('');
+
+    const fokus = prima
+      ? 'Pertahankan performa di semua pilar. Atlet siap masuk program L4 Speed &amp; Agility.'
+      : layak
+        ? `Fondasi power cukup kuat. Fokus perkuat <strong>${lemah[0] ? lemah[0].nama : '-'}</strong> selama transisi ke L4.`
+        : `Jalankan program power dasar 4–6 minggu, prioritas <strong>${lemah[0] ? lemah[0].nama : '-'}</strong> dan <strong>${lemah[1] ? lemah[1].nama : '-'}</strong>.`;
+
+    box.innerHTML = `
+      <div style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(245,158,11,0.1);">
+        <span style="color:var(--amber);font-weight:700;font-size:12px;">&#9889; ${nama}</span> ${kPred[pred] || ''}
+        Total skor: <strong style="font-size:13px;color:${wrn(total)}">${total.toFixed(1)}/10</strong>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>
+        ${kuatHTML}
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>
+        ${lemahHTML}
+      </div>
+      <div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">
+        <div style="color:var(--text3);font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>
+        ${layakStr}<br><span style="color:var(--text2);font-size:10.5px;">${fokus}</span>
+      </div>`;
+    panel.style.display = 'block';
+  }
+
+  // ── Rekomendasi program latihan per pilar (bukan cuma 1 pesan umum) ──
+  const REKO_L3 = {
+    Jump: {
+      low: ['Box Jump 3x8 dengan fokus landing lembut', 'Squat Jump tanpa beban 4x6', 'Depth Drop dari 20cm 3x5 untuk pola landing', 'Kembali ke L2 Strength: perkuat Goblet Squat dulu'],
+      mid: ['Countermovement Jump 4x5 dengan target tinggi bertahap', 'Loaded Jump Squat dengan beban ringan 3x5', 'Reactive Box Jump 3x6 untuk kecepatan reaksi'],
+      high: ['Depth Jump dari 40cm 4x5 untuk power puncak', 'Contrast Training: Squat berat + CMJ 4x3']
+    },
+    Sprint: {
+      low: ['Acceleration Drill 10m 4x sprint dengan start berdiri', 'A-Skip & B-Skip 3x20m untuk mekanik lari', 'Resisted Sprint dengan band ringan 4x15m'],
+      mid: ['Flying Sprint 20m 4x dengan run-up 10m', 'Hill Sprint 6x15m untuk power akselerasi', 'Sprint Technique Drill: high knee, wall drill 3x'],
+      high: ['Max Velocity Sprint 30-40m 4x dengan recovery penuh', 'Resisted Sled Sprint 5x15m beban ringan']
+    },
+    Throw: {
+      low: ['Rotational Med Ball Throw ringan (2-3kg) 3x8 tiap sisi — fokus urutan hip-trunk-lengan', 'Chest Pass Med Ball dinding 3x10 sebagai pelengkap pola straight punch', 'Overhead Slam 3x10 untuk power tubuh penuh'],
+      mid: ['Rotational Throw dengan beban sedang (4-5kg) 4x8 tiap sisi — fokus kecepatan rotasi', 'Landmine Rotation 3x10 tiap sisi untuk transfer power hip-trunk', 'Rotational Med Ball Scoop Toss 4x8 tiap sisi, tambah jarak bertahap'],
+      high: ['Rotational Throw dengan run-up ringan 3x8 tiap sisi — simulasi momentum step-in cross', 'Med Ball Throw maksimal (6kg+) rotasional 4x5', 'Contrast Training: Landmine Rotation berat + Rotational Throw eksplosif']
+    },
+    RSI: {
+      low: ['Ankle Hop 3x15 untuk stiffness pergelangan kaki', 'Pogo Jump 3x20 detik fokus kontak cepat', 'Kembali ke Jump dasar sebelum drop jump'],
+      mid: ['Drop Jump dari 20cm 4x6 fokus waktu kontak minimal', 'Bounding Drill 3x20m untuk elastisitas', 'Single Leg Pogo Hop 3x10 tiap sisi'],
+      high: ['Drop Jump dari 40cm 4x5 kontak &lt;200ms', 'Depth Jump to Sprint 4x5 untuk transfer power']
+    },
+    Agility: {
+      low: ['Cone Drill dasar (4-corner) 3x untuk koordinasi arah', 'Ladder Drill 2-in 2-out 3x panjang', 'Lateral Shuffle 4x10m untuk footwork samping'],
+      mid: ['T-Test Drill 4x dengan target waktu bertahap', '5-10-5 Pro Agility 4x untuk perubahan arah', 'Reactive Agility dengan visual cue 3x'],
+      high: ['Kompetitif T-Test 5x dengan interval pendek', 'Sport-specific footwork taekwondo 3x1 menit']
     }
+  };
+
+  function generateRekoL3(pilars) {
+    const rekT = document.getElementById('rekomendasi_text');
+    const filled = pilars.filter(p => p.val > 0);
+    if (!filled.length) { rekT.innerHTML = ''; return; }
+
+    const sorted  = filled.slice().sort((a,b) => a.val - b.val);
+    const weakest = sorted.slice(0, 3);
+
+    let html = '<div style="font-size:10px;font-weight:700;color:var(--amber);margin-bottom:8px;letter-spacing:1px;">PROGRAM REKOMENDASI PELATIH</div>';
+    weakest.forEach(p => {
+      const db = REKO_L3[p.nama];
+      if (!db) return;
+      const tips = p.val < 5.5 ? db.low : p.val < 7.5 ? db.mid : db.high;
+      const col  = p.val < 5.5 ? 'var(--red)' : p.val < 7.5 ? 'var(--amber)' : 'var(--green)';
+      const icon = p.val < 5.5 ? '&#128308;' : p.val < 7.5 ? '&#128993;' : '&#128994;';
+      html += `<div style="margin-bottom:8px;padding:7px 10px;background:rgba(245,158,11,0.04);border-radius:6px;border-left:3px solid ${col};">
+        <div style="font-size:10px;font-weight:700;color:${col};margin-bottom:4px;">${icon} ${p.nama.toUpperCase()} — ${p.val.toFixed(1)}/10</div>`;
+      tips.forEach(t => {
+        html += `<div style="display:flex;gap:5px;margin-bottom:2px;font-size:10.5px;color:var(--text2);"><span style="color:${col};flex-shrink:0;">&#8594;</span><span>${t}</span></div>`;
+      });
+      html += '</div>';
+    });
+    rekT.innerHTML = html;
+  }
+
+  // ── Data tampilan rubrik (rentang string, sesuai teks SOP PDF) ─────
+  var RUBRIK_L3_DISPLAY = {
+      YOUTH: {
+          Putra: {
+              jump:{nama:'Vertical Jump', sub:'CMJ (cm)', vals:['≥ 42 cm','35–41 cm','28–34 cm','20–27 cm','< 20 cm']},
+              sprint:{nama:'Sprint 30M', sub:'detik', vals:['≤ 4.60 dtk','4.61–5.00 dtk','5.01–5.40 dtk','5.41–5.80 dtk','> 5.80 dtk']},
+              throw:{nama:'Med Ball Throw', sub:'2kg (m)', vals:['≥ 6.6 m','5.4–6.5 m','4.2–5.3 m','3.0–4.1 m','< 3.0 m']},
+              rsi:{nama:'RSI Index', sub:'Box 20cm', vals:['≥ 1.50','1.20–1.49','0.90–1.19','0.60–0.89','< 0.60']},
+              agility:{nama:'Agility T-Test', sub:'detik', vals:['≤ 10.50 dtk','10.51–11.50 dtk','11.51–12.50 dtk','12.51–13.50 dtk','> 13.50 dtk']}
+          },
+          Putri: {
+              jump:{nama:'Vertical Jump', sub:'CMJ (cm)', vals:['≥ 36 cm','29–35 cm','23–28 cm','16–22 cm','< 16 cm']},
+              sprint:{nama:'Sprint 30M', sub:'detik', vals:['≤ 5.00 dtk','5.01–5.40 dtk','5.41–5.80 dtk','5.81–6.20 dtk','> 6.20 dtk']},
+              throw:{nama:'Med Ball Throw', sub:'2kg (m)', vals:['≥ 5.5 m','4.5–5.4 m','3.5–4.4 m','2.5–3.4 m','< 2.5 m']},
+              rsi:{nama:'RSI Index', sub:'Box 20cm', vals:['≥ 1.25','1.00–1.24','0.75–0.99','0.50–0.74','< 0.50']},
+              agility:{nama:'Agility T-Test', sub:'detik', vals:['≤ 11.50 dtk','11.51–12.50 dtk','12.51–13.50 dtk','13.51–14.50 dtk','> 14.50 dtk']}
+          }
+      },
+      JUNIOR: {
+          Putra: {
+              jump:{nama:'Vertical Jump', sub:'CMJ (cm)', vals:['≥ 60 cm','50–59 cm','40–49 cm','30–39 cm','< 30 cm']},
+              sprint:{nama:'Sprint 30M', sub:'detik', vals:['≤ 3.90 dtk','3.91–4.20 dtk','4.21–4.50 dtk','4.51–4.80 dtk','> 4.80 dtk']},
+              throw:{nama:'Med Ball Throw', sub:'3kg (m)', vals:['≥ 9.0 m','7.5–8.9 m','6.0–7.4 m','4.5–5.9 m','< 4.5 m']},
+              rsi:{nama:'RSI Index', sub:'Box 30cm', vals:['≥ 2.20','1.80–2.19','1.40–1.79','1.00–1.39','< 1.00']},
+              agility:{nama:'Agility T-Test', sub:'detik', vals:['≤ 9.50 dtk','9.51–10.10 dtk','10.11–10.80 dtk','10.81–11.50 dtk','> 11.50 dtk']}
+          },
+          Putri: {
+              jump:{nama:'Vertical Jump', sub:'CMJ (cm)', vals:['≥ 45 cm','37–44 cm','30–36 cm','22–29 cm','< 22 cm']},
+              sprint:{nama:'Sprint 30M', sub:'detik', vals:['≤ 4.30 dtk','4.31–4.60 dtk','4.61–4.90 dtk','4.91–5.20 dtk','> 5.20 dtk']},
+              throw:{nama:'Med Ball Throw', sub:'3kg (m)', vals:['≥ 6.5 m','5.5–6.4 m','4.5–5.4 m','3.5–4.4 m','< 3.5 m']},
+              rsi:{nama:'RSI Index', sub:'Box 30cm', vals:['≥ 1.80','1.50–1.79','1.20–1.49','0.80–1.19','< 0.80']},
+              agility:{nama:'Agility T-Test', sub:'detik', vals:['≤ 10.30 dtk','10.31–11.00 dtk','11.01–11.80 dtk','11.81–12.50 dtk','> 12.50 dtk']}
+          }
+      },
+      SENIOR: {
+          Putra: {
+              jump:{nama:'Vertical Jump', sub:'CMJ (cm)', vals:['≥ 70 cm','60–69 cm','50–59 cm','40–49 cm','< 40 cm']},
+              sprint:{nama:'Sprint 30M', sub:'detik', vals:['≤ 3.70 dtk','3.71–3.90 dtk','3.91–4.20 dtk','4.21–4.50 dtk','> 4.50 dtk']},
+              throw:{nama:'Med Ball Throw', sub:'3kg (m)', vals:['≥ 10.0 m','8.5–9.9 m','7.0–8.4 m','5.5–6.9 m','< 5.5 m']},
+              rsi:{nama:'RSI Index', sub:'Box 30cm', vals:['≥ 2.50','2.10–2.49','1.60–2.09','1.20–1.59','< 1.20']},
+              agility:{nama:'Agility T-Test', sub:'detik', vals:['≤ 8.60 dtk','8.61–9.20 dtk','9.21–9.80 dtk','9.81–10.50 dtk','> 10.50 dtk']}
+          },
+          Putri: {
+              jump:{nama:'Vertical Jump', sub:'CMJ (cm)', vals:['≥ 50 cm','43–49 cm','35–42 cm','28–34 cm','< 28 cm']},
+              sprint:{nama:'Sprint 30M', sub:'detik', vals:['≤ 4.00 dtk','4.01–4.30 dtk','4.31–4.60 dtk','4.61–4.90 dtk','> 4.90 dtk']},
+              throw:{nama:'Med Ball Throw', sub:'3kg (m)', vals:['≥ 8.0 m','6.5–7.9 m','5.2–6.4 m','4.0–5.1 m','< 4.0 m']},
+              rsi:{nama:'RSI Index', sub:'Box 30cm', vals:['≥ 2.00','1.70–1.99','1.30–1.69','1.00–1.29','< 1.00']},
+              agility:{nama:'Agility T-Test', sub:'detik', vals:['≤ 9.40 dtk','9.41–10.10 dtk','10.11–10.80 dtk','10.81–11.50 dtk','> 11.50 dtk']}
+          }
+      }
+  };
+
+  function renderRubrikL3() {
+      var kat = document.getElementById('rubrikKategoriSelL3').value;
+      var gen = document.getElementById('rubrikGenderSelL3').value;
+      var data = RUBRIK_L3_DISPLAY[kat][gen];
+      var urutan = ['jump','sprint','throw','rsi','agility'];
+      var html = '';
+      urutan.forEach(function(pilar) {
+          var d = data[pilar];
+          html += '<div class="rubrik-row"><div><div class="rubrik-label">'+d.nama+'</div><div class="rubrik-sub">'+d.sub+'</div></div>'
+              + d.vals.map(function(v,i){
+                  var cls = i===0?'val-g':i<=2?'val-b':'val-y';
+                  return '<div><span class="val '+cls+'">'+v+'</span></div>';
+              }).join('')
+              + '</div>';
+      });
+      document.getElementById('rubrikL3Body').innerHTML = html;
   }
 
   // ── Rubrik & Print ────────────────────────────────────────────────
-  function toggleRubrik() { document.getElementById('rubrikPanel').classList.toggle('open'); }
+  function toggleRubrik() {
+      var rp = document.getElementById('rubrikPanel');
+      var akanTampil = !rp.classList.contains('open');
+      rp.classList.toggle('open');
+      if (akanTampil) renderRubrikL3();
+  }
   function handlePrint() {
     const c = document.getElementById('radarChart');
     if (c) document.getElementById('chartPrintImg').src = c.toDataURL('image/png');

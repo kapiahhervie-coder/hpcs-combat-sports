@@ -66,6 +66,7 @@ class Siswa(models.Model):
     L_P = [('L', 'Laki-laki'), ('P', 'Perempuan')]
 
     guru = models.ForeignKey(GuruProfile, on_delete=models.CASCADE, related_name='siswa')
+    fase = models.CharField(max_length=1, choices=FASE_CHOICES, null=True, blank=True)
     nama = models.CharField(max_length=100)
     kelas = models.CharField(max_length=20)
     jenis_kelamin = models.CharField(max_length=1, choices=L_P)
@@ -236,3 +237,74 @@ class PenilaianKarakter(models.Model):
 
     def __str__(self):
         return f"{self.siswa.nama} - {self.get_aspek_display()}: {self.skor}"
+
+
+# ---------------------------------------------------------------------------
+# Absensi — per sesi pertemuan, mencatat kehadiran semua siswa sekaligus
+# ---------------------------------------------------------------------------
+
+class SesiAbsensi(models.Model):
+    """Satu kali pertemuan/sesi pelajaran untuk satu fase pada tanggal tertentu."""
+    guru = models.ForeignKey(GuruProfile, on_delete=models.CASCADE, related_name='sesi_absensi')
+    fase = models.CharField(max_length=1, choices=FASE_CHOICES)
+    tanggal = models.DateField()
+    catatan_sesi = models.CharField(max_length=200, blank=True, help_text="Contoh: Materi lari zig-zag")
+    dibuat_pada = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('guru', 'fase', 'tanggal')
+        ordering = ['-tanggal']
+
+    def __str__(self):
+        return f"Absensi Fase {self.fase} - {self.tanggal}"
+
+
+class Absensi(models.Model):
+    STATUS_CHOICES = [
+        ('H', 'Hadir'),
+        ('I', 'Izin'),
+        ('S', 'Sakit'),
+        ('A', 'Alpa'),
+    ]
+    sesi = models.ForeignKey(SesiAbsensi, on_delete=models.CASCADE, related_name='daftar_absensi')
+    siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='absensi')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='H')
+    keterangan = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        unique_together = ('sesi', 'siswa')
+
+    def __str__(self):
+        return f"{self.siswa.nama} - {self.get_status_display()} ({self.sesi.tanggal})"
+
+# ---------------------------------------------------------------------------
+# Prota & Prosem — rencana materi mingguan, dipakai untuk generate dokumen
+# ---------------------------------------------------------------------------
+
+class RencanaMingguan(models.Model):
+    SEMESTER_CHOICES = [
+        ('ganjil', 'Ganjil'),
+        ('genap', 'Genap'),
+    ]
+    guru = models.ForeignKey(GuruProfile, on_delete=models.CASCADE, related_name='rencana_mingguan')
+    fase = models.CharField(max_length=1, choices=FASE_CHOICES)
+    tahun_ajaran = models.CharField(max_length=9, help_text="Contoh: 2026/2027")
+    semester = models.CharField(max_length=6, choices=SEMESTER_CHOICES)
+    minggu_ke = models.PositiveSmallIntegerField()
+    materi = models.ForeignKey(MateriFase, on_delete=models.SET_NULL, null=True, blank=True, related_name='rencana_mingguan')
+    nama_materi_bebas = models.CharField(max_length=150, blank=True, help_text="Isi kalau materi belum ada di daftar Materi Fase")
+    alokasi_jp = models.PositiveSmallIntegerField(default=2, help_text="Jumlah jam pelajaran")
+    keterangan = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        unique_together = ('guru', 'fase', 'tahun_ajaran', 'semester', 'minggu_ke')
+        ordering = ['tahun_ajaran', 'semester', 'minggu_ke']
+
+    @property
+    def nama_tampil(self):
+        if self.materi:
+            return self.materi.nama_materi
+        return self.nama_materi_bebas or '(belum diisi)'
+
+    def __str__(self):
+        return f"Fase {self.fase} - {self.tahun_ajaran} {self.semester} - Minggu {self.minggu_ke}"

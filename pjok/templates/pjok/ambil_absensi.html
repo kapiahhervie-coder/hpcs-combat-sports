@@ -1,0 +1,93 @@
+{% extends "base_pjok.html" %}
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --red:#0f766e; --red-bright:#14b8a6; --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171; --izin:#a78bfa;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:900px;
+  }
+  .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:28px;margin:0 0 14px;line-height:1.15;}
+  .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:22px;border-radius:2px;}
+
+  .top-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px;}
+  .date-input{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;}
+  .date-input:focus{outline:none;border-color:var(--gold);}
+  .nav-date-btn{font-family:'IBM Plex Mono',monospace;font-size:12px;padding:10px 14px;border-radius:8px;border:1px solid var(--border);color:var(--text-dim);text-decoration:none;}
+  .nav-date-btn:hover{border-color:var(--gold-dim);color:var(--text);}
+
+  .pjok-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:24px;margin-bottom:16px;}
+  .pjok-card::before,.pjok-card::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;opacity:.85;}
+  .pjok-card::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-top-left-radius:6px;}
+  .pjok-card::after{top:-1px;right:-1px;border-width:2px 2px 0 0;border-top-right-radius:6px;}
+
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
+  .field-input{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-size:14px;box-sizing:border-box;}
+  .field-input:focus{outline:none;border-color:var(--gold);}
+
+  .siswa-row{border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:10px;background:var(--surface-2);}
+  .siswa-nama{font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;margin-bottom:10px;}
+  .status-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .status-chip{position:relative;}
+  .status-chip input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0;}
+  .status-chip label{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;padding:8px 16px;border-radius:20px;border:1.5px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all .15s ease;}
+  .status-chip input:checked + label.h{border-color:var(--ok);background:rgba(34,197,94,.15);color:var(--ok);}
+  .status-chip input:checked + label.i{border-color:var(--izin);background:rgba(167,139,250,.15);color:var(--izin);}
+  .status-chip input:checked + label.s{border-color:var(--warn);background:rgba(245,158,11,.15);color:var(--warn);}
+  .status-chip input:checked + label.a{border-color:var(--danger);background:rgba(248,113,113,.15);color:var(--danger);}
+  .keterangan-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:13px;box-sizing:border-box;}
+  .keterangan-input:focus{outline:none;border-color:var(--gold);}
+  .keterangan-input::placeholder{color:var(--text-faint);}
+
+  .btn-save{width:100%;background:linear-gradient(90deg,#0f766e,#14b8a6);border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:14px;padding:15px;border-radius:8px;cursor:pointer;margin-top:8px;}
+  .btn-back{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--text-dim);text-decoration:none;margin-bottom:16px;}
+  .btn-back:hover{color:var(--text);}
+</style>
+
+<div class="pjok-scope">
+  <a href="{% url 'pjok:daftar_absensi' fase %}" class="btn-back">&larr; Riwayat Absensi Fase {{ fase }}</a>
+  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
+  <h2 class="pjok-title">Ambil Absensi</h2>
+  <div class="pjok-rule"></div>
+
+  <div class="top-controls">
+    <label class="field-label" style="margin:0;">Tanggal:</label>
+    <input type="date" class="date-input" value="{{ tanggal|date:'Y-m-d' }}" onchange="window.location.href='{% url 'pjok:ambil_absensi' fase %}?tanggal='+this.value;">
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="pjok-card">
+      <label class="field-label">Catatan Sesi (opsional)</label>
+      <input type="text" name="catatan_sesi" class="field-input" placeholder="Contoh: Materi lari zig-zag" value="{{ sesi.catatan_sesi }}">
+    </div>
+
+    {% for row in rows %}
+    <div class="siswa-row">
+      <div class="siswa-nama">{{ row.siswa.nama }} <span style="color:var(--text-faint);font-weight:400;font-size:12px;">({{ row.siswa.kelas }})</span></div>
+      <div class="status-row">
+        {% for kode, label in status_choices %}
+        <div class="status-chip">
+          <input type="radio" name="status_{{ row.siswa.id }}" value="{{ kode }}" id="s{{ row.siswa.id }}_{{ kode }}"
+            {% if row.absen.status == kode or not row.absen and kode == 'H' %}checked{% endif %}>
+          <label for="s{{ row.siswa.id }}_{{ kode }}" class="{{ kode|lower }}">{{ label }}</label>
+        </div>
+        {% endfor %}
+      </div>
+      <input type="text" name="keterangan_{{ row.siswa.id }}" class="keterangan-input" placeholder="Keterangan (opsional)" value="{{ row.absen.keterangan|default:'' }}">
+    </div>
+    {% empty %}
+    <p style="color:var(--text-faint);">Belum ada siswa terdaftar di fase ini.</p>
+    {% endfor %}
+
+    {% if rows %}
+    <button type="submit" class="btn-save">Simpan Absensi</button>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

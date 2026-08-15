@@ -1,0 +1,93 @@
+{% extends "base_pjok.html" %}
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --red:#0f766e; --red-bright:#14b8a6; --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171; --izin:#a78bfa;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:100%;
+  }
+  .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:28px;margin:0 0 14px;line-height:1.15;}
+  .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:22px;border-radius:2px;}
+
+  .btn-back{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--text-dim);text-decoration:none;margin-bottom:16px;}
+  .btn-back:hover{color:var(--text);}
+
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);}
+  .legend-dot{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);}
+  .rekap-table{border-collapse:collapse;font-size:13px;min-width:100%;}
+  .rekap-table th, .rekap-table td{padding:10px 12px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);white-space:nowrap;text-align:center;}
+  .rekap-table thead th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-faint);background:var(--surface-2);}
+  .rekap-table td.nama-col, .rekap-table th.nama-col{text-align:left;position:sticky;left:0;background:var(--surface-2);z-index:2;font-weight:600;min-width:120px;}
+  .rekap-table thead th.nama-col{z-index:3;}
+  .rekap-table tbody tr:hover td{background:rgba(255,255,255,0.02);}
+  .rekap-table tbody tr:hover td.nama-col{background:#22292a;}
+
+  .status-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:11px;}
+  .status-badge.h{background:rgba(34,197,94,.18);color:var(--ok);}
+  .status-badge.i{background:rgba(167,139,250,.18);color:var(--izin);}
+  .status-badge.s{background:rgba(245,158,11,.18);color:var(--warn);}
+  .status-badge.a{background:rgba(248,113,113,.18);color:var(--danger);}
+  .status-empty{color:var(--text-faint);}
+
+  .rekap-summary{font-size:11px;color:var(--text-faint);}
+  .empty{text-align:center;padding:50px 20px;color:var(--text-faint);font-size:14px;}
+</style>
+
+<div class="pjok-scope">
+  <a href="{% url 'pjok:daftar_absensi' fase %}" class="btn-back">&larr; Kembali ke Riwayat Absensi</a>
+  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
+  <h2 class="pjok-title">Rekap Absensi</h2>
+  <div class="pjok-rule"></div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--ok);"></span> Hadir</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--izin);"></span> Izin</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--warn);"></span> Sakit</div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--danger);"></span> Alpa</div>
+  </div>
+
+  {% if sesi_list %}
+  <div class="table-wrap">
+    <table class="rekap-table">
+      <thead>
+        <tr>
+          <th class="nama-col">Nama Siswa</th>
+          {% for sesi in sesi_list %}
+          <th>{{ sesi.tanggal|date:"d/m" }}</th>
+          {% endfor %}
+          <th>Rekap</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td class="nama-col">{{ row.siswa.nama }}</td>
+          {% for cell in row.cells %}
+          <td>
+            {% if cell.status == 'H' %}<span class="status-badge h">H</span>
+            {% elif cell.status == 'I' %}<span class="status-badge i">I</span>
+            {% elif cell.status == 'S' %}<span class="status-badge s">S</span>
+            {% elif cell.status == 'A' %}<span class="status-badge a">A</span>
+            {% else %}<span class="status-empty">&mdash;</span>
+            {% endif %}
+          </td>
+          {% endfor %}
+          <td class="rekap-summary">H:{{ row.rekap.H }} I:{{ row.rekap.I }} S:{{ row.rekap.S }} A:{{ row.rekap.A }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty">Belum ada sesi absensi tercatat untuk fase ini.</div>
+  {% endif %}
+</div>
+{% endblock %}

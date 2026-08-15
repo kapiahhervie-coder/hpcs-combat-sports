@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
@@ -22,7 +22,7 @@
       min-height: 100vh;
     }
 
-/* ── Main area ── */
+/* -- Main area -- */
     .main-wrapper {
       margin-left: 240px;
       transition: margin-left .25s ease;
@@ -31,7 +31,7 @@
       flex-direction: column;
     }
 
-    /* ── Topbar ── */
+    /* -- Topbar -- */
     .topbar {
       background: #fff;
       border-bottom: 0.5px solid #e5e7eb;
@@ -74,13 +74,13 @@
       justify-content: center;
     }
 
-    /* ── Page content ── */
+    /* -- Page content -- */
     .page-content {
       flex: 1;
       padding: 24px;
     }
 
-    /* ── Messages / alerts ── */
+    /* -- Messages / alerts -- */
     .messages { list-style: none; margin-bottom: 1rem; }
     .messages li {
       padding: 10px 16px;
@@ -93,7 +93,7 @@
     .messages .warning { background: #FAEEDA; color: #854F0B; }
     .messages .info    { background: #E6F1FB; color: #185FA5; }
 
-    /* ══════ Sidebar — unified design system ══════ */
+    /* ------ Sidebar — unified design system ------ */
     :root{
       --sb-panel:#0d1017;
       --sb-line: rgba(255,255,255,0.07);
@@ -223,7 +223,7 @@
     .main-content { transition: margin-left .25s ease; }
     .main-content.expanded { margin-left: 56px; }
 
-    /* ── Responsive ── */
+    /* -- Responsive -- */
     .mobile-menu-btn { display: none; }
     @media (max-width: 768px) {
       .sidebar { transform: translateX(-100%) !important; }
@@ -263,6 +263,11 @@
       <a href="{% url 'pjok:tambah_siswa' %}" class="nav-link {% if request.resolver_match.url_name == 'tambah_siswa' %}active{% endif %}">
         <span class="nav-icon">&#43;</span> <span class="nav-link-text">Tambah Siswa</span>
       </a>
+      {% if request.user.guruprofile %}
+      <a href="{% url 'pjok:daftar_absensi' request.user.guruprofile.fase %}" class="nav-link {% if request.resolver_match.url_name == 'daftar_absensi' or request.resolver_match.url_name == 'ambil_absensi' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="4" width="14" height="17" rx="2" stroke="currentColor" stroke-width="2"/><path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="2"/><path d="M8 11h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span> <span class="nav-link-text">Absensi</span>
+      </a>
+      {% endif %}
       <div class="nav-divider"></div>
       <div class="nav-section">Penilaian</div>
       <a href="{% url 'pjok:buat_profile' %}" class="nav-link {% if request.resolver_match.url_name == 'buat_profile' %}active{% endif %}">

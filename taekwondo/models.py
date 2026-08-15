@@ -1,29 +1,38 @@
 """
-taekwondo/models.py
-Model audit khusus Taekwondo. Model Atlet & lintas-cabang lain tetap
-dipakai bersama dari app 'combat'.
+taekwondo/models.py — VERSI KOREKSI
+
+PERUBAHAN dari versi sebelumnya:
+1. Field skor_neural_* diubah dari IntegerField(choices=NEURAL_CHOICES 1-3)
+   menjadi FloatField — sekarang diisi OTOMATIS oleh view (hasil kalkulasi
+   dari data mentah + rubrik), BUKAN dari input manual coach.
+2. total_skor sekarang = rata-rata 8 skor_neural_* (masing-masing sudah
+   dalam skala 0-10 hasil rubrik) — TIDAK LAGI pakai rumus (raw/24)*10.
+3. Threshold predikat (8.3/5.8/4.2) TETAP SAMA seperti sebelumnya, karena
+   memang sudah tepat.
+
+Field data mentah (hip_rotasi_*, balance_durasi_*, dll) TIDAK BERUBAH.
+Field skor_neural_* TETAP ADA di model (dipakai untuk radar chart & histori)
+tapi sekarang perannya sebagai HASIL KALKULASI, bukan input.
+
+Timpa seluruh isi taekwondo/models.py dengan file ini.
 """
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 from combat.models import Atlet, KATEGORI_USIA_CHOICES, GENDER_CHOICES, PREDIKAT_CHOICES
-
-
-NEURAL_CHOICES = [
-    (1, 'Cognitive'),
-    (2, 'Associative'),
-    (3, 'Autonomous'),
-]
 
 
 class CorrectionAuditL1TKD(models.Model):
     """
-    L1 Correction -- Taekwondo
+    L1 Correction — Taekwondo
     Fokus: Mobility, Stability, Fleksibilitas sebagai fondasi sebelum
     masuk ke teknik tendangan spesifik (dolyo chagi, ap chagi, dwi chagi,
-    naeryo chagi, dolgae chagi). Dominan single-leg & rotational, beda
-    penekanan dari Muay Thai yang lebih ke clinch/elbow.
-    Setiap item punya skor kuantitatif (Q) + skor kualitas neural (N),
-    mengikuti Motor Automaticity Scale (1=Cognitive, 2=Associative, 3=Autonomous).
+    naeryo chagi, dolgae chagi). Dominan single-leg & rotational.
+
+    Skor per item (skor_neural_*) DIHITUNG OTOMATIS oleh server dari data
+    mentah hasil ukur (derajat/detik/cm) memakai rubrik per kategori usia
+    — lihat RUBRIK_L1 & fungsi hitung_skor_l1_*() di taekwondo/views.py.
+    Coach hanya input data mentah, bukan skor.
     """
     # -- Identitas --------------------------------------------------
     atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='audit_l1_tkd', verbose_name='Atlet')
@@ -37,45 +46,45 @@ class CorrectionAuditL1TKD(models.Model):
     hip_rotasi_internal_kiri   = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kiri (derajat)')
     hip_rotasi_eksternal_kanan = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kanan (derajat)')
     hip_rotasi_eksternal_kiri  = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kiri (derajat)')
-    skor_neural_hip_rotasi     = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_hip_rotasi     = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 2. Single-Leg Balance (kicking stance) -------------------------
     balance_durasi_mata_terbuka  = models.FloatField(null=True, blank=True, verbose_name='Balance Mata Terbuka (detik)')
     balance_durasi_mata_tertutup = models.FloatField(null=True, blank=True, verbose_name='Balance Mata Tertutup (detik)')
-    skor_neural_balance          = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_balance          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 3. Ankle Dorsiflexion (chamber & pivot) -------------------------
     ankle_dorsifleksi_kanan_cm = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kanan (cm)')
     ankle_dorsifleksi_kiri_cm  = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kiri (cm)')
-    skor_neural_ankle          = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_ankle          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 4. Thoracic Spine Rotation (spinning / back kick) ----------------
     thoracic_rotasi_kanan = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kanan (derajat)')
     thoracic_rotasi_kiri  = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kiri (derajat)')
-    skor_neural_thoracic  = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_thoracic  = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 5. Hip Flexor / Hamstring Flexibility (kick height) ---------------
     asl_raise_kanan_derajat = models.FloatField(null=True, blank=True, verbose_name='Active Straight Leg Raise Kanan (derajat)')
     asl_raise_kiri_derajat  = models.FloatField(null=True, blank=True, verbose_name='Active Straight Leg Raise Kiri (derajat)')
-    skor_neural_hamstring   = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_hamstring   = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 6. Hip Hinge Pattern --------------------------------------------
     hip_hinge_pass        = models.BooleanField(default=False, verbose_name='Hip Hinge Pattern Benar?')
-    skor_neural_hip_hinge = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_hip_hinge = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 7. Core Anti-Rotation Stability ----------------------------------
     core_hold_durasi_detik = models.FloatField(null=True, blank=True, verbose_name='Pallof Press Hold (detik)')
-    skor_neural_core       = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_core       = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- 8. Dynamic Balance Recovery (landing after kick) -------------------
     recovery_waktu_detik = models.FloatField(null=True, blank=True, verbose_name='Recovery Time (detik)')
-    skor_neural_recovery = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    skor_neural_recovery = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # -- AI --------------------------------------------------------
     ai_confidence_score = models.FloatField(null=True, blank=True)
 
     # -- Hasil --------------------------------------------------------
-    total_skor         = models.FloatField(default=0, verbose_name='Total Skor Neural (0-10)')
+    total_skor         = models.FloatField(default=0, verbose_name='Total Skor (0-10)')
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naik ke L2?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
@@ -107,16 +116,18 @@ class CorrectionAuditL1TKD(models.Model):
         if self.atlet_id and not self.atlet_name:
             self.atlet_name = self.atlet.nama_atlet
 
-        # Total skor neural mentah: 8 item x skor 1-3 -> max 24
-        raw_total = sum(self.skor_neural_list)
-        # Normalisasi ke skala 0-10 supaya konsisten dengan predikat lintas app
-        self.total_skor = round((raw_total / 24) * 10, 1)
+        # NOTE: skor_neural_* SUDAH dihitung otomatis di view sebelum
+        # instance ini dibuat (dari data mentah + rubrik), jadi di sini
+        # tinggal dirata-rata. Masing-masing skor_neural_* sudah dalam
+        # skala 0-10, jadi total_skor = rata-rata langsung (BUKAN dibagi
+        # 24 lagi seperti versi lama).
+        self.total_skor = round(sum(self.skor_neural_list) / 8, 1)
 
-        if self.total_skor >= 8.3:       # setara skor neural rata-rata mendekati 3 (Autonomous)
+        if self.total_skor >= 8.3:
             self.predikat = 'ELITE'
-        elif self.total_skor >= 5.8:     # rata-rata mendekati 2-3 (Associative-Autonomous)
+        elif self.total_skor >= 5.8:
             self.predikat = 'READY'
-        elif self.total_skor >= 4.2:     # rata-rata mendekati 2 (Associative)
+        elif self.total_skor >= 4.2:
             self.predikat = 'DEVELOPING'
         else:
             self.predikat = 'NOVICE'
@@ -127,7 +138,7 @@ class CorrectionAuditL1TKD(models.Model):
         else:
             self.layak_naik = False
             self.alasan_tidak_layak = (
-                f"Skor neural {self.total_skor}/10 (raw {raw_total}/24). "
+                f"Skor {self.total_skor}/10. "
                 f"Item terlemah: {self.item_terlemah}. "
                 f"Wajib program korektif mobility/stability sebelum lanjut."
             )
@@ -152,13 +163,13 @@ class CorrectionAuditL1TKD(models.Model):
     def predikat_neural_label(self):
         skor = self.total_skor
         if skor >= 8.3:
-            return 'Autonomous -- Siap lanjut ke L2'
+            return 'Autonomous — Siap lanjut ke L2'
         elif skor >= 5.8:
-            return 'Associative-Autonomous -- Layak lanjut dengan catatan'
+            return 'Associative-Autonomous — Layak lanjut dengan catatan'
         elif skor >= 4.2:
-            return 'Associative -- Perlu pembinaan tambahan'
+            return 'Associative — Perlu pembinaan tambahan'
         else:
-            return 'Cognitive -- Belum layak lanjut, fokus koreksi dasar'
+            return 'Cognitive — Belum layak lanjut, fokus koreksi dasar'
 
     @property
     def rekomendasi_auto(self):

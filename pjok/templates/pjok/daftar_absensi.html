@@ -1,0 +1,67 @@
+{% extends "base_pjok.html" %}
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --red:#0f766e; --red-bright:#14b8a6; --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:900px;
+  }
+  .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:28px;margin:0 0 14px;line-height:1.15;}
+  .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:22px;border-radius:2px;}
+
+  .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+  .btn-ambil{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;padding:11px 20px;border-radius:8px;background:linear-gradient(90deg,#0f766e,#14b8a6);color:#fff;text-decoration:none;}
+
+  .pjok-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px;}
+  .pjok-card::before,.pjok-card::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;opacity:.85;}
+  .pjok-card::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-top-left-radius:6px;}
+  .pjok-card::after{top:-1px;right:-1px;border-width:2px 2px 0 0;border-top-right-radius:6px;}
+
+  .pjok-table{width:100%;border-collapse:collapse;}
+  .pjok-table thead th{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);text-align:left;padding:12px 14px;border-bottom:1px solid var(--border);}
+  .pjok-table tbody td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:14px;}
+  .pjok-table tbody tr:last-child td{border-bottom:none;}
+  .pjok-table tbody tr:hover{background:var(--surface-2);}
+  .pjok-link{color:var(--gold);text-decoration:none;font-size:13px;font-family:'IBM Plex Mono',monospace;}
+  .pjok-link:hover{text-decoration:underline;}
+  .hadir-badge{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ok);}
+  .empty{text-align:center;padding:40px 20px;color:var(--text-faint);font-size:14px;}
+</style>
+
+<div class="pjok-scope">
+  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
+  <h2 class="pjok-title">Riwayat Absensi</h2>
+  <div class="pjok-rule"></div>
+
+  <div class="top-row">
+    <span style="color:var(--text-faint);font-size:13px;">{{ sesi_list.count }} sesi tercatat</span>
+    <div style="display:flex;gap:10px;">
+      <a href="{% url 'pjok:rekap_absensi' fase %}" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;padding:11px 20px;border-radius:8px;border:1px solid var(--gold-dim);color:var(--gold);text-decoration:none;">Lihat Rekap</a>
+      <a href="{% url 'pjok:ambil_absensi' fase %}" class="btn-ambil">+ Ambil Absensi Hari Ini</a>
+    </div>
+  </div>
+
+  <div class="pjok-card">
+    <table class="pjok-table">
+      <thead><tr><th>Tanggal</th><th>Catatan Sesi</th><th>Kehadiran</th><th>Aksi</th></tr></thead>
+      <tbody>
+        {% for sesi in sesi_list %}
+        <tr>
+          <td>{{ sesi.tanggal|date:"d M Y" }}</td>
+          <td>{{ sesi.catatan_sesi|default:"&mdash;" }}</td>
+          <td><span class="hadir-badge">{{ sesi.total_hadir }}/{{ sesi.total_siswa }} hadir</span></td>
+          <td><a class="pjok-link" href="{% url 'pjok:ambil_absensi' fase %}?tanggal={{ sesi.tanggal|date:'Y-m-d' }}">Lihat / Edit &rarr;</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4"><div class="empty">Belum ada sesi absensi. Klik "+ Ambil Absensi Hari Ini" untuk memulai.</div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

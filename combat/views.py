@@ -29,8 +29,8 @@ from .permissions import get_atlet_queryset, is_admin
 # ----------------------------------------------------------------------
 
 CABOR_DASHBOARD_URL = {
-    'boxing': 'combat:dashboard_boxing',
-    'muaythai': 'combat:dashboard_muaythai',
+    'boxing': 'boxing:dashboard',
+    'muaythai': 'muaythai:dashboard',
     'tkd': 'taekwondo:dashboard',
     'krt': 'karate:dashboard',
 }
@@ -531,5 +531,3 @@ class TambahAtletView(LoginRequiredMixin, View):
         except Exception as e:
             messages.error(request, f'Gagal menyimpan: {e}')
             return render(request, self.template_name, {'back_url': self.get_back_url(request)})
-
-

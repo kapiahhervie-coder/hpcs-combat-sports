@@ -48,8 +48,8 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .rubrik-toggle { margin-bottom: 20px; }
 .rubrik-panel { display: none; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 10px; }
 .rubrik-panel.open { display: block; }
-.rub-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; background: rgba(6,182,212,0.06); border-bottom: 1px solid var(--border); padding: 10px 16px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--cyan); text-transform: uppercase; }
-.rub-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; padding: 12px 16px; border-bottom: 1px solid rgba(37,45,61,0.5); font-size: 12.5px; transition: background 0.15s; }
+.rub-head { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr 1fr; background: rgba(6,182,212,0.06); border-bottom: 1px solid var(--border); padding: 10px 16px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--cyan); text-transform: uppercase; }
+.rub-row { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr 1fr 1fr; padding: 12px 16px; border-bottom: 1px solid rgba(37,45,61,0.5); font-size: 12.5px; transition: background 0.15s; }
 .rub-row:last-child { border-bottom: none; }
 .rub-row:hover { background: rgba(6,182,212,0.02); }
 .rub-label { color: var(--cyan); font-weight: 600; font-size: 12px; }
@@ -59,9 +59,6 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .vb { background: rgba(6,182,212,0.1); color: var(--cyan); }
 .vy { background: rgba(251,191,36,0.1); color: var(--amber); }
 .vr { background: rgba(239,68,68,0.1); color: #f87171; }
-.val ul { list-style: none; margin: 0; padding: 0; font-size: 10px; line-height: 1.6; text-align: left; }
-.rub-howto { grid-column: 1/-1; padding: 8px 16px; font-size: 10.5px; color: var(--text3); background: rgba(255,255,255,0.02); border-top: 1px solid rgba(37,45,61,0.5); }
-.rub-howto b { color: var(--text2); }
 
 /* Grid */
 .main-grid { display: grid; grid-template-columns: 360px 1fr 300px; gap: 16px; margin-bottom: 24px; }
@@ -82,6 +79,10 @@ body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-s
 .fc::placeholder { color: var(--text3); }
 select.fc { cursor: pointer; }
 textarea.fc { resize: vertical; min-height: 60px; }
+.fc-auto { background: rgba(6,182,212,0.06); border-color: rgba(6,182,212,0.25); color: var(--cyan); font-weight:600; cursor:not-allowed; }
+.fc-auto:focus { box-shadow:none; border-color: rgba(6,182,212,0.25); }
+.fl-auto { display:flex; align-items:center; gap:6px; }
+.auto-tag { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--text3); background:var(--bg3); border:1px solid var(--border); padding:1px 6px; border-radius:10px; }
 .r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .r3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 
@@ -224,10 +225,10 @@ tbody tr:last-child td { border-bottom: none; }
     <div>
       <div class="badge-l4">Level 4 — Speed · Agility · Metabolic</div>
       <h1 class="page-title">HPCS <span>SPEED</span> AUDIT</h1>
-      <p class="page-sub">Hexagon Jump · 10-Second Combo Frequency · Yo-Yo IR Test Level 1 · Coach Fanny</p>
+      <p class="page-sub">Hexagon Jump · 10-Second Kick Frequency · Yo-Yo IR Test Level 1 · Coach Fanny</p>
     </div>
     <div class="hdr-actions">
-      <a href="{% url 'combat:dashboard' %}" class="btn btn-ghost no-print">
+      <a href="{% url 'taekwondo:dashboard' %}" class="btn btn-ghost no-print">
         <i class="bi bi-house-fill"></i> Dashboard
       </a>
       <button class="btn btn-outline-cyan no-print" onclick="toggleRubrik()">
@@ -240,37 +241,61 @@ tbody tr:last-child td { border-bottom: none; }
   <!-- Rubrik -->
   <div class="rubrik-toggle no-print">
     <div class="rubrik-panel" id="rubrikPanel">
+      <div style="padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border);">
+        <select id="rubrikKategoriSelL4" class="fc" style="width:auto;" onchange="renderRubrikL4()">
+          <option value="YOUTH">Anak-anak (6–12 thn)</option>
+          <option value="JUNIOR">Junior (13–17 thn)</option>
+          <option value="SENIOR" selected>Senior / Elite (18–35 thn)</option>
+        </select>
+        <select id="rubrikGenderSelL4" class="fc" style="width:auto;" onchange="renderRubrikL4()">
+          <option value="Putra">Laki-Laki</option>
+          <option value="Putri">Perempuan</option>
+        </select>
+      </div>
       <div class="rub-head">
-        <div>Instrumen & Protokol</div>
-        <div>Elite (9–10)</div>
-        <div>Ready (7–8)</div>
-        <div>Developing (5–6)</div>
-        <div>Novice (1–4)</div>
+        <div>Instrumen & Protokol</div><div>Superior</div><div>Excellent</div><div>Good</div><div>Fair</div><div>Novice</div>
       </div>
-      <div class="rub-row">
-        <div>
-          <div class="rub-label"><a href="https://www.youtube.com/watch?v=OkN5Ht4PjGo" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">HEXAGON JUMP TEST <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div>
-          <div class="rub-sub">3 putaran penuh searah jarum jam, tanpa pause, rerata waktu</div>
+      <div id="rubrikL4Body"></div>
+      <div style="padding:10px 16px;font-size:10.5px;color:var(--text3, #7d8598);border-top:1px solid var(--border);">
+        Norma NSCA/ACSM Specialist Combat — SOP L4 Speed/Agility HPCS. Kategori <strong>Elite</strong> memakai tabel Senior.
+        VO2 Max referensi: Elite Putra &gt;55 mL/kg/min, Elite Putri &gt;48 mL/kg/min · Amatir Putra 50–55, Amatir Putri 44–50.
+      </div>
+
+      <!-- SOP Protokol per Pilar -->
+      <div style="padding:14px 16px;border-top:1px solid var(--border);">
+        <div style="color:var(--cyan);font-weight:700;font-size:12px;margin-bottom:10px;"><i class="bi bi-clipboard2-pulse"></i> SOP & Protokol Pelaksanaan</div>
+
+        <div style="margin-bottom:12px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Pilar 1. Hexagon Jump Test</strong><br>
+          <strong>Fungsi:</strong> Mengukur kelincahan footwork multi-arah 360°, kecepatan reaksi kaki, dan stabilitas pergelangan kaki.<br>
+          <strong>Target Otot:</strong> Ankle Stabilizers, Gastrocnemius, Quadriceps, Core.<br>
+          <strong>Alat:</strong> Pola Heksagon (Sisi 60cm, Sudut 120°), Lakban/Markah, Stopwatch.<br>
+          <strong>Cara Pelaksanaan:</strong> Berdiri di tengah heksagon. Melompat dengan dua kaki keluar dan kembali ke tengah mengikuti 6 sisi berturut-turut. Lakukan 3 putaran penuh secepat mungkin tanpa menyentuh garis.<br>
+          <strong>Data Input:</strong> Waktu Tempuh Rerata (detik) untuk 3 Putaran.
         </div>
-        <div><span class="val vg"><ul><li>E: &lt; 10.0 dtk</li><li>Y: &lt; 11.5 dtk</li><li>J: &lt; 13.0 dtk</li></ul></span></div><div><span class="val vb"><ul><li>E: 10.0&ndash;12.0 dtk</li><li>Y: 11.5&ndash;13.5 dtk</li><li>J: 13.0&ndash;15.0 dtk</li></ul></span></div><div><span class="val vy"><ul><li>E: 12.1&ndash;14.0 dtk</li><li>Y: 13.6&ndash;15.5 dtk</li><li>J: 15.1&ndash;17.0 dtk</li></ul></span></div><div><span class="val vr"><ul><li>E: &ge; 14.0 dtk</li><li>Y: &ge; 15.5 dtk</li><li>J: &ge; 17.0 dtk</li></ul></span></div>
-      </div>
-      <div class="rub-row"><div class="rub-howto">&#128295; <b>Cara:</b> Berdiri di tengah hexagon bertanda di lantai, lompat keluar-masuk mengelilingi semua sisi searah jarum jam sebanyak 3 putaran penuh tanpa jeda, ukur waktu total &nbsp;&middot;&nbsp; <b>Alat:</b> Lakban/tali untuk bentuk hexagon di lantai, stopwatch</div></div>
-      <div class="rub-row">
-        <div>
-          <div class="rub-label"><a href="https://www.youtube.com/watch?v=x_54OJ3CmtY" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">10-SECOND COMBO FREQUENCY <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div>
-          <div class="rub-sub">Kombo Jab-Cross-Hook-Round Kick, hitung kombo penuh dalam 10 detik, postur harus tetap benar</div>
+
+        <div style="margin-bottom:12px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Pilar 2. 10-Second Kick Frequency</strong><br>
+          <strong>Fungsi:</strong> Mengukur leg speed spesifik, frekuensi tendangan maksimum, dan rate of force development (RFD) tungkai.<br>
+          <strong>Target Otot:</strong> Hip Flexors, Quadriceps, Hamstrings, Core Rotators.<br>
+          <strong>Alat:</strong> Kick Pad / Target Pad dengan Sensor / Video Timer HP 240fps.<br>
+          <strong>Cara Pelaksanaan:</strong> Berdiri dalam posisi kuda-kuda (fighting stance) taekwondo. Saat aba-aba "Ya", lontarkan tendangan (Dolyo Chagi/roundhouse) eksplosif penuh sebanyak mungkin pada target selama 10 detik.<br>
+          <strong>Data Input:</strong> Total Jumlah Tendangan Sah (10 dtk) & Waktu Reaksi (ms).
         </div>
-        <div><span class="val vg"><ul><li>E: &ge; 7 kombo</li><li>Y: &ge; 6 kombo</li><li>J: &ge; 5 kombo</li></ul></span></div><div><span class="val vb"><ul><li>E: 5&ndash;6 kombo</li><li>Y: 4&ndash;5 kombo</li><li>J: 3&ndash;4 kombo</li></ul></span></div><div><span class="val vy"><ul><li>E: 3&ndash;4 kombo</li><li>Y: 2&ndash;3 kombo</li><li>J: 2 kombo</li></ul></span></div><div><span class="val vr"><ul><li>E: &le; 2 kombo</li><li>Y: &le; 1 kombo</li><li>J: &le; 1 kombo</li></ul></span></div>
-      </div>
-      <div class="rub-row"><div class="rub-howto">&#128295; <b>Cara:</b> Lakukan kombo Jab-Cross-Hook-Round Kick berulang secepat mungkin selama 10 detik dengan postur/teknik tetap benar, hitung jumlah kombo penuh &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, target pad/fokus mitt (opsional)</div></div>
-      <div class="rub-row">
-        <div>
-          <div class="rub-label"><a href="https://www.youtube.com/watch?v=nkOk_P5VnOA" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">YO-YO IR TEST LEVEL 1 <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></div>
-          <div class="rub-sub">Estimasi VO2 Max: Elite Putra &gt; 55, Elite Putri &gt; 48 mL/kg/min</div>
+
+        <div style="margin-bottom:4px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Pilar 3. Yo-Yo Intermittent Recovery Test (Level 1)</strong><br>
+          <strong>Fungsi:</strong> Mengukur kapasitas pemulihan anaerobik berulang & estimasi VO2 Max spesifik karakter ronder.<br>
+          <strong>Target Otot:</strong> Cardiovascular System, Quadriceps, Hamstrings, Calves.<br>
+          <strong>Alat:</strong> Audio Beep Test Yo-Yo IR1, Cones (Lintasan 20m & Area Recovery 5m), Meteran.<br>
+          <strong>Cara Pelaksanaan:</strong> Lari bolak-balik 2×20m mengikuti sinyal beep. Di setiap selang 40m, atlet melakukan active recovery berjalan/jogging 5m selama 10 detik. Tes selesai jika gagal memenuhi sinyal 2 kali berturut-turut.<br>
+          <strong>Data Input:</strong> Level & Shuttle Terdaftar / Total Jarak (meter).
         </div>
-        <div><span class="val vg"><ul><li>E: VO2 &gt; 55</li><li>Y: VO2 &gt; 48</li><li>J: VO2 &gt; 42</li></ul></span></div><div><span class="val vb"><ul><li>E: 50&ndash;54.9</li><li>Y: 43&ndash;47.9</li><li>J: 37&ndash;41.9</li></ul></span></div><div><span class="val vy"><ul><li>E: 45&ndash;49.9</li><li>Y: 38&ndash;42.9</li><li>J: 32&ndash;36.9</li></ul></span></div><div><span class="val vr"><ul><li>E: VO2 &lt; 45</li><li>Y: VO2 &lt; 38</li><li>J: VO2 &lt; 32</li></ul></span></div>
+
+        <div style="margin-top:10px;padding:10px 12px;background:rgba(6,182,212,.06);border-left:3px solid var(--cyan);border-radius:6px;font-size:12px;color:var(--text2, #b6bccb);">
+          <strong style="color:var(--cyan);">Catatan Operasional Pelatih:</strong> Gunakan rekaman video HP untuk menghitung tendangan yang valid (ekstensi penuh, kontak penuh ke target). Berikan istirahat 5–8 menit antar tes pilar untuk memastikan pemulihan sistem energi ATP-PC.
+        </div>
       </div>
-      <div class="rub-row"><div class="rub-howto">&#128295; <b>Cara:</b> Lari bolak-balik 20m mengikuti bunyi bip yang semakin cepat, berhenti saat 2x gagal mencapai garis tepat waktu, catat level &amp; jarak tempuh untuk estimasi VO2 Max &nbsp;&middot;&nbsp; <b>Alat:</b> Area lari 20m, audio Yo-Yo test (rekaman bip standar), cone</div></div>
     </div>
   </div>
 
@@ -304,7 +329,7 @@ tbody tr:last-child td { border-bottom: none; }
           <div class="r3">
             <div class="fg">
               <label class="fl">Kategori</label>
-              <select name="kategori_usia" class="fc">
+              <select name="kategori_usia" class="fc" onchange="syncKatGenManual()">
                 <option value="ELITE">Elite</option>
                 <option value="YOUTH">Youth</option>
                 <option value="JUNIOR">Junior</option>
@@ -313,7 +338,7 @@ tbody tr:last-child td { border-bottom: none; }
             </div>
             <div class="fg">
               <label class="fl">Gender</label>
-              <select name="gender" class="fc">
+              <select name="gender" class="fc" onchange="syncKatGenManual()">
                 <option value="Putra">Putra</option>
                 <option value="Putri">Putri</option>
               </select>
@@ -367,28 +392,28 @@ tbody tr:last-child td { border-bottom: none; }
               Rata-rata: <span class="info-val" id="hex_avg">—</span> detik
             </div>
             <div class="fg" style="margin-top:8px;">
-              <label class="fl">Skor Hex Jump (0–10)</label>
-              <input type="number" name="score_hex" id="score_hex" class="fc" step="0.1" min="0" max="10" oninput="liveUpdate()" placeholder="auto">
+              <label class="fl fl-auto">Skor Hex Jump (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="number" name="score_hex" id="score_hex" class="fc fc-auto" step="0.1" min="0" max="10" readonly tabindex="-1" placeholder="Isi waktu putaran di atas">
             </div>
           </div>
         </div>
 
-        <!-- Pilar 2: Combo Frequency -->
+        <!-- Pilar 2: Kick Frequency -->
         <div class="card">
-          <div class="card-title">Pilar 2 — 10-Second Combo Frequency</div>
+          <div class="card-title">Pilar 2 — 10-Second Kick Frequency</div>
           <div class="pilar">
             <div class="pilar-name">
-              👟 Combo Frequency
-              <span class="pilar-sub">Kombo Dolyo-Yeop-Dwi Chagi (roundhouse-side-back kick) dalam 10 detik</span>
+              🦵 Kick Frequency
+              <span class="pilar-sub">Tendangan lurus maks dalam 10 detik</span>
             </div>
             <div class="r2">
               <div class="fg">
-                <label class="fl">Jumlah Kombo (10 dtk)</label>
-                <input type="number" name="punch_freq_10s" id="punch_freq" class="fc" placeholder="0" oninput="autoScorePunch()">
+                <label class="fl">Jumlah Tendangan (10 dtk)</label>
+                <input type="number" name="kick_freq_10s" id="kick_freq" class="fc" placeholder="0" oninput="autoScoreKick()">
               </div>
               <div class="fg">
                 <label class="fl">Reaction Time (ms)</label>
-                <input type="number" name="punch_reaction_time_ms" class="fc" step="1" placeholder="250">
+                <input type="number" name="kick_reaction_time_ms" class="fc" step="1" placeholder="250">
               </div>
             </div>
             <div class="fg">
@@ -397,11 +422,11 @@ tbody tr:last-child td { border-bottom: none; }
                 <button type="button" class="cond-btn active" onclick="setPosetur('true', this)">✓ Ya</button>
                 <button type="button" class="cond-btn" onclick="setPosetur('false', this)">✗ Tidak (−1 poin)</button>
               </div>
-              <input type="hidden" name="punch_postur_ok" id="punch_postur_ok" value="true">
+              <input type="hidden" name="kick_postur_ok" id="kick_postur_ok" value="true">
             </div>
             <div class="fg">
-              <label class="fl">Skor Combo (0–10)</label>
-              <input type="number" name="score_punch" id="score_punch" class="fc" step="0.1" min="0" max="10" oninput="liveUpdate()" placeholder="auto">
+              <label class="fl fl-auto">Skor Kick (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="number" name="score_kick" id="score_kick" class="fc fc-auto" step="0.1" min="0" max="10" readonly tabindex="-1" placeholder="Isi jumlah tendangan di atas">
             </div>
           </div>
         </div>
@@ -432,8 +457,8 @@ tbody tr:last-child td { border-bottom: none; }
               Estimasi VO2 Max: <span class="vo2-val" id="vo2_val">—</span> mL/kg/min
             </div>
             <div class="fg" style="margin-top:8px;">
-              <label class="fl">Skor Yo-Yo (0–10)</label>
-              <input type="number" name="score_yoyo" id="score_yoyo" class="fc" step="0.1" min="0" max="10" oninput="liveUpdate()" placeholder="auto">
+              <label class="fl fl-auto">Skor Yo-Yo (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="number" name="score_yoyo" id="score_yoyo" class="fc fc-auto" step="0.1" min="0" max="10" readonly tabindex="-1" placeholder="Isi level & shuttle di atas">
             </div>
           </div>
         </div>
@@ -447,7 +472,7 @@ tbody tr:last-child td { border-bottom: none; }
         </div>
         <div class="score-pills">
           <span class="score-pill" id="p_hex">Hex: —</span>
-          <span class="score-pill" id="p_punch">Combo: —</span>
+          <span class="score-pill" id="p_kick">Kick: —</span>
           <span class="score-pill" id="p_yoyo">Yo-Yo: —</span>
         </div>
 
@@ -492,7 +517,7 @@ tbody tr:last-child td { border-bottom: none; }
 
         <!-- VO2 Max Reference -->
         <div class="card" style="margin-top:16px;">
-          <div class="card-title">Referensi VO2 Max Tinju</div>
+          <div class="card-title">Referensi VO2 Max Taekwondo</div>
           <div style="font-size:12px;color:var(--text2);line-height:1.8;">
             <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
               <span>Elite Putra</span><span style="color:var(--green);font-family:'DM Mono',monospace;">&gt; 55 mL/kg/min</span>
@@ -533,10 +558,10 @@ tbody tr:last-child td { border-bottom: none; }
             <th>Kategori</th>
             
             <th>Hex (dtk)</th>
-            <th>Combo (10s)</th>
+            <th>Kick (10s)</th>
             <th>Yo-Yo VO2</th>
             <th>Hex</th>
-            <th>Combo</th>
+            <th>Kick</th>
             <th>Yo-Yo</th>
             <th>Total</th>
             <th>Predikat</th>
@@ -557,8 +582,8 @@ tbody tr:last-child td { border-bottom: none; }
               {% else %}—{% endif %}
             </td>
             <td>
-              {% if item.punch_freq_10s %}
-                <span class="pill">{{ item.punch_freq_10s }}x</span>
+              {% if item.kick_freq_10s %}
+                <span class="pill">{{ item.kick_freq_10s }}x</span>
               {% else %}—{% endif %}
             </td>
             <td>
@@ -567,7 +592,7 @@ tbody tr:last-child td { border-bottom: none; }
               {% else %}—{% endif %}
             </td>
             <td><span class="pill">{{ item.score_hex }}</span></td>
-            <td><span class="pill">{{ item.score_punch }}</span></td>
+            <td><span class="pill">{{ item.score_kick }}</span></td>
             <td><span class="pill">{{ item.score_yoyo }}</span></td>
             <td style="font-family:'DM Mono',monospace;font-size:1.05rem;color:var(--cyan);font-weight:600;">{{ item.total_skor }}</td>
             <td>
@@ -618,7 +643,7 @@ window.onload = function() { const ctx = document.getElementById('radarChart').g
 chart = new Chart(ctx, {
   type: 'radar',
   data: {
-    labels: ['HEXAGON', 'COMBO FREQ', 'YO-YO'],
+    labels: ['HEXAGON', 'KICK FREQ', 'YO-YO'],
     datasets: [{
       data: [0,0,0],
       backgroundColor: 'rgba(6,182,212,0.12)',
@@ -663,13 +688,27 @@ function onAtletChange(sel) {
   if (hGen) hGen.value = opt.dataset.gender   || 'Putra';
   if (hBb)  hBb.value  = opt.dataset.berat    || '';
   if (bb)  bb.value  = opt.dataset.berat;
+  calcHex(); autoScoreKick(); calcYoYo();
+}
+
+// Kalau pelatih ubah manual dropdown Kategori/Gender, sinkronkan ke hidden
+// field yang beneran dikirim ke server (dulu tidak sinkron -> data yang
+// tersimpan bisa beda dari yang dipilih pelatih di layar).
+function syncKatGenManual() {
+  const kat = document.querySelector('select[name="kategori_usia"]');
+  const gen = document.querySelector('select[name="gender"]');
+  const hKat = document.getElementById('h_kat_l4');
+  const hGen = document.getElementById('h_gen_l4');
+  if (kat && hKat) hKat.value = kat.value;
+  if (gen && hGen) hGen.value = gen.value;
+  calcHex(); autoScoreKick(); calcYoYo();
 }
 
 // ── Live Update ──
 function liveUpdate() {
   const s = [
     parseFloat(document.getElementById('score_hex').value) || 0,
-    parseFloat(document.getElementById('score_punch').value) || 0,
+    parseFloat(document.getElementById('score_kick').value) || 0,
     parseFloat(document.getElementById('score_yoyo').value) || 0,
   ];
   const avg = (s.reduce((a,b)=>a+b,0)/3).toFixed(1);
@@ -678,7 +717,7 @@ function liveUpdate() {
 
   document.getElementById('res_total').innerText = avg;
   document.getElementById('p_hex').innerText   = 'Hex: ' + s[0];
-  document.getElementById('p_punch').innerText = 'Punch: ' + s[1];
+  document.getElementById('p_kick').innerText = 'Kick: ' + s[1];
   document.getElementById('p_yoyo').innerText  = 'Yo-Yo: ' + s[2];
 
   const badge = document.getElementById('res_badge');
@@ -697,7 +736,7 @@ function liveUpdate() {
   // Pilar data
   var pilarL4 = [
     {nama:'Hex',   val: parseFloat(s[0])||0},
-    {nama:'Combo', val: parseFloat(s[1])||0},
+    {nama:'Kick', val: parseFloat(s[1])||0},
     {nama:'YoYo',  val: parseFloat(s[2])||0}
   ];
   var filledL4  = pilarL4.filter(function(p){return p.val>0;});
@@ -717,10 +756,10 @@ function liveUpdate() {
   // Risiko cedera
   var risikoL4 = [];
   var hexScore  = parseFloat(s[0])||0;
-  var punchScore= parseFloat(s[1])||0;
+  var kickScore= parseFloat(s[1])||0;
   var yoyoScore = parseFloat(s[2])||0;
   if (hexScore < 5)  risikoL4.push('&#9888; Hex Jump rendah — risiko ankle sprain & kurang koordinasi kaki');
-  if (punchScore < 5) risikoL4.push('&#9888; Combo frequency rendah — risiko kelelahan otot kaki prematur saat tanding');
+  if (kickScore < 5) risikoL4.push('&#9888; Kick frequency rendah — risiko kelelahan otot lengan prematur saat tanding');
   if (yoyoScore < 5) risikoL4.push('&#9888; VO2 Max rendah — risiko kelelahan kardio dan penurunan performa di ronde akhir');
   if (risikoL4.length === 0) risikoL4.push('&#10003; Profil risiko RENDAH — kapasitas speed-agility-metabolik seimbang');
 
@@ -766,7 +805,7 @@ function liveUpdate() {
   // Rekomendasi latihan lengkap
   var REKO_L4 = {
     Hex:   {low:['Hexagon Drill 3x3 putaran — fokus teknik footwork','Ladder Drill 2-in 2-out 3x panjang','4-Corner Cone Drill 3x untuk koordinasi','Kembali ke L3 Agility drill dasar'],mid:['Hex Jump 4x3 putaran dengan target < 11 dtk','Reactive Hex dengan visual cue 3x3','Mini Hurdle Hop 3x6 untuk foot speed'],high:['Kompetitif Hex: 5x3 putaran dengan interval pendek','Sport-specific footwork taekwondo 3x1 menit']},
-    Combo: {low:['Shadow Sparring 3x1 menit fokus frekuensi tendangan','Speed Bag 3x2 menit untuk ritme tangan','Jab Combination Drill 4x30 detik','Double End Bag 3x1 menit'],mid:['10-Second Punch Burst 5x dengan istirahat','Combination Speed Drill 4x45 detik','Reactive Pad Work 3x2 menit'],high:['Competition Pace Pad Work 4x3 menit','Pertahankan dengan Speed Bag 3x/minggu']},
+    Kick: {low:['Shadow Kicking 3x1 menit fokus frekuensi','Kick Pad Speed Drill 3x2 menit untuk ritme kaki','Combination Kick Drill (Dolyo-Dolyo Chagi) 4x30 detik','Focus Mitt Kick Target 3x1 menit'],mid:['10-Second Kick Burst 5x dengan istirahat','Combination Speed Drill 4x45 detik','Reactive Pad Work 3x2 menit'],high:['Competition Pace Pad Work 4x3 menit','Pertahankan dengan Kick Pad Drill 3x/minggu']},
     YoYo:  {low:['Lari Aerobik 30 menit 3x/minggu di 65% HRmax','Walk-Jog Interval 20 menit untuk base aerobik','Kembali ke L3 dan tingkatkan VO2 Max base','Renang atau Sepeda 30 menit 3x/minggu'],mid:['Yo-Yo Interval Training Level 1 2x/minggu','HIIT 20 menit: 1 menit kerja, 1 menit rest','Fartlek Run 30 menit 2x/minggu'],high:['Yo-Yo IR1 monitoring bulanan','Supramaksimal Interval 3x/minggu','Sport-specific conditioning: round-based training']}
   };
 
@@ -787,6 +826,31 @@ function liveUpdate() {
   rekT.innerHTML = rekoHTML4;
 }
 
+// ── Rubrik NSCA/ACSM L4 (harus identik dengan RUBRIK_L4 di taekwondo/views.py
+//    agar preview & hasil simpan konsisten) ──
+var RUBRIK_L4 = {
+    YOUTH: {
+        Putra: { hex:[[12.00,9.5],[14.00,7.5],[16.00,5.5],[18.00,3.5]], kick:[[59,9.5],[51,7.5],[43,5.5],[35,3.5]], yoyo:[[920,9.5],[680,7.5],[440,5.5],[240,3.5]] },
+        Putri: { hex:[[13.50,9.5],[15.50,7.5],[17.50,5.5],[19.50,3.5]], kick:[[53,9.5],[46,7.5],[38,5.5],[30,3.5]], yoyo:[[760,9.5],[560,7.5],[360,5.5],[160,3.5]] }
+    },
+    JUNIOR: {
+        Putra: { hex:[[10.50,9.5],[12.00,7.5],[13.50,5.5],[15.00,3.5]], kick:[[75,9.5],[65,7.5],[55,5.5],[45,3.5]], yoyo:[[1640,9.5],[1240,7.5],[880,5.5],[560,3.5]] },
+        Putri: { hex:[[11.60,9.5],[13.20,7.5],[14.80,5.5],[16.50,3.5]], kick:[[66,9.5],[58,7.5],[49,5.5],[40,3.5]], yoyo:[[1320,9.5],[1000,7.5],[680,5.5],[400,3.5]] }
+    },
+    SENIOR: {
+        Putra: { hex:[[8.80,9.5],[10.00,7.5],[11.50,5.5],[13.00,3.5]], kick:[[90,9.5],[79,7.5],[67,5.5],[55,3.5]], yoyo:[[2080,9.5],[1640,7.5],[1200,5.5],[800,3.5]] },
+        Putri: { hex:[[9.80,9.5],[11.20,7.5],[12.80,5.5],[14.50,3.5]], kick:[[79,9.5],[69,7.5],[59,5.5],[48,3.5]], yoyo:[[1640,9.5],[1280,7.5],[920,5.5],[600,3.5]] }
+    }
+};
+RUBRIK_L4.ELITE = RUBRIK_L4.SENIOR;
+
+function kategoriGenderL4() {
+    var kat = (document.getElementById('h_kat_l4').value || 'ELITE').toUpperCase();
+    var gen = document.getElementById('h_gen_l4').value || 'Putra';
+    var tabelKat = RUBRIK_L4[kat] || RUBRIK_L4.SENIOR;
+    return tabelKat[gen] || tabelKat.Putra;
+}
+
 // ── Hexagon Auto-Score ──
 function calcHex() {
   const v = [
@@ -799,19 +863,23 @@ function calcHex() {
   document.getElementById('hex_avg').innerText = avg;
   document.getElementById('hex_result').style.display = 'block';
   const t = parseFloat(avg);
-  let s = t < 10 ? 10 : t < 10.5 ? 9 : t < 11 ? 8 : t < 11.5 ? 7 : t < 12 ? 6 : t < 13 ? 5 : t < 14 ? 4 : 3;
+  const ambang = kategoriGenderL4().hex;
+  let s = 1.5;
+  for (var i = 0; i < ambang.length; i++) { if (t <= ambang[i][0]) { s = ambang[i][1]; break; } }
   document.getElementById('score_hex').value = s;
   liveUpdate();
 }
 
-// ── Punch Auto-Score ──
-function autoScorePunch() {
-  const p = parseInt(document.getElementById('punch_freq').value);
-  const posturOk = document.getElementById('punch_postur_ok').value === 'true';
+// ── Kick Auto-Score ──
+function autoScoreKick() {
+  const p = parseInt(document.getElementById('kick_freq').value);
+  const posturOk = document.getElementById('kick_postur_ok').value === 'true';
   if (!p) return;
-  let s = p >= 25 ? 10 : p >= 22 ? 9 : p >= 20 ? 8 : p >= 18 ? 7 : p >= 16 ? 6 : p >= 14 ? 5 : p >= 12 ? 4 : 3;
-  if (!posturOk) s = Math.max(0, s - 1);
-  document.getElementById('score_punch').value = s;
+  const ambang = kategoriGenderL4().kick;
+  let s = 1.5;
+  for (var i = 0; i < ambang.length; i++) { if (p >= ambang[i][0]) { s = ambang[i][1]; break; } }
+  if (!posturOk) s = Math.max(1.5, Math.round((s - 1) * 10) / 10);
+  document.getElementById('score_kick').value = s;
   liveUpdate();
 }
 
@@ -848,8 +916,10 @@ function calcVO2Max() {
   const vo2 = ((jarak * 0.0084) + 36.4).toFixed(1);
   document.getElementById('vo2_val').innerText = vo2;
   document.getElementById('vo2_result').style.display = 'block';
-  const v = parseFloat(vo2);
-  let s = v >= 60 ? 10 : v >= 57 ? 9 : v >= 55 ? 8 : v >= 52 ? 7 : v >= 50 ? 6 : v >= 47 ? 5 : v >= 44 ? 4 : 3;
+  // Skor dari JARAK (bukan VO2) sesuai rubrik NSCA/ACSM per kategori & gender
+  const ambang = kategoriGenderL4().yoyo;
+  let s = 1.5;
+  for (var i = 0; i < ambang.length; i++) { if (jarak >= ambang[i][0]) { s = ambang[i][1]; break; } }
   document.getElementById('score_yoyo').value = s;
   liveUpdate();
 }
@@ -870,13 +940,73 @@ function setPosetur(val, btn) {
     if (b.closest('.fg') === btn.closest('.fg')) b.classList.remove('active');
   });
   btn.classList.add('active');
-  document.getElementById('punch_postur_ok').value = val;
-  autoScorePunch();
+  document.getElementById('kick_postur_ok').value = val;
+  autoScoreKick();
+}
+
+// ── Data tampilan rubrik (rentang string, sesuai teks SOP PDF) ──
+var RUBRIK_L4_DISPLAY = {
+    YOUTH: {
+        Putra: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 12.00 dtk','12.01–14.00 dtk','14.01–16.00 dtk','16.01–18.00 dtk','> 18.00 dtk']},
+            kick:{nama:'10-Sec Kick Frequency', sub:'jumlah tendangan', vals:['≥ 59 tendangan','51–58 tendangan','43–50 tendangan','35–42 tendangan','< 35 tendangan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 920 m','680–880 m','440–640 m','240–400 m','< 240 m']}
+        },
+        Putri: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 13.50 dtk','13.51–15.50 dtk','15.51–17.50 dtk','17.51–19.50 dtk','> 19.50 dtk']},
+            kick:{nama:'10-Sec Kick Frequency', sub:'jumlah tendangan', vals:['≥ 53 tendangan','46–52 tendangan','38–45 tendangan','30–37 tendangan','< 30 tendangan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 760 m','560–720 m','360–520 m','160–320 m','< 160 m']}
+        }
+    },
+    JUNIOR: {
+        Putra: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 10.50 dtk','10.51–12.00 dtk','12.01–13.50 dtk','13.51–15.00 dtk','> 15.00 dtk']},
+            kick:{nama:'10-Sec Kick Frequency', sub:'jumlah tendangan', vals:['≥ 75 tendangan','65–74 tendangan','55–64 tendangan','45–54 tendangan','< 45 tendangan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 1640 m','1240–1600 m','880–1200 m','560–840 m','< 560 m']}
+        },
+        Putri: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 11.60 dtk','11.61–13.20 dtk','13.21–14.80 dtk','14.81–16.50 dtk','> 16.50 dtk']},
+            kick:{nama:'10-Sec Kick Frequency', sub:'jumlah tendangan', vals:['≥ 66 tendangan','58–65 tendangan','49–57 tendangan','40–48 tendangan','< 40 tendangan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 1320 m','1000–1280 m','680–960 m','400–640 m','< 400 m']}
+        }
+    },
+    SENIOR: {
+        Putra: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 8.80 dtk','8.81–10.00 dtk','10.01–11.50 dtk','11.51–13.00 dtk','> 13.00 dtk']},
+            kick:{nama:'10-Sec Kick Frequency', sub:'jumlah tendangan', vals:['≥ 90 tendangan','79–89 tendangan','67–78 tendangan','55–66 tendangan','< 55 tendangan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 2080 m','1640–2040 m','1200–1600 m','800–1160 m','< 800 m']}
+        },
+        Putri: {
+            hex:{nama:'Hexagon Jump', sub:'3 Putaran (detik)', vals:['≤ 9.80 dtk','9.81–11.20 dtk','11.21–12.80 dtk','12.81–14.50 dtk','> 14.50 dtk']},
+            kick:{nama:'10-Sec Kick Frequency', sub:'jumlah tendangan', vals:['≥ 79 tendangan','69–78 tendangan','59–68 tendangan','48–58 tendangan','< 48 tendangan']},
+            yoyo:{nama:'Yo-Yo IR1', sub:'jarak (m)', vals:['≥ 1640 m','1280–1600 m','920–1240 m','600–880 m','< 600 m']}
+        }
+    }
+};
+
+function renderRubrikL4() {
+    var kat = document.getElementById('rubrikKategoriSelL4').value;
+    var gen = document.getElementById('rubrikGenderSelL4').value;
+    var data = RUBRIK_L4_DISPLAY[kat][gen];
+    var urutan = ['hex','kick','yoyo'];
+    var html = '';
+    urutan.forEach(function(pilar) {
+        var d = data[pilar];
+        html += '<div class="rub-row"><div><div class="rub-label">'+d.nama+'</div><div class="rub-sub">'+d.sub+'</div></div>'
+            + d.vals.map(function(v,i){
+                var cls = i===0?'vg':i<=2?'vb':i===3?'vy':'vr';
+                return '<div><span class="val '+cls+'">'+v+'</span></div>';
+            }).join('')
+            + '</div>';
+    });
+    document.getElementById('rubrikL4Body').innerHTML = html;
 }
 
 function toggleRubrik() {
-  document.getElementById('rubrikPanel').classList.toggle('open');
+  var rp = document.getElementById('rubrikPanel');
+  var akanTampil = !rp.classList.contains('open');
+  rp.classList.toggle('open');
+  if (akanTampil) renderRubrikL4();
 }
 </script>
 {% endblock %}
-

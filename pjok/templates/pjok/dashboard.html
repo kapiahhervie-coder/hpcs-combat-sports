@@ -122,7 +122,7 @@
       <div><span class="pjok-brand">HPCS</span><span class="pjok-brand-sub">PJOK EXPERT PANEL</span></div>
       <div class="pjok-guru-line">Guru Pengampu: <strong style="color:var(--text);">{{ profile.nama_lengkap }}</strong> &mdash; {{ profile.sekolah }}</div>
     </div>
-    <a class="pjok-btn-outline" href="{% url 'pjok:tambah_siswa' %}">+ Tambah Siswa</a>
+    <a class="pjok-btn-outline" href="{% url 'pjok:tambah_siswa' %}?fase={{ fase }}">+ Tambah Siswa</a>
   </div>
 
   <div class="fase-menu-title">Pilih Fase</div>
@@ -161,12 +161,18 @@
   <div class="audit-section">
     <div class="audit-section-head">Panel Asesmen &mdash; Fase {{ fase }} ({{ jenjang }})</div>
 
-    <select class="siswa-select" onchange="if(this.value){window.location.href='{% url 'pjok:dashboard_fase' fase=fase %}?siswa_id='+this.value;}">
-      <option value="">-- Pilih Siswa --</option>
-      {% for s in siswa_list %}
-      <option value="{{ s.id }}" {% if selected_siswa and selected_siswa.id == s.id %}selected{% endif %}>{{ s.nama }} ({{ s.kelas }})</option>
-      {% endfor %}
-    </select>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:22px;">
+      <select class="siswa-select" style="margin-bottom:0;" onchange="if(this.value){window.location.href='{% url 'pjok:dashboard_fase' fase=fase %}?siswa_id='+this.value;}">
+        <option value="">-- Pilih Siswa --</option>
+        {% for s in siswa_list %}
+        <option value="{{ s.id }}" {% if selected_siswa and selected_siswa.id == s.id %}selected{% endif %}>{{ s.nama }} ({{ s.kelas }})</option>
+        {% endfor %}
+      </select>
+      {% if selected_siswa %}
+      <a href="{% url 'pjok:detail_siswa' selected_siswa.id %}" target="_blank" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;background:linear-gradient(90deg,#0f766e,#14b8a6);color:#fff;text-decoration:none;white-space:nowrap;">&#128196; Lihat Rapor</a>
+      <a href="{% url 'pjok:edit_siswa' selected_siswa.id %}" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;border:1px solid #f59e0b;color:#f59e0b;text-decoration:none;white-space:nowrap;">&#9998; Edit Siswa</a>
+      {% endif %}
+    </div>
 
     {% if not selected_siswa %}
       <p class="warn-note">&#9888; Pilih siswa di atas untuk mengaktifkan penyimpanan penilaian.</p>

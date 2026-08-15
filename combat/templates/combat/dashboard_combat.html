@@ -310,13 +310,13 @@ body {
 
   <!-- Sport Cards -->
   <div class="sport-grid">
-    <a href="{% url 'combat:dashboard_boxing' %}" class="sport-card boxing active">
+    <a href="{% url 'boxing:dashboard' %}" class="sport-card boxing active">
       <span class="code">BXG</span>
       <h3>Boxing</h3>
       <span class="meta">{{ total_atlet }} Atlet Terdaftar</span>
       <div class="sport-bar"><div class="sport-bar-fill" style="width:75%;background:var(--red);"></div></div>
     </a>
-    <a href="{% url 'combat:dashboard_muaythai' %}" class="sport-card muaythai" style="text-decoration:none;opacity:1;">
+    <a href="{% url 'muaythai:dashboard' %}" class="sport-card muaythai" style="text-decoration:none;opacity:1;">
       <span class="code">MTH</span>
       <h3>Muay Thai</h3>
       <span class="meta">{{ total_atlet_muaythai|default:0 }} Atlet Terdaftar</span>
@@ -578,4 +578,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 {% endblock %}
-

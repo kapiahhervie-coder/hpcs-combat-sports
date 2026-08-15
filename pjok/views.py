@@ -1,10 +1,15 @@
 import json
 from datetime import date
+from django.http import HttpResponse
+from docx import Document
+from docx.shared import Pt, Cm
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from django.contrib.auth.decorators import login_required
+from django.db import models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .models import Siswa, FASE_CHOICES, JENJANG_PER_FASE
+from .models import Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan
 
 from .diagnostik import (
     KOMPONEN_LABEL,
@@ -12,7 +17,7 @@ from .diagnostik import (
     rekomendasi_perbaikan,
     rubrik_label,
 )
-from .forms import GuruProfileForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, SiswaForm
+from .forms import EditSiswaForm, GuruProfileForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, RencanaMingguanForm, SiswaForm
 from .models import GuruProfile, MateriFase, Siswa
 
 
@@ -49,7 +54,7 @@ def dashboard_fase(request, fase):
     """
     profile = request.user.guruprofile
 
-    siswa_list = Siswa.objects.filter(guru__fase=fase)
+    siswa_list = Siswa.objects.filter(guru=profile, fase=fase)
 
     # Hitung skor kesiapan terbaru per siswa untuk badge di tabel & statistik ringkas
     siswa_data = []
@@ -112,24 +117,168 @@ def dashboard_fase(request, fase):
 
 @login_required
 def tambah_siswa(request):
-    """Form tambah siswa baru — otomatis terikat ke guru yang login (fase & sekolahnya)."""
+    """Form tambah siswa baru — terikat ke guru yang login, fase diambil dari halaman asal."""
     profile = request.user.guruprofile
+    fase_target = request.GET.get('fase') or profile.fase
 
     if request.method == 'POST':
         form = SiswaForm(request.POST)
         if form.is_valid():
             siswa = form.save(commit=False)
-            siswa.guru = profile  # kunci kepemilikan ke guru yang login
+            siswa.guru = profile
+            siswa.fase = request.POST.get('fase') or fase_target
             siswa.save()
-            return redirect('pjok:dashboard_fase', fase=profile.fase)
+            return redirect('pjok:dashboard_fase', fase=siswa.fase)
     else:
         form = SiswaForm()
 
     return render(request, 'pjok/tambah_siswa.html', {
         'form': form,
-        'fase': profile.fase,
-        'jenjang': profile.jenjang,
+        'fase': fase_target,
+        'jenjang': JENJANG_PER_FASE.get(fase_target, ''),
     })
+
+
+@login_required
+def rencana_mingguan(request, fase):
+    """Kelola rencana materi mingguan untuk Prota/Prosem, per tahun ajaran & semester."""
+    profile = request.user.guruprofile
+    tahun_ajaran = request.GET.get('tahun', '2026/2027')
+    semester = request.GET.get('semester', 'ganjil')
+
+    if request.method == 'POST':
+        minggu_ke = request.POST.get('minggu_ke')
+        instance = RencanaMingguan.objects.filter(
+            guru=profile, fase=fase, tahun_ajaran=tahun_ajaran,
+            semester=semester, minggu_ke=minggu_ke,
+        ).first()
+        form = RencanaMingguanForm(request.POST, instance=instance, fase=fase)
+        if form.is_valid():
+            rencana = form.save(commit=False)
+            rencana.guru = profile
+            rencana.fase = fase
+            rencana.tahun_ajaran = tahun_ajaran
+            rencana.semester = semester
+            rencana.save()
+        return redirect(f"{request.path}?tahun={tahun_ajaran}&semester={semester}")
+
+    rencana_list = RencanaMingguan.objects.filter(
+        guru=profile, fase=fase, tahun_ajaran=tahun_ajaran, semester=semester,
+    ).select_related('materi')
+    rencana_map = {r.minggu_ke: r for r in rencana_list}
+
+    JUMLAH_MINGGU = 18
+    rows = []
+    for i in range(1, JUMLAH_MINGGU + 1):
+        rows.append({'minggu_ke': i, 'rencana': rencana_map.get(i)})
+
+    return render(request, 'pjok/rencana_mingguan.html', {
+        'rows': rows,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'tahun_ajaran': tahun_ajaran,
+        'semester': semester,
+        'form_materi_qs': MateriFase.objects.filter(fase=fase),
+    })
+
+
+@login_required
+def daftar_absensi(request, fase):
+    """Daftar semua sesi absensi yang pernah diambil untuk fase ini."""
+    profile = request.user.guruprofile
+    sesi_list = SesiAbsensi.objects.filter(guru=profile, fase=fase).annotate(
+        total_hadir=models.Count('daftar_absensi', filter=models.Q(daftar_absensi__status='H')),
+        total_siswa=models.Count('daftar_absensi'),
+    )
+    return render(request, 'pjok/daftar_absensi.html', {
+        'sesi_list': sesi_list,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+    })
+
+
+@login_required
+def rekap_absensi(request, fase):
+    """Tabel rekap: baris siswa, kolom tanggal sesi, isi status kehadiran."""
+    profile = request.user.guruprofile
+    siswa_list = Siswa.objects.filter(guru=profile, fase=fase).order_by('nama')
+    sesi_list = SesiAbsensi.objects.filter(guru=profile, fase=fase).order_by('tanggal')
+
+    absen_qs = Absensi.objects.filter(sesi__in=sesi_list).select_related('sesi', 'siswa')
+    absen_map = {}
+    for a in absen_qs:
+        absen_map[(a.siswa_id, a.sesi_id)] = a
+
+    rows = []
+    for s in siswa_list:
+        cells = []
+        rekap = {'H': 0, 'I': 0, 'S': 0, 'A': 0}
+        for sesi in sesi_list:
+            a = absen_map.get((s.id, sesi.id))
+            status = a.status if a else None
+            if status:
+                rekap[status] += 1
+            cells.append({'sesi': sesi, 'status': status})
+        rows.append({'siswa': s, 'cells': cells, 'rekap': rekap})
+
+    return render(request, 'pjok/rekap_absensi.html', {
+        'rows': rows,
+        'sesi_list': sesi_list,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+    })
+
+
+@login_required
+def ambil_absensi(request, fase):
+    """Ambil/edit absensi untuk fase & tanggal tertentu (?tanggal=YYYY-MM-DD, default hari ini)."""
+    profile = request.user.guruprofile
+    tanggal_str = request.GET.get('tanggal') or date.today().isoformat()
+    tanggal = date.fromisoformat(tanggal_str)
+
+    siswa_list = Siswa.objects.filter(guru=profile, fase=fase).order_by('nama')
+    sesi, _ = SesiAbsensi.objects.get_or_create(guru=profile, fase=fase, tanggal=tanggal)
+
+    if request.method == 'POST':
+        sesi.catatan_sesi = request.POST.get('catatan_sesi', '')
+        sesi.save()
+        for s in siswa_list:
+            status = request.POST.get(f'status_{s.id}', 'H')
+            keterangan = request.POST.get(f'keterangan_{s.id}', '')
+            Absensi.objects.update_or_create(
+                sesi=sesi, siswa=s,
+                defaults={'status': status, 'keterangan': keterangan},
+            )
+        return redirect('pjok:daftar_absensi', fase=fase)
+
+    absen_map = {a.siswa_id: a for a in sesi.daftar_absensi.all()}
+    rows = [{'siswa': s, 'absen': absen_map.get(s.id)} for s in siswa_list]
+
+    return render(request, 'pjok/ambil_absensi.html', {
+        'rows': rows,
+        'sesi': sesi,
+        'tanggal': tanggal,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'status_choices': Absensi.STATUS_CHOICES,
+    })
+
+
+@login_required
+def edit_siswa(request, siswa_id):
+    """Guru bisa mengedit data siswa miliknya sendiri, termasuk memindahkan fase."""
+    profile = request.user.guruprofile
+    siswa = get_object_or_404(Siswa, id=siswa_id, guru=profile)
+
+    if request.method == 'POST':
+        form = EditSiswaForm(request.POST, instance=siswa)
+        if form.is_valid():
+            siswa = form.save()
+            return redirect('pjok:dashboard_fase', fase=siswa.fase)
+    else:
+        form = EditSiswaForm(instance=siswa)
+
+    return render(request, 'pjok/edit_siswa.html', {'form': form, 'siswa': siswa})
 
 
 @login_required
@@ -325,3 +474,113 @@ def detail_siswa(request, siswa_id):
         'diagnosis_per_materi': diagnosis_per_materi,
         'tanggal_cetak': timezone.now(),
     })
+
+
+def _bikin_dokumen_dasar(judul, guru, fase, jenjang):
+    doc = Document()
+    for section in doc.sections:
+        section.left_margin = Cm(2)
+        section.right_margin = Cm(2)
+
+    h = doc.add_heading(judul, level=1)
+    h.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run(f"Mata Pelajaran: PJOK (Pendidikan Jasmani, Olahraga, dan Kesehatan)")
+    run.font.size = Pt(11)
+
+    p2 = doc.add_paragraph()
+    p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p2.add_run(f"Fase {fase} ({jenjang}) &mdash; Sekolah: {guru.sekolah}").font.size = Pt(11)
+
+    p3 = doc.add_paragraph()
+    p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p3.add_run(f"Guru Pengampu: {guru.nama_lengkap}").font.size = Pt(11)
+
+    doc.add_paragraph()
+    return doc
+
+
+def _isi_tabel_rencana(doc, rows, dengan_semester=False):
+    kolom = 5 if dengan_semester else 4
+    table = doc.add_table(rows=1, cols=kolom)
+    table.style = 'Light Grid Accent 1'
+    hdr = table.rows[0].cells
+    hdr[0].text = 'Minggu'
+    hdr[1].text = 'Materi Pembelajaran'
+    hdr[2].text = 'Alokasi JP'
+    hdr[3].text = 'Keterangan'
+    if dengan_semester:
+        hdr[4].text = 'Semester'
+
+    for row in rows:
+        cells = table.add_row().cells
+        cells[0].text = str(row['minggu_ke'])
+        if row.get('rencana'):
+            cells[1].text = row['rencana'].nama_tampil
+            cells[2].text = str(row['rencana'].alokasi_jp)
+            cells[3].text = row['rencana'].keterangan or ''
+        else:
+            cells[1].text = '-'
+            cells[2].text = '-'
+            cells[3].text = ''
+        if dengan_semester:
+            cells[4].text = row.get('semester_label', '')
+
+
+@login_required
+def export_prosem(request, fase):
+    """Generate dokumen Word Program Semester (Prosem)."""
+    profile = request.user.guruprofile
+    tahun_ajaran = request.GET.get('tahun', '2026/2027')
+    semester = request.GET.get('semester', 'ganjil')
+
+    rencana_list = RencanaMingguan.objects.filter(
+        guru=profile, fase=fase, tahun_ajaran=tahun_ajaran, semester=semester,
+    ).select_related('materi')
+    rencana_map = {r.minggu_ke: r for r in rencana_list}
+    rows = [{'minggu_ke': i, 'rencana': rencana_map.get(i)} for i in range(1, 19)]
+
+    judul_semester = 'Ganjil' if semester == 'ganjil' else 'Genap'
+    doc = _bikin_dokumen_dasar(
+        f"PROGRAM SEMESTER {judul_semester.upper()}\nTahun Ajaran {tahun_ajaran}",
+        profile, fase, JENJANG_PER_FASE.get(fase, ''),
+    )
+    _isi_tabel_rencana(doc, rows)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = f'attachment; filename="Prosem_{judul_semester}_{fase}_{tahun_ajaran.replace("/", "-")}.docx"'
+    doc.save(response)
+    return response
+
+
+@login_required
+def export_prota(request, fase):
+    """Generate dokumen Word Program Tahunan (Prota), gabungan semester ganjil + genap."""
+    profile = request.user.guruprofile
+    tahun_ajaran = request.GET.get('tahun', '2026/2027')
+
+    doc = _bikin_dokumen_dasar(
+        f"PROGRAM TAHUNAN\nTahun Ajaran {tahun_ajaran}",
+        profile, fase, JENJANG_PER_FASE.get(fase, ''),
+    )
+
+    for semester, label in [('ganjil', 'Ganjil'), ('genap', 'Genap')]:
+        doc.add_heading(f"Semester {label}", level=2)
+        rencana_list = RencanaMingguan.objects.filter(
+            guru=profile, fase=fase, tahun_ajaran=tahun_ajaran, semester=semester,
+        ).select_related('materi')
+        rencana_map = {r.minggu_ke: r for r in rencana_list}
+        rows = [{'minggu_ke': i, 'rencana': rencana_map.get(i)} for i in range(1, 19)]
+        _isi_tabel_rencana(doc, rows)
+        doc.add_paragraph()
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = f'attachment; filename="Prota_{fase}_{tahun_ajaran.replace("/", "-")}.docx"'
+    doc.save(response)
+    return response
