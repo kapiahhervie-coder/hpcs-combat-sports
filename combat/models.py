@@ -210,12 +210,17 @@ class CorrectionAuditL1(models.Model):
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True, verbose_name='Berat Badan (kg)')
 
-    # ── Skor 5 Pilar ─────────────────────────────────────────────────
-    score_rotation  = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Rotasi')
-    score_extension = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Ekstensi')
-    score_stability = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Stabilitas')
-    score_posture   = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Postur')
-    score_breathing = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Pernafasan')
+    # ── Skor 6 Pilar ─────────────────────────────────────────────────
+    # (score_ankle ditambahkan belakangan, khusus dipakai cabang yang
+    # menguji Ankle Mobility / Weight-Bearing Lunge Test — mis. Boxing.
+    # Cabang lain yang tidak mengisi field ini tetap None, dan _avg()
+    # otomatis mengecualikannya dari total_skor — lihat save() di bawah.)
+    score_rotation  = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Rotasi')
+    score_extension = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Ekstensi')
+    score_stability = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Stabilitas')
+    score_posture   = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Postur')
+    score_breathing = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Pernafasan')
+    score_ankle     = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Ankle Mobility')
 
     # ── AI ────────────────────────────────────────────────────────────
     ai_confidence_score = models.FloatField(null=True, blank=True, verbose_name='AI Confidence (%)')
@@ -223,7 +228,7 @@ class CorrectionAuditL1(models.Model):
     # ── Hasil ────────────────────────────────────────────────────────
     total_skor         = models.FloatField(default=0, verbose_name='Total Skor')
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
-    layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naik ke L2?')
+    layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naikke L2?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
 
     # ── Metadata ─────────────────────────────────────────────────────
@@ -246,6 +251,7 @@ class CorrectionAuditL1(models.Model):
         self.total_skor = _avg(
             self.score_rotation, self.score_extension,
             self.score_stability, self.score_posture, self.score_breathing,
+            self.score_ankle,
         )
         self.predikat = _hitung_predikat(self.total_skor)
         if self.total_skor >= 7.0:
@@ -267,6 +273,8 @@ class CorrectionAuditL1(models.Model):
             'Stabilitas': self.score_stability, 'Postur': self.score_posture,
             'Pernafasan': self.score_breathing,
         }
+        if self.score_ankle is not None:
+            pilar['Ankle Mobility'] = self.score_ankle
         return min(pilar, key=pilar.get)
 
     @property
@@ -302,7 +310,7 @@ class StrengthAuditL2(models.Model):
     score_lower        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # ── Pilar 2: Upper Push ───────────────────────────────────────────
-    push_5rm_beban = models.FloatField(null=True, blank=True, verbose_name='Push 5RM Beban (kg)')
+    push_5rm_beban = models.FloatField(null=True, blank=True, verbose_name='Push 5RMBeban (kg)')
     score_push     = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
     # ── Pilar 3: Upper Pull ───────────────────────────────────────────
@@ -328,7 +336,7 @@ class StrengthAuditL2(models.Model):
     # ── Hasil ────────────────────────────────────────────────────────
     total_skor         = models.FloatField(default=0)
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
-    layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naik ke L3?')
+    layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naikke L3?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
 
     # ── Metadata ─────────────────────────────────────────────────────
@@ -349,7 +357,7 @@ class StrengthAuditL2(models.Model):
         if self.atlet_id and not self.atlet_name:
             self.atlet_name = self.atlet.nama_atlet
         if self.lower_5rm_beban and self.kelas_berat and self.kelas_berat > 0:
-            self.lower_5rm_bw_ratio = round(self.lower_5rm_beban / self.kelas_berat, 2)
+            self.lower_5rm_bw_ratio = round(self.lower_5rm_beban / self.kelas_berat,2)
         if self.iso_tremor_onset_detik and self.iso_durasi_detik and self.iso_durasi_detik > 0:
             self.iso_tremor_rasio = round((self.iso_tremor_onset_detik / self.iso_durasi_detik) * 100, 1)
         self.total_skor = _avg(self.score_lower, self.score_push, self.score_pull, self.score_core, self.score_isometric)
@@ -365,7 +373,7 @@ class StrengthAuditL2(models.Model):
             if not skor_cukup:
                 alasan.append(f"Skor {self.total_skor} < 7.0")
             if not tremor_cukup:
-                alasan.append(f"CNS Tremor Ratio {self.iso_tremor_rasio or 0:.1f}% < 65%")
+                alasan.append(f"CNS Tremor Ratio {self.iso_tremor_rasio or 0:.1f}% <65%")
             self.alasan_tidak_layak = ' | '.join(alasan)
         super().save(*args, **kwargs)
 
@@ -395,7 +403,7 @@ class StrengthAuditL2(models.Model):
         elif self.predikat == 'READY':
             if not self.layak_naik:
                 return f"Skor cukup tapi {self.cns_status}. Istirahat CNS 48-72 jam."
-            return f"Layak ke L3. Fokus perkuat '{self.pilar_terendah}': progressive overload 3x/minggu."
+            return f"Layak ke L3. Fokus perkuat '{self.pilar_terendah}': progressiveoverload 3x/minggu."
         elif self.predikat == 'DEVELOPING':
             return f"Tahan ke L3. Prioritaskan '{self.pilar_terendah}': compound movement 3x/minggu."
         return f"STOP loading berat. Kekuatan dasar '{self.pilar_terendah}' kritis."
@@ -627,12 +635,12 @@ class SpeedAgilityAuditL4(models.Model):
             self.predikat       = 'READY'
             self.layak_kompetisi = False
             self.layak_bertahan  = True
-            self.rekomendasi_auto = "Kompeten. Target VO2 Max > 52 mL/kg/min dalam 8 minggu."
+            self.rekomendasi_auto = "Kompeten. Target VO2 Max > 52 mL/kg/min dalam 8minggu."
         elif self.total_skor >= 5.0:
             self.predikat       = 'DEVELOPING'
             self.layak_kompetisi = False
             self.layak_bertahan  = False
-            self.rekomendasi_auto = "Dalam Pengembangan. Prioritaskan Yo-Yo Training dan Hexagon drill."
+            self.rekomendasi_auto = "Dalam Pengembangan. Prioritaskan Yo-Yo Trainingdan Hexagon drill."
         else:
             self.predikat          = 'NOVICE'
             self.layak_kompetisi    = False
