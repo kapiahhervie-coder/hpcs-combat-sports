@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'karate',
     'pjok',
     'periodization',
+    'workout_prescription',
 
     # Tambah cabang lain di sini: 'boxing', 'taekwondo', dst
 ]
