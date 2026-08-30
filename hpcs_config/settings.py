@@ -38,7 +38,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,8 +51,9 @@ INSTALLED_APPS = [
     'boxing',
     'taekwondo',
     'karate',
-    'pjok',  
-     
+    'pjok',
+    'periodization',
+
     # Tambah cabang lain di sini: 'boxing', 'taekwondo', dst
 ]
 
@@ -138,10 +138,6 @@ USE_TZ = True
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Media files (uploads)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
@@ -158,7 +154,6 @@ STORAGES = {
 }
 
 
-
 # Email Configuration (Gmail)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -173,9 +168,3 @@ DEFAULT_FROM_EMAIL = 'HPCS Combat Sports <sakalahpcs@gmail.com>'
 # Allow GET logout
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/combat/'
-
-
-
-
-
-

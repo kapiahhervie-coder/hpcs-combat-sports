@@ -50,6 +50,51 @@ LTAD_CHOICES = [
 
 
 # ══════════════════════════════════════════════════════════════════════
+# CABOR — tabel referensi metadata cabang olahraga (Pilar Periodisasi dkk)
+#
+# SENGAJA tidak dijadikan ForeignKey di Atlet.cabang (yang masih CharField
+# string biasa) — biar kode lama di semua app (karate/muaythai/boxing/
+# taekwondo) yang udah filter pakai cabang='boxing' dkk TIDAK perlu
+# migrasi ulang. Cabor cuma "nempel" lewat field `kode` yang nilainya
+# sama persis dengan CABANG_CHOICES di atas. Lihat Atlet.cabor_obj.
+# ══════════════════════════════════════════════════════════════════════
+
+class Cabor(models.Model):
+    kode          = models.CharField(
+        max_length=20, unique=True,
+        help_text="Harus sama persis dengan value di CABANG_CHOICES, mis. 'boxing', 'krt', 'tkd'"
+    )
+    nama          = models.CharField(max_length=50, verbose_name='Nama Cabor')
+    app_slug      = models.CharField(
+        max_length=30, blank=True,
+        help_text="Nama app Django-nya, mis. 'karate' (beda dari kode 'krt'). Kosongkan kalau app-nya belum ada."
+    )
+    deskripsi     = models.TextField(blank=True)
+    icon_class    = models.CharField(
+        max_length=50, blank=True,
+        help_text="Kelas FontAwesome, mis. 'fa-solid fa-hand-fist'"
+    )
+    warna_tema    = models.CharField(
+        max_length=7, blank=True, default='#e63946',
+        help_text="Kode hex, mis. #e63946"
+    )
+    aktif         = models.BooleanField(
+        default=True,
+        help_text="Non-aktifkan buat sembunyikan dari pilihan tanpa hapus datanya"
+    )
+    urutan_tampil = models.PositiveIntegerField(default=0)
+    dibuat_pada   = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name        = 'Cabor'
+        verbose_name_plural = 'Cabor'
+        ordering            = ['urutan_tampil', 'nama']
+
+    def __str__(self):
+        return self.nama
+
+
+# ══════════════════════════════════════════════════════════════════════
 # HELPER
 # ══════════════════════════════════════════════════════════════════════
 
@@ -193,6 +238,16 @@ class Atlet(models.Model):
         elif audit.total_skor < 7.0:
             return 'SEDANG'
         return 'RENDAH'
+
+    @property
+    def cabor_obj(self):
+        """
+        Jembatan ke tabel Cabor, dicocokkan lewat kode (bukan FK asli).
+        Return None kalau cabang kosong atau belum ada baris Cabor yang cocok.
+        """
+        if not self.cabang:
+            return None
+        return Cabor.objects.filter(kode=self.cabang).first()
 
 
 # ══════════════════════════════════════════════════════════════════════
