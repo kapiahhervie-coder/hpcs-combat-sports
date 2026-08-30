@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>HPCS — Level 1: Mobility &amp; Stability Screening</title>
+<title>HPCS — Level 1: Mobility &amp; Stability Screening (Karate)</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -43,13 +43,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .main{padding:20px 28px;max-width:1500px;margin:0 auto}
 .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,42px);letter-spacing:3px;color:var(--cyan);line-height:1;}
 .page-sub{font-size:11px;color:var(--text3);margin-top:3px;font-family:'JetBrains Mono',monospace;letter-spacing:1px}
-.filter-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0}
-.ftab{padding:4px 14px;border-radius:20px;font-size:10px;font-weight:600;text-transform:uppercase;text-decoration:none;letter-spacing:1px;border:1px solid var(--border2);color:var(--text3);transition:.2s;}
-.ftab-all{border-color:#fff;color:#fff;background:rgba(255,255,255,0.07)}
-.ftab-elite{border-color:var(--green);color:var(--green);background:rgba(46,204,113,0.08)}
-.ftab-youth{border-color:var(--blue);color:var(--blue);background:rgba(52,152,219,0.08)}
-.ftab-junior{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,0.08)}
-.ftab-senior{border-color:var(--red);color:var(--red);background:rgba(231,76,60,0.08)}
 .card-x{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;height:100%;}
 .card-title{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;border-left:3px solid var(--cyan);padding-left:10px;}
 .form-control,.form-select{background:#1a1c28!important;border:1px solid #2a2d3e;color:var(--text)!important;border-radius:8px;font-size:13px;transition:border-color .2s;}
@@ -65,54 +58,138 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 .pred-READY{border-color:var(--cyan);color:var(--cyan);background:rgba(80,238,241,0.1)}
 .pred-DEVELOPING{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,0.1)}
 .pred-NOVICE{border-color:var(--red);color:var(--red);background:rgba(231,76,60,0.1)}
-.reko-item{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:8px;margin-bottom:5px;background:rgba(80,238,241,0.05);border:1px solid rgba(80,238,241,0.12);font-size:11px;line-height:1.55;}
-.reko-icon{font-size:13px;flex-shrink:0;margin-top:1px}
 .item-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
 .item-card:hover{border-color:rgba(80,238,241,0.25)}
-.item-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .item-sub{font-size:10px;color:var(--text3);font-style:italic;margin-bottom:8px}
 .rubrik-toggle-btn{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);cursor:pointer;padding:5px 12px;border-radius:6px;border:1px solid var(--cyan);background:transparent;margin-top:8px;}
 .rubrik-l1-panel.no-print{display:none;margin-top:10px;border:1px solid #2a2d3e;border-radius:10px;overflow:hidden;background:#13151f;}
 .rubrik-l1-panel.no-print.open{display:block;}
-.rb1-head{display:grid;grid-template-columns:150px 1fr 1fr 1fr;background:linear-gradient(90deg,#0a1e35,#122d4a);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.rb1-head div{padding:8px 10px;}
-.rb1-row{display:grid;grid-template-columns:150px 1fr 1fr 1fr;border-top:1px solid #1a2330;font-size:10.5px;line-height:1.5;}
-.rb1-row div{padding:8px 10px;}
 .rb-table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:0;}
 .rb-table th,.rb-table td{border:1px solid var(--border2);padding:7px 9px;vertical-align:top;line-height:1.5;}
-.rb-table ul{margin:2px 0;padding-left:14px;}
-.rb-th-aspek{background:#0a1e35;color:var(--cyan);font-weight:700;width:120px;}
+.rb-th-aspek{background:#0a1e35;color:var(--cyan);font-weight:700;width:150px;}
 .rb-td-elite{background:rgba(46,204,113,0.06);color:#a0e4bc;}
 .rb-td-ready{background:rgba(52,152,219,0.06);color:#90cce8;}
-.rb-td-dev{background:rgba(245,166,35,0.06);color:#e8c870;}
 .rb-td-novice{background:rgba(231,76,60,0.06);color:#e8a0a0;}
 .rb-howto{background:rgba(255,255,255,0.02);font-size:9.5px;color:var(--text3);padding:6px 9px;line-height:1.5;}
 .rb-howto b{color:var(--text2);}
-.rb-header{background:linear-gradient(90deg,#0a1e35,#122d4a);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;display:grid;grid-template-columns:120px 1fr 1fr 1fr 1fr;}
+.rb-header{background:linear-gradient(90deg,#0a1e35,#122d4a);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;display:grid;grid-template-columns:150px 1fr 1fr 1fr;}
 .rb-header div{padding:8px 10px;}
-.score-input-1to10{margin-top:8px;}
-.score-input-1to10 input[type="number"]{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;text-align:center;}
+.catatan-box{background:rgba(245,166,35,0.06);border:1px solid rgba(245,166,35,0.25);border-radius:8px;padding:9px 12px;font-size:9.5px;color:var(--text2);line-height:1.6;margin:8px 12px;}
+.score-readonly{margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.score-readonly .lbl{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+.score-readonly .val{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;padding:3px 12px;border-radius:6px;border:1px solid var(--border2);background:#111320;min-width:52px;text-align:center;}
+.asym-warn{font-size:9.5px;color:var(--gold);margin-top:4px;display:none;}
 .no-print{display:block}
 @media print{
-  .no-print,.btn,.topbar,.filter-bar{display:none!important}
+  .no-print,.btn,.topbar{display:none!important}
   body{background:#fff!important;color:#000!important}
   .card-x{background:#fff!important;border-color:#eee!important}
   .score-big{color:#0066aa!important}
   .page-title{color:#0066aa!important}
 }
+
+/* ── Rubrik panel (gaya sama dengan Boxing l1_correction.html) ── */
+.rubrik-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--cyan);cursor:pointer;padding:4px 10px;border-radius:6px;border:1px solid rgba(80,238,241,0.2);transition:.2s;margin-top:10px;}
+.rubrik-panel{margin-top:12px;border:1px solid var(--border2);border-radius:12px;overflow:hidden;}
+.l1doc{font-size:11px;color:var(--text2);line-height:1.55;padding:14px 16px}
+.l1doc h3{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:900;color:#00d2ff;text-transform:uppercase;
+  letter-spacing:1.5px;border-left:3px solid #00d2ff;padding:5px 0 5px 10px;margin:18px 0 8px;background:rgba(0,210,255,0.06)}
+.l1doc h3:first-child{margin-top:0}
+.l1doc table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:10.5px}
+.l1doc th,.l1doc td{border:1px solid var(--border2);padding:6px 8px;text-align:left;vertical-align:middle}
+.l1doc th{background:#0a1e35;color:#00d2ff;font-weight:700;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px}
+.l1doc td.kurang{background:rgba(255,107,107,0.06);color:#e89090}
+.l1doc td.cukup{background:rgba(255,179,0,0.06);color:#e8c870}
+.l1doc td.baik{background:rgba(0,255,136,0.06);color:#a0e4bc}
+.l1doc .catatan-box{background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.25);border-radius:8px;padding:8px 12px;margin:6px 0 14px;font-size:10.5px;color:#e8c870}
+.l1doc .sop-test{background:rgba(255,255,255,0.02);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.l1doc .sop-test .judul{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--cyan);font-size:11px;margin-bottom:2px}
+.l1doc .sop-test .alt{font-size:9.5px;color:var(--text3);margin-bottom:6px;font-style:italic}
+.l1doc .sop-test ol{margin:0;padding-left:18px}
+.l1doc .sop-test li{margin-bottom:3px}
+.l1doc .sop-tools{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.l1doc .sop-tool-chip{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;border-radius:12px;border:1px solid var(--border2);color:var(--text3)}
+
+/* ── AI Camera floating panel (sama dengan Boxing) ── */
+.cam-wrap{background:#000;border-radius:12px;overflow:hidden;position:relative;aspect-ratio:4/3;min-height:180px;}
+.cam-canvas{width:100%;height:100%;display:block}
+.cam-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);transition:opacity .3s;}
+.cam-overlay.hidden{opacity:0;pointer-events:none}
+.cam-badges{position:absolute;top:8px;left:8px;display:flex;flex-direction:column;gap:4px;pointer-events:none;}
+.cam-badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;}
+.cam-fps{position:absolute;bottom:6px;right:8px;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(255,255,255,0.4)}
+.cam-status-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,0.6);padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);}
+.btn-cam{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.5px;padding:6px 14px;border-radius:8px;border:1px solid;transition:.2s;cursor:pointer;}
+.btn-cam-start{background:rgba(52,152,219,0.15);border-color:var(--blue);color:var(--blue)}
+.btn-cam-capture{background:rgba(46,204,113,0.15);border-color:var(--green);color:var(--green)}
+.btn-cam-capture:disabled{opacity:.4;cursor:not-allowed}
+.btn-cam-stop{background:rgba(231,76,60,0.1);border-color:var(--red);color:var(--red)}
+.score-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;padding:8px;background:rgba(255,255,255,0.03);border-radius:8px;}
+.sp-item{text-align:center}
+.sp-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.sp-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--cyan);margin-top:2px}
+.toast-hpcs{position:fixed;top:18px;right:18px;z-index:9999;font-family:'JetBrains Mono',monospace;font-size:11px;padding:10px 18px;border-radius:8px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:opacity .4s;}
 </style>
 </head>
 <body>
-<!-- TOPBAR -->
-<header class="topbar no-print">
-  <div class="topbar-brand">
-    <div class="brand-mark">H</div>
-    <div>
-      <div class="brand-title">HPCS</div>
-      <div class="brand-sub">Karate Division</div>
+
+<!-- FLOATING CAMERA PANEL -->
+<div id="camPanel" style="display:none;position:fixed;top:64px;right:20px;width:340px;z-index:500;background:#13151f;border:1px solid rgba(80,238,241,0.3);border-radius:14px;padding:16px;box-shadow:0 8px 32px rgba(0,0,0,0.6)">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div class="card-title mb-0"><i class="bi bi-camera-video-fill"></i> AI Camera — Pose Detection</div>
+    <button type="button" onclick="toggleCamPanel()" style="background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer">×</button>
+  </div>
+  <video id="input_video" playsinline style="display:none"></video>
+  <div class="cam-wrap" id="camWrap">
+    <canvas id="output_canvas" class="cam-canvas"></canvas>
+    <div class="cam-overlay" id="camOverlay">
+      <i class="bi bi-camera-video-off" style="font-size:2rem;color:rgba(255,255,255,0.3)"></i>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);margin-top:8px;text-align:center">
+        Kamera belum aktif<br>Klik "Aktifkan" untuk mulai
+      </div>
+    </div>
+    <div class="cam-badges" id="camBadges" style="display:none">
+      <div class="cam-badge" style="background:rgba(80,238,241,0.85);color:#000" id="b_thorl">THOR-L: —</div>
+      <div class="cam-badge" style="background:rgba(80,238,241,0.85);color:#000" id="b_thorr">THOR-R: —</div>
+      <div class="cam-badge" style="background:rgba(46,204,113,0.85);color:#000" id="b_pelvic">PELVIC: —</div>
+    </div>
+    <div class="cam-fps" id="camFps"> FPS</div>
+    <div class="cam-status-bar" id="camStatusBar" style="display:none">
+      <span id="camStatusTxt" style="color:var(--cyan)">Mendeteksi pose...</span>
     </div>
   </div>
-  <div class="d-flex gap-2 align-items-center">
+  <div class="d-flex gap-2 mt-2 flex-wrap">
+    <button type="button" class="btn-cam btn-cam-start" id="btnStart" onclick="startCam()">
+      <i class="bi bi-camera-video"></i> Aktifkan
+    </button>
+    <button type="button" class="btn-cam btn-cam-capture" id="btnCapture" onclick="captureScores()" disabled>
+      <i class="bi bi-check-circle-fill"></i> Gunakan
+    </button>
+    <button type="button" class="btn-cam btn-cam-stop" id="btnStop" onclick="stopCam()" style="display:none">
+      <i class="bi bi-stop-circle"></i> Stop
+    </button>
+  </div>
+  <div class="score-preview" id="scorePreview" style="display:none">
+    <div class="sp-item"><div class="sp-lbl">Thor-L</div><div class="sp-val" id="sp_thorl">—</div></div>
+    <div class="sp-item"><div class="sp-lbl">Thor-R</div><div class="sp-val" id="sp_thorr">—</div></div>
+    <div class="sp-item"><div class="sp-lbl">Pelvic</div><div class="sp-val" id="sp_pelvic">—</div></div>
+  </div>
+  <div class="x-small mono mt-1" style="color:var(--text3)">
+    <i class="bi bi-info-circle"></i> Rata-rata 30 frame. MediaPipe Pose Lite.
+  </div>
+  <div class="catatan-box" style="margin:8px 0 0;font-size:9px">⚠️ AI Camera hanya mendukung estimasi <b>Thoracic Rotation</b> &amp; <b>Lateral Pelvic Stability</b> (observasi visual 2D). Pilar Ankle, Hip Rotation (IR/ER), ASLR, dan Lumbar Extension <b>wajib diukur manual</b> dengan goniometer/meteran sesuai SOP — kamera tidak bisa mengukur cm/sudut sendi presisi.</div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar no-print">
+  <div class="d-flex gap-3 align-items-center">
+    <div class="topbar-brand">
+      <div class="brand-mark">H</div>
+      <div>
+        <div class="brand-title">HPCS</div>
+        <div class="brand-sub">Karate Division</div>
+      </div>
+    </div>
     <a href="{% url 'karate:dashboard' %}" class="btn-dash"><i class="bi bi-grid-fill"></i> &larr; DASHBOARD</a>
   </div>
 </header>
@@ -127,22 +204,135 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 
   <div class="no-print">
     <div class="page-title">L1 — MOBILITY &amp; STABILITY</div>
-    <div class="page-sub">SCREENING FUNGSIONAL &middot; FONDASI SEBELUM TEKNIK &middot; MOTOR AUTOMATICITY ASSESSMENT</div>
-  <button type="button" class="rubrik-toggle-btn no-print" onclick="toggleRubrikL1()"><i class="bi bi-journal-medical"></i> Rubrik Standar L1 (Fitts &amp; Posner)</button>
+    <div class="page-sub">SOP REVISI 2 &middot; SPESIFIKASI KARATE &middot; SKOR OTOMATIS BERBASIS PENGUKURAN</div>
   </div>
 
-  <div class="rubrik-l1-panel no-print" id="rubrikL1Panel">
-    <div class="rb-header"><div>ASPEK</div><div>&#127942; VERY COMPETENT<br><span style="font-weight:400">(9-10)</span></div><div>&#9989; COMPETENT<br><span style="font-weight:400">(7-8)</span></div><div>&#128260; DEVELOPING<br><span style="font-weight:400">(5-6)</span></div><div>&#9888; NOVICE<br><span style="font-weight:400">(1-4)</span></div></div>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=HKYVJHnrReU" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Hip Rotation <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;90&deg;</li><li>Y: &gt;80&deg;</li><li>J: &gt;70&deg;</li></ul></td><td class="rb-td-ready"><ul><li>E: 70-90&deg;</li><li>Y: 60-80&deg;</li><li>J: 55-70&deg;</li></ul></td><td class="rb-td-dev"><ul><li>E: 50-70&deg;</li><li>Y: 45-60&deg;</li><li>J: 40-55&deg;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;50&deg;</li><li>Y: &lt;45&deg;</li><li>J: &lt;40&deg;</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Posisi terlentang/tengkurap, fleksi hip 90&deg;, putar tungkai bawah ke dalam (internal) &amp; ke luar (eksternal) semaksimal mungkin tanpa menggerakkan pinggul, jumlahkan sudut internal+eksternal &nbsp;&middot;&nbsp; <b>Alat:</b> Matras, goniometer atau aplikasi pengukur sudut di HP</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=sX7klnl6uks" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Single-Leg Balance <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;45 dtk</li><li>Y: &gt;30 dtk</li><li>J: &gt;20 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 30-45 dtk</li><li>Y: 20-30 dtk</li><li>J: 15-20 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 15-30 dtk</li><li>Y: 10-20 dtk</li><li>J: 8-15 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;15 dtk</li><li>Y: &lt;10 dtk</li><li>J: &lt;8 dtk</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Berdiri satu kaki, tangan di pinggang, mata tertutup, tahan selama mungkin sampai kaki lain menyentuh lantai atau goyah signifikan &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, permukaan datar</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=Clutk_VsgUY" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Ankle Dorsiflexion <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &#8805;12 cm</li><li>Y: &#8805;10 cm</li><li>J: &#8805;9 cm</li></ul></td><td class="rb-td-ready"><ul><li>E: 9-11 cm</li><li>Y: 7-9 cm</li><li>J: 6-8 cm</li></ul></td><td class="rb-td-dev"><ul><li>E: 6-8 cm</li><li>Y: 5-6 cm</li><li>J: 4-5 cm</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;6 cm</li><li>Y: &lt;5 cm</li><li>J: &lt;4 cm</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Knee-to-Wall Test &mdash; berlutut menghadap tembok, dorong lutut ke depan hingga menyentuh tembok tanpa tumit terangkat, geser kaki mundur bertahap cari jarak maksimal &nbsp;&middot;&nbsp; <b>Alat:</b> Tembok/dinding rata, penggaris atau meteran</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=QqZAIMLtlTc" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Thoracic Rotation <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;55&deg;</li><li>Y: &gt;45&deg;</li><li>J: &gt;40&deg;</li></ul></td><td class="rb-td-ready"><ul><li>E: 40-55&deg;</li><li>Y: 35-45&deg;</li><li>J: 30-40&deg;</li></ul></td><td class="rb-td-dev"><ul><li>E: 25-40&deg;</li><li>Y: 20-35&deg;</li><li>J: 18-30&deg;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;25&deg;</li><li>Y: &lt;20&deg;</li><li>J: &lt;18&deg;</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Posisi quadruped (merangkak), satu tangan di belakang kepala, putar dada ke atas &amp; bawah tanpa menggerakkan pinggul, ukur sudut rotasi maksimal &nbsp;&middot;&nbsp; <b>Alat:</b> Matras, goniometer atau observasi video</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=zyJf11ThX4g" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Hip Flexor/Hamstring Flexibility <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;90&deg;</li><li>Y: &gt;80&deg;</li><li>J: &gt;75&deg;</li></ul></td><td class="rb-td-ready"><ul><li>E: 75-90&deg;</li><li>Y: 65-80&deg;</li><li>J: 60-75&deg;</li></ul></td><td class="rb-td-dev"><ul><li>E: 60-75&deg;</li><li>Y: 50-65&deg;</li><li>J: 45-60&deg;</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;60&deg;</li><li>Y: &lt;50&deg;</li><li>J: &lt;45&deg;</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Straight Leg Raise &mdash; berbaring telentang, angkat satu kaki lurus ke atas semaksimal mungkin, kaki lain tetap menempel lantai, ukur sudut elevasi &nbsp;&middot;&nbsp; <b>Alat:</b> Matras, goniometer atau aplikasi pengukur sudut di HP</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=W_O65GVbLQM" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Hip Hinge Pattern <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: 5/5 sempurna</li><li>Y: 5/5 sempurna</li><li>J: 5/5 sempurna</li></ul></td><td class="rb-td-ready"><ul><li>E: 4/5</li><li>Y: 4/5</li><li>J: 3-4/5</li></ul></td><td class="rb-td-dev"><ul><li>E: 2-3/5</li><li>Y: 2-3/5</li><li>J: 2/5</li></ul></td><td class="rb-td-novice"><ul><li>E: &#8804;1/5</li><li>Y: &#8804;1/5</li><li>J: &#8804;1/5</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Berdiri dengan tongkat menempel di 3 titik (kepala, punggung atas, tulang ekor), lakukan hip hinge (dorong pinggul ke belakang, punggung lurus) 5x percobaan, hitung berapa kali 3 titik kontak tetap menempel &nbsp;&middot;&nbsp; <b>Alat:</b> Tongkat kayu/PVC pipe</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=WImKWp7_OZs" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Core Anti-Rotation <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &gt;20 dtk</li><li>Y: &gt;15 dtk</li><li>J: &gt;12 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 12-20 dtk</li><li>Y: 10-15 dtk</li><li>J: 8-12 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 6-12 dtk</li><li>Y: 5-10 dtk</li><li>J: 4-8 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &lt;6 dtk</li><li>Y: &lt;5 dtk</li><li>J: &lt;4 dtk</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Posisi plank atau berdiri, minta atlet bracing (kencangkan perut), beri dorongan ringan tak terduga berulang di dada/punggung, ukur durasi bertahan sebelum postur runtuh &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, tidak perlu alat lain</td></tr></tbody></table>
-<table class="rb-table"><tbody><tr><td class="rb-th-aspek"><a href="https://www.youtube.com/watch?v=0Ua9bOsZTYg" target="_blank" style="color:inherit;text-decoration:underline dotted;cursor:pointer;opacity:0.9;">Dynamic Balance Recovery <span style="font-size:9px;opacity:0.6;">&#9654;</span></a></td><td class="rb-td-elite"><ul><li>E: &lt;60 dtk</li><li>Y: &lt;90 dtk</li><li>J: &lt;120 dtk</li></ul></td><td class="rb-td-ready"><ul><li>E: 60-90 dtk</li><li>Y: 90-120 dtk</li><li>J: 120-150 dtk</li></ul></td><td class="rb-td-dev"><ul><li>E: 90-150 dtk</li><li>Y: 120-180 dtk</li><li>J: 150-210 dtk</li></ul></td><td class="rb-td-novice"><ul><li>E: &gt;150 dtk</li><li>Y: &gt;180 dtk</li><li>J: &gt;210 dtk</li></ul></td></tr><tr><td colspan="5" class="rb-howto">&#128295; <b>Cara:</b> Setelah sesi intensitas tinggi (mis. 1 menit shadow sparring maksimal), ukur waktu denyut nadi kembali &lt;120 bpm atau napas kembali teratur &nbsp;&middot;&nbsp; <b>Alat:</b> Stopwatch, heart rate monitor atau aplikasi HP (opsional)</td></tr></tbody></table>
-    <div style="padding:8px 12px;font-size:9px;color:var(--text3);border-top:1px solid #1a2330;"><strong style="color:var(--cyan);">Skor input:</strong> ketik angka 1-10 per item sesuai band di atas &nbsp;&middot;&nbsp; E=Elite, Y=Youth, J=Junior &nbsp;&middot;&nbsp; Standar awal &mdash; sesuaikan dengan data internal/rujukan Anda sendiri seiring waktu.</div>
+  <div class="d-flex align-items-center justify-content-between no-print" style="margin-top:10px;flex-wrap:wrap;gap:8px">
+    <a class="rubrik-toggle" onclick="toggleRubrikL1()" id="btnRubrikL1" style="margin-top:0">
+      <i class="bi bi-table"></i> RUBRIK STANDAR SKORING
+      <i class="bi bi-chevron-down" id="rubrik-chevron-krt"></i>
+    </a>
+    <div class="d-flex gap-2">
+      <button type="button" id="btnToggleCam" onclick="toggleCamPanel()"
+              style="background:rgba(46,204,113,0.12);border:1px solid var(--green);color:var(--green);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:6px;cursor:pointer">
+        <i class="bi bi-camera-video-fill me-1"></i>AI Camera
+      </button>
+      <button type="button" onclick="handlePrint()"
+              style="background:rgba(80,238,241,0.12);border:1px solid var(--cyan);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:6px;cursor:pointer">
+        <i class="bi bi-printer-fill me-1"></i>PRINT REPORT
+      </button>
+    </div>
   </div>
+
+  <div class="rubrik-panel no-print" id="rubrikL1Panel" style="display:none">
+  <div class="l1doc">
+
+    <h3>📊 Rubrik Norma Penilaian &amp; Skoring (1–10)</h3>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:10px">Skor dihitung otomatis oleh sistem dari data pengukuran — tabel ini untuk referensi pelatih. SOP ini <b>FLAT</b> (tidak dipecah per kategori usia/gender), berlaku sama untuk semua atlet Karate.</div>
+
+    <b style="font-size:10.5px;color:var(--text)">A. Ankle Mobility <span style="color:var(--text3);font-weight:400">(Weight-Bearing Lunge Test — cm)</span></b>
+    <table>
+      <thead><tr><th>Parameter</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Jarak (cm)</td><td class="kurang">&lt; 6–7 cm ATAU asimetri L-R &gt; 1,5 cm</td><td class="cukup">7 – 10 cm</td><td class="baik">&#8805; 10–12 cm (simetris, selisih &#8804; 1,5 cm)</td></tr>
+      </tbody>
+    </table>
+
+    <b style="font-size:10.5px;color:var(--text)">B. Seated Thoracic Rotation <span style="color:var(--text3);font-weight:400">(derajat°)</span></b>
+    <table>
+      <thead><tr><th>Parameter</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Sudut per sisi</td><td class="kurang">&lt; 35°</td><td class="cukup">35° – 44°</td><td class="baik">&#8805; 45° (mulus, asimetri &#8804; 10°)</td></tr>
+      </tbody>
+    </table>
+    <div class="catatan-box">⚠️ <b>Syarat asimetri:</b> selisih Kanan vs Kiri &gt; 10° membatasi skor maksimal di batas atas "Cukup" (7.0) — tidak bisa mencapai "Baik" walau sudut individual sudah besar.</div>
+
+    <b style="font-size:10.5px;color:var(--text)">C. Hip Rotation Mobility <span style="color:var(--text3);font-weight:400">(Internal &amp; External Rotation — derajat°, dinilai TERPISAH)</span></b>
+    <table>
+      <thead><tr><th>Parameter</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Internal Rotation (IR)</td><td class="kurang">&lt; 30°</td><td class="cukup">30° – 35°</td><td class="baik">&#8805; 35°</td></tr>
+        <tr><td>External Rotation (ER)</td><td class="kurang">&lt; 40°</td><td class="cukup">40° – 45°</td><td class="baik">&#8805; 45°</td></tr>
+      </tbody>
+    </table>
+    <div class="catatan-box">⚠️ <b>Skor gabungan</b> = skor yang <b>TERLEMAH</b> antara IR dan ER (bukan dijumlahkan). <b>Penalti asimetri:</b> selisih Kanan vs Kiri &gt; 10° pada IR ATAU ER → otomatis masuk band "Kurang" (skor dibatasi maksimal 4.0), terlepas dari besar sudutnya.</div>
+
+    <b style="font-size:10.5px;color:var(--text)">D. ASLR / Fleksibilitas Tungkai <span style="color:var(--text3);font-weight:400">(Active Straight Leg Raise — derajat°)</span></b>
+    <table>
+      <thead><tr><th>Parameter</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Sudut elevasi</td><td class="kurang">&lt; 70°</td><td class="cukup">70° – 85°</td><td class="baik">&gt; 85° – 90°+ (tanpa kompensasi panggul)</td></tr>
+      </tbody>
+    </table>
+
+    <b style="font-size:10.5px;color:var(--text)">E. Lumbar Extension &amp; Lateral Pelvic Stability <span style="color:var(--text3);font-weight:400">(Skala Kualitatif — observasi pelatih)</span></b>
+    <table>
+      <thead><tr><th>Parameter</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td><b>Lumbar Extension</b></td><td class="kurang">Nyeri saat ekstensi → <b>skor otomatis 0</b> (gagal clearing gate) / sangat terbatas</td><td class="cukup">Ekstensi cukup, ada kompensasi bahu/panggul terangkat</td><td class="baik">Ekstensi mulus, panggul menempel matras, tanpa nyeri/kompensasi</td></tr>
+        <tr><td><b>Lateral Pelvic Stability</b></td><td class="kurang">Knee valgus parah / panggul miring anjlok jelas (Trendelenburg sign)</td><td class="cukup">Lutut bergoyang ringan / kompensasi minim</td><td class="baik">Alignment lurus (lutut sejajar jari kaki), panggul stabil</td></tr>
+      </tbody>
+    </table>
+
+    <div class="catatan-box">📌 <b>Catatan skoring:</b> Skor 1-4 = prioritas corrective exercise tinggi, hindari beban tinggi pada pola gerak terkait sampai ada perbaikan. Skor 5-7 = corrective exercise sebagai bagian pemanasan/pendinginan, monitor progres. Skor 8-10 = pertahankan dengan maintenance routine, fokus ke pengembangan Strength &amp; Power.</div>
+    <div class="catatan-box">📐 <b>Cara baca skor di bawah ambang "Kurang":</b> nilai di bawah batas minimum tidak otomatis 1, tapi dihitung proporsional: <code>skor = 1 + 3 × (nilai ÷ batas bawah "Kurang")</code>, dibatasi maksimal 4.0. Ini bukan bug — radar yang "menciut" di satu titik memang menandai kelemahan nyata sesuai data yang diinput.</div>
+
+    <h3 style="margin-top:22px">📋 SOP — Prosedur Pelaksanaan Tes Lapangan</h3>
+    <div class="sop-tools">
+      <span class="sop-tool-chip">📏 Meteran/Pita ukur</span>
+      <span class="sop-tool-chip">📐 Goniometer/Clinometer HP</span>
+      <span class="sop-tool-chip">⏱️ Stopwatch</span>
+      <span class="sop-tool-chip">🧘 Matras</span>
+      <span class="sop-tool-chip">📦 Boks/Kursi tinggi</span>
+      <span class="sop-tool-chip">📍 Fixed Plumb Line</span>
+    </div>
+
+    <div class="sop-test"><div class="judul">1. Ankle Mobility Test</div><div class="alt">Weight-Bearing Lunge Test (WBLT)</div>
+      <ol><li>Atlet berdiri menghadap dinding, kaki menempel lantai.</li><li>Melangkah mundur dengan kaki sebelahnya, tekuk lutut depan hingga menyentuh dinding (tumit wajib menempel lantai).</li><li>Geser kaki depan menjauh bertahap sampai jarak maksimum lutut masih bisa menyentuh dinding tanpa tumit terangkat.</li><li>Ukur jarak jempol kaki ke dinding (cm). Ulangi kaki sebelahnya, catat selisih L-R.</li><li><b>Clearing gate:</b> hentikan &amp; tandai "perlu evaluasi medis" jika muncul nyeri tajam pergelangan kaki/lutut.</li></ol></div>
+
+    <div class="sop-test"><div class="judul">2. Seated Thoracic Rotation Test</div><div class="alt">Rotasi Thorakal &amp; Bahu</div>
+      <ol><li>Duduk tegak di boks/kursi, paha dijepit balok foam (kunci panggul).</li><li>Tangan menyilang di dada pegang bahu berlawanan, stik ringan horizontal di dada.</li><li>Putar batang tubuh Kiri &amp; Kanan sejauh mungkin tanpa menggeser panggul.</li><li>Ukur sudut rotasi stik dengan goniometer/clinometer. Catat sudut per sisi &amp; selisih asimetri.</li></ol></div>
+
+    <div class="sop-test"><div class="judul">3. Seated Hip Internal &amp; External Rotation Test</div><div class="alt">Hip Rotation Mobility (IR &amp; ER)</div>
+      <ol><li>Duduk di tepi boks/meja tinggi, kedua lutut menggantung 90°.</li><li>Jepit balok foam kecil di antara paha (kunci kompensasi panggul).</li><li><b>External Rotation (ER):</b> putar tungkai bawah ke luar (jari kaki menjauh dari midline) semaksimal mungkin.</li><li><b>Internal Rotation (IR):</b> putar tungkai bawah ke dalam (jari kaki mendekati midline) semaksimal mungkin.</li><li>Ukur IR &amp; ER secara terpisah dengan goniometer/clinometer. Catat asimetri L/R masing-masing.</li><li>Pastikan gerakan berasal dari rotasi panggul, bukan kompensasi kemiringan trunk/panggul.</li></ol></div>
+
+    <div class="sop-test"><div class="judul">4. Active Straight Leg Raise (ASLR)</div><div class="alt">Hamstring &amp; Hip Flexor Test</div>
+      <ol><li>Berbaring telentang di matras, kedua kaki lurus, panggul netral.</li><li>Angkat satu kaki setinggi mungkin tanpa menekuk lutut &amp; tanpa mengangkat panggul/kaki sebelahnya.</li><li>Ukur sudut kemiringan paha terhadap lantai dengan goniometer/clinometer.</li><li>Ulangi pada kaki sebelahnya.</li></ol></div>
+
+    <div class="sop-test"><div class="judul">5. Lumbar Extension Test</div><div class="alt">Modified Cobra / Clearing Gate</div>
+      <ol><li><b>Clearing step:</b> tanyakan riwayat nyeri lumbal akut sebelum mulai — jika ada, tunda tes ini.</li><li>Tengkurap di matras, telapak tangan di lantai tepat di bawah bahu.</li><li>Dorong dada ke atas, luruskan siku perlahan, panggul tetap menempel matras.</li><li>Hentikan segera jika muncul nyeri — catat sebagai <b>gagal/skor 0</b>, rujuk evaluasi lebih lanjut.</li><li>Jika tanpa nyeri, amati kelancaran ekstensi thoracolumbar &amp; kompensasi (bahu/panggul terangkat).</li></ol></div>
+
+    <div class="sop-test"><div class="judul">6. Lateral Pelvic Stability Test</div><div class="alt">Single-Leg Squat Assessment</div>
+      <ol><li>Atlet berdiri satu kaki, kaki sebelahnya diangkat ke depan.</li><li>Lakukan Single-Leg Squat hingga tekukan lutut mencapai sudut 45°.</li><li>Amati apakah lutut menekuk miring ke dalam (knee valgus) atau panggul anjlok miring (Trendelenburg sign).</li><li>Ulangi pada kaki sebelahnya.</li></ol></div>
+
+    <div style="font-size:9px;color:var(--text3);margin-top:6px;padding-top:8px;border-top:1px solid #1a2330;">Sumber: SOP &amp; Rubrik Asesmen HPCS Level 1 Karate — Revisi 2 (Koreksi Biomekanik).</div>
+
+    <h3 style="margin-top:22px">📝 Ringkasan Perubahan (Changelog Revisi 2)</h3>
+    <table>
+      <thead><tr><th style="width:16%">Item</th><th style="width:14%">Status</th><th>Perubahan</th></tr></thead>
+      <tbody>
+        <tr><td>Tabel A — Ankle Mobility</td><td class="kurang">[!] Direvisi</td><td>Ambang diperbarui (&lt;7 / 7-10 / &#8805;10 cm) dan ditambahkan syarat asimetri eksplisit — selisih L-R &gt;1,5cm otomatis masuk band "Kurang", sebelumnya hanya dinilai dari sisi terlemah tanpa syarat asimetri.</td></tr>
+        <tr><td>Tabel B — Thoracic Rotation</td><td class="cukup">[~] Diperkuat</td><td>Ditambahkan syarat eksplisit: asimetri &gt;10° membatasi skor maksimal di "Cukup" (7.0), tidak bisa mencapai "Baik" walau sudut individual besar.</td></tr>
+        <tr><td>Tabel C — Hip Rotation</td><td class="kurang">[!!] Direvisi Besar</td><td>Internal Rotation (IR) &amp; External Rotation (ER) kini dinilai <b>TERPISAH</b> dengan ambang masing-masing (sebelumnya dijumlahkan jadi satu angka gabungan). Skor akhir = komponen yang paling lemah. Asimetri &gt;10° pada IR ATAU ER otomatis "Kurang".</td></tr>
+        <tr><td>Tabel D — ASLR</td><td class="baik">[OK] Tidak berubah</td><td>Ambang &lt;70° / 70-85° / &gt;85-90°+ dipertahankan.</td></tr>
+        <tr><td>Tabel E — Lumbar Extension &amp; Lateral Pelvic Stability</td><td class="baik">[OK] Tidak berubah</td><td>Mekanisme skoring sama, redaksi diperjelas ("tanpa kompensasi signifikan", penambahan rujukan evaluasi medis pada clearing gate).</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:22px">📚 Daftar Sumber</h3>
+    <ol style="font-size:10px;color:var(--text2);line-height:1.7;padding-left:18px;margin-bottom:8px">
+      <li>Adillón, C., Gallegos, M., Treviño, S., &amp; Salvat, I. (2022). Ankle Joint Dorsiflexion Reference Values in Non-Injured Youth Athletes. <i>International Journal of Environmental Research and Public Health</i>, 19(18), 11740. (PMC9517286)</li>
+      <li>Titleist Performance Institute (TPI). The Seated Trunk Rotation Test Protocol and Normative Biomechanical Range of Motion. (45° Reference Threshold)</li>
+      <li>Movement Assessment Technologies (MAT). Clinical Assessment &amp; Normative Range Values for Seated Hip Internal and External Rotation. (30°–45° Reference Range)</li>
+      <li>Functional Movement Screen (FMS). Protokol Resmi &amp; Normatif Skoring Active Straight Leg Raise (ASLR) &amp; Spinal Extension Clearing Test.</li>
+      <li>Chaabene, H., et al. (2012). Physical and Physiological Profile of Elite Karate Athletes. <i>Sports Medicine</i>, 42(10), 829–843.</li>
+      <li>Roggio, F., et al. (2024). Intra-rater and inter-rater reliability of the fixed plumb line for postural assessment in the sagittal plane. <i>PeerJ</i>, 12, e17820. (PMID: 39553711)</li>
+    </ol>
+    <div class="catatan-box">📌 Seluruh instrumen di atas menggunakan standar ukur akademis terverifikasi (PubMed/PMC/FMS/TPI/MAT) yang disesuaikan secara biomekanis untuk kebutuhan spesifik kedalaman kuda-kuda, rotasi panggul, dan stabilitas tumpuan olahraga Karate.</div>
+    <div style="padding:8px 12px;font-size:9px;color:var(--text3);border-top:1px solid #1a2330;"><strong style="color:var(--cyan);">Skor otomatis:</strong> pilar A-D dihitung dari angka pengukuran sesuai ambang di atas (termasuk penalti asimetri) &nbsp;&middot;&nbsp; pilar E dipilih pelatih dari dropdown observasi &nbsp;&middot;&nbsp; total skor = rata-rata 6 pilar.</div>
+  </div>
+  </div>
+
   <form method="POST" action="{% url 'karate:l1_correction' %}" id="mainForm" class="mt-3">
     {% csrf_token %}
     <input type="hidden" name="atlet_id" id="id_atlet_hidden">
@@ -150,6 +340,8 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
     <input type="hidden" name="kategori_usia" id="input_kategori" value="ELITE">
     <input type="hidden" name="gender" id="input_gender" value="Putra">
     <input type="hidden" name="kelas_berat" id="input_berat">
+    <input type="hidden" name="skor_lumbar_extension" id="input_skor_lumbar" value="0">
+    <input type="hidden" name="skor_lateral_pelvic" id="input_skor_pelvic" value="0">
 
     <div class="row g-3">
       <!-- Kolom 1: Form Input -->
@@ -176,107 +368,74 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
           <div class="alert alert-warning py-2 small">Tidak ada atlet ditemukan.</div>
           {% endif %}
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-repeat"></i> 1. Hip Rotation ROM</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-down-circle"></i> 1. Ankle Mobility (WBLT)</div>
           <div class="item-card">
-            <div class="item-sub">Prone/supine, hip fleksi 90°, ukur rotasi internal &amp; eksternal (derajat)</div>
-            <div class="row g-2">
-              <div class="col-6"><label class="cyan">Internal Kanan</label><input type="number" name="hip_rotasi_internal_kanan" id="f_hip_int_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-              <div class="col-6"><label class="cyan">Internal Kiri</label><input type="number" name="hip_rotasi_internal_kiri" id="f_hip_int_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-              <div class="col-6"><label class="gold">Eksternal Kanan</label><input type="number" name="hip_rotasi_eksternal_kanan" id="f_hip_ext_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-              <div class="col-6"><label class="gold">Eksternal Kiri</label><input type="number" name="hip_rotasi_eksternal_kiri" id="f_hip_ext_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-            </div>
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_hip_rotasi" id="n_hip_rotasi" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
-          </div>
-
-          <div class="card-title mt-2"><i class="bi bi-person-standing"></i> 2. Single-Leg Balance</div>
-          <div class="item-card">
-            <div class="item-sub">Berdiri satu kaki, tangan di pinggang, maks 30 detik tiap kondisi</div>
-            <div class="row g-2">
-              <div class="col-6"><label class="cyan">Mata Terbuka (dtk)</label><input type="number" name="balance_durasi_mata_terbuka" id="f_bal_terbuka" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-              <div class="col-6"><label class="gold">Mata Tertutup (dtk)</label><input type="number" name="balance_durasi_mata_tertutup" id="f_bal_tertutup" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-            </div>
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_balance" id="n_balance" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
-          </div>
-
-          <div class="card-title mt-2"><i class="bi bi-arrow-down-circle"></i> 3. Ankle Dorsiflexion</div>
-          <div class="item-card">
-            <div class="item-sub">Knee-to-wall test, jarak jempol kaki ke tembok (cm)</div>
+            <div class="item-sub">Knee-to-Wall Test — jarak jempol kaki ke tembok (cm)</div>
             <div class="row g-2">
               <div class="col-6"><label class="cyan">Kanan (cm)</label><input type="number" name="ankle_dorsifleksi_kanan_cm" id="f_ankle_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
               <div class="col-6"><label class="gold">Kiri (cm)</label><input type="number" name="ankle_dorsifleksi_kiri_cm" id="f_ankle_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_ankle" id="n_ankle" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
+            <div class="asym-warn" id="warn_ankle_asym">⚠️ Selisih Kanan vs Kiri &gt; 1,5 cm — otomatis masuk band "Kurang" (SOP)</div>
+            <div class="score-readonly"><span class="lbl">SKOR (OTOMATIS)</span><span class="val" id="s_ankle">0.0</span></div>
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-left-right"></i> 4. Thoracic Rotation</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-left-right"></i> 2. Seated Thoracic Rotation</div>
           <div class="item-card">
-            <div class="item-sub">Quadruped, tangan di belakang kepala, rotasi trunk (derajat)</div>
+            <div class="item-sub">Duduk, paha dijepit foam, rotasi trunk terhadap goniometer (derajat)</div>
             <div class="row g-2">
               <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="thoracic_rotasi_kanan" id="f_thor_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
               <div class="col-6"><label class="gold">Kiri</label><input type="number" name="thoracic_rotasi_kiri" id="f_thor_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_thoracic" id="n_thoracic" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
+            <div class="asym-warn" id="warn_thoracic_asym">⚠️ Selisih &gt; 10° — skor dibatasi maksimal "Cukup" (7.0), tidak bisa "Baik"</div>
+            <div class="score-readonly"><span class="lbl">SKOR (OTOMATIS)</span><span class="val" id="s_thoracic">0.0</span></div>
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 5. Hip Flexor/Hamstring Flexibility</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-repeat"></i> 3. Hip Rotation Mobility (IR &amp; ER)</div>
           <div class="item-card">
-            <div class="item-sub">Active Straight Leg Raise (ASLR), ukur sudut elevasi kaki dari lantai (derajat)</div>
+            <div class="item-sub">Duduk di tepi meja tinggi, lutut 90°. IR &amp; ER diukur TERPISAH (derajat)</div>
             <div class="row g-2">
-              <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="asl_raise_kanan_derajat" id="f_asl_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
-              <div class="col-6"><label class="gold">Kiri</label><input type="number" name="asl_raise_kiri_derajat" id="f_asl_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="cyan">Internal (IR) Kanan</label><input type="number" name="hip_rotasi_internal_kanan" id="f_hip_int_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="cyan">Internal (IR) Kiri</label><input type="number" name="hip_rotasi_internal_kiri" id="f_hip_int_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Eksternal (ER) Kanan</label><input type="number" name="hip_rotasi_eksternal_kanan" id="f_hip_ext_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Eksternal (ER) Kiri</label><input type="number" name="hip_rotasi_eksternal_kiri" id="f_hip_ext_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_hamstring" id="n_hamstring" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
+            <div class="asym-warn" id="warn_hip_asym">⚠️ Selisih Kanan vs Kiri (IR atau ER) &gt; 10° — otomatis masuk band "Kurang" (SOP)</div>
+            <div class="score-readonly"><span class="lbl">SKOR (OTOMATIS)</span><span class="val" id="s_hip_rotation">0.0</span></div>
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-check2-square"></i> 6. Hip Hinge Pattern</div>
+          <div class="card-title mt-2"><i class="bi bi-arrow-up-circle"></i> 4. ASLR / Fleksibilitas Tungkai</div>
           <div class="item-card">
-            <div class="item-sub">Bodyweight hip hinge, observasi kualitas pola tanpa cueing verbal</div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="f_hiphinge_pass" onchange="syncHipHinge();liveUpdate()">
-              <label class="form-check-label" for="f_hiphinge_pass" style="display:inline;color:var(--text2)">Pola benar (neutral spine, hip-dominant)</label>
+            <div class="item-sub">Active Straight Leg Raise — sudut elevasi kaki dari lantai (derajat)</div>
+            <div class="row g-2">
+              <div class="col-6"><label class="cyan">Kanan</label><input type="number" name="asl_raise_kanan_derajat" id="f_aslr_kanan" class="form-control" step="0.1" oninput="liveUpdate()"></div>
+              <div class="col-6"><label class="gold">Kiri</label><input type="number" name="asl_raise_kiri_derajat" id="f_aslr_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
-            <input type="hidden" name="hip_hinge_pass" id="input_hiphinge" value="false">
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_hip_hinge" id="n_hiphinge" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
+            <div class="score-readonly"><span class="lbl">SKOR (OTOMATIS)</span><span class="val" id="s_aslr">0.0</span></div>
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-shield-check"></i> 7. Core Anti-Rotation</div>
+          <div class="card-title mt-2"><i class="bi bi-activity"></i> 5. Lumbar Extension</div>
           <div class="item-card">
-            <div class="item-sub">Pallof Press hold dengan resistance band, durasi (detik)</div>
-            <label class="cyan">Durasi Hold (detik)</label>
-            <input type="number" name="core_hold_durasi_detik" id="f_core" class="form-control" step="0.1" oninput="liveUpdate()">
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_core" id="n_core" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
+            <div class="item-sub">Modified Cobra — clearing step nyeri lumbal dulu sebelum tes</div>
+            <select id="sel_lumbar" class="form-select" onchange="liveUpdate()">
+              <option value="">— Pilih kondisi —</option>
+              <option value="9">Baik/Ideal (8–10) — ekstensi mulus, panggul menempel matras, tanpa nyeri/kompensasi</option>
+              <option value="6">Cukup (5–7) — ekstensi cukup, kompensasi bahu/panggul terangkat</option>
+              <option value="3">Kurang (1–4) — sangat terbatas</option>
+              <option value="0">Nyeri — clearing gate GAGAL, otomatis skor 0, rujuk evaluasi medis</option>
+            </select>
+            <div class="score-readonly"><span class="lbl">SKOR</span><span class="val" id="s_lumbar">0.0</span></div>
           </div>
 
-          <div class="card-title mt-2"><i class="bi bi-lightning-charge"></i> 8. Dynamic Balance Recovery</div>
+          <div class="card-title mt-2"><i class="bi bi-shield-check"></i> 6. Lateral Pelvic Stability</div>
           <div class="item-card">
-            <div class="item-sub">Simulasi tendangan ringan, waktu kembali stabil (detik)</div>
-            <label class="gold">Recovery Time (detik)</label>
-            <input type="number" name="recovery_waktu_detik" id="f_recovery" class="form-control" step="0.1" oninput="liveUpdate()">
-            <div class="score-input-1to10">
-              <label class="cyan">Skor (1-10)</label>
-              <input type="number" name="skor_neural_recovery" id="n_recovery" class="form-control" min="1" max="10" step="1" value="5" oninput="liveUpdate()">
-            </div>
+            <div class="item-sub">Single-Leg Squat Assessment — amati knee valgus / Trendelenburg sign</div>
+            <select id="sel_pelvic" class="form-select" onchange="liveUpdate()">
+              <option value="">— Pilih kondisi —</option>
+              <option value="9">Baik/Ideal (8–10) — alignment lurus, lutut sejajar jari kaki, panggul stabil</option>
+              <option value="6">Cukup (5–7) — lutut bergoyang ringan / kompensasi minim</option>
+              <option value="3">Kurang (1–4) — knee valgus parah / panggul miring anjlok</option>
+            </select>
+            <div class="score-readonly"><span class="lbl">SKOR</span><span class="val" id="s_pelvic">0.0</span></div>
           </div>
 
         </div>
@@ -285,9 +444,10 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
       <!-- Kolom 2: Radar + Narasi -->
       <div class="col-lg-4">
         <div class="card-x text-center">
-          <div class="card-title"><i class="bi bi-radar"></i> Neural Efficiency Radar</div>
+          <div class="card-title"><i class="bi bi-radar"></i> Biomechanics Radar</div>
           <div style="height:300px;display:flex;align-items:center;justify-content:center">
             <canvas id="radarChart"></canvas>
+            <img id="chart-image" alt="Radar" style="display:none;max-width:100%">
           </div>
           <div id="narasi_panel" class="mt-3 text-start" style="display:none">
             <div class="card-title"><i class="bi bi-person-lines-fill" style="color:var(--cyan)"></i> Profil Kondisi Atlet</div>
@@ -346,6 +506,10 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             </td>
             <td class="mono x-small" style="color:var(--gold)">{{ audit.item_terlemah }}</td>
             <td class="text-center">
+              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 me-1" title="Cetak PDF"
+                      onclick="cetakAudit({{ audit.id }},'{{ audit.atlet_name|escapejs }}','{{ audit.kategori_usia }}','{{ audit.gender }}','{{ audit.kelas_berat|default:'-' }}',{{ audit.score_ankle|default:0 }},{{ audit.score_thoracic_rotation|default:0 }},{{ audit.score_hip_rotation|default:0 }},{{ audit.score_aslr|default:0 }},{{ audit.score_lumbar_extension|default:0 }},{{ audit.score_lateral_pelvic|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.timestamp|date:"d/m/Y H:i" }}')">
+                <i class="bi bi-printer-fill"></i>
+              </button>
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
                       onclick="if(confirm('Hapus data {{ audit.atlet_name|escapejs }}?')) window.location='{% url 'karate:hapus_l1_audit' audit.pk %}'">
                 <i class="bi bi-trash3-fill"></i>
@@ -367,10 +531,35 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js">
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
 <script>
-function syncHipHinge(){
-  var chk = document.getElementById('f_hiphinge_pass');
-  document.getElementById('input_hiphinge').value = chk.checked ? 'true' : 'false';
+// ══════════════════════════════════════════════════════════════════════
+// RUBRIK L1 KARATE — SOP RESMI REVISI 2
+// HARUS identik dengan RUBRIK_L1_KRT di karate/views.py agar preview (JS)
+// & hasil simpan (server) konsisten. SOP ini FLAT (tidak dipecah per
+// kategori usia/gender).
+// ══════════════════════════════════════════════════════════════════════
+const RUBRIK_L1_KRT = {
+  ankle:    [[10, 9.5], [8.5, 7.5], [7, 5.5]],
+  thoracic: [[45, 9.5], [40, 7.5], [35, 5.5]],
+  hip_ir:   [[35, 9.5], [32.5, 7.5], [30, 5.5]],
+  hip_er:   [[45, 9.5], [42.5, 7.5], [40, 5.5]],
+  aslr:     [[85, 9.5], [77.5, 7.5], [70, 5.5]],
+};
+const BATAS_ASIMETRI_ANKLE = 1.5;
+const BATAS_ASIMETRI_THORACIC = 10;
+const BATAS_ASIMETRI_HIP_ROTATION = 10;
+
+function skorDariAmbang(nilai, ambang) {
+  if (nilai === null || nilai === undefined || isNaN(nilai)) return null;
+  for (const [batas, skor] of ambang) {
+    if (nilai >= batas) return skor;
+  }
+  const batasBawah = ambang[ambang.length - 1][0];
+  if (!batasBawah || batasBawah <= 0) return 1.0;
+  return Math.round(Math.min(1 + 3 * (nilai / batasBawah), 4.0) * 10) / 10;
 }
 
 function onAtletChange(sel) {
@@ -383,8 +572,7 @@ function onAtletChange(sel) {
   document.getElementById('input_berat').value = opt.dataset.berat || '';
 }
 
-function g(id){ return parseFloat(document.getElementById(id)?.value) || 0; }
-function n(id){ return parseInt(document.getElementById(id)?.value) || 1; }
+function g(id){ const v = parseFloat(document.getElementById(id)?.value); return isNaN(v) ? null : v; }
 
 let radarChart = null;
 document.addEventListener('DOMContentLoaded', function(){
@@ -392,9 +580,9 @@ document.addEventListener('DOMContentLoaded', function(){
   radarChart = new Chart(ctx, {
     type: 'radar',
     data: {
-      labels: ['HIP ROTATION','BALANCE','ANKLE','THORACIC','HAMSTRING','HIP HINGE','CORE','RECOVERY'],
+      labels: ['ANKLE','THORACIC','HIP ROTATION','ASLR','LUMBAR EXT','PELVIC STAB'],
       datasets: [{
-        data: [0,0,0,0,0,0,0,0],
+        data: [0,0,0,0,0,0],
         backgroundColor: 'rgba(80,238,241,0.12)',
         borderColor: '#50eef1', borderWidth: 2,
         pointBackgroundColor: '#50eef1', pointRadius: 3,
@@ -412,78 +600,116 @@ document.addEventListener('DOMContentLoaded', function(){
       plugins: { legend: { display: false } }
     }
   });
+  liveUpdate();
 });
 
 const ITEM_LABELS = {
-  hip_rotasi: 'Hip Rotation', balance: 'Single-Leg Balance', ankle: 'Ankle Dorsiflexion',
-  thoracic: 'Thoracic Rotation', hamstring: 'Hip Flexor/Hamstring Flexibility', hip_hinge: 'Hip Hinge Pattern',
-  core: 'Core Anti-Rotation', recovery: 'Dynamic Balance Recovery'
+  ankle: 'Ankle Mobility', thoracic: 'Seated Thoracic Rotation',
+  hip_rotation: 'Hip Rotation Mobility', aslr: 'ASLR / Fleksibilitas Tungkai',
+  lumbar: 'Lumbar Extension', pelvic: 'Lateral Pelvic Stability'
 };
 
-const REKO_L1MT = {
-  hip_rotasi: {
-    1: ['90/90 Hip Stretch 3x30 detik tiap sisi', 'Hip CARs (Controlled Articular Rotations) 2x5 tiap arah, sangat perlahan', 'Assisted Hip Rotation dengan band 3x10'],
-    2: ['Deep Squat Hold dengan rotasi hip 3x30 detik', 'Cossack Squat 3x8 tiap sisi untuk ROM dinamis', 'Hip CARs tanpa bantuan 3x5 tiap arah'],
-    3: ['Pertahankan dengan dynamic hip opener rutin sebelum latihan', 'Hip CARs sebagai warm-up harian', 'Mulai integrasi ke gerak spesifik (pivot kick) dengan pengawasan']
-  },
-  balance: {
-    1: ['Single-Leg Stance dengan pegangan 3x20 detik tiap kaki', 'Double-Leg Balance di bosu/pad tidak stabil 3x30 detik', 'Static Balance dengan visual fokus tetap 3x20 detik'],
-    2: ['Single-Leg Stance tanpa pegangan 3x30 detik tiap kaki', 'Single-Leg Balance eyes-closed 3x15 detik', 'Single-Leg Reach (Y-Balance) 3x8 tiap arah'],
-    3: ['Single-Leg Balance eyes-closed di permukaan tidak stabil 3x20 detik', 'Perturbation Training (partner memberi dorongan ringan) 3x10', 'Integrasi ke pola tendangan dengan kontrol penuh']
-  },
+const REKO_L1KRT = {
   ankle: {
-    1: ['Ankle Mobilization dengan band 3x15 tiap sisi', 'Calf Stretch (gastrocnemius & soleus) 3x30 detik', 'Knee-to-Wall Drill submaksimal 3x10 tiap sisi'],
+    1: ['Ankle Mobilization dengan band 3x15 tiap sisi', 'Calf Stretch (gastrocnemius & soleus) 3x30 detik', 'Knee-to-Wall Drill submaksimal 3x10 tiap sisi — fokus samakan jarak Kanan/Kiri'],
     2: ['Weighted Ankle Mobilization (knee-to-wall dengan beban) 3x10', 'Ankle Circles + Dorsiflexion Hold 3x30 detik', 'Deep Squat dengan heel tetap menapak 3x8'],
-    3: ['Pertahankan dengan dynamic ankle prep sebelum latihan', 'Integrasi ke pivot roundhouse kick dengan pengawasan teknik', 'Single-Leg Ankle Mobilization dalam gerak dinamis']
+    3: ['Pertahankan dengan dynamic ankle prep sebelum latihan', 'Integrasi ke Zenkutsu Dachi dalam dengan pengawasan teknik', 'Single-Leg Ankle Mobilization dalam gerak dinamis']
   },
   thoracic: {
     1: ['Open Book Stretch 3x10 tiap sisi', 'Quadruped Thoracic Rotation submaksimal 3x10 tiap sisi', 'Cat-Cow dengan fokus rotasi ringan 3x10'],
-    2: ['Quadruped Thoracic Rotation full ROM 3x12 tiap sisi', 'Side-Lying Windmill 3x10 tiap sisi', 'Thoracic Rotation dengan band resistance ringan 3x10'],
-    3: ['Pertahankan dengan T-spine mobility drill sebagai warm-up', 'Integrasi rotasi ke shadow boxing/kick dengan kontrol penuh', 'Loaded Thoracic Rotation (light med ball) 3x10 tiap sisi']
+    2: ['Quadruped Thoracic Rotation full ROM 3x12 tiap sisi', 'Side-Lying Windmill 3x10 tiap sisi — samakan ROM Kanan/Kiri', 'Thoracic Rotation dengan band resistance ringan 3x10'],
+    3: ['Pertahankan dengan T-spine mobility drill sebagai warm-up', 'Integrasi rotasi ke Gyaku Zuki dengan kontrol penuh', 'Loaded Thoracic Rotation (light med ball) 3x10 tiap sisi']
   },
-  hamstring: {
+  hip_rotation: {
+    1: ['90/90 Hip Stretch 3x30 detik tiap sisi (fokus IR & ER terpisah)', 'Hip CARs (Controlled Articular Rotations) 2x5 tiap arah, sangat perlahan', 'Assisted Hip Internal/External Rotation dengan band 3x10'],
+    2: ['Deep Squat Hold dengan rotasi hip 3x30 detik', 'Cossack Squat 3x8 tiap sisi untuk ROM dinamis', 'Hip CARs tanpa bantuan 3x5 tiap arah, samakan Kanan/Kiri'],
+    3: ['Pertahankan dengan dynamic hip opener rutin sebelum latihan', 'Hip CARs sebagai warm-up harian', 'Integrasi ke Koshino Kaiten (Mawashi Geri) dengan pengawasan']
+  },
+  aslr: {
     1: ['Passive Hamstring Stretch (strap-assisted) 3x30 detik tiap sisi', 'Active Straight Leg Raise submaksimal 3x8 tiap sisi', 'Standing Hamstring Stretch dengan bantuan dinding 3x30 detik'],
     2: ['PNF Hamstring Stretch (contract-relax) 3x20 detik tiap sisi', 'Active Straight Leg Raise dengan band resistance 3x10 tiap sisi', 'Dynamic Leg Swing (front-back) 3x12 tiap sisi'],
-    3: ['Pertahankan dengan dynamic leg swing sebagai warm-up harian', 'Integrasi ke tendangan tinggi (dolyo/ap chagi) dengan kontrol penuh', 'Loaded ASLR / Nordic-style hamstring work untuk kekuatan di ROM penuh']
+    3: ['Pertahankan dengan dynamic leg swing sebagai warm-up harian', 'Integrasi ke Jodan Mawashi/Yoko Geri dengan kontrol penuh', 'Loaded ASLR untuk kekuatan di ROM penuh']
   },
-  hip_hinge: {
-    1: ['Hip Hinge dengan cueing verbal (dowel di punggung) 3x10', 'Wall Hip Hinge (bokong menyentuh dinding) 3x10', 'Romanian Deadlift bodyweight submaksimal 3x10'],
-    2: ['Hip Hinge tanpa cueing, evaluasi ulang tiap sesi 3x10', 'Single-Leg Hip Hinge (assisted) 3x8 tiap sisi', 'Romanian Deadlift dengan beban ringan 3x10'],
-    3: ['Pertahankan pola dengan RDL/Good Morning terprogram', 'Single-Leg RDL tanpa bantuan untuk transfer ke knee strike', 'Integrasi hip hinge ke gerak clinch dengan kontrol penuh']
+  lumbar: {
+    1: ['Cat-Cow perlahan 3x10 (hindari ekstensi penuh jika ada nyeri)', 'McGill Curl-Up untuk stabilitas lumbal dasar 3x8', 'Rujuk evaluasi fisioterapis jika nyeri persisten sebelum lanjut korektif'],
+    2: ['Modified Cobra submaksimal 3x8, fokus tanpa kompensasi bahu/panggul', 'Prone Press-Up bertahap 3x10', 'Thoracic Extension Mobilization (foam roller) 3x30 detik'],
+    3: ['Pertahankan dengan spinal mobility drill sebagai warm-up', 'Integrasi ekstensi ke postur tegak & teknik memutar dengan kontrol penuh', 'Full Cobra Extension terprogram 3x10']
   },
-  core: {
-    1: ['Pallof Press ringan (band) 3x8 tiap sisi, fokus tidak ada rotasi', 'Dead Bug 3x10 tiap sisi untuk anti-extension dasar', 'Plank Hold 3x20 detik'],
-    2: ['Pallof Press dengan beban sedang 3x10 tiap sisi', 'Pallof Press dengan langkah (half-kneeling to standing) 3x8', 'Anti-Rotation Chop/Lift dengan band 3x10 tiap sisi'],
-    3: ['Pallof Press dinamis (dengan gerak kaki) 3x10 tiap sisi', 'Pertahankan feedforward bracing sebagai bagian warm-up', 'Integrasi ke simulasi menerima clinch/dorongan dengan kontrol penuh']
-  },
-  recovery: {
-    1: ['Single-Leg Balance Recovery dari langkah kecil 3x10 tiap sisi', 'Step-Down Controlled dari box rendah 3x8', 'Static-to-Dynamic Balance Transition submaksimal 3x8'],
-    2: ['Simulasi tendangan ringan + recovery 3x8 tiap sisi', 'Lateral Bound dengan stick landing 3x6 tiap sisi', 'Single-Leg Hop dengan recovery terkontrol 3x8'],
-    3: ['Pertahankan dengan reactive balance drill sebagai bagian warm-up', 'Integrasi penuh ke kombinasi tendangan multi-arah', 'Perturbation Training dengan partner untuk simulasi kontak']
+  pelvic: {
+    1: ['Clamshell dengan mini-band 3x12 tiap sisi', 'Single-Leg Glute Bridge (assisted) 3x8 tiap sisi', 'Wall-Assisted Single-Leg Squat submaksimal 3x8'],
+    2: ['Single-Leg Squat ke box rendah 3x10 tiap sisi', 'Lateral Band Walk 3x12 langkah tiap arah', 'Single-Leg Deadlift (bodyweight) 3x8 tiap sisi'],
+    3: ['Pertahankan dengan single-leg strength work terprogram', 'Integrasi ke pendaratan tendangan/Nekoashi Dachi dengan kontrol penuh', 'Single-Leg Squat dengan beban tambahan 3x8 tiap sisi']
   }
 };
 
 function liveUpdate() {
-  const items = {
-    hip_rotasi: n('n_hip_rotasi'),
-    balance:    n('n_balance'),
-    ankle:      n('n_ankle'),
-    thoracic:   n('n_thoracic'),
-    hamstring:  n('n_hamstring'),
-    hip_hinge:  n('n_hiphinge'),
-    core:       n('n_core'),
-    recovery:   n('n_recovery'),
-  };
+  // 1. Ankle — skor sisi terlemah + penalti asimetri >1.5cm -> band Kurang
+  const ankleKanan = g('f_ankle_kanan'), ankleKiri = g('f_ankle_kiri');
+  let sAnkle = 0, ankleAsym = false;
+  if (ankleKanan!==null || ankleKiri!==null) {
+    const nilaiMin = (ankleKanan!==null && ankleKiri!==null) ? Math.min(ankleKanan,ankleKiri) : (ankleKanan ?? ankleKiri);
+    sAnkle = skorDariAmbang(nilaiMin, RUBRIK_L1_KRT.ankle) || 0;
+    if (ankleKanan!==null && ankleKiri!==null && Math.abs(ankleKanan-ankleKiri) > BATAS_ASIMETRI_ANKLE) {
+      sAnkle = Math.min(sAnkle, 4.0);
+      ankleAsym = true;
+    }
+  }
+  document.getElementById('warn_ankle_asym').style.display = ankleAsym ? 'block' : 'none';
 
+  // 2. Thoracic — skor sisi terlemah, asimetri >10° membatasi maks 7.0
+  const thorKanan = g('f_thor_kanan'), thorKiri = g('f_thor_kiri');
+  let sThoracic = 0, thorAsym = false;
+  if (thorKanan!==null || thorKiri!==null) {
+    const nilaiMin = (thorKanan!==null && thorKiri!==null) ? Math.min(thorKanan,thorKiri) : (thorKanan ?? thorKiri);
+    sThoracic = skorDariAmbang(nilaiMin, RUBRIK_L1_KRT.thoracic) || 0;
+    if (thorKanan!==null && thorKiri!==null && Math.abs(thorKanan-thorKiri) > BATAS_ASIMETRI_THORACIC && sThoracic > 7.0) {
+      sThoracic = 7.0;
+      thorAsym = true;
+    }
+  }
+  document.getElementById('warn_thoracic_asym').style.display = thorAsym ? 'block' : 'none';
+
+  // 3. Hip Rotation — IR & ER ambang terpisah, skor = MIN(skor_IR, skor_ER)
+  const hipIntKanan = g('f_hip_int_kanan'), hipIntKiri = g('f_hip_int_kiri');
+  const hipExtKanan = g('f_hip_ext_kanan'), hipExtKiri = g('f_hip_ext_kiri');
+  const nilaiIR = [hipIntKanan, hipIntKiri].filter(v => v!==null);
+  const nilaiER = [hipExtKanan, hipExtKiri].filter(v => v!==null);
+  const skorIR = nilaiIR.length ? skorDariAmbang(Math.min(...nilaiIR), RUBRIK_L1_KRT.hip_ir) : null;
+  const skorER = nilaiER.length ? skorDariAmbang(Math.min(...nilaiER), RUBRIK_L1_KRT.hip_er) : null;
+  const komponenHip = [skorIR, skorER].filter(v => v!==null);
+  let sHipRotation = komponenHip.length ? Math.min(...komponenHip) : 0;
+  let hipAsym = false;
+  if (hipIntKanan!==null && hipIntKiri!==null && Math.abs(hipIntKanan-hipIntKiri) > BATAS_ASIMETRI_HIP_ROTATION) hipAsym = true;
+  if (hipExtKanan!==null && hipExtKiri!==null && Math.abs(hipExtKanan-hipExtKiri) > BATAS_ASIMETRI_HIP_ROTATION) hipAsym = true;
+  if (hipAsym) sHipRotation = Math.min(sHipRotation, 4.0);
+  document.getElementById('warn_hip_asym').style.display = hipAsym ? 'block' : 'none';
+
+  // 4. ASLR
+  const aslrKanan = g('f_aslr_kanan'), aslrKiri = g('f_aslr_kiri');
+  const sAslr = skorDariAmbang(aslrKanan!==null && aslrKiri!==null ? Math.min(aslrKanan,aslrKiri) : (aslrKanan ?? aslrKiri), RUBRIK_L1_KRT.aslr) || 0;
+
+  // 5 & 6. Kualitatif (dropdown)
+  const sLumbar = parseFloat(document.getElementById('sel_lumbar').value) || 0;
+  const sPelvic = parseFloat(document.getElementById('sel_pelvic').value) || 0;
+  document.getElementById('input_skor_lumbar').value = sLumbar;
+  document.getElementById('input_skor_pelvic').value = sPelvic;
+
+  document.getElementById('s_ankle').textContent = sAnkle.toFixed(1);
+  document.getElementById('s_thoracic').textContent = sThoracic.toFixed(1);
+  document.getElementById('s_hip_rotation').textContent = sHipRotation.toFixed(1);
+  document.getElementById('s_aslr').textContent = sAslr.toFixed(1);
+  document.getElementById('s_lumbar').textContent = sLumbar.toFixed(1);
+  document.getElementById('s_pelvic').textContent = sPelvic.toFixed(1);
+
+  const items = { ankle: sAnkle, thoracic: sThoracic, hip_rotation: sHipRotation, aslr: sAslr, lumbar: sLumbar, pelvic: sPelvic };
   const vals = Object.values(items);
-  const rawTotal = vals.reduce((a,b)=>a+b,0);
-  const total = +(rawTotal/8).toFixed(1);
+  const total = +(vals.reduce((a,b)=>a+b,0) / 6).toFixed(1);
 
   document.getElementById('res_total').textContent = total.toFixed(1);
   let pred, col;
-  if (total >= 8.3) { pred='ELITE'; col='var(--green)'; }
-  else if (total >= 5.8) { pred='READY'; col='var(--cyan)'; }
-  else if (total >= 4.2) { pred='DEVELOPING'; col='var(--gold)'; }
+  if (total >= 9.0) { pred='ELITE'; col='var(--green)'; }
+  else if (total >= 7.0) { pred='READY'; col='var(--cyan)'; }
+  else if (total >= 5.0) { pred='DEVELOPING'; col='var(--gold)'; }
   else { pred='NOVICE'; col='var(--red)'; }
   const predEl = document.getElementById('res_predikat');
   predEl.textContent = pred;
@@ -506,8 +732,8 @@ function generateNarasi(items, total, pred) {
   const namaEl = document.querySelector('#select-atlet option:checked');
   const namaAtlet = namaEl && namaEl.value ? namaEl.textContent.trim() : 'Atlet';
 
-  function lbl(v){ return v>=9?'Very Competent':v>=7?'Competent':v>=5?'Developing':'Novice'; }
-  function wrn(v){ return v>=9?'var(--green)':v>=7?'var(--blue)':v>=5?'var(--gold)':'var(--red)'; }
+  function lbl(v){ return v>=8?'Baik/Ideal':v>=5?'Cukup':'Kurang'; }
+  function wrn(v){ return v>=8?'var(--green)':v>=5?'var(--gold)':'var(--red)'; }
 
   const entries = Object.entries(items).map(([key,val]) => ({key, nama: ITEM_LABELS[key], val}));
   const sorted = [...entries].sort((a,b) => b.val - a.val);
@@ -518,10 +744,10 @@ function generateNarasi(items, total, pred) {
   const semuaPrima = entries.every(e => e.val >= 9);
 
   const kPred = {
-    ELITE: 'menunjukkan efisiensi neural <strong style="color:var(--green)">AUTONOMOUS</strong> — kontrol motorik matang di hampir semua item.',
-    READY: 'berada di level <strong style="color:var(--cyan)">SIAP (READY)</strong> — kontrol neuromuskular cukup matang untuk lanjut.',
-    DEVELOPING: 'sedang <strong style="color:var(--gold)">BERKEMBANG (ASSOCIATIVE)</strong> — pola gerak mulai terbentuk namun belum otomatis.',
-    NOVICE: 'berada di tahap <strong style="color:var(--red)">COGNITIVE</strong> — kontrol motorik masih butuh perhatian visual/verbal besar.'
+    ELITE: 'menunjukkan mobilitas &amp; stabilitas <strong style="color:var(--green)">SANGAT BAIK</strong> — fondasi biomekanik matang di hampir semua pilar.',
+    READY: 'berada di level <strong style="color:var(--cyan)">SIAP (READY)</strong> — mobilitas &amp; stabilitas cukup untuk lanjut.',
+    DEVELOPING: 'sedang <strong style="color:var(--gold)">BERKEMBANG</strong> — fondasi mulai terbentuk namun beberapa pilar masih perlu koreksi.',
+    NOVICE: 'berada di tahap <strong style="color:var(--red)">KRITIS</strong> — mobilitas/stabilitas dasar butuh perhatian besar sebelum lanjut ke teknik.'
   };
 
   const layakStr = layak
@@ -538,18 +764,18 @@ function generateNarasi(items, total, pred) {
   const lemahHTML = semuaPrima
     ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,255,136,0.07);border-radius:6px;border:1px solid rgba(0,255,136,0.2);">
         <span style="font-size:16px;">&#127942;</span>
-        <span style="color:var(--green);font-weight:600;">Semua item sudah Autonomous — tidak ada kelemahan signifikan.</span>
+        <span style="color:var(--green);font-weight:600;">Semua pilar sudah Baik/Ideal — tidak ada kelemahan signifikan.</span>
       </div>`
     : lemah.map(p => `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
       <div style="width:6px;height:6px;border-radius:50%;background:${wrn(p.val)};flex-shrink:0;"></div>
       <span><strong style="color:${wrn(p.val)}">${p.nama}</strong> — ${lbl(p.val)}
       <span style="color:${wrn(p.val)};font-weight:700;">(${p.val}/10)</span>
-      ${p.val===1 ? ' : prioritas utama program korektif.' : ' : perlu perhatian dalam program latihan.'}</span>
+      ${p.val<=3 ? ' : prioritas utama program korektif.' : ' : perlu perhatian dalam program latihan.'}</span>
     </div>`).join('');
 
   const fokus = semuaPrima
-    ? 'Pertahankan performa di semua item. Atlet siap masuk L2 Strength.'
+    ? 'Pertahankan performa di semua pilar. Atlet siap masuk L2 Strength.'
     : layak
     ? `Fondasi mobility/stability cukup. Tetap latih <strong>${lemah[0]?.nama || '-'}</strong> selama transisi ke L2.`
     : `Jalankan korektif 4–6 minggu, fokus <strong>${lemah[0]?.nama || '-'}</strong> dan <strong>${lemah[1]?.nama || '-'}</strong> sebelum lanjut ke teknik.`;
@@ -578,9 +804,8 @@ function generateReko(items) {
 
   let html = '';
   weakest.forEach(p => {
-    const db = REKO_L1MT[p.key];
+    const db = REKO_L1KRT[p.key];
     if (!db) return;
-    // Peta skor 1-10 baru ke 3 tingkat lama (1=Novice/Developing rendah, 2=Developing/Competent, 3=Very Competent) supaya konten rekomendasi lama tetap terpakai
     const tier = p.val <= 4 ? 1 : (p.val <= 7 ? 2 : 3);
     const tips = db[tier] || db[1];
     const col = tier === 1 ? 'var(--red)' : tier === 2 ? 'var(--gold)' : 'var(--green)';
@@ -606,7 +831,240 @@ document.getElementById('mainForm').addEventListener('submit', function(e) {
 });
 
 function toggleRubrikL1() {
-  document.getElementById('rubrikL1Panel').classList.toggle('open');
+  var p = document.getElementById('rubrikL1Panel');
+  var c = document.getElementById('rubrik-chevron-krt');
+  var open = p.style.display === 'none' || p.style.display === '';
+  p.style.display = open ? 'block' : 'none';
+  if (c) c.className = open ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// PRINT REPORT (halaman) — swap canvas radar jadi <img> dulu biar kebawa print
+// ══════════════════════════════════════════════════════════════════════
+function handlePrint(){
+  const c = document.getElementById('radarChart');
+  const img = document.getElementById('chart-image');
+  if (c && img) { img.src = c.toDataURL('image/png'); }
+  window.print();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// AI CAMERA — Pose Detection (MediaPipe)
+// Estimasi visual 2D TERBATAS hanya untuk 2 pilar yang masuk akal dinilai
+// dari kamera: Thoracic Rotation (lean bahu vs pinggul, proxy sudut) dan
+// Lateral Pelvic Stability (kesejajaran lutut terhadap garis panggul-mata
+// kaki, proxy knee valgus). Ankle (cm), Hip Rotation IR/ER, ASLR, dan
+// Lumbar Extension TIDAK diestimasi kamera -- butuh pengukuran fisik
+// presisi (goniometer/meteran) sesuai SOP, jadi tetap wajib manual.
+// ══════════════════════════════════════════════════════════════════════
+function toggleCamPanel(){
+  const p = document.getElementById('camPanel');
+  const open = p.style.display !== 'none';
+  p.style.display = open ? 'none' : 'block';
+  if (open && isRunning) stopCam();
+}
+
+const videoEl = document.getElementById('input_video');
+const canvasEl = document.getElementById('output_canvas');
+const ctx2d = canvasEl.getContext('2d');
+let poseInst = null, camInst = null, isRunning = false, lastT = 0;
+const BUF = 30, buf = { thorL: [], thorR: [], pelvic: [] };
+let stableScores = { thorL: null, thorR: null, pelvic: null };
+
+function angleBetween(A, B, C) {
+  const r = Math.atan2(C.y - B.y, C.x - B.x) - Math.atan2(A.y - B.y, A.x - B.x);
+  let a = Math.abs(r * 180 / Math.PI);
+  return a > 180 ? 360 - a : a;
+}
+function pushBuf(arr, v) {
+  arr.push(v);
+  if (arr.length > BUF) arr.shift();
+  return arr.reduce((s, x) => s + x, 0) / arr.length;
+}
+function setBadge(id, label, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = label + ': ' + (val !== null ? val.toFixed(1) : '—');
+}
+
+function onPoseResults(res) {
+  const now = performance.now();
+  document.getElementById('camFps').textContent = (now - lastT > 0 ? (1000 / (now - lastT)).toFixed(0) : '—') + ' FPS';
+  lastT = now;
+  ctx2d.clearRect(0, 0, canvasEl.width, canvasEl.height);
+  ctx2d.drawImage(res.image, 0, 0, canvasEl.width, canvasEl.height);
+  if (!res.poseLandmarks || res.poseLandmarks.length < 33) {
+    document.getElementById('camStatusTxt').textContent = '⚠ Pose tidak terdeteksi';
+    return;
+  }
+  const lm = res.poseLandmarks;
+  document.getElementById('camStatusTxt').textContent = '✓ Pose terdeteksi';
+  if (window.drawConnectors && window.POSE_CONNECTIONS) {
+    drawConnectors(ctx2d, lm, POSE_CONNECTIONS, { color: 'rgba(80,238,241,0.5)', lineWidth: 2 });
+    drawLandmarks(ctx2d, lm, { color: '#50eef1', fillColor: '#50eef1', radius: 3 });
+  }
+  const vis = l => (l.visibility || 0) > 0.5;
+  // Landmark index MediaPipe Pose: 11=LShoulder 12=RShoulder 23=LHip 24=RHip 25=LKnee 26=RKnee 27=LAnkle 28=RAnkle
+  const [LS, RS, LH, RH, LK, RK, LA, RA] = [lm[11], lm[12], lm[23], lm[24], lm[25], lm[26], lm[27], lm[28]];
+
+  // Proxy Thoracic Rotation: sudut lean garis bahu-pinggul tiap sisi (derajat estimasi)
+  let thorLdeg = null, thorRdeg = null;
+  if (vis(LS) && vis(LH)) { const dx = LS.x - LH.x, dy = LS.y - LH.y; thorLdeg = Math.abs(Math.atan2(dx, Math.abs(dy)) * 180 / Math.PI) * 1.4; }
+  if (vis(RS) && vis(RH)) { const dx = RS.x - RH.x, dy = RS.y - RH.y; thorRdeg = Math.abs(Math.atan2(dx, Math.abs(dy)) * 180 / Math.PI) * 1.4; }
+
+  // Proxy Lateral Pelvic Stability: deviasi horizontal lutut dari garis pinggul-mata kaki
+  // (leg dengan lutut lebih rendah/menekuk dianggap stance leg), dinormalisasi lebar pinggul.
+  let pelvicScore = null;
+  const hipWidth = (vis(LH) && vis(RH)) ? Math.abs(LH.x - RH.x) : null;
+  if (hipWidth && hipWidth > 0.01) {
+    const evalKnee = (H, K, A) => {
+      if (!vis(H) || !vis(K) || !vis(A)) return null;
+      const idealX = H.x + (A.x - H.x) * ((K.y - H.y) / (A.y - H.y || 1));
+      return Math.abs(K.x - idealX) / hipWidth;
+    };
+    const devL = evalKnee(LH, LK, LA);
+    const devR = evalKnee(RH, RK, RA);
+    let dev = null;
+    if (devL !== null && devR !== null) {
+      // ambil sisi yang lututnya lebih menekuk (posisi Y lebih rendah = lebih jongkok)
+      dev = (LK.y > RK.y) ? devL : devR;
+    } else {
+      dev = devL !== null ? devL : devR;
+    }
+    if (dev !== null) {
+      // dev kecil = alignment baik. Skala: <0.15 baik, 0.15-0.3 cukup, >0.3 kurang
+      pelvicScore = Math.max(0, Math.min(10, 10 - dev * 28));
+    }
+  }
+
+  const aThorL = thorLdeg !== null ? pushBuf(buf.thorL, thorLdeg) : null;
+  const aThorR = thorRdeg !== null ? pushBuf(buf.thorR, thorRdeg) : null;
+  const aPelvic = pelvicScore !== null ? pushBuf(buf.pelvic, pelvicScore) : null;
+  stableScores = { thorL: aThorL, thorR: aThorR, pelvic: aPelvic };
+
+  setBadge('b_thorl', 'THOR-L', aThorL);
+  setBadge('b_thorr', 'THOR-R', aThorR);
+  setBadge('b_pelvic', 'PELVIC', aPelvic);
+  const sp = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v !== null ? v.toFixed(1) : '—'; };
+  sp('sp_thorl', aThorL); sp('sp_thorr', aThorR); sp('sp_pelvic', aPelvic);
+  document.getElementById('btnCapture').disabled = !(aThorL || aThorR || aPelvic);
+}
+
+function initPose() {
+  poseInst = new Pose({ locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}` });
+  poseInst.setOptions({ modelComplexity: 0, smoothLandmarks: true, enableSegmentation: false, minDetectionConfidence: 0.55, minTrackingConfidence: 0.5 });
+  poseInst.onResults(onPoseResults);
+}
+function startCam() {
+  if (isRunning) return;
+  if (!poseInst) initPose();
+  camInst = new Camera(videoEl, {
+    onFrame: async () => {
+      if (canvasEl.width !== videoEl.videoWidth && videoEl.videoWidth > 0) canvasEl.width = videoEl.videoWidth;
+      if (canvasEl.height !== videoEl.videoHeight && videoEl.videoHeight > 0) canvasEl.height = videoEl.videoHeight;
+      await poseInst.send({ image: videoEl });
+    }, width: 640, height: 480
+  });
+  camInst.start().then(() => {
+    isRunning = true;
+    document.getElementById('camOverlay').classList.add('hidden');
+    document.getElementById('camBadges').style.display = 'flex';
+    document.getElementById('camStatusBar').style.display = 'flex';
+    document.getElementById('scorePreview').style.display = 'grid';
+    document.getElementById('btnStart').style.display = 'none';
+    document.getElementById('btnStop').style.display = 'inline-block';
+  }).catch(e => { alert('Kamera tidak bisa diakses: ' + e.message); });
+}
+function stopCam() {
+  if (camInst) camInst.stop();
+  isRunning = false;
+  document.getElementById('camOverlay').classList.remove('hidden');
+  document.getElementById('camBadges').style.display = 'none';
+  document.getElementById('camStatusBar').style.display = 'none';
+  document.getElementById('btnStart').style.display = 'inline-block';
+  document.getElementById('btnStop').style.display = 'none';
+  document.getElementById('btnCapture').disabled = true;
+  ctx2d.clearRect(0, 0, canvasEl.width, canvasEl.height);
+}
+function captureScores() {
+  // Isi field derajat Thoracic (Kanan/Kiri) dari estimasi kamera.
+  if (stableScores.thorR !== null) { const el = document.getElementById('f_thor_kanan'); if (el) { el.value = stableScores.thorR.toFixed(1); } }
+  if (stableScores.thorL !== null) { const el = document.getElementById('f_thor_kiri'); if (el) { el.value = stableScores.thorL.toFixed(1); } }
+  // Isi dropdown Lateral Pelvic Stability berdasar estimasi skor (0-10 -> Baik/Cukup/Kurang).
+  if (stableScores.pelvic !== null) {
+    const sel = document.getElementById('sel_pelvic');
+    if (sel) {
+      const v = stableScores.pelvic;
+      sel.value = v >= 8 ? '9' : v >= 5 ? '6' : '3';
+    }
+  }
+  liveUpdate();
+  showToast('Estimasi dari kamera diterapkan ke Thoracic Rotation & Pelvic Stability. Pilar lain tetap perlu diisi manual.', 'success');
+}
+window.addEventListener('beforeunload', stopCam);
+
+function showToast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast-hpcs';
+  el.style.background = type === 'success' ? '#20c997' : '#e74c3c';
+  el.style.color = '#fff';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 420); }, 3200);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// CETAK PDF per baris histori (popup print, sama gaya dengan Boxing)
+// ══════════════════════════════════════════════════════════════════════
+function cetakAudit(id, nama, kategori, gender, berat, ankle, thoracic, hipRotation, aslr, lumbar, pelvic, totalScore, predikat, tanggal) {
+  const warna = { ELITE: '#20c997', READY: '#0dcaf0', DEVELOPING: '#ffc107', NOVICE: '#dc3545' }[predikat] || '#6c757d';
+  const pilar = [
+    { n: 'Ankle Mobility', v: parseFloat(ankle) || 0 },
+    { n: 'Seated Thoracic Rotation', v: parseFloat(thoracic) || 0 },
+    { n: 'Hip Rotation Mobility', v: parseFloat(hipRotation) || 0 },
+    { n: 'ASLR / Fleksibilitas Tungkai', v: parseFloat(aslr) || 0 },
+    { n: 'Lumbar Extension', v: parseFloat(lumbar) || 0 },
+    { n: 'Lateral Pelvic Stability', v: parseFloat(pelvic) || 0 },
+  ];
+  const pilarHTML = pilar.map(p => {
+    const pct = Math.min(100, (p.v / 10) * 100).toFixed(0);
+    return `<div style="flex:1;min-width:100px;text-align:center;background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;padding:10px"><div style="font-size:9px;color:#888;text-transform:uppercase">${p.n}</div><div style="font-size:22px;font-weight:900;color:#0dcaf0">${p.v.toFixed(1)}</div><div style="height:5px;background:#e9ecef;border-radius:3px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pct}%;background:#0dcaf0;border-radius:3px"></div></div></div>`;
+  }).join('');
+  let rekoHTML = '';
+  const keyMap = { 'Ankle Mobility': 'ankle', 'Seated Thoracic Rotation': 'thoracic', 'Hip Rotation Mobility': 'hip_rotation', 'ASLR / Fleksibilitas Tungkai': 'aslr', 'Lumbar Extension': 'lumbar', 'Lateral Pelvic Stability': 'pelvic' };
+  pilar.forEach(p => {
+    const db = REKO_L1KRT[keyMap[p.n]];
+    if (!db || p.v === 0) return;
+    const tier = p.v <= 4 ? 1 : (p.v <= 7 ? 2 : 3);
+    const tips = db[tier] || db[1];
+    rekoHTML += `<div style="margin-bottom:10px"><div style="font-weight:700;font-size:11px;color:#0dcaf0;margin-bottom:4px">${p.n.toUpperCase()} — ${p.v.toFixed(1)}/10</div>`;
+    tips.forEach(t => { rekoHTML += `<div style="padding:4px 8px;border-left:3px solid #0dcaf0;margin:2px 0;font-size:11px;color:#444">${t}</div>`; });
+    rekoHTML += '</div>';
+  });
+  const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit L1 Karate — ${nama}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#fff;color:#111;padding:28px 36px;font-size:13px}</style></head><body>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0dcaf0;padding-bottom:14px;margin-bottom:18px">
+      <div><div style="font-size:20px;font-weight:900;letter-spacing:2px;color:#0dcaf0">HPCS KARATE — AUDIT LEVEL 1</div><div style="font-size:11px;color:#555;margin-top:3px">High Performance Coaching System · Mobility &amp; Stability Screening (SOP Revisi 2)</div></div>
+      <div style="text-align:right;font-size:11px;color:#888"><div>Tanggal Audit</div><div style="font-weight:700;color:#111">${tanggal}</div></div>
+    </div>
+    <div style="background:#f0f8ff;border:1px solid #0dcaf0;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      ${[['Nama Atlet', nama], ['Kategori', kategori], ['Gender', gender], ['Berat', berat + ' kg'], ['Cabang', 'Karate'], ['Level', 'L1 — Mobility & Stability']].map(([l, v]) => `<div><div style="font-size:9px;color:#555;text-transform:uppercase">${l}</div><div style="font-size:15px;font-weight:700">${v}</div></div>`).join('')}
+    </div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:8px">Skor 6 Pilar SOP Revisi 2</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">${pilarHTML}</div>
+    <div style="display:flex;align-items:center;gap:20px;border:2px solid ${warna};border-radius:12px;padding:14px 22px;margin-bottom:18px">
+      <div style="font-size:52px;font-weight:900;color:${warna};line-height:1">${(parseFloat(totalScore) || 0).toFixed(1)}</div>
+      <div><div style="font-size:26px;font-weight:900;color:${warna};letter-spacing:3px">${predikat}</div></div>
+    </div>
+    <div style="background:#f8f9fa;border-left:4px solid #0dcaf0;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:18px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0dcaf0;margin-bottom:10px">Rekomendasi Program HPCS</div>
+      ${rekoHTML || '<p style="font-size:12px;color:#444">Tidak ada catatan.</p>'}
+    </div>
+  </body></html>`;
+  const win = window.open('', '_blank', 'width=900,height=700');
+  if (!win) { alert('Izinkan pop-up untuk mencetak.'); return; }
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+  win.onload = () => { setTimeout(() => { win.print(); win.onafterprint = () => win.close(); }, 500); };
 }
 </script>
 </body>

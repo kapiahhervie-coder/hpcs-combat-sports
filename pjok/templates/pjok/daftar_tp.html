@@ -1,0 +1,146 @@
+{% extends "base_pjok.html" %}
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root, .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --red:#0f766e; --red-bright:#14b8a6; --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171; --karakter:#a78bfa;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:1000px;
+  }
+  .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:28px;margin:0 0 14px;line-height:1.15;}
+  .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:22px;border-radius:2px;}
+
+  .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+  .btn-tambah{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;padding:11px 20px;border-radius:8px;background:linear-gradient(90deg,#0f766e,#14b8a6);color:#fff;border:none;cursor:pointer;}
+
+  .elemen-group{margin-bottom:24px;}
+  .elemen-head{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+
+  .tp-card{position:relative;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:16px 18px;margin-bottom:10px;}
+  .tp-kode{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--gold);margin-bottom:6px;}
+  .tp-desk{font-size:14px;color:var(--text);margin-bottom:10px;line-height:1.5;}
+  .tp-kktp{font-size:12.5px;color:var(--text-dim);background:var(--surface-2);border-radius:6px;padding:10px 12px;line-height:1.5;}
+  .tp-kktp strong{color:var(--text-faint);font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;}
+  .tp-actions{display:flex;gap:8px;margin-top:10px;}
+  .tp-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);background:none;border:1px solid var(--border);padding:5px 10px;border-radius:5px;cursor:pointer;text-decoration:none;}
+  .tp-btn:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .tp-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
+  .empty{color:var(--text-faint);font-size:13px;font-style:italic;padding:14px 0;}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;}
+  .modal-overlay.active{display:flex;}
+  .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;width:90%;max-width:520px;max-height:85vh;overflow-y:auto;}
+  .modal-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:18px;margin-bottom:16px;text-transform:uppercase;}
+  .field-group{margin-bottom:14px;}
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
+  .field-input{width:100%;background:#1c2422!important;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:#efe9df!important;font-size:14px;box-sizing:border-box;font-family:inherit;}
+  .field-input:focus{outline:none;border-color:var(--gold);}
+  textarea.field-input{resize:vertical;min-height:80px;}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;}
+  .btn-save{flex:1;background:linear-gradient(90deg,#0f766e,#14b8a6);border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;padding:11px;border-radius:6px;cursor:pointer;}
+  .btn-cancel{padding:11px 16px;border-radius:6px;border:1px solid var(--border);color:var(--text-dim);background:none;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer;}
+</style>
+
+<div class="pjok-scope">
+  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
+  <h2 class="pjok-title">Tujuan Pembelajaran (TP &amp; KKTP)</h2>
+  <div class="pjok-rule"></div>
+
+  <div class="top-row">
+    <span style="color:var(--text-faint);font-size:13px;">{{ tp_list.count }} TP tersusun &middot; ATP terbentuk otomatis dari urutan kode TP</span>
+    <button type="button" class="btn-tambah" onclick="bukaModal()">+ Tambah TP</button>
+  </div>
+
+  {% for kode_elemen, label_elemen in elemen_choices %}
+  <div class="elemen-group">
+    <div class="elemen-head">{{ label_elemen }}</div>
+    {% for tp in tp_list %}
+      {% if tp.elemen == kode_elemen %}
+      <div class="tp-card">
+        <div class="tp-kode">{{ tp.kode }}</div>
+        <div class="tp-desk">{{ tp.deskripsi }}</div>
+        {% if tp.kktp %}
+        <div class="tp-kktp"><strong>KKTP:</strong><br>{{ tp.kktp|linebreaksbr }}</div>
+        {% endif %}
+        <div class="tp-actions">
+          <button type="button" class="tp-btn" onclick='bukaModalEdit({{ tp.id }}, "{{ tp.kode|escapejs }}", "{{ tp.elemen }}", "{{ tp.deskripsi|escapejs }}", "{{ tp.kktp|escapejs }}")'>Edit</button>
+          <a href="?hapus={{ tp.id }}" class="tp-btn danger" onclick="return confirm('Hapus TP {{ tp.kode }}?');">Hapus</a>
+        </div>
+      </div>
+      {% endif %}
+    {% empty %}
+    {% endfor %}
+    {% if not tp_list %}<div class="empty">Belum ada TP untuk elemen ini.</div>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<div class="modal-overlay" id="modalTp">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">Tambah TP</div>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="tp_id" id="inputTpId">
+
+      <div class="field-group">
+        <label class="field-label">Kode TP</label>
+        <input type="text" name="kode" id="inputKode" class="field-input" placeholder="Contoh: TP.1.1">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Elemen</label>
+        <select name="elemen" id="inputElemen" class="field-input">
+          {% for kode_elemen, label_elemen in elemen_choices %}
+          <option value="{{ kode_elemen }}">{{ label_elemen }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Rumusan Tujuan Pembelajaran</label>
+        <textarea name="deskripsi" id="inputDeskripsi" class="field-input" placeholder="Peserta didik mampu ..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">KKTP (Kriteria Ketercapaian Tujuan Pembelajaran)</label>
+        <textarea name="kktp" id="inputKktp" class="field-input" placeholder="Peserta didik dikatakan tercapai apabila ..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="tutupModal()">Batal</button>
+        <button type="submit" class="btn-save">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function bukaModal(){
+  document.getElementById('modalTitle').textContent = 'Tambah TP';
+  document.getElementById('inputTpId').value = '';
+  document.getElementById('inputKode').value = '';
+  document.getElementById('inputElemen').value = 'keterampilan_gerak';
+  document.getElementById('inputDeskripsi').value = '';
+  document.getElementById('inputKktp').value = '';
+  document.getElementById('modalTp').classList.add('active');
+}
+function bukaModalEdit(id, kode, elemen, deskripsi, kktp){
+  document.getElementById('modalTitle').textContent = 'Edit TP';
+  document.getElementById('inputTpId').value = id;
+  document.getElementById('inputKode').value = kode;
+  document.getElementById('inputElemen').value = elemen;
+  document.getElementById('inputDeskripsi').value = deskripsi;
+  document.getElementById('inputKktp').value = kktp;
+  document.getElementById('modalTp').classList.add('active');
+}
+function tutupModal(){
+  document.getElementById('modalTp').classList.remove('active');
+}
+</script>
+{% endblock %}

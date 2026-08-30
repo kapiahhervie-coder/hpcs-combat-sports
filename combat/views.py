@@ -55,10 +55,10 @@ class DashboardView(LoginRequiredMixin, View):
             if profil and profil.cabang in CABOR_DASHBOARD_URL:
                 return redirect(CABOR_DASHBOARD_URL[profil.cabang])
         squad_atlet = get_atlet_queryset(request.user)
-        audit_l1    = CorrectionAuditL1.objects.all()
-        audit_l2    = StrengthAuditL2.objects.all()
-        audit_l3    = PowerAuditL3.objects.all()
-        audit_l4    = SpeedAgilityAuditL4.objects.all()
+        audit_l1    = CorrectionAuditL1.objects.filter(atlet__in=squad_atlet)
+        audit_l2    = StrengthAuditL2.objects.filter(atlet__in=squad_atlet)
+        audit_l3    = PowerAuditL3.objects.filter(atlet__in=squad_atlet)
+        audit_l4    = SpeedAgilityAuditL4.objects.filter(atlet__in=squad_atlet)
 
         total_atlet = squad_atlet.count()
         total_l1    = audit_l1.count()
@@ -137,7 +137,7 @@ class AthleteIntelligenceReportView(LoginRequiredMixin, View):
     template_name = 'combat/athlete_report.html'
 
     def get(self, request, atlet_id):
-        atlet = get_object_or_404(Atlet, pk=atlet_id)
+        atlet = get_object_or_404(get_atlet_queryset(request.user), pk=atlet_id)
 
         l1_latest = CorrectionAuditL1.objects.filter(atlet=atlet).order_by('-timestamp').first()
         l2_latest = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first()
@@ -205,7 +205,7 @@ class ReportCardView(LoginRequiredMixin, View):
 
     def get(self, request, atlet_id):
         from django.utils import timezone
-        atlet = get_object_or_404(Atlet, pk=atlet_id)
+        atlet = get_object_or_404(get_atlet_queryset(request.user), pk=atlet_id)
 
         l1 = CorrectionAuditL1.objects.filter(atlet=atlet).order_by('-timestamp').first()
         l2 = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first()

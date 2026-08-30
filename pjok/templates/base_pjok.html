@@ -267,6 +267,12 @@
       <a href="{% url 'pjok:daftar_absensi' request.user.guruprofile.fase %}" class="nav-link {% if request.resolver_match.url_name == 'daftar_absensi' or request.resolver_match.url_name == 'ambil_absensi' %}active{% endif %}">
         <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="4" width="14" height="17" rx="2" stroke="currentColor" stroke-width="2"/><path d="M9 3h6a1 1 0 0 1 1 1v1H8V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="2"/><path d="M8 11h8M8 15h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span> <span class="nav-link-text">Absensi</span>
       </a>
+      <a href="{% url 'pjok:rencana_mingguan' request.user.guruprofile.fase %}" class="nav-link {% if request.resolver_match.url_name == 'rencana_mingguan' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" stroke="currentColor" stroke-width="2"/><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span> <span class="nav-link-text">Prota &amp; Prosem</span>
+      </a>
+      <a href="{% url 'pjok:daftar_tp' request.user.guruprofile.fase %}" class="nav-link {% if request.resolver_match.url_name == 'daftar_tp' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text">TP &amp; KKTP</span>
+      </a>
       {% endif %}
       <div class="nav-divider"></div>
       <div class="nav-section">Penilaian</div>

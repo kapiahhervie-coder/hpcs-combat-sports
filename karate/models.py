@@ -2,9 +2,29 @@
 karate/models.py
 Model audit khusus Karate. Model Atlet & lintas-cabang lain tetap
 dipakai bersama dari app 'combat'.
+
+REVISI 1 (SOP Rubrik Asesmen HPCS Level 1 - Karate):
+L1 Correction diganti dari skema 8-pilar (skor manual 1-3, Motor
+Automaticity Scale) menjadi skema 6-pilar sesuai SOP resmi, dengan skor
+0-10 dihitung OTOMATIS di server dari data pengukuran mentah -- pola yang
+sama seperti combat.CorrectionAuditL1 (Boxing).
+
+6 Pilar SOP Karate:
+  1. Ankle Mobility (WBLT)             -> cm
+  2. Seated Thoracic Rotation          -> derajat
+  3. Hip Rotation Mobility             -> derajat (internal+eksternal per sisi)
+  4. ASLR / Fleksibilitas Tungkai      -> derajat
+  5. Lumbar Extension                  -> kualitatif (observasi, clearing gate nyeri)
+  6. Lateral Pelvic Stability          -> kualitatif (observasi knee valgus)
+
+Field-field pilar LAMA yang di-drop dari SOP baru (Balance, Hip Hinge,
+Core Anti-Rotation, Dynamic Balance Recovery) SENGAJA TIDAK DIHAPUS dari
+model -- supaya histori audit lama yang sudah tersimpan di database tetap
+aman & bisa diakses, meskipun form & kalkulasi baru tidak memakainya lagi.
 """
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 from combat.models import Atlet, KATEGORI_USIA_CHOICES, GENDER_CHOICES, PREDIKAT_CHOICES
 
 
@@ -17,15 +37,12 @@ NEURAL_CHOICES = [
 
 class CorrectionAuditL1KRT(models.Model):
     """
-    L1 Correction -- Karate
-    Fokus: Mobility, Stability, Fleksibilitas sebagai fondasi sebelum masuk
-    ke teknik pukulan (choku-zuki, gyaku-zuki), tendangan (mae geri, yoko
-    geri, mawashi geri), dan kata. Karate menekankan kime -- pengerahan
-    tenaga penuh & fokus pada momen impact yang membutuhkan rotasi
-    pinggul-bahu yang eksplosif dan bracing core yang reflek, di samping
-    kebutuhan fleksibilitas tendangan tinggi yang serupa dengan Taekwondo.
-    Setiap item punya skor kualitas neural (N), mengikuti Motor
-    Automaticity Scale (1=Cognitive, 2=Associative, 3=Autonomous).
+    L1 Correction -- Karate (SOP Revisi 1)
+    Fokus: mobilitas ankle & panggul untuk kedalaman kuda-kuda (Zenkutsu,
+    Kokutsu, Kiba Dachi), fleksibilitas thorakal & rotasi panggul untuk
+    pelepasan tenaga (Koshino Kaiten) saat Gyaku Zuki/Mawashi Geri, serta
+    stabilitas postur bawah-atas untuk mencegah cedera spesifik Karate
+    (patellofemoral pain, hip impingement, ankle sprain).
     """
     # -- Identitas --------------------------------------------------
     atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='audit_l1_krt', verbose_name='Atlet')
@@ -34,50 +51,72 @@ class CorrectionAuditL1KRT(models.Model):
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True, verbose_name='Berat Badan (kg)')
 
-    # -- 1. Hip Rotation ROM (mawashi geri / rotational punch power) ----
+    # ══════════════════════════════════════════════════════════════
+    # 6 PILAR SOP REVISI 1 -- data mentah + skor 0-10 (dihitung server)
+    # ══════════════════════════════════════════════════════════════
+
+    # -- 1. Ankle Mobility (Weight-Bearing Lunge Test) -------------------
+    ankle_dorsifleksi_kanan_cm = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kanan (cm)')
+    ankle_dorsifleksi_kiri_cm  = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kiri (cm)')
+    score_ankle = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Ankle Mobility')
+
+    # -- 2. Seated Thoracic Rotation -------------------------------------
+    thoracic_rotasi_kanan = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kanan (derajat)')
+    thoracic_rotasi_kiri  = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kiri (derajat)')
+    score_thoracic_rotation = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Thoracic Rotation')
+
+    # -- 3. Hip Rotation Mobility (internal + eksternal per sisi) --------
     hip_rotasi_internal_kanan  = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kanan (derajat)')
     hip_rotasi_internal_kiri   = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kiri (derajat)')
     hip_rotasi_eksternal_kanan = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kanan (derajat)')
     hip_rotasi_eksternal_kiri  = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kiri (derajat)')
-    skor_neural_hip_rotasi     = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    score_hip_rotation = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Hip Rotation Mobility')
 
-    # -- 2. Single-Leg Balance (kata precision & kicking stance) --------
-    balance_durasi_mata_terbuka  = models.FloatField(null=True, blank=True, verbose_name='Balance Mata Terbuka (detik)')
-    balance_durasi_mata_tertutup = models.FloatField(null=True, blank=True, verbose_name='Balance Mata Tertutup (detik)')
-    skor_neural_balance          = models.IntegerField(choices=NEURAL_CHOICES, default=1)
-
-    # -- 3. Ankle Dorsiflexion (deep stance / zenkutsu-dachi) -----------
-    ankle_dorsifleksi_kanan_cm = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kanan (cm)')
-    ankle_dorsifleksi_kiri_cm  = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kiri (cm)')
-    skor_neural_ankle          = models.IntegerField(choices=NEURAL_CHOICES, default=1)
-
-    # -- 4. Thoracic Spine Rotation (hip-shoulder separation for kime) --
-    thoracic_rotasi_kanan = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kanan (derajat)')
-    thoracic_rotasi_kiri  = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kiri (derajat)')
-    skor_neural_thoracic  = models.IntegerField(choices=NEURAL_CHOICES, default=1)
-
-    # -- 5. Hip Flexor / Hamstring Flexibility (jodan kick height) ------
+    # -- 4. ASLR / Fleksibilitas Tungkai (Hamstring & Hip Flexor) --------
     asl_raise_kanan_derajat = models.FloatField(null=True, blank=True, verbose_name='Active Straight Leg Raise Kanan (derajat)')
     asl_raise_kiri_derajat  = models.FloatField(null=True, blank=True, verbose_name='Active Straight Leg Raise Kiri (derajat)')
-    skor_neural_hamstring   = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    score_aslr = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor ASLR')
 
-    # -- 6. Hip Hinge Pattern --------------------------------------------
-    hip_hinge_pass        = models.BooleanField(default=False, verbose_name='Hip Hinge Pattern Benar?')
-    skor_neural_hip_hinge = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 5. Lumbar Extension (Modified Cobra / Clearing Gate) ------------
+    # Kualitatif -- pelatih memilih kondisi hasil observasi langsung
+    # (Baik=9 / Cukup=6 / Kurang=3 / Nyeri=0 clearing gate), server hanya
+    # validasi & clamp skornya, sama pola dengan Boxing.
+    score_lumbar_extension = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Lumbar Extension')
 
-    # -- 7. Core Anti-Rotation Stability (kime bracing at impact) -------
-    core_hold_durasi_detik = models.FloatField(null=True, blank=True, verbose_name='Pallof Press Hold (detik)')
-    skor_neural_core       = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 6. Lateral Pelvic Stability (Single-Leg Squat Assessment) -------
+    # Kualitatif -- observasi knee valgus / Trendelenburg sign.
+    score_lateral_pelvic = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)], verbose_name='Skor Lateral Pelvic Stability')
 
-    # -- 8. Dynamic Balance Recovery (landing after kick / kumite) ------
-    recovery_waktu_detik = models.FloatField(null=True, blank=True, verbose_name='Recovery Time (detik)')
-    skor_neural_recovery = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # ══════════════════════════════════════════════════════════════
+    # PILAR LAMA (SKEMA 8-PILAR, DEPRECATED) -- dipertahankan hanya
+    # untuk histori data lama, TIDAK dipakai form/kalkulasi baru.
+    # ══════════════════════════════════════════════════════════════
+    balance_durasi_mata_terbuka  = models.FloatField(null=True, blank=True, verbose_name='[Lama] Balance Mata Terbuka (detik)')
+    balance_durasi_mata_tertutup = models.FloatField(null=True, blank=True, verbose_name='[Lama] Balance Mata Tertutup (detik)')
+    skor_neural_balance          = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Balance')
+
+    hip_hinge_pass        = models.BooleanField(default=False, verbose_name='[Lama] Hip Hinge Pattern Benar?')
+    skor_neural_hip_hinge = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Hip Hinge')
+
+    core_hold_durasi_detik = models.FloatField(null=True, blank=True, verbose_name='[Lama] Pallof Press Hold (detik)')
+    skor_neural_core       = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Core')
+
+    recovery_waktu_detik = models.FloatField(null=True, blank=True, verbose_name='[Lama] Recovery Time (detik)')
+    skor_neural_recovery = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Recovery')
+
+    # skor_neural_hip_rotasi/ankle/thoracic/hamstring versi LAMA (skala
+    # 1-3) juga dipertahankan apa adanya untuk histori, terpisah dari
+    # score_hip_rotation/score_ankle/dst (skala 0-10) versi baru di atas.
+    skor_neural_hip_rotasi = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Hip Rotasi (skala 1-3)')
+    skor_neural_ankle      = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Ankle (skala 1-3)')
+    skor_neural_thoracic   = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Thoracic (skala 1-3)')
+    skor_neural_hamstring  = models.IntegerField(choices=NEURAL_CHOICES, default=1, verbose_name='[Lama] Skor Neural Hamstring (skala 1-3)')
 
     # -- AI --------------------------------------------------------
     ai_confidence_score = models.FloatField(null=True, blank=True)
 
     # -- Hasil --------------------------------------------------------
-    total_skor         = models.FloatField(default=0, verbose_name='Total Skor Neural (0-10)')
+    total_skor         = models.FloatField(default=0, verbose_name='Total Skor (0-10)')
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naik ke L2?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
@@ -96,6 +135,7 @@ class CorrectionAuditL1KRT(models.Model):
     def __str__(self):
         return f"{self.atlet_name or self.atlet.nama_atlet} | {self.predikat} | {self.total_skor}"
 
+    # -- (Dipertahankan untuk histori skema lama, tidak dipakai lagi) ----
     @property
     def skor_neural_list(self):
         return [
@@ -109,66 +149,69 @@ class CorrectionAuditL1KRT(models.Model):
         if self.atlet_id and not self.atlet_name:
             self.atlet_name = self.atlet.nama_atlet
 
-        # Total skor neural mentah: 8 item x skor 1-3 -> max 24
-        raw_total = sum(self.skor_neural_list)
-        # Normalisasi ke skala 0-10 supaya konsisten dengan predikat lintas app
-        self.total_skor = round((raw_total / 24) * 10, 1)
+        # Total skor SOP Revisi 1: rata-rata 6 pilar (skala 0-10 langsung,
+        # BUKAN skala 1-3/24 seperti skema lama).
+        self.total_skor = round(sum([
+            self.score_ankle, self.score_thoracic_rotation,
+            self.score_hip_rotation, self.score_aslr,
+            self.score_lumbar_extension, self.score_lateral_pelvic,
+        ]) / 6, 1)
 
-        if self.total_skor >= 8.3:
+        # Ambang predikat disamakan dengan standar HPCS lintas cabang
+        # (combat.CorrectionAuditL1 / Boxing) untuk konsistensi platform.
+        if self.total_skor >= 9.0:
             self.predikat = 'ELITE'
-        elif self.total_skor >= 5.8:
+        elif self.total_skor >= 7.0:
             self.predikat = 'READY'
-        elif self.total_skor >= 4.2:
+        elif self.total_skor >= 5.0:
             self.predikat = 'DEVELOPING'
         else:
             self.predikat = 'NOVICE'
 
-        if self.predikat in ('ELITE', 'READY'):
-            self.layak_naik = True
+        if self.total_skor >= 7.0:
+            self.layak_naik        = True
             self.alasan_tidak_layak = ''
         else:
-            self.layak_naik = False
+            self.layak_naik        = False
             self.alasan_tidak_layak = (
-                f"Skor neural {self.total_skor}/10 (raw {raw_total}/24). "
-                f"Item terlemah: {self.item_terlemah}. "
-                f"Wajib program korektif mobility/stability sebelum lanjut."
+                f"Skor {self.total_skor}/10 < 7.0. "
+                f"Pilar terlemah: {self.item_terlemah}. "
+                f"Wajib program korektif mobility/stability sebelum lanjut ke L2."
             )
 
         super().save(*args, **kwargs)
 
     @property
     def item_terlemah(self):
-        labels = {
-            'Hip Rotation': self.skor_neural_hip_rotasi,
-            'Single-Leg Balance': self.skor_neural_balance,
-            'Ankle Dorsiflexion': self.skor_neural_ankle,
-            'Thoracic Rotation': self.skor_neural_thoracic,
-            'Hip Flexor/Hamstring Flexibility': self.skor_neural_hamstring,
-            'Hip Hinge': self.skor_neural_hip_hinge,
-            'Core Anti-Rotation': self.skor_neural_core,
-            'Dynamic Balance Recovery': self.skor_neural_recovery,
+        pilar = {
+            'Ankle Mobility': self.score_ankle,
+            'Seated Thoracic Rotation': self.score_thoracic_rotation,
+            'Hip Rotation Mobility': self.score_hip_rotation,
+            'ASLR / Fleksibilitas Tungkai': self.score_aslr,
+            'Lumbar Extension': self.score_lumbar_extension,
+            'Lateral Pelvic Stability': self.score_lateral_pelvic,
         }
-        return min(labels, key=labels.get)
+        return min(pilar, key=pilar.get)
 
     @property
     def predikat_neural_label(self):
         skor = self.total_skor
-        if skor >= 8.3:
-            return 'Autonomous -- Siap lanjut ke L2'
-        elif skor >= 5.8:
-            return 'Associative-Autonomous -- Layak lanjut dengan catatan'
-        elif skor >= 4.2:
-            return 'Associative -- Perlu pembinaan tambahan'
+        if skor >= 9.0:
+            return 'Excellent -- Siap lanjut ke L2'
+        elif skor >= 7.0:
+            return 'Ready -- Layak lanjut ke L2'
+        elif skor >= 5.0:
+            return 'Developing -- Perlu pembinaan tambahan'
         else:
-            return 'Cognitive -- Belum layak lanjut, fokus koreksi dasar'
+            return 'Novice -- Belum layak lanjut, fokus koreksi dasar'
 
     @property
     def rekomendasi_auto(self):
         nama = self.item_terlemah
         if self.predikat == 'ELITE':
-            return "Kontrol neuromuskular sangat matang di semua item. Lanjut ke L2 Strength Assessment."
+            return "Mobilitas & stabilitas sangat matang di semua pilar. Lanjut ke L2 Strength Assessment."
         elif self.predikat == 'READY':
-            return f"Layak ke L2. Tetap latih '{nama}' 2-3x/minggu untuk konsolidasi otomatisasi."
+            return f"Layak ke L2. Tetap latih '{nama}' 2-3x/minggu untuk konsolidasi."
         elif self.predikat == 'DEVELOPING':
-            return f"Tahan ke L2. Fokus 4-6 minggu perbaikan mobility/stability pada '{nama}'."
-        return f"STOP lanjut ke teknik. Kontrol neuromuskular kritis pada '{nama}'. Wajib program korektif 8 minggu."
+            return f"Tahan ke L2. Fokus 4-6 minggu perbaikan '{nama}'."
+        return f"STOP lanjut ke teknik. Skor kritis pada '{nama}'. Wajib program korektif 8 minggu."

@@ -155,8 +155,15 @@ tbody tr:last-child td { border-bottom: none; }
   .card, .history-section { border: 1px solid #ddd; background: #fff; }
 }
 
-    /* Sembunyikan field yang ada di admin */
-    .r3, .fg:has(select[name="kategori_usia"]),
+    /* Sembunyikan field yang ada di admin — DIPERBAIKI: selector ".r3" yang
+       tadinya berdiri sendiri menyembunyikan SEMUA elemen ber-class .r3 di
+       halaman, termasuk baris input Putaran 1/2/3 Hexagon Jump yang juga
+       memakai class "r3" (bukan cuma baris Kategori/Gender/BB yang dituju).
+       Itu sebabnya field-field itu tidak bisa diklik/diketik — kelihatan
+       "hilang" karena display:none. Sekarang hanya .fg yang BENAR-BENAR
+       berisi field kategori_usia/gender/kelas_berat/kondisi/catatan yang
+       disembunyikan, bukan seluruh grid .r3. */
+    .fg:has(select[name="kategori_usia"]),
     .fg:has(select[name="gender"]),
     .fg:has(input[name="kelas_berat"]),
     .fg:has(.cond-btns),

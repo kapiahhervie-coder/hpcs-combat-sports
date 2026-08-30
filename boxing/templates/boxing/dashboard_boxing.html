@@ -382,7 +382,7 @@
 
         </div>
 
-        <a href="{% url 'combat:tambah_atlet' %}" class="btn btn-sm btn-outline-info">
+        <a href="{% url 'boxing:daftar_atlet' %}" class="btn btn-sm btn-outline-info">
 
             <i class="fa-solid fa-users me-2"></i><span class="i18n-custom" data-id="Daftar Atlet Sasana" data-en="Register Gym Athlete">Daftar Atlet Sasana</span>
 
@@ -878,11 +878,13 @@ if (validData.length < 2) {
 
     ctxProgress.textBaseline = 'middle';
 
+    const __lang = localStorage.getItem('hpcs_lang') || 'id';
+
     ctxProgress.fillText(
 
         validData.length === 0
 
-            ? '<span class="i18n-custom" data-id="Belum ada data audit" data-en="No audit data yet">Belum ada data audit</span>'
+            ? (__lang === 'en' ? 'No audit data yet' : 'Belum ada data audit')
 
             : 'Data tren muncul setelah minimal 2x audit',
 

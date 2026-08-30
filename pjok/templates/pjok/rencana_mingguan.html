@@ -1,0 +1,149 @@
+{% extends "base_pjok.html" %}
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root, .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --red:#0f766e; --red-bright:#14b8a6; --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:1000px;
+  }
+  .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:28px;margin:0 0 14px;line-height:1.15;}
+  .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:22px;border-radius:2px;}
+
+  .top-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:22px;}
+  .select-input{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;}
+  .select-input:focus{outline:none;border-color:var(--gold);}
+
+  .btn-doc{font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;text-decoration:none;white-space:nowrap;}
+  .btn-prota{background:linear-gradient(90deg,#0f766e,#14b8a6);color:#fff;}
+  .btn-prosem{border:1px solid var(--gold-dim);color:var(--gold);}
+
+  .table-wrap{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--surface);}
+  .rencana-table{width:100%;border-collapse:collapse;}
+  .rencana-table thead th{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);}
+  .rencana-table tbody td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle;}
+  .rencana-table tbody tr:last-child td{border-bottom:none;}
+  .minggu-badge{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--gold);}
+  .materi-empty{color:var(--text-faint);font-style:italic;}
+  .btn-edit-row{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-dim);background:none;border:1px solid var(--border);padding:5px 10px;border-radius:5px;cursor:pointer;}
+  .btn-edit-row:hover{border-color:var(--gold-dim);color:var(--gold);}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;align-items:center;justify-content:center;}
+  .modal-overlay.active{display:flex;}
+  .modal-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;width:90%;max-width:480px;}
+  .modal-title{font-family:'Oswald',sans-serif;font-weight:600;font-size:18px;margin-bottom:16px;text-transform:uppercase;}
+  .field-group{margin-bottom:14px;}
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
+  .field-input{width:100%;background:#1c2422!important;border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:#efe9df!important;font-size:14px;box-sizing:border-box;}
+  .field-input:focus{outline:none;border-color:var(--gold);}
+  .field-input option{background:#1c2422;color:#efe9df;}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;}
+  .btn-save{flex:1;background:linear-gradient(90deg,#0f766e,#14b8a6);border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;padding:11px;border-radius:6px;cursor:pointer;}
+  .btn-cancel{padding:11px 16px;border-radius:6px;border:1px solid var(--border);color:var(--text-dim);background:none;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer;}
+</style>
+
+<div class="pjok-scope">
+  <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
+  <h2 class="pjok-title">Rencana Mingguan (Prota &amp; Prosem)</h2>
+  <div class="pjok-rule"></div>
+
+  <div class="top-controls">
+    <select class="select-input" onchange="gantiUrl()" id="selTahun">
+      <option value="2025/2026" {% if tahun_ajaran == '2025/2026' %}selected{% endif %}>Tahun Ajaran 2025/2026</option>
+      <option value="2026/2027" {% if tahun_ajaran == '2026/2027' %}selected{% endif %}>Tahun Ajaran 2026/2027</option>
+      <option value="2027/2028" {% if tahun_ajaran == '2027/2028' %}selected{% endif %}>Tahun Ajaran 2027/2028</option>
+    </select>
+    <select class="select-input" onchange="gantiUrl()" id="selSemester">
+      <option value="ganjil" {% if semester == 'ganjil' %}selected{% endif %}>Semester Ganjil</option>
+      <option value="genap" {% if semester == 'genap' %}selected{% endif %}>Semester Genap</option>
+    </select>
+    <a href="{% url 'pjok:export_prosem' fase %}?tahun={{ tahun_ajaran }}&semester={{ semester }}" class="btn-doc btn-prosem">&#128196; Unduh Prosem (.docx)</a>
+    <a href="{% url 'pjok:export_prota' fase %}?tahun={{ tahun_ajaran }}" class="btn-doc btn-prota">&#128196; Unduh Prota Lengkap (.docx)</a>
+  </div>
+
+  <div class="table-wrap">
+    <table class="rencana-table">
+      <thead><tr><th>Minggu</th><th>Materi</th><th>Alokasi JP</th><th>Keterangan</th><th>Aksi</th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td><span class="minggu-badge">{{ row.minggu_ke }}</span></td>
+          <td>{% if row.rencana %}{{ row.rencana.nama_tampil }}{% else %}<span class="materi-empty">Belum diisi</span>{% endif %}</td>
+          <td>{% if row.rencana %}{{ row.rencana.alokasi_jp }} JP{% else %}&mdash;{% endif %}</td>
+          <td>{{ row.rencana.keterangan|default:"" }}</td>
+          <td>
+            <button type="button" class="btn-edit-row" onclick='bukaModal({{ row.minggu_ke }}, {{ row.rencana.materi_id|default:"null" }}, "{{ row.rencana.nama_materi_bebas|default:"" }}", {{ row.rencana.alokasi_jp|default:2 }}, "{{ row.rencana.keterangan|default:"" }}")'>Isi / Edit</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalRencana">
+  <div class="modal-box">
+    <div class="modal-title">Isi Rencana Minggu <span id="modalMingguKe"></span></div>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="minggu_ke" id="inputMingguKe">
+
+      <div class="field-group">
+        <label class="field-label">Materi (dari daftar)</label>
+        <select name="materi" id="inputMateri" class="field-input">
+          <option value="">-- Pilih materi --</option>
+          {% for m in form_materi_qs %}
+          <option value="{{ m.id }}">{{ m.nama_materi }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Atau nama materi bebas (kalau belum ada di daftar)</label>
+        <input type="text" name="nama_materi_bebas" id="inputMateriBebas" class="field-input" placeholder="Contoh: Pengenalan Permainan Bola Kecil">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Alokasi Jam Pelajaran (JP)</label>
+        <input type="number" name="alokasi_jp" id="inputAlokasiJp" class="field-input" value="2" min="1">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Keterangan (opsional)</label>
+        <input type="text" name="keterangan" id="inputKeterangan" class="field-input">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="tutupModal()">Batal</button>
+        <button type="submit" class="btn-save">Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function gantiUrl(){
+  var tahun = document.getElementById('selTahun').value;
+  var semester = document.getElementById('selSemester').value;
+  window.location.href = '{% url "pjok:rencana_mingguan" fase %}?tahun=' + tahun + '&semester=' + semester;
+}
+function bukaModal(mingguKe, materiId, materiBebas, alokasiJp, keterangan){
+  document.getElementById('modalMingguKe').textContent = mingguKe;
+  document.getElementById('inputMingguKe').value = mingguKe;
+  document.getElementById('inputMateri').value = materiId || '';
+  document.getElementById('inputMateriBebas').value = materiBebas || '';
+  document.getElementById('inputAlokasiJp').value = alokasiJp || 2;
+  document.getElementById('inputKeterangan').value = keterangan || '';
+  document.getElementById('modalRencana').classList.add('active');
+}
+function tutupModal(){
+  document.getElementById('modalRencana').classList.remove('active');
+}
+</script>
+{% endblock %}

@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .models import Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan
+from .models import Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan, TujuanPembelajaran, TujuanPembelajaran
 
 from .diagnostik import (
     KOMPONEN_LABEL,
@@ -17,7 +17,7 @@ from .diagnostik import (
     rekomendasi_perbaikan,
     rubrik_label,
 )
-from .forms import EditSiswaForm, GuruProfileForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, RencanaMingguanForm, SiswaForm
+from .forms import EditSiswaForm, GuruProfileForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, RencanaMingguanForm, SiswaForm, TujuanPembelajaranForm
 from .models import GuruProfile, MateriFase, Siswa
 
 
@@ -152,7 +152,7 @@ def rencana_mingguan(request, fase):
             guru=profile, fase=fase, tahun_ajaran=tahun_ajaran,
             semester=semester, minggu_ke=minggu_ke,
         ).first()
-        form = RencanaMingguanForm(request.POST, instance=instance, fase=fase)
+        form = RencanaMingguanForm(request.POST, instance=instance, fase=fase, guru=profile)
         if form.is_valid():
             rencana = form.save(commit=False)
             rencana.guru = profile
@@ -179,6 +179,37 @@ def rencana_mingguan(request, fase):
         'tahun_ajaran': tahun_ajaran,
         'semester': semester,
         'form_materi_qs': MateriFase.objects.filter(fase=fase),
+        'form_tp_qs': TujuanPembelajaran.objects.filter(fase=fase, guru=profile),
+    })
+
+
+@login_required
+def daftar_tp(request, fase):
+    """Kelola daftar Tujuan Pembelajaran (TP) per elemen CP untuk fase ini."""
+    profile = request.user.guruprofile
+
+    if request.method == 'POST':
+        tp_id = request.POST.get('tp_id')
+        instance = TujuanPembelajaran.objects.filter(id=tp_id, guru=profile, fase=fase).first() if tp_id else None
+        form = TujuanPembelajaranForm(request.POST, instance=instance)
+        if form.is_valid():
+            tp = form.save(commit=False)
+            tp.guru = profile
+            tp.fase = fase
+            tp.save()
+        return redirect('pjok:daftar_tp', fase=fase)
+
+    hapus_id = request.GET.get('hapus')
+    if hapus_id:
+        TujuanPembelajaran.objects.filter(id=hapus_id, guru=profile, fase=fase).delete()
+        return redirect('pjok:daftar_tp', fase=fase)
+
+    tp_list = TujuanPembelajaran.objects.filter(guru=profile, fase=fase)
+    return render(request, 'pjok/daftar_tp.html', {
+        'tp_list': tp_list,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'elemen_choices': TujuanPembelajaran.ELEMEN_CHOICES,
     })
 
 
@@ -492,7 +523,7 @@ def _bikin_dokumen_dasar(judul, guru, fase, jenjang):
 
     p2 = doc.add_paragraph()
     p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p2.add_run(f"Fase {fase} ({jenjang}) &mdash; Sekolah: {guru.sekolah}").font.size = Pt(11)
+    p2.add_run(f"Fase {fase} ({jenjang}) - Sekolah: {guru.sekolah}").font.size = Pt(11)
 
     p3 = doc.add_paragraph()
     p3.alignment = WD_ALIGN_PARAGRAPH.CENTER

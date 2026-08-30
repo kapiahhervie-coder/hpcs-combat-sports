@@ -155,14 +155,6 @@ tbody tr:last-child td { border-bottom: none; }
   .card, .history-section { border: 1px solid #ddd; background: #fff; }
 }
 
-    /* Sembunyikan field yang ada di admin */
-    .r3, .fg:has(select[name="kategori_usia"]),
-    .fg:has(select[name="gender"]),
-    .fg:has(input[name="kelas_berat"]),
-    .fg:has(.cond-btns),
-    .fg:has(textarea[name="catatan"]) { display: none !important; }
-
-
     .history-section table { table-layout: fixed; }
     .history-section thead th { white-space: nowrap; font-size: 9px; padding: 8px 6px; }
     .history-section tbody td { padding: 8px 6px; font-size: 11px; }
@@ -932,7 +924,8 @@ function setKondisi(val, btn) {
   btn.classList.add('active');
   document.getElementById('kondisi_uji').value = val;
   const labels = { FRESH: 'Fresh', POST_SPARRING: 'Post-Sparring', POST_CIRCUIT: 'Post-Circuit' };
-  document.getElementById('kondisi_display').innerText = labels[val] || val;
+  const kondisiDisplayEl = document.getElementById('kondisi_display');
+  if (kondisiDisplayEl) kondisiDisplayEl.innerText = labels[val] || val;
 }
 
 function setPosetur(val, btn) {

@@ -6,6 +6,7 @@ Fase 2: L1-L4 pakai model yang sama, filter atlet MT.
 
 import json
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.http import JsonResponse
@@ -91,7 +92,106 @@ class DaftarAtletMuayThaiView(LoginRequiredMixin, View):
 
 
 # ══════════════════════════════════════════════════════════════════════
-# L1 — CORRECTION (Muay Thai)
+# L1 — CORRECTION (Muay Thai) — SOP Revisi 2, 6 pilar, skor otomatis 0-10
+# ══════════════════════════════════════════════════════════════════════
+#
+# Ambang IDENTIK dengan Karate Revisi 2 (SOP dua cabang ini sama persis
+# nilainya). HARUS identik juga dengan tabel norma di
+# muaythai/l1_correction.html (JS) agar preview & hasil simpan konsisten.
+# SOP ini FLAT (tidak dipecah per kategori usia/gender).
+
+RUBRIK_L1_MT = {
+    'ankle':    [(10, 9.5), (8.5, 7.5), (7, 5.5)],       # WBLT cm: <7 kurang / 7-10 cukup / >=10 baik
+    'thoracic': [(45, 9.5), (40, 7.5), (35, 5.5)],        # derajat: <35 / 35-44 / >=45
+    'hip_ir':   [(35, 9.5), (32.5, 7.5), (30, 5.5)],      # Internal Rotation: <30 / 30-35 / >=35
+    'hip_er':   [(45, 9.5), (42.5, 7.5), (40, 5.5)],      # External Rotation: <40 / 40-45 / >=45
+    'aslr':     [(85, 9.5), (77.5, 7.5), (70, 5.5)],      # derajat: <70 / 70-85 / >85-90+
+}
+BATAS_ASIMETRI_ANKLE_MT = 1.5          # cm
+BATAS_ASIMETRI_THORACIC_MT = 10        # derajat
+BATAS_ASIMETRI_HIP_ROTATION_MT = 10    # derajat
+
+
+def _skor_dari_ambang_mt(nilai, ambang):
+    """ambang = daftar (batas, skor) terurut MENURUN. Di bawah batas
+    terendah, skor dihitung proporsional (maks 4.0 - band 'Kurang')."""
+    if nilai is None:
+        return None
+    for batas, skor in ambang:
+        if nilai >= batas:
+            return skor
+    batas_bawah = ambang[-1][0]
+    if not batas_bawah or batas_bawah <= 0:
+        return 1.0
+    return round(min(1 + 3 * (nilai / batas_bawah), 4.0), 1)
+
+
+def hitung_skor_ankle_mt(kanan, kiri):
+    nilai = [v for v in (kanan, kiri) if v is not None]
+    if not nilai:
+        return 5
+    skor = _skor_dari_ambang_mt(min(nilai), RUBRIK_L1_MT['ankle']) or 1.0
+    if kanan is not None and kiri is not None and abs(kanan - kiri) > BATAS_ASIMETRI_ANKLE_MT:
+        skor = min(skor, 4.0)
+    return round(skor)
+
+
+def hitung_skor_thoracic_mt(kanan, kiri):
+    nilai = [v for v in (kanan, kiri) if v is not None]
+    if not nilai:
+        return 5
+    skor = _skor_dari_ambang_mt(min(nilai), RUBRIK_L1_MT['thoracic']) or 1.0
+    if kanan is not None and kiri is not None and abs(kanan - kiri) > BATAS_ASIMETRI_THORACIC_MT and skor > 7.0:
+        skor = 7.0
+    return round(skor)
+
+
+def hitung_skor_hip_rotation_mt(ir_kanan, ir_kiri, er_kanan, er_kiri):
+    """IR & ER dinilai TERPISAH dengan ambang masing-masing (bukan
+    dijumlahkan). Skor gabungan = komponen terlemah. Asimetri Kanan vs
+    Kiri >10° di IR ATAU ER -> otomatis Kurang (maks skor 4.0)."""
+    nilai_ir = [v for v in (ir_kanan, ir_kiri) if v is not None]
+    nilai_er = [v for v in (er_kanan, er_kiri) if v is not None]
+    skor_ir = _skor_dari_ambang_mt(min(nilai_ir), RUBRIK_L1_MT['hip_ir']) if nilai_ir else None
+    skor_er = _skor_dari_ambang_mt(min(nilai_er), RUBRIK_L1_MT['hip_er']) if nilai_er else None
+    komponen = [s for s in (skor_ir, skor_er) if s is not None]
+    if not komponen:
+        return 5
+    skor = min(komponen)
+    if ir_kanan is not None and ir_kiri is not None and abs(ir_kanan - ir_kiri) > BATAS_ASIMETRI_HIP_ROTATION_MT:
+        skor = min(skor, 4.0)
+    if er_kanan is not None and er_kiri is not None and abs(er_kanan - er_kiri) > BATAS_ASIMETRI_HIP_ROTATION_MT:
+        skor = min(skor, 4.0)
+    return round(skor)
+
+
+def hitung_skor_aslr_mt(kanan, kiri):
+    nilai = [v for v in (kanan, kiri) if v is not None]
+    if not nilai:
+        return 5
+    skor = _skor_dari_ambang_mt(min(nilai), RUBRIK_L1_MT['aslr']) or 1.0
+    return round(skor)
+
+
+def hitung_skor_lumbar_mt(nyeri, kualitas):
+    """Clearing gate: nyeri -> skor 0. Kalau tidak, dari kualitas
+    observasi (MULUS=Baik/9, KOMPENSASI=Cukup/6, TERBATAS=Kurang/3)."""
+    if nyeri:
+        return 0
+    return {'MULUS': 9, 'KOMPENSASI': 6, 'TERBATAS': 3}.get(kualitas, 5)
+
+
+def hitung_skor_pelvic_mt(kanan, kiri):
+    """Ambil sisi TERBURUK (worst-case) antara Kanan & Kiri."""
+    urutan_keparahan = {'VALGUS': 0, 'RINGAN': 1, 'STABIL': 2}
+    peta_skor = {'STABIL': 9, 'RINGAN': 6, 'VALGUS': 3}
+    kandidat = [k for k in (kanan, kiri) if k in peta_skor]
+    if not kandidat:
+        return 5
+    terburuk = min(kandidat, key=lambda k: urutan_keparahan.get(k, 2))
+    return peta_skor[terburuk]
+
+
 # ══════════════════════════════════════════════════════════════════════
 
 class L1CorrectionMTView(LoginRequiredMixin, View):
@@ -109,59 +209,82 @@ class L1CorrectionMTView(LoginRequiredMixin, View):
     def post(self, request):
         try:
             atlet_id = request.POST.get('atlet_id')
-            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai') if atlet_id else None
+            atlet    = get_object_or_404(get_atlet_muaythai(request.user), pk=atlet_id) if atlet_id else None
 
             def to_float(key):
                 val = request.POST.get(key)
+                if val in (None, ''):
+                    return None
+                val = str(val).strip().replace(',', '.')  # dukung input format ID (koma desimal)
                 try:
-                    return float(val) if val else None
+                    return float(val)
                 except (ValueError, TypeError):
                     return None
 
-            def to_int(key, default=1):
-                val = request.POST.get(key)
-                try:
-                    return int(val) if val else default
-                except (ValueError, TypeError):
-                    return default
+            kategori_usia = request.POST.get('kategori_usia', 'ELITE')
+            gender        = request.POST.get('gender', 'Putra')
 
+            wblt_kanan = to_float('wblt_jarak_kanan_cm')
+            wblt_kiri  = to_float('wblt_jarak_kiri_cm')
+
+            thoracic_kanan = to_float('thoracic_rotasi_kanan')
+            thoracic_kiri  = to_float('thoracic_rotasi_kiri')
+
+            hip_ir_kanan = to_float('hip_ir_kanan')
+            hip_ir_kiri  = to_float('hip_ir_kiri')
+            hip_er_kanan = to_float('hip_er_kanan')
+            hip_er_kiri  = to_float('hip_er_kiri')
+
+            aslr_kanan = to_float('aslr_kanan')
+            aslr_kiri  = to_float('aslr_kiri')
+
+            lumbar_nyeri    = request.POST.get('lumbar_nyeri') == 'true'
+            lumbar_kualitas = request.POST.get('lumbar_kualitas', 'MULUS')
+
+            pelvic_kanan = request.POST.get('pelvic_stability_kanan', 'STABIL')
+            pelvic_kiri  = request.POST.get('pelvic_stability_kiri', 'STABIL')
+
+            # NOTE: semua skor_* di bawah SENGAJA dihitung ulang di server
+            # dari data pengukuran/observasi mentah, TIDAK diambil dari
+            # request.POST — sama pola dengan combat/karate/views.py.
             audit = CorrectionAuditL1MT(
                 atlet         = atlet,
                 atlet_name    = atlet.nama_atlet if atlet else request.POST.get('atlet_name', ''),
-                kategori_usia = request.POST.get('kategori_usia', 'ELITE'),
-                gender        = request.POST.get('gender', 'Putra'),
+                kategori_usia = kategori_usia,
+                gender        = gender,
                 kelas_berat   = to_float('kelas_berat'),
 
-                hip_rotasi_internal_kanan  = to_float('hip_rotasi_internal_kanan'),
-                hip_rotasi_internal_kiri   = to_float('hip_rotasi_internal_kiri'),
-                hip_rotasi_eksternal_kanan = to_float('hip_rotasi_eksternal_kanan'),
-                hip_rotasi_eksternal_kiri  = to_float('hip_rotasi_eksternal_kiri'),
-                skor_neural_hip_rotasi     = to_int('skor_neural_hip_rotasi'),
+                # 1. Ankle Mobility (WBLT)
+                wblt_jarak_kanan_cm = wblt_kanan,
+                wblt_jarak_kiri_cm  = wblt_kiri,
+                skor_ankle_mobility = hitung_skor_ankle_mt(wblt_kanan, wblt_kiri),
 
-                balance_durasi_mata_terbuka  = to_float('balance_durasi_mata_terbuka'),
-                balance_durasi_mata_tertutup = to_float('balance_durasi_mata_tertutup'),
-                skor_neural_balance          = to_int('skor_neural_balance'),
+                # 2. Seated Thoracic Rotation
+                thoracic_rotasi_kanan  = thoracic_kanan,
+                thoracic_rotasi_kiri   = thoracic_kiri,
+                skor_thoracic_rotation = hitung_skor_thoracic_mt(thoracic_kanan, thoracic_kiri),
 
-                ankle_dorsifleksi_kanan_cm = to_float('ankle_dorsifleksi_kanan_cm'),
-                ankle_dorsifleksi_kiri_cm  = to_float('ankle_dorsifleksi_kiri_cm'),
-                skor_neural_ankle          = to_int('skor_neural_ankle'),
+                # 3. Hip Rotation Mobility (IR & ER)
+                hip_ir_kanan      = hip_ir_kanan,
+                hip_ir_kiri       = hip_ir_kiri,
+                hip_er_kanan      = hip_er_kanan,
+                hip_er_kiri       = hip_er_kiri,
+                skor_hip_rotation = hitung_skor_hip_rotation_mt(hip_ir_kanan, hip_ir_kiri, hip_er_kanan, hip_er_kiri),
 
-                thoracic_rotasi_kanan = to_float('thoracic_rotasi_kanan'),
-                thoracic_rotasi_kiri  = to_float('thoracic_rotasi_kiri'),
-                skor_neural_thoracic  = to_int('skor_neural_thoracic'),
+                # 4. ASLR
+                aslr_kanan = aslr_kanan,
+                aslr_kiri  = aslr_kiri,
+                skor_aslr  = hitung_skor_aslr_mt(aslr_kanan, aslr_kiri),
 
-                shoulder_fleksi_kanan = to_float('shoulder_fleksi_kanan'),
-                shoulder_fleksi_kiri  = to_float('shoulder_fleksi_kiri'),
-                skor_neural_shoulder  = to_int('skor_neural_shoulder'),
+                # 5. Lumbar Extension (Modified Cobra / Clearing Gate)
+                lumbar_nyeri          = lumbar_nyeri,
+                lumbar_kualitas       = lumbar_kualitas,
+                skor_lumbar_extension = hitung_skor_lumbar_mt(lumbar_nyeri, lumbar_kualitas),
 
-                hip_hinge_pass        = request.POST.get('hip_hinge_pass') == 'true',
-                skor_neural_hip_hinge = to_int('skor_neural_hip_hinge'),
-
-                core_hold_durasi_detik = to_float('core_hold_durasi_detik'),
-                skor_neural_core       = to_int('skor_neural_core'),
-
-                recovery_waktu_detik = to_float('recovery_waktu_detik'),
-                skor_neural_recovery = to_int('skor_neural_recovery'),
+                # 6. Lateral Pelvic Stability (Single-Leg Squat)
+                pelvic_stability_kanan = pelvic_kanan,
+                pelvic_stability_kiri  = pelvic_kiri,
+                skor_pelvic_stability  = hitung_skor_pelvic_mt(pelvic_kanan, pelvic_kiri),
 
                 ai_confidence_score = to_float('ai_confidence_score'),
             )
@@ -178,23 +301,33 @@ class L1CorrectionMTView(LoginRequiredMixin, View):
         return redirect('muaythai:l1_correction')
 
 
+@login_required
 def hapus_l1_mt(request, pk):
-    audit = get_object_or_404(CorrectionAuditL1MT, pk=pk)
+    audit = get_object_or_404(CorrectionAuditL1MT, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     nama  = audit.atlet_name
     audit.delete()
     messages.success(request, f'Data L1 {nama} berhasil dihapus.')
     return redirect('muaythai:l1_correction')
 
 
+@login_required
 def detail_l1_mt(request, pk):
-    audit = get_object_or_404(CorrectionAuditL1MT, pk=pk)
+    audit = get_object_or_404(CorrectionAuditL1MT, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     return JsonResponse({
         'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
         'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
-        'score_rotation': audit.score_rotation, 'score_extension': audit.score_extension,
-        'score_stability': audit.score_stability, 'score_posture': audit.score_posture,
-        'score_breathing': audit.score_breathing, 'total_skor': audit.total_skor,
+        'skor_ankle_mobility': audit.skor_ankle_mobility,
+        'skor_thoracic_rotation': audit.skor_thoracic_rotation,
+        'skor_hip_rotation': audit.skor_hip_rotation,
+        'skor_aslr': audit.skor_aslr,
+        'skor_lumbar_extension': audit.skor_lumbar_extension,
+        'skor_pelvic_stability': audit.skor_pelvic_stability,
+        'lumbar_nyeri': audit.lumbar_nyeri,
+        'item_terlemah': audit.item_terlemah,
+        'rekomendasi_auto': audit.rekomendasi_auto,
+        'total_skor': audit.total_skor,
         'predikat': audit.predikat, 'layak_naik': audit.layak_naik,
+        'alasan_tidak_layak': audit.alasan_tidak_layak,
     })
 
 
@@ -219,7 +352,7 @@ class L2StrengthMTView(LoginRequiredMixin, View):
     def post(self, request):
         try:
             atlet_id = request.POST.get('atlet_id')
-            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai') if atlet_id else None
+            atlet    = get_object_or_404(get_atlet_muaythai(request.user), pk=atlet_id) if atlet_id else None
 
             def to_float(key):
                 val = request.POST.get(key)
@@ -261,16 +394,18 @@ class L2StrengthMTView(LoginRequiredMixin, View):
         return redirect('muaythai:l2_strength')
 
 
+@login_required
 def hapus_l2_mt(request, pk):
-    audit = get_object_or_404(StrengthAuditL2, pk=pk)
+    audit = get_object_or_404(StrengthAuditL2, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     nama  = audit.atlet_name
     audit.delete()
     messages.success(request, f'Data L2 {nama} berhasil dihapus.')
     return redirect('muaythai:l2_strength')
 
 
+@login_required
 def detail_l2_mt(request, pk):
-    audit = get_object_or_404(StrengthAuditL2, pk=pk)
+    audit = get_object_or_404(StrengthAuditL2, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     return JsonResponse({
         'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
         'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
@@ -304,7 +439,7 @@ class L3PowerMTView(LoginRequiredMixin, View):
     def post(self, request):
         try:
             atlet_id = request.POST.get('atlet_id')
-            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai') if atlet_id else None
+            atlet    = get_object_or_404(get_atlet_muaythai(request.user), pk=atlet_id) if atlet_id else None
 
             def to_float(key):
                 val = request.POST.get(key)
@@ -341,16 +476,18 @@ class L3PowerMTView(LoginRequiredMixin, View):
         return redirect('muaythai:l3_power')
 
 
+@login_required
 def hapus_l3_mt(request, pk):
-    audit = get_object_or_404(PowerAuditL3, pk=pk)
+    audit = get_object_or_404(PowerAuditL3, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     nama  = audit.atlet_name
     audit.delete()
     messages.success(request, f'Data L3 {nama} berhasil dihapus.')
     return redirect('muaythai:l3_power')
 
 
+@login_required
 def detail_l3_mt(request, pk):
-    audit = get_object_or_404(PowerAuditL3, pk=pk)
+    audit = get_object_or_404(PowerAuditL3, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     return JsonResponse({
         'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
         'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
@@ -488,7 +625,7 @@ class L4SpeedAgilityMTView(LoginRequiredMixin, View):
     def post(self, request):
         try:
             atlet_id = request.POST.get('atlet_id')
-            atlet    = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai') if atlet_id else None
+            atlet    = get_object_or_404(get_atlet_muaythai(request.user), pk=atlet_id) if atlet_id else None
 
             def to_float(key):
                 val = request.POST.get(key)
@@ -559,16 +696,18 @@ class L4SpeedAgilityMTView(LoginRequiredMixin, View):
         return redirect('muaythai:l4_speed_agility')
 
 
+@login_required
 def hapus_l4_mt(request, pk):
-    audit = get_object_or_404(SpeedAgilityAuditL4, pk=pk)
+    audit = get_object_or_404(SpeedAgilityAuditL4, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     nama  = audit.atlet_name
     audit.delete()
     messages.success(request, f'Data L4 {nama} berhasil dihapus.')
     return redirect('muaythai:l4_speed_agility')
 
 
+@login_required
 def detail_l4_mt(request, pk):
-    audit = get_object_or_404(SpeedAgilityAuditL4, pk=pk)
+    audit = get_object_or_404(SpeedAgilityAuditL4, pk=pk, atlet__in=get_atlet_muaythai(request.user))
     return JsonResponse({
         'atlet_name': audit.atlet_name, 'kategori_usia': audit.kategori_usia,
         'gender': audit.gender, 'kelas_berat': audit.kelas_berat,
@@ -590,7 +729,8 @@ class ReportCardMTView(LoginRequiredMixin, View):
 
     def get(self, request, atlet_id):
         from django.utils import timezone
-        atlet = get_object_or_404(Atlet, pk=atlet_id, cabang='muaythai')
+        atlet_qs = get_atlet_muaythai(request.user)
+        atlet = get_object_or_404(atlet_qs, pk=atlet_id, cabang='muaythai')
 
         l1 = CorrectionAuditL1MT.objects.filter(atlet=atlet).order_by('-timestamp').first()
         l2 = StrengthAuditL2.objects.filter(atlet=atlet).order_by('-timestamp').first()

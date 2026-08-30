@@ -293,6 +293,7 @@ class RencanaMingguan(models.Model):
     minggu_ke = models.PositiveSmallIntegerField()
     materi = models.ForeignKey(MateriFase, on_delete=models.SET_NULL, null=True, blank=True, related_name='rencana_mingguan')
     nama_materi_bebas = models.CharField(max_length=150, blank=True, help_text="Isi kalau materi belum ada di daftar Materi Fase")
+    tp = models.ForeignKey('TujuanPembelajaran', on_delete=models.SET_NULL, null=True, blank=True, related_name='rencana_mingguan')
     alokasi_jp = models.PositiveSmallIntegerField(default=2, help_text="Jumlah jam pelajaran")
     keterangan = models.CharField(max_length=200, blank=True)
 
@@ -308,3 +309,31 @@ class RencanaMingguan(models.Model):
 
     def __str__(self):
         return f"Fase {self.fase} - {self.tahun_ajaran} {self.semester} - Minggu {self.minggu_ke}"
+
+# ---------------------------------------------------------------------------
+# TP, ATP, KKTP — Tujuan Pembelajaran per elemen CP, dasar Alur Tujuan Pembelajaran
+# ---------------------------------------------------------------------------
+
+class TujuanPembelajaran(models.Model):
+    ELEMEN_CHOICES = [
+        ('keterampilan_gerak', 'Keterampilan Gerak'),
+        ('pengetahuan_gerak', 'Pengetahuan Gerak'),
+        ('pemanfaatan_gerak', 'Pemanfaatan Gerak'),
+        ('pengembangan_karakter', 'Pengembangan Karakter'),
+    ]
+    guru = models.ForeignKey(GuruProfile, on_delete=models.CASCADE, related_name='tujuan_pembelajaran')
+    fase = models.CharField(max_length=1, choices=FASE_CHOICES)
+    kode = models.CharField(max_length=20, help_text="Contoh: TP.1.1")
+    elemen = models.CharField(max_length=30, choices=ELEMEN_CHOICES)
+    deskripsi = models.TextField(help_text="Rumusan Tujuan Pembelajaran")
+    kktp = models.TextField(blank=True, help_text="Kriteria Ketercapaian Tujuan Pembelajaran")
+
+    class Meta:
+        ordering = ['elemen', 'kode']
+        unique_together = ('guru', 'fase', 'kode')
+
+    def get_elemen_display_short(self):
+        return dict(self.ELEMEN_CHOICES).get(self.elemen, self.elemen)
+
+    def __str__(self):
+        return f"{self.kode} - {self.deskripsi[:50]}"

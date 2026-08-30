@@ -1,27 +1,49 @@
 """
 muaythai/models.py
-Model audit khusus Muay Thai. Model Atlet & lintas-cabang lain tetap
-dipakai bersama dari app 'combat'.
+Model audit L1 -- Koreksi Biomekanik Muay Thai.
+Direvisi mengikuti "SOP & Rubrik Asesmen Level 1: Koreksi Biomekanik
+Muay Thai -- REVISI 2 (Norma Terupdate)".
+
+6 parameter tes sesuai SOP:
+  1. Ankle Mobility            -- Weight-Bearing Lunge Test (WBLT), jarak (cm)
+  2. Seated Thoracic Rotation  -- sudut rotasi trunk (derajat)
+  3. Hip Rotation Mobility     -- Internal & External Rotation (derajat)
+  4. ASLR                      -- Active Straight Leg Raise (derajat)
+  5. Lumbar Extension          -- Modified Cobra + Clearing Gate nyeri
+  6. Lateral Pelvic Stability  -- Single-Leg Squat (knee valgus/Trendelenburg)
+
+Setiap parameter diskor 1-10 langsung oleh pelatih mengikuti rubrik norma
+di SOP (Kurang 1-4 / Cukup 5-7 / Baik-Ideal 8-10). total_skor = rata-rata
+ke-6 skor tsb (skala 0-10) -- TIDAK lagi memakai skala neural 1-3
+(Cognitive/Associative/Autonomous) dari versi sebelumnya, karena rubrik
+resmi Muay Thai Revisi 2 memakai skala 1-10 langsung per parameter.
+
+Model Atlet & lintas-cabang lain tetap dipakai bersama dari app 'combat'.
 """
 from django.db import models
 from django.utils import timezone
 from combat.models import Atlet, KATEGORI_USIA_CHOICES, GENDER_CHOICES, PREDIKAT_CHOICES
 
 
-NEURAL_CHOICES = [
-    (1, 'Cognitive'),
-    (2, 'Associative'),
-    (3, 'Autonomous'),
+LUMBAR_KUALITAS_CHOICES = [
+    ('MULUS', 'Ekstensi mulus, tanpa kompensasi'),
+    ('KOMPENSASI', 'Ada kompensasi bahu/panggul terangkat'),
+    ('TERBATAS', 'ROM sangat terbatas'),
+]
+
+PELVIC_STABILITY_CHOICES = [
+    ('STABIL', 'Alignment lurus, panggul stabil (tanpa valgus)'),
+    ('RINGAN', 'Lutut bergoyang ringan / kompensasi minim'),
+    ('VALGUS', 'Knee valgus parah / panggul anjlok (Trendelenburg sign)'),
 ]
 
 
 class CorrectionAuditL1MT(models.Model):
     """
-    L1 Correction -- Muay Thai
-    Fokus: Mobility, Stability, Fleksibilitas sebagai fondasi sebelum
-    masuk ke teknik spesifik (pukulan, tendangan, siku, lutut, clinch).
-    Setiap item punya skor kuantitatif (Q) + skor kualitas neural (N),
-    mengikuti Motor Automaticity Scale (1=Cognitive, 2=Associative, 3=Autonomous).
+    L1 Correction -- Muay Thai (SOP Revisi 2)
+    Fokus: mobilitas thorakal & panggul, fleksibilitas ankle, kontrol
+    lumbal, dan stabilitas panggul lateral sebagai fondasi sebelum masuk
+    ke teknik spesifik (pukulan, tendangan, siku/Sok, lutut/Khao, clinch).
     """
     # -- Identitas --------------------------------------------------
     atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='audit_l1_mt', verbose_name='Atlet')
@@ -30,50 +52,43 @@ class CorrectionAuditL1MT(models.Model):
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True, verbose_name='Berat Badan (kg)')
 
-    # -- 1. Hip Rotation ROM ------------------------------------------
-    hip_rotasi_internal_kanan  = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kanan (derajat)')
-    hip_rotasi_internal_kiri   = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kiri (derajat)')
-    hip_rotasi_eksternal_kanan = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kanan (derajat)')
-    hip_rotasi_eksternal_kiri  = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kiri (derajat)')
-    skor_neural_hip_rotasi     = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 1. Ankle Mobility (Weight-Bearing Lunge Test) -----------------
+    wblt_jarak_kanan_cm = models.FloatField(null=True, blank=True, verbose_name='WBLT Kanan (cm)')
+    wblt_jarak_kiri_cm  = models.FloatField(null=True, blank=True, verbose_name='WBLT Kiri (cm)')
+    skor_ankle_mobility = models.IntegerField(default=5, verbose_name='Skor Ankle Mobility (1-10)')
 
-    # -- 2. Single-Leg Balance -----------------------------------------
-    balance_durasi_mata_terbuka  = models.FloatField(null=True, blank=True, verbose_name='Balance Mata Terbuka (detik)')
-    balance_durasi_mata_tertutup = models.FloatField(null=True, blank=True, verbose_name='Balance Mata Tertutup (detik)')
-    skor_neural_balance          = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 2. Seated Thoracic Rotation -----------------------------------
+    thoracic_rotasi_kanan  = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kanan (derajat)')
+    thoracic_rotasi_kiri   = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kiri (derajat)')
+    skor_thoracic_rotation = models.IntegerField(default=5, verbose_name='Skor Thoracic Rotation (1-10)')
 
-    # -- 3. Ankle Dorsiflexion -------------------------------------------
-    ankle_dorsifleksi_kanan_cm = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kanan (cm)')
-    ankle_dorsifleksi_kiri_cm  = models.FloatField(null=True, blank=True, verbose_name='Ankle Dorsiflexion Kiri (cm)')
-    skor_neural_ankle          = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 3. Hip Rotation Mobility (IR & ER) ----------------------------
+    hip_ir_kanan      = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kanan (derajat)')
+    hip_ir_kiri       = models.FloatField(null=True, blank=True, verbose_name='Hip Internal Rotation Kiri (derajat)')
+    hip_er_kanan      = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kanan (derajat)')
+    hip_er_kiri       = models.FloatField(null=True, blank=True, verbose_name='Hip External Rotation Kiri (derajat)')
+    skor_hip_rotation = models.IntegerField(default=5, verbose_name='Skor Hip Rotation IR/ER (1-10)')
 
-    # -- 4. Thoracic Spine Rotation ----------------------------------
-    thoracic_rotasi_kanan = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kanan (derajat)')
-    thoracic_rotasi_kiri  = models.FloatField(null=True, blank=True, verbose_name='Thoracic Rotation Kiri (derajat)')
-    skor_neural_thoracic  = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 4. ASLR (Active Straight Leg Raise) ---------------------------
+    aslr_kanan = models.FloatField(null=True, blank=True, verbose_name='ASLR Kanan (derajat)')
+    aslr_kiri  = models.FloatField(null=True, blank=True, verbose_name='ASLR Kiri (derajat)')
+    skor_aslr  = models.IntegerField(default=5, verbose_name='Skor ASLR (1-10)')
 
-    # -- 5. Shoulder Overhead Mobility --------------------------------
-    shoulder_fleksi_kanan = models.FloatField(null=True, blank=True, verbose_name='Shoulder Flexion Kanan (derajat)')
-    shoulder_fleksi_kiri  = models.FloatField(null=True, blank=True, verbose_name='Shoulder Flexion Kiri (derajat)')
-    skor_neural_shoulder  = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 5. Lumbar Extension (Modified Cobra / Clearing Gate) ----------
+    lumbar_nyeri           = models.BooleanField(default=False, verbose_name='Nyeri saat Ekstensi? (Clearing Gate Gagal)')
+    lumbar_kualitas        = models.CharField(max_length=20, choices=LUMBAR_KUALITAS_CHOICES, default='MULUS', verbose_name='Kualitas Ekstensi Thoracolumbar')
+    skor_lumbar_extension  = models.IntegerField(default=5, verbose_name='Skor Lumbar Extension (1-10)')
 
-    # -- 6. Hip Hinge Pattern -----------------------------------------
-    hip_hinge_pass       = models.BooleanField(default=False, verbose_name='Hip Hinge Pattern Benar?')
-    skor_neural_hip_hinge = models.IntegerField(choices=NEURAL_CHOICES, default=1)
-
-    # -- 7. Core Anti-Rotation Stability -------------------------------
-    core_hold_durasi_detik = models.FloatField(null=True, blank=True, verbose_name='Pallof Press Hold (detik)')
-    skor_neural_core       = models.IntegerField(choices=NEURAL_CHOICES, default=1)
-
-    # -- 8. Dynamic Balance Recovery -----------------------------------
-    recovery_waktu_detik  = models.FloatField(null=True, blank=True, verbose_name='Recovery Time (detik)')
-    skor_neural_recovery  = models.IntegerField(choices=NEURAL_CHOICES, default=1)
+    # -- 6. Lateral Pelvic Stability (Single-Leg Squat) ----------------
+    pelvic_stability_kanan = models.CharField(max_length=20, choices=PELVIC_STABILITY_CHOICES, default='STABIL', verbose_name='Pelvic Stability Kanan')
+    pelvic_stability_kiri  = models.CharField(max_length=20, choices=PELVIC_STABILITY_CHOICES, default='STABIL', verbose_name='Pelvic Stability Kiri')
+    skor_pelvic_stability  = models.IntegerField(default=5, verbose_name='Skor Lateral Pelvic Stability (1-10)')
 
     # -- AI --------------------------------------------------------
     ai_confidence_score = models.FloatField(null=True, blank=True)
 
     # -- Hasil --------------------------------------------------------
-    total_skor         = models.FloatField(default=0, verbose_name='Total Skor Neural (0-10)')
+    total_skor         = models.FloatField(default=0, verbose_name='Total Skor L1 (0-10)')
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naik ke L2?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
@@ -93,78 +108,91 @@ class CorrectionAuditL1MT(models.Model):
         return f"{self.atlet_name or self.atlet.nama_atlet} | {self.predikat} | {self.total_skor}"
 
     @property
-    def skor_neural_list(self):
+    def skor_list(self):
         return [
-            self.skor_neural_hip_rotasi, self.skor_neural_balance,
-            self.skor_neural_ankle, self.skor_neural_thoracic,
-            self.skor_neural_shoulder, self.skor_neural_hip_hinge,
-            self.skor_neural_core, self.skor_neural_recovery,
+            self.skor_ankle_mobility, self.skor_thoracic_rotation,
+            self.skor_hip_rotation, self.skor_aslr,
+            self.skor_lumbar_extension, self.skor_pelvic_stability,
         ]
 
     def save(self, *args, **kwargs):
         if self.atlet_id and not self.atlet_name:
             self.atlet_name = self.atlet.nama_atlet
 
-        # Total skor neural mentah: 8 item x skor 1-3 -> max 24
-        raw_total = sum(self.skor_neural_list)
-        # Normalisasi ke skala 0-10 supaya konsisten dengan predikat lintas app
-        self.total_skor = round((raw_total / 24) * 10, 1)
+        # Clearing gate SOP: nyeri saat Lumbar Extension -> Skor 0, gagal (rujuk medis)
+        if self.lumbar_nyeri:
+            self.skor_lumbar_extension = 0
 
-        if self.total_skor >= 8.3:       # setara skor neural rata-rata mendekati 3 (Autonomous)
+        # Total skor: rata-rata 6 parameter, tiap parameter sudah 1-10 (bukan raw/24 lagi)
+        raw_total = sum(self.skor_list)
+        self.total_skor = round(raw_total / 6, 1)
+
+        if self.lumbar_nyeri:
+            # Clearing gate gagal -> otomatis tidak layak, terlepas dari total skor item lain
+            self.predikat = 'NOVICE'
+        elif self.total_skor >= 8.3:
             self.predikat = 'ELITE'
-        elif self.total_skor >= 5.8:     # rata-rata mendekati 2-3 (Associative-Autonomous)
+        elif self.total_skor >= 5.8:
             self.predikat = 'READY'
-        elif self.total_skor >= 4.2:     # rata-rata mendekati 2 (Associative)
+        elif self.total_skor >= 4.2:
             self.predikat = 'DEVELOPING'
         else:
             self.predikat = 'NOVICE'
 
-        if self.predikat in ('ELITE', 'READY'):
+        if self.predikat in ('ELITE', 'READY') and not self.lumbar_nyeri:
             self.layak_naik = True
             self.alasan_tidak_layak = ''
         else:
             self.layak_naik = False
-            self.alasan_tidak_layak = (
-                f"Skor neural {self.total_skor}/10 (raw {raw_total}/24). "
-                f"Item terlemah: {self.item_terlemah}. "
-                f"Wajib program korektif mobility/stability sebelum lanjut."
-            )
+            if self.lumbar_nyeri:
+                self.alasan_tidak_layak = (
+                    "Clearing Gate GAGAL: nyeri tajam saat Lumbar Extension Test. "
+                    "Wajib evaluasi medis sebelum lanjut program apapun."
+                )
+            else:
+                self.alasan_tidak_layak = (
+                    f"Skor L1 {self.total_skor}/10 (raw {raw_total}/60). "
+                    f"Item terlemah: {self.item_terlemah}. "
+                    f"Wajib program korektif mobility/stability sebelum lanjut."
+                )
 
         super().save(*args, **kwargs)
 
     @property
     def item_terlemah(self):
         labels = {
-            'Hip Rotation': self.skor_neural_hip_rotasi,
-            'Single-Leg Balance': self.skor_neural_balance,
-            'Ankle Dorsiflexion': self.skor_neural_ankle,
-            'Thoracic Rotation': self.skor_neural_thoracic,
-            'Shoulder Mobility': self.skor_neural_shoulder,
-            'Hip Hinge': self.skor_neural_hip_hinge,
-            'Core Anti-Rotation': self.skor_neural_core,
-            'Dynamic Balance Recovery': self.skor_neural_recovery,
+            'Ankle Mobility (WBLT)':      self.skor_ankle_mobility,
+            'Seated Thoracic Rotation':   self.skor_thoracic_rotation,
+            'Hip Rotation (IR/ER)':       self.skor_hip_rotation,
+            'ASLR':                       self.skor_aslr,
+            'Lumbar Extension':           self.skor_lumbar_extension,
+            'Lateral Pelvic Stability':   self.skor_pelvic_stability,
         }
         return min(labels, key=labels.get)
 
     @property
-    def predikat_neural_label(self):
+    def predikat_label(self):
+        if self.lumbar_nyeri:
+            return 'Clearing Gate GAGAL -- Evaluasi medis diperlukan'
         skor = self.total_skor
         if skor >= 8.3:
-            return 'Autonomous -- Siap lanjut ke L2'
+            return 'Baik / Ideal -- Siap lanjut ke L2'
         elif skor >= 5.8:
-            return 'Associative-Autonomous -- Layak lanjut dengan catatan'
+            return 'Baik-Cukup -- Layak lanjut dengan catatan'
         elif skor >= 4.2:
-            return 'Associative -- Perlu pembinaan tambahan'
+            return 'Cukup -- Perlu pembinaan tambahan'
         else:
-            return 'Cognitive -- Belum layak lanjut, fokus koreksi dasar'
+            return 'Kurang -- Belum layak lanjut, fokus koreksi dasar'
 
     @property
     def rekomendasi_auto(self):
         nama = self.item_terlemah
+        if self.lumbar_nyeri:
+            return "STOP semua program pembebanan. Rujuk evaluasi medis untuk nyeri Lumbar Extension sebelum asesmen dilanjutkan."
         if self.predikat == 'ELITE':
-            return "Kontrol neuromuskular sangat matang di semua item. Lanjut ke L2 Strength Assessment."
+            return "Mobilitas & stabilitas sangat matang di semua parameter. Lanjut ke L2 Strength Assessment."
         elif self.predikat == 'READY':
-            return f"Layak ke L2. Tetap latih '{nama}' 2-3x/minggu untuk konsolidasi otomatisasi."
+            return f"Layak ke L2. Tetap latih '{nama}' 2-3x/minggu sebagai bagian pemanasan/pendinginan."
         elif self.predikat == 'DEVELOPING':
-            return f"Tahan ke L2. Fokus 4-6 minggu perbaikan mobility/stability pada '{nama}'."
-        return f"STOP lanjut ke teknik. Kontrol neuromuskular kritis pada '{nama}'. Wajib program korektif 8 minggu."
+            return f"Tahan ke L2. Fokus 4-6 minggu perbaikan corrective exercise pada '{nama}'."
+        return f"STOP lanjut ke teknik. Prioritas corrective exercise tinggi pada '{nama}'. Hindari beban tinggi pada pola gerak terkait sampai ada perbaikan."

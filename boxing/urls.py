@@ -5,6 +5,7 @@ app_name = 'boxing'
 
 urlpatterns = [
     path('', views.DashboardBoxingView.as_view(), name='dashboard'),
+    path('daftar-atlet/', views.DaftarAtletBoxingView.as_view(), name='daftar_atlet'),
 
     path('l1-correction/', views.L1CorrectionView.as_view(), name='l1_correction'),
     path('l1-correction/hapus/<int:pk>/', views.hapus_l1_audit, name='hapus_l1_audit'),

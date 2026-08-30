@@ -1,8 +1,35 @@
-﻿{% extends 'base.html' %}
+﻿{% extends 'base_taekwondo.html' %}
+{% block title %}HPCS - Daftar Atlet Taekwondo{% endblock %}
+{% block page_title %}Daftar Atlet Taekwondo{% endblock %}
+
 {% block content %}
-<h2>Daftar Atlet Taekwondo</h2>
-<p>Total: {{ total_atlet }} atlet</p>
-{% for atlet in daftar_atlet %}
-<p>{{ atlet.nama_atlet }}</p>
-{% endfor %}
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius: 10px; padding: 24px;">
+    <h2 style="margin-top:0;">Daftar Atlet Taekwondo</h2>
+    <p>Total: {{ total_atlet }} atlet</p>
+
+    {% if daftar_atlet %}
+    <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <thead>
+            <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
+                <th style="padding: 8px;">Nama Atlet</th>
+                <th style="padding: 8px;">Kategori Usia</th>
+                <th style="padding: 8px;">Gender</th>
+                <th style="padding: 8px;">Berat (kg)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atlet in daftar_atlet %}
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+                <td style="padding: 8px;">{{ atlet.nama_atlet }}</td>
+                <td style="padding: 8px;">{{ atlet.get_kategori_umur_display }}</td>
+                <td style="padding: 8px;">{{ atlet.get_gender_display }}</td>
+                <td style="padding: 8px;">{{ atlet.kelas_berat|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#888;">Belum ada atlet Taekwondo yang terdaftar untuk pelatih ini.</p>
+    {% endif %}
+</div>
 {% endblock %}

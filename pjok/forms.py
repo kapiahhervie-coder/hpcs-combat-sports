@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES
+from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES, TujuanPembelajaran
 
 
 class GuruProfileForm(forms.ModelForm):
@@ -89,21 +89,47 @@ class PenilaianPengetahuanForm(forms.ModelForm):
 class RencanaMingguanForm(forms.ModelForm):
     class Meta:
         model = RencanaMingguan
-        fields = ['minggu_ke', 'materi', 'nama_materi_bebas', 'alokasi_jp', 'keterangan']
+        fields = ['minggu_ke', 'materi', 'nama_materi_bebas', 'tp', 'alokasi_jp', 'keterangan']
 
-    def __init__(self, *args, fase=None, **kwargs):
+    def __init__(self, *args, fase=None, guru=None, **kwargs):
         super().__init__(*args, **kwargs)
         if fase:
             self.fields['materi'].queryset = MateriFase.objects.filter(fase=fase)
+        if fase and guru:
+            self.fields['tp'].queryset = TujuanPembelajaran.objects.filter(fase=fase, guru=guru)
         self.fields['materi'].required = False
+        self.fields['tp'].required = False
+
+
+class TujuanPembelajaranForm(forms.ModelForm):
+    class Meta:
+        model = TujuanPembelajaran
+        fields = ['kode', 'elemen', 'deskripsi', 'kktp']
+        widgets = {
+            'deskripsi': forms.Textarea(attrs={'rows': 3}),
+            'kktp': forms.Textarea(attrs={'rows': 3}),
+        }
 
 class RencanaMingguanForm(forms.ModelForm):
     class Meta:
         model = RencanaMingguan
-        fields = ['minggu_ke', 'materi', 'nama_materi_bebas', 'alokasi_jp', 'keterangan']
+        fields = ['minggu_ke', 'materi', 'nama_materi_bebas', 'tp', 'alokasi_jp', 'keterangan']
 
-    def __init__(self, *args, fase=None, **kwargs):
+    def __init__(self, *args, fase=None, guru=None, **kwargs):
         super().__init__(*args, **kwargs)
         if fase:
             self.fields['materi'].queryset = MateriFase.objects.filter(fase=fase)
+        if fase and guru:
+            self.fields['tp'].queryset = TujuanPembelajaran.objects.filter(fase=fase, guru=guru)
         self.fields['materi'].required = False
+        self.fields['tp'].required = False
+
+
+class TujuanPembelajaranForm(forms.ModelForm):
+    class Meta:
+        model = TujuanPembelajaran
+        fields = ['kode', 'elemen', 'deskripsi', 'kktp']
+        widgets = {
+            'deskripsi': forms.Textarea(attrs={'rows': 3}),
+            'kktp': forms.Textarea(attrs={'rows': 3}),
+        }

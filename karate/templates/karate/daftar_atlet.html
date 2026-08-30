@@ -1,16 +1,16 @@
-﻿{% extends 'base_muaythai.html' %}
-{% block title %}HPCS - Daftar Atlet Muay Thai{% endblock %}
-{% block page_title %}Daftar Atlet Muay Thai{% endblock %}
+{% extends 'base_karate.html' %}
+{% block title %}HPCS - Daftar Atlet Karate{% endblock %}
+{% block page_title %}Daftar Atlet Karate{% endblock %}
 
 {% block content %}
-<div class="card" style="padding: 24px;">
-    <h2 style="margin-top:0;">Daftar Atlet Muay Thai</h2>
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius: 10px; padding: 24px;">
+    <h2 style="margin-top:0;">Daftar Atlet Karate</h2>
     <p>Total: {{ total_atlet }} atlet</p>
 
     {% if daftar_atlet %}
     <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
         <thead>
-            <tr style="text-align:left; border-bottom: 2px solid #ddd;">
+            <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
                 <th style="padding: 8px;">Nama Atlet</th>
                 <th style="padding: 8px;">Kategori Usia</th>
                 <th style="padding: 8px;">Gender</th>
@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             {% for atlet in daftar_atlet %}
-            <tr style="border-bottom: 1px solid #eee;">
+            <tr style="border-bottom: 1px solid #f3f4f6;">
                 <td style="padding: 8px;">{{ atlet.nama_atlet }}</td>
                 <td style="padding: 8px;">{{ atlet.get_kategori_umur_display }}</td>
                 <td style="padding: 8px;">{{ atlet.get_gender_display }}</td>
@@ -29,7 +29,7 @@
         </tbody>
     </table>
     {% else %}
-    <p style="color:#888;">Belum ada atlet Muay Thai yang terdaftar untuk pelatih ini.</p>
+    <p style="color:#888;">Belum ada atlet Karate yang terdaftar untuk pelatih ini.</p>
     {% endif %}
 </div>
 {% endblock %}
