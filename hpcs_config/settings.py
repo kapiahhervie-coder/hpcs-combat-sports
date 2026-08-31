@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'taekwondo',
     'karate',
     'pjok',
+    'coaching_community',
     'periodization',
     'workout_prescription',
 

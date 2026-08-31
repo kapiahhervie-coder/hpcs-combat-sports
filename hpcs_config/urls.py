@@ -16,4 +16,5 @@ urlpatterns = [
     path('taekwondo/', include('taekwondo.urls')),
     path('karate/', include('karate.urls')),
     path('pjok/', include('pjok.urls')),
+    path('periodization/', include('periodization.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

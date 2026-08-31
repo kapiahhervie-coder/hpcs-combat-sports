@@ -96,11 +96,13 @@ class MesoCycle(models.Model):
     tanggal_mulai     = models.DateField()
     tanggal_selesai   = models.DateField()
 
+    # Porsi fokus per parameter L1-L4 (persen, idealnya total ~100)
     fokus_l1_persen   = models.PositiveIntegerField(default=25, help_text="Porsi fokus Koreksi/Mobility (L1)")
     fokus_l2_persen   = models.PositiveIntegerField(default=25, help_text="Porsi fokus Strength (L2)")
     fokus_l3_persen   = models.PositiveIntegerField(default=25, help_text="Porsi fokus Power (L3)")
     fokus_l4_persen   = models.PositiveIntegerField(default=25, help_text="Porsi fokus Speed/Agility (L4)")
 
+    # Buat kurva Volume vs Intensitas (skala 1-10, diisi pelatih)
     volume_target     = models.PositiveIntegerField(default=5, help_text="Skala 1-10")
     intensitas_target = models.PositiveIntegerField(default=5, help_text="Skala 1-10")
 
@@ -117,7 +119,10 @@ class MesoCycle(models.Model):
     @property
     def durasi_minggu(self):
         if self.tanggal_mulai and self.tanggal_selesai:
-            return max((self.tanggal_selesai - self.tanggal_mulai).days // 7, 0)
+            # +1 karena tanggal_selesai itu INKLUSIF (hari terakhir fase
+            # ini, bukan hari pertama fase berikutnya) -- tanpa +1,
+            # pembagian bulat ke bawah bikin hasilnya kurang 1 minggu.
+            return max(((self.tanggal_selesai - self.tanggal_mulai).days + 1) // 7, 0)
         return 0
 
     @property
