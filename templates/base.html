@@ -278,6 +278,11 @@
         <span class="nav-round">4</span> <span class="nav-link-text" data-i18n="nav_l4">Level 4 (Speed & Agility)</span><span class="nav-badge">SPD</span>
       </a>
       <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_periodization">Periodisasi</div>
+      <a href="{% url 'periodization:daftar_program' %}" class="nav-link {% if request.resolver_match.namespace == 'periodization' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 14l4-4 3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text" data-i18n="nav_periodization_link">Program Periodisasi</span>
+      </a>
+      <div class="nav-divider"></div>
       <div class="nav-section" data-i18n="nav_system">Sistem</div>
       {% if request.user.is_superuser or request.user.is_staff %}
       <a href="{% url 'admin:index' %}" class="nav-link">
@@ -390,6 +395,8 @@ var TRANSLATIONS = {
     nav_l2:         'Level 2 (Kekuatan)',
     nav_l3:         'Level 3 (Power)',
     nav_l4:         'Level 4 (Kecepatan & Kelincahan)',
+    nav_periodization:      'Periodisasi',
+    nav_periodization_link: 'Program Periodisasi',
     nav_system:     'Sistem',
     nav_admin:      'Panel Admin',
     nav_report:     'Pusat Laporan',
@@ -515,6 +522,8 @@ var TRANSLATIONS = {
     nav_l2:         'Level 2 (Strength)',
     nav_l3:         'Level 3 (Power)',
     nav_l4:         'Level 4 (Speed & Agility)',
+    nav_periodization:      'Periodization',
+    nav_periodization_link: 'Periodization Program',
     nav_system:     'System',
     nav_admin:      'Admin Panel',
     nav_report:     'Report Center',

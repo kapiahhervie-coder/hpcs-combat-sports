@@ -337,3 +337,85 @@ class TujuanPembelajaran(models.Model):
 
     def __str__(self):
         return f"{self.kode} - {self.deskripsi[:50]}"
+
+
+# ---------------------------------------------------------------------------
+# Data Kesehatan Siswa — untuk keselamatan saat aktivitas fisik PJOK
+# ---------------------------------------------------------------------------
+
+class KondisiKesehatan(models.Model):
+    """
+    Data kesehatan 'standing' (jarang berubah) per siswa: alergi, riwayat
+    penyakit, kontak darurat, dll. Satu siswa hanya punya satu catatan ini,
+    diisi/diperbarui guru kapan pun ada info baru.
+    """
+    GOLONGAN_DARAH_CHOICES = [
+        ('A', 'A'), ('B', 'B'), ('AB', 'AB'), ('O', 'O'), ('', 'Tidak tahu'),
+    ]
+    TINGKAT_RISIKO_CHOICES = [
+        ('rendah', 'Rendah — aman ikut semua aktivitas'),
+        ('sedang', 'Sedang — perlu pemantauan/penyesuaian tertentu'),
+        ('tinggi', 'Tinggi — perlu penyesuaian aktivitas & pengawasan ketat'),
+    ]
+
+    siswa = models.OneToOneField(Siswa, on_delete=models.CASCADE, related_name='kesehatan')
+
+    golongan_darah = models.CharField(max_length=2, choices=GOLONGAN_DARAH_CHOICES, blank=True)
+    alergi = models.TextField(
+        blank=True,
+        help_text="Contoh: alergi debu, alergi makanan tertentu — pisahkan dengan koma",
+    )
+    riwayat_penyakit = models.TextField(
+        blank=True,
+        help_text="Contoh: asma, jantung bawaan, epilepsi, diabetes",
+    )
+    kontraindikasi_aktivitas = models.TextField(
+        blank=True,
+        help_text="Aktivitas yang harus dihindari atau dimodifikasi untuk siswa ini",
+    )
+    obat_darurat = models.CharField(
+        max_length=200, blank=True,
+        help_text="Contoh: Inhaler asma — disimpan di tas siswa",
+    )
+    kontak_darurat_nama = models.CharField(max_length=100, blank=True)
+    kontak_darurat_hubungan = models.CharField(max_length=50, blank=True, help_text="Contoh: Ibu, Ayah, Wali")
+    kontak_darurat_telepon = models.CharField(max_length=20, blank=True)
+
+    tingkat_risiko = models.CharField(max_length=10, choices=TINGKAT_RISIKO_CHOICES, default='rendah')
+    catatan_tambahan = models.TextField(blank=True)
+
+    diperbarui_pada = models.DateTimeField(auto_now=True)
+
+    @property
+    def perlu_perhatian(self):
+        """True kalau siswa punya kondisi yang perlu diwaspadai guru sebelum aktivitas fisik."""
+        return bool(
+            self.alergi or self.riwayat_penyakit or self.kontraindikasi_aktivitas
+            or self.tingkat_risiko != 'rendah'
+        )
+
+    def __str__(self):
+        return f"Data Kesehatan - {self.siswa.nama}"
+
+
+class CatatanCedera(models.Model):
+    """Log riwayat cedera siswa dari waktu ke waktu — bisa lebih dari satu kejadian per siswa."""
+    STATUS_CHOICES = [
+        ('pemulihan', 'Masih Pemulihan'),
+        ('sembuh', 'Sudah Sembuh'),
+        ('kronis', 'Kondisi Kronis / Berulang'),
+    ]
+
+    siswa = models.ForeignKey(Siswa, on_delete=models.CASCADE, related_name='riwayat_cedera')
+    tanggal_kejadian = models.DateField()
+    jenis_cedera = models.CharField(max_length=100, help_text="Contoh: keseleo pergelangan kaki, benturan kepala")
+    deskripsi = models.TextField(blank=True, help_text="Kronologi singkat kejadian")
+    tindakan_diambil = models.TextField(blank=True, help_text="Pertolongan pertama / rujukan yang diberikan")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pemulihan')
+    dicatat_oleh = models.ForeignKey(GuruProfile, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-tanggal_kejadian']
+
+    def __str__(self):
+        return f"{self.siswa.nama} - {self.jenis_cedera} ({self.tanggal_kejadian})"

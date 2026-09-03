@@ -78,6 +78,7 @@ body { font-family: "Inter", sans-serif; background: #05080f; color: #e2e8f0; ma
       <a href="{% url 'pjok:dashboard_fase' fase=profile.fase %}" class="back-link">&#8592; Kembali ke Dashboard</a>
       <a href="{% url 'pjok:tambah_penilaian_fisik' siswa.id %}" class="back-link" style="margin-left:6px;">+ Tes Fisik</a>
       <a href="{% url 'pjok:tambah_penilaian_teknik' siswa.id %}" class="back-link" style="margin-left:6px;">+ Nilai Teknik</a>
+      <a href="{% url 'pjok:data_kesehatan' siswa.id %}" class="back-link" style="margin-left:6px;{% if kesehatan.perlu_perhatian %}border-color:#ef4444;color:#ef4444;{% endif %}">&#10084; Kesehatan{% if kesehatan.perlu_perhatian %} &#9888;{% endif %}</a>
       <div style="font-size:9px;color:#475569;letter-spacing:2px;text-transform:uppercase;margin-top:12px;">Assessment Cycle</div>
       <div style="color:#38bdf8;font-weight:700;font-size:12px;">{{ tanggal_cetak|date:"F Y"|upper }}</div>
       <div style="font-size:9px;color:#475569;letter-spacing:2px;text-transform:uppercase;margin-top:8px;">Report ID</div>
@@ -87,6 +88,17 @@ body { font-family: "Inter", sans-serif; background: #05080f; color: #e2e8f0; ma
 </div>
 
 <div style="padding:28px 40px;max-width:1280px;margin:0 auto;">
+
+  {% if kesehatan.perlu_perhatian %}
+  <div class="card" style="padding:16px 20px;margin-bottom:20px;border:1px solid #ef4444;background:rgba(239,68,68,.06);">
+    <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#ef4444;text-transform:uppercase;margin-bottom:6px;">&#9888; Perlu Perhatian Khusus</div>
+    <div style="font-size:12px;color:#cbd5e1;line-height:1.6;">
+      {% if kesehatan.alergi %}<div><strong style="color:#e2e8f0;">Alergi:</strong> {{ kesehatan.alergi }}</div>{% endif %}
+      {% if kesehatan.riwayat_penyakit %}<div><strong style="color:#e2e8f0;">Riwayat Penyakit:</strong> {{ kesehatan.riwayat_penyakit }}</div>{% endif %}
+      {% if kesehatan.kontraindikasi_aktivitas %}<div><strong style="color:#e2e8f0;">Hindari:</strong> {{ kesehatan.kontraindikasi_aktivitas }}</div>{% endif %}
+    </div>
+  </div>
+  {% endif %}
   <div style="display:grid;grid-template-columns:240px 1fr 270px;gap:16px;margin-bottom:20px;">
 
     <div class="card-premium" style="padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden;">
@@ -225,6 +237,21 @@ body { font-family: "Inter", sans-serif; background: #05080f; color: #e2e8f0; ma
         </tbody>
       </table>
     </div>
+  </div>
+
+  <div class="card" style="padding:24px;margin-bottom:20px;">
+    <div class="section-label">Riwayat Cedera Terbaru</div>
+    <table class="pjok-table">
+      <thead><tr><th>Tanggal</th><th>Jenis Cedera</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for c in riwayat_cedera_terbaru %}
+        <tr><td>{{ c.tanggal_kejadian }}</td><td>{{ c.jenis_cedera }}</td><td>{{ c.get_status_display }}</td></tr>
+        {% empty %}
+        <tr><td colspan="3" style="color:#475569;">Belum ada catatan cedera untuk siswa ini.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div style="margin-top:12px;"><a href="{% url 'pjok:data_kesehatan' siswa.id %}" class="back-link">Lihat/Catat Data Kesehatan Lengkap &rarr;</a></div>
   </div>
 
   {% if diagnosis_per_materi %}

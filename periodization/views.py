@@ -8,6 +8,7 @@ diperbaiki di semua app cabang (karate/muaythai/boxing/taekwondo)
 supaya tidak mengulang bug IDOR yang sama di fitur baru ini.
 """
 import json
+from datetime import date
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -57,13 +58,21 @@ class TambahMacroProgramView(LoginRequiredMixin, View):
         atlet_id = request.POST.get('atlet_id')
         atlet = get_object_or_404(get_atlet_queryset_lokal(request.user), pk=atlet_id)
 
+        try:
+            tanggal_mulai = date.fromisoformat(request.POST.get('tanggal_mulai', ''))
+            tanggal_target = date.fromisoformat(request.POST.get('tanggal_target', ''))
+        except ValueError:
+            messages.error(request, "Format tanggal tidak valid. Pastikan tanggal mulai & target sudah diisi dengan benar.")
+            daftar_atlet = get_atlet_queryset_lokal(request.user).order_by('nama_atlet')
+            return render(request, self.template_name, {'daftar_atlet': daftar_atlet})
+
         program = MacroProgram.objects.create(
             atlet=atlet,
             nama_program=request.POST.get('nama_program', '').strip(),
             event_target=request.POST.get('event_target', 'lainnya'),
             nama_event=request.POST.get('nama_event', '').strip(),
-            tanggal_mulai=request.POST.get('tanggal_mulai'),
-            tanggal_target=request.POST.get('tanggal_target'),
+            tanggal_mulai=tanggal_mulai,
+            tanggal_target=tanggal_target,
             catatan=request.POST.get('catatan', '').strip(),
         )
 

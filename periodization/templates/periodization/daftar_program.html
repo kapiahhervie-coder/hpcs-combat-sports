@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}HPCS - Daftar Program Periodisasi{% endblock %}
+{% block page_title %}Daftar Program Periodisasi{% endblock %}
+
+{% block content %}
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius: 10px; padding: 24px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+            <h2 style="margin:0;">Daftar Program Periodisasi</h2>
+            <p style="margin:4px 0 0; color:#6b7280;">Total: {{ total_program }} program</p>
+        </div>
+        <a href="{% url 'periodization:tambah_program' %}"
+           style="background:#e63946; color:#fff; padding:10px 18px; border-radius:8px; text-decoration:none; font-weight:600; font-size:14px;">
+            + Program Baru
+        </a>
+    </div>
+
+    {% if daftar_program %}
+    <table style="width:100%; border-collapse: collapse; margin-top: 8px;">
+        <thead>
+            <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
+                <th style="padding: 10px 8px;">Nama Program</th>
+                <th style="padding: 10px 8px;">Atlet</th>
+                <th style="padding: 10px 8px;">Cabor</th>
+                <th style="padding: 10px 8px;">Event Target</th>
+                <th style="padding: 10px 8px;">Target</th>
+                <th style="padding: 10px 8px;">Progres</th>
+                <th style="padding: 10px 8px;">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for program in daftar_program %}
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+                <td style="padding: 10px 8px;">
+                    <a href="{% url 'periodization:detail_program' program.id %}" style="color:#1f2937; font-weight:600; text-decoration:none;">
+                        {{ program.nama_program }}
+                    </a>
+                </td>
+                <td style="padding: 10px 8px;">{{ program.atlet.nama_atlet }}</td>
+                <td style="padding: 10px 8px;">
+                    {% with cabor=program.atlet.cabor_obj %}
+                        {% if cabor %}
+                            <span style="background:{{ cabor.warna_tema }}1a; color:{{ cabor.warna_tema }}; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">
+                                {{ cabor.nama }}
+                            </span>
+                        {% else %}
+                            <span style="color:#9ca3af; font-size:12px;">-</span>
+                        {% endif %}
+                    {% endwith %}
+                </td>
+                <td style="padding: 10px 8px;">{{ program.get_event_target_display }}</td>
+                <td style="padding: 10px 8px;">{{ program.tanggal_target|date:"d M Y" }}</td>
+                <td style="padding: 10px 8px; min-width:120px;">
+                    <div style="background:#f3f4f6; border-radius:6px; height:8px; overflow:hidden;">
+                        <div style="background:#e63946; height:100%; width:{{ program.progres_persen }}%;"></div>
+                    </div>
+                    <small style="color:#6b7280;">{{ program.progres_persen }}% &middot; sisa {{ program.sisa_minggu }} minggu</small>
+                </td>
+                <td style="padding: 10px 8px;">
+                    {% if program.status == 'AKTIF' %}
+                        <span style="background:#dcfce7; color:#166534; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">Aktif</span>
+                    {% elif program.status == 'SELESAI' %}
+                        <span style="background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">Selesai</span>
+                    {% elif program.status == 'DIBATALKAN' %}
+                        <span style="background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">Dibatalkan</span>
+                    {% else %}
+                        <span style="background:#f3f4f6; color:#374151; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600;">Draft</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#888; padding: 24px 0; text-align:center;">
+        Belum ada program periodisasi. Klik "+ Program Baru" buat mulai bikin roadmap atlet.
+    </p>
+    {% endif %}
+</div>
+{% endblock %}

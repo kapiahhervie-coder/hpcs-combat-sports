@@ -122,7 +122,10 @@
       <div><span class="pjok-brand">HPCS</span><span class="pjok-brand-sub">PJOK EXPERT PANEL</span></div>
       <div class="pjok-guru-line">Guru Pengampu: <strong style="color:var(--text);">{{ profile.nama_lengkap }}</strong> &mdash; {{ profile.sekolah }}</div>
     </div>
-    <a class="pjok-btn-outline" href="{% url 'pjok:tambah_siswa' %}?fase={{ fase }}">+ Tambah Siswa</a>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a class="pjok-btn-outline" href="{% url 'pjok:import_siswa' fase=fase %}">&#8593; Impor Siswa</a>
+      <a class="pjok-btn-outline" href="{% url 'pjok:tambah_siswa' %}?fase={{ fase }}">+ Tambah Siswa</a>
+    </div>
   </div>
 
   <div class="fase-menu-title">Pilih Fase</div>
@@ -158,6 +161,21 @@
     </div>
   </div>
 
+  {% if total_perlu_perhatian_kesehatan > 0 %}
+  <div style="background:rgba(248,113,113,.1);border:1px solid var(--danger);border-radius:8px;padding:14px 18px;margin-bottom:24px;">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--danger);margin-bottom:8px;">
+      &#9888; {{ total_perlu_perhatian_kesehatan }} SISWA PERLU PERHATIAN KESEHATAN KHUSUS
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      {% for s in siswa_list %}
+        {% if s.kesehatan.perlu_perhatian %}
+        <a href="{% url 'pjok:data_kesehatan' s.id %}" style="font-size:12px;color:var(--danger);text-decoration:none;border:1px solid var(--danger);border-radius:20px;padding:4px 12px;">{{ s.nama }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
   <div class="audit-section">
     <div class="audit-section-head">Panel Asesmen &mdash; Fase {{ fase }} ({{ jenjang }})</div>
 
@@ -165,14 +183,21 @@
       <select class="siswa-select" style="margin-bottom:0;" onchange="if(this.value){window.location.href='{% url 'pjok:dashboard_fase' fase=fase %}?siswa_id='+this.value;}">
         <option value="">-- Pilih Siswa --</option>
         {% for s in siswa_list %}
-        <option value="{{ s.id }}" {% if selected_siswa and selected_siswa.id == s.id %}selected{% endif %}>{{ s.nama }} ({{ s.kelas }})</option>
+        <option value="{{ s.id }}" {% if selected_siswa and selected_siswa.id == s.id %}selected{% endif %}>{% if s.kesehatan.perlu_perhatian %}&#9888; {% endif %}{{ s.nama }} ({{ s.kelas }})</option>
         {% endfor %}
       </select>
       {% if selected_siswa %}
       <a href="{% url 'pjok:detail_siswa' selected_siswa.id %}" target="_blank" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;background:linear-gradient(90deg,#0f766e,#14b8a6);color:#fff;text-decoration:none;white-space:nowrap;">&#128196; Lihat Rapor</a>
       <a href="{% url 'pjok:edit_siswa' selected_siswa.id %}" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;border:1px solid #f59e0b;color:#f59e0b;text-decoration:none;white-space:nowrap;">&#9998; Edit Siswa</a>
+      <a href="{% url 'pjok:data_kesehatan' selected_siswa.id %}" style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;border:1px solid {% if selected_siswa.kesehatan.perlu_perhatian %}var(--danger){% else %}var(--gold-dim){% endif %};color:{% if selected_siswa.kesehatan.perlu_perhatian %}var(--danger){% else %}var(--gold){% endif %};text-decoration:none;white-space:nowrap;">&#10084; Kesehatan{% if selected_siswa.kesehatan.perlu_perhatian %} &#9888;{% endif %}</a>
       {% endif %}
     </div>
+
+    {% if selected_siswa.kesehatan.perlu_perhatian %}
+    <div style="background:rgba(248,113,113,.1);border:1px solid var(--danger);border-radius:8px;padding:12px 16px;margin-bottom:20px;font-size:12.5px;color:var(--danger);">
+      &#9888; <strong>{{ selected_siswa.nama }}</strong> punya kondisi kesehatan yang perlu diperhatikan sebelum aktivitas fisik berat. Lihat detail di tombol "Kesehatan" di atas.
+    </div>
+    {% endif %}
 
     {% if not selected_siswa %}
       <p class="warn-note">&#9888; Pilih siswa di atas untuk mengaktifkan penyimpanan penilaian.</p>

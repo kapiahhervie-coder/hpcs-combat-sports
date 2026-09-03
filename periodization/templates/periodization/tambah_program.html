@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block title %}HPCS - Tambah Program Periodisasi{% endblock %}
+{% block page_title %}Tambah Program Periodisasi{% endblock %}
+
+{% block content %}
+<div style="max-width:640px;">
+    <div style="background:#fff; border:1px solid #e5e7eb; border-radius: 10px; padding: 24px;">
+        <h2 style="margin-top:0;">Program Periodisasi Baru</h2>
+        <p style="color:#6b7280; margin-bottom:20px;">Bikin roadmap jangka panjang buat 1 atlet menuju 1 event target.</p>
+
+        <form method="post" action="{% url 'periodization:tambah_program' %}">
+            {% csrf_token %}
+
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Pilih Atlet *</label>
+                <select name="atlet_id" required
+                        style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px;">
+                    <option value="">-- Pilih Atlet --</option>
+                    {% for atlet in daftar_atlet %}
+                    <option value="{{ atlet.id }}">{{ atlet.nama_atlet }} ({{ atlet.get_cabang_display }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Nama Program *</label>
+                <input type="text" name="nama_program" required placeholder="mis. Persiapan PON 2028"
+                       style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box;">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Event Target *</label>
+                    <select name="event_target" required
+                            style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px;">
+                        <option value="kejurda">Kejuaraan Daerah (Kejurda)</option>
+                        <option value="kejurnas">Kejuaraan Nasional (Kejurnas)</option>
+                        <option value="pon">PON</option>
+                        <option value="sea_games">SEA Games</option>
+                        <option value="lainnya" selected>Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Detail Nama Event</label>
+                    <input type="text" name="nama_event" placeholder="mis. PON XXII Aceh-Sumut"
+                           style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box;">
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Tanggal Mulai *</label>
+                    <input type="date" name="tanggal_mulai" id="id_tanggal_mulai" required
+                           style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Tanggal Target (Event) *</label>
+                    <input type="date" name="tanggal_target" id="id_tanggal_target" required
+                           style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box;">
+                </div>
+            </div>
+            <small id="info-durasi" style="display:block; margin-top:-8px; margin-bottom:14px; color:#6b7280;"></small>
+
+            <div style="margin-bottom:18px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; margin-bottom:5px;">Catatan</label>
+                <textarea name="catatan" rows="3" placeholder="Opsional"
+                          style="width:100%; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box; resize:vertical;"></textarea>
+            </div>
+
+            <div style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px; padding:14px; margin-bottom:20px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:14px; cursor:pointer;">
+                    <input type="checkbox" name="generate_otomatis" checked style="width:16px; height:16px;">
+                    <span>Langsung generate periodisasi otomatis (GPP &rarr; SPP &rarr; Pre-Comp &rarr; Comp)</span>
+                </label>
+                <small style="color:#6b7280; margin-left:24px; display:block; margin-top:4px;">
+                    Minimal durasi 4 minggu. Kalau dimatiin, kamu bisa isi MesoCycle manual nanti dari halaman detail.
+                </small>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <a href="{% url 'periodization:daftar_program' %}"
+                   style="padding:11px 20px; border:1px solid #d1d5db; border-radius:8px; color:#374151; text-decoration:none; font-size:14px;">
+                    Batal
+                </a>
+                <button type="submit"
+                        style="flex:1; background:#e63946; color:#fff; border:none; border-radius:8px; padding:11px 20px; font-size:14px; font-weight:600; cursor:pointer;">
+                    Simpan Program
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Info durasi otomatis pas dua tanggal keisi -- bantu pelatih sadar
+// kalau durasinya kurang dari 4 minggu (minimum buat auto-generate)
+function updateInfoDurasi() {
+    const mulai = document.getElementById('id_tanggal_mulai').value;
+    const target = document.getElementById('id_tanggal_target').value;
+    const info = document.getElementById('info-durasi');
+    if (!mulai || !target) { info.textContent = ''; return; }
+
+    const d1 = new Date(mulai);
+    const d2 = new Date(target);
+    const selisihHari = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+    const minggu = Math.floor(selisihHari / 7);
+
+    if (selisihHari <= 0) {
+        info.textContent = 'Tanggal target harus setelah tanggal mulai.';
+        info.style.color = '#dc2626';
+    } else if (minggu < 4) {
+        info.textContent = `Durasi: ${minggu} minggu -- kurang dari 4 minggu, auto-generate periodisasi tidak akan jalan.`;
+        info.style.color = '#d97706';
+    } else {
+        info.textContent = `Durasi: ${minggu} minggu.`;
+        info.style.color = '#6b7280';
+    }
+}
+document.getElementById('id_tanggal_mulai').addEventListener('change', updateInfoDurasi);
+document.getElementById('id_tanggal_target').addEventListener('change', updateInfoDurasi);
+</script>
+{% endblock %}

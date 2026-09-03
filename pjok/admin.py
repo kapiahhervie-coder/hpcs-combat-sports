@@ -1,5 +1,4 @@
 from django.contrib import admin
-
 from .models import (
     GuruProfile,
     InstrumenTKJI,
@@ -9,6 +8,10 @@ from .models import (
     PenilaianKarakter,
     PenilaianTeknik,
     Siswa,
+    # TODO: uncomment 2 baris ini setelah KondisiKesehatan & CatatanCedera
+    # selesai ditambahkan ke pjok/models.py
+    # KondisiKesehatan,
+    # CatatanCedera,
 )
 
 
@@ -60,3 +63,27 @@ class PenilaianFisikAdmin(admin.ModelAdmin):
 class PenilaianKarakterAdmin(admin.ModelAdmin):
     list_display = ('siswa', 'aspek', 'skor', 'tanggal')
     list_filter = ('aspek',)
+
+
+# ══════════════════════════════════════════════════════════════════
+# BELUM AKTIF -- nunggu model KondisiKesehatan & CatatanCedera
+# selesai ditambahkan ke pjok/models.py. Setelah itu, uncomment
+# import di atas DAN 2 blok admin di bawah ini.
+# ══════════════════════════════════════════════════════════════════
+
+# @admin.register(KondisiKesehatan)
+# class KondisiKesehatanAdmin(admin.ModelAdmin):
+#     list_display = ('siswa', 'tingkat_risiko', 'perlu_perhatian', 'diperbarui_pada')
+#     list_filter = ('tingkat_risiko',)
+#     search_fields = ('siswa__nama',)
+#
+#     @admin.display(boolean=True, description='Perlu Perhatian')
+#     def perlu_perhatian(self, obj):
+#         return obj.perlu_perhatian
+
+
+# @admin.register(CatatanCedera)
+# class CatatanCederaAdmin(admin.ModelAdmin):
+#     list_display = ('siswa', 'jenis_cedera', 'tanggal_kejadian', 'status')
+#     list_filter = ('status',)
+#     search_fields = ('siswa__nama', 'jenis_cedera')

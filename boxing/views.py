@@ -375,7 +375,9 @@ class L2StrengthView(LoginRequiredMixin, View):
 
             def to_float(key):
                 val = request.POST.get(key)
-                return float(val) if val else None
+                if not val: return None
+                try: return float(str(val).replace(',', '.').strip())
+                except: return None
 
             def to_int(key):
                 val = request.POST.get(key)
@@ -388,16 +390,16 @@ class L2StrengthView(LoginRequiredMixin, View):
                 gender=request.POST.get('gender', 'Putra'),
                 kelas_berat=to_float('kelas_berat'),
                 lower_5rm_beban=to_float('lower_5rm_beban'),
-                score_lower=float(request.POST.get('score_lower', 0)),
+                score_lower=float(str(request.POST.get('score_lower', 0) or 0).replace(',', '.')),
                 push_5rm_beban=to_float('push_5rm_beban'),
-                score_push=float(request.POST.get('score_push', 0)),
+                score_push=float(str(request.POST.get('score_push', 0) or 0).replace(',', '.')),
                 pull_reps=to_int('pull_reps'),
-                score_pull=float(request.POST.get('score_pull', 0)),
+                score_pull=float(str(request.POST.get('score_pull', 0) or 0).replace(',', '.')),
                 core_durasi_detik=to_int('core_durasi_detik'),
-                score_core=float(request.POST.get('score_core', 0)),
+                score_core=float(str(request.POST.get('score_core', 0) or 0).replace(',', '.')),
                 iso_durasi_detik=to_int('iso_durasi_detik'),
                 iso_tremor_onset_detik=to_int('iso_tremor_onset_detik'),
-                score_isometric=float(request.POST.get('score_isometric', 0)),
+                score_isometric=float(str(request.POST.get('score_isometric', 0) or 0).replace(',', '.')),
                 ai_rep_count_lower=to_int('ai_rep_count_lower'),
                 ai_rep_count_push=to_int('ai_rep_count_push'),
                 ai_rep_count_pull=to_int('ai_rep_count_pull'),
@@ -473,7 +475,9 @@ class L3PowerView(LoginRequiredMixin, View):
 
             def to_float(key):
                 val = request.POST.get(key)
-                return float(val) if val else None
+                if not val: return None
+                try: return float(str(val).replace(',', '.').strip())
+                except: return None
 
             audit = PowerAuditL3(
                 atlet=atlet,
@@ -481,11 +485,11 @@ class L3PowerView(LoginRequiredMixin, View):
                 kategori_usia=request.POST.get('kategori_usia', 'ELITE'),
                 gender=request.POST.get('gender', 'Putra'),
                 kelas_berat=to_float('kelas_berat'),
-                score_jump=float(request.POST.get('score_jump', 0)),
-                score_sprint=float(request.POST.get('score_sprint', 0)),
-                score_throw=float(request.POST.get('score_throw', 0)),
-                score_rsi=float(request.POST.get('score_rsi', 0)),
-                score_agility=float(request.POST.get('score_agility', 0)),
+                score_jump=float(str(request.POST.get('score_jump', 0) or 0).replace(',', '.')),
+                score_sprint=float(str(request.POST.get('score_sprint', 0) or 0).replace(',', '.')),
+                score_throw=float(str(request.POST.get('score_throw', 0) or 0).replace(',', '.')),
+                score_rsi=float(str(request.POST.get('score_rsi', 0) or 0).replace(',', '.')),
+                score_agility=float(str(request.POST.get('score_agility', 0) or 0).replace(',', '.')),
                 rsi_jump_height=to_float('rsi_jump_height'),
                 rsi_contact_time=to_float('rsi_contact_time'),
                 ai_confidence_score=to_float('ai_confidence_score'),
@@ -636,10 +640,9 @@ class L4SpeedAgilityView(LoginRequiredMixin, View):
 
             def to_float(key):
                 val = request.POST.get(key)
-                try:
-                    return float(val) if val else None
-                except (ValueError, TypeError):
-                    return None
+                if not val: return None
+                try: return float(str(val).replace(',', '.').strip())
+                except: return None
 
             def to_int(key):
                 val = request.POST.get(key)

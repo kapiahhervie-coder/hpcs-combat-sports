@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .models import Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan, TujuanPembelajaran, TujuanPembelajaran
+from .models import CatatanCedera, KondisiKesehatan, Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan, TujuanPembelajaran, TujuanPembelajaran
 
 from .diagnostik import (
     KOMPONEN_LABEL,
@@ -17,7 +17,8 @@ from .diagnostik import (
     rekomendasi_perbaikan,
     rubrik_label,
 )
-from .forms import EditSiswaForm, GuruProfileForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, RencanaMingguanForm, SiswaForm, TujuanPembelajaranForm
+from .import_siswa import baca_csv_siswa, buat_template_csv, validasi_baris_siswa
+from .forms import CatatanCederaForm, EditSiswaForm, GuruProfileForm, ImportSiswaForm, KondisiKesehatanForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, RencanaMingguanForm, SiswaForm, TujuanPembelajaranForm
 from .models import GuruProfile, MateriFase, Siswa
 
 
@@ -54,12 +55,13 @@ def dashboard_fase(request, fase):
     """
     profile = request.user.guruprofile
 
-    siswa_list = Siswa.objects.filter(guru=profile, fase=fase)
+    siswa_list = Siswa.objects.filter(guru=profile, fase=fase).select_related('kesehatan')
 
     # Hitung skor kesiapan terbaru per siswa untuk badge di tabel & statistik ringkas
     siswa_data = []
     skor_semua = []
     tier_count = {'SANGAT BAIK': 0, 'BAIK': 0, 'CUKUP': 0, 'PERLU PERHATIAN': 0}
+    total_perlu_perhatian_kesehatan = 0
 
     for s in siswa_list:
         fisik = s.penilaian_fisik.order_by('-tanggal_tes').first()
@@ -77,7 +79,20 @@ def dashboard_fase(request, fase):
             else:
                 tier = 'PERLU PERHATIAN'
             tier_count[tier] += 1
-        siswa_data.append({'siswa': s, 'kesiapan': kesiapan, 'tier': tier})
+
+        # Data kesehatan mungkin belum diisi guru sama sekali — aman kalau None
+        kesehatan = getattr(s, 'kesehatan', None)
+        perlu_perhatian_kesehatan = bool(kesehatan and kesehatan.perlu_perhatian)
+        if perlu_perhatian_kesehatan:
+            total_perlu_perhatian_kesehatan += 1
+
+        siswa_data.append({
+            'siswa': s,
+            'kesiapan': kesiapan,
+            'tier': tier,
+            'perlu_perhatian_kesehatan': perlu_perhatian_kesehatan,
+            'tingkat_risiko': kesehatan.tingkat_risiko if kesehatan else None,
+        })
 
     rata_rata_kesiapan = round(sum(skor_semua) / len(skor_semua), 1) if skor_semua else None
     total_baik_ke_atas = tier_count['SANGAT BAIK'] + tier_count['BAIK']
@@ -99,6 +114,7 @@ def dashboard_fase(request, fase):
         'rata_rata_kesiapan': rata_rata_kesiapan,
         'total_baik_ke_atas': total_baik_ke_atas,
         'total_perlu_perhatian': total_perlu_perhatian,
+        'total_perlu_perhatian_kesehatan': total_perlu_perhatian_kesehatan,
         'fase': fase,
         'jenjang': JENJANG_PER_FASE.get(fase, ''),
         'profile': profile,
@@ -137,6 +153,78 @@ def tambah_siswa(request):
         'fase': fase_target,
         'jenjang': JENJANG_PER_FASE.get(fase_target, ''),
     })
+
+
+@login_required
+def import_siswa(request, fase):
+    """
+    Impor banyak siswa sekaligus dari file CSV. Baris valid tetap disimpan
+    meski ada baris lain yang error — guru diberi laporan baris mana yang
+    gagal & alasannya, supaya tinggal perbaiki baris itu saja.
+    """
+    profile = request.user.guruprofile
+    hasil = None  # ringkasan hasil impor, ditampilkan setelah submit
+
+    if request.method == 'POST':
+        form = ImportSiswaForm(request.POST, request.FILES)
+        if form.is_valid():
+            baris_mentah, error_header = baca_csv_siswa(request.FILES['file_csv'])
+
+            if error_header:
+                hasil = {'sukses': 0, 'gagal': 0, 'error_list': error_header, 'fatal': True}
+            else:
+                baris_valid, error_list = validasi_baris_siswa(baris_mentah)
+
+                # Cek duplikat sederhana: nama + kelas sama persis dengan siswa yang sudah ada di fase ini
+                siswa_ada = set(
+                    Siswa.objects.filter(guru=profile, fase=fase)
+                    .values_list('nama', 'kelas')
+                )
+
+                siswa_baru = []
+                dilewati_duplikat = 0
+                for b in baris_valid:
+                    if (b['nama'], b['kelas']) in siswa_ada:
+                        dilewati_duplikat += 1
+                        continue
+                    siswa_baru.append(Siswa(
+                        guru=profile,
+                        fase=fase,
+                        nama=b['nama'],
+                        kelas=b['kelas'],
+                        jenis_kelamin=b['jenis_kelamin'],
+                        tanggal_lahir=b['tanggal_lahir'],
+                    ))
+
+                if siswa_baru:
+                    Siswa.objects.bulk_create(siswa_baru)
+
+                hasil = {
+                    'sukses': len(siswa_baru),
+                    'gagal': len(error_list),
+                    'dilewati_duplikat': dilewati_duplikat,
+                    'error_list': error_list,
+                    'fatal': False,
+                }
+            form = ImportSiswaForm()  # reset form kosong setelah submit
+    else:
+        form = ImportSiswaForm()
+
+    return render(request, 'pjok/import_siswa.html', {
+        'form': form,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'hasil': hasil,
+    })
+
+
+@login_required
+def download_template_csv(request):
+    """Unduh template CSV kosong (dengan contoh 2 baris) untuk fitur impor siswa."""
+    konten = buat_template_csv()
+    response = HttpResponse(konten, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="template_import_siswa.csv"'
+    return response
 
 
 @login_required
@@ -483,10 +571,16 @@ def detail_siswa(request, siswa_id):
         if semua:
             profil_dominan = max(semua, key=lambda x: x['skor'])['label']
 
+    # Data kesehatan — dipakai untuk banner peringatan di atas halaman detail siswa
+    kesehatan = getattr(siswa, 'kesehatan', None)
+    riwayat_cedera_terbaru = siswa.riwayat_cedera.all()[:3]
+
     return render(request, 'pjok/detail_siswa.html', {
         'siswa': siswa,
         'profile': profile,
         'umur': umur,
+        'kesehatan': kesehatan,
+        'riwayat_cedera_terbaru': riwayat_cedera_terbaru,
         'fisik_terbaru': fisik_terbaru,
         'jumlah_tes': len(riwayat_fisik),
         'teknik_list': teknik_list,
@@ -505,6 +599,51 @@ def detail_siswa(request, siswa_id):
         'diagnosis_per_materi': diagnosis_per_materi,
         'tanggal_cetak': timezone.now(),
     })
+
+
+@login_required
+def data_kesehatan(request, siswa_id):
+    """
+    Kelola data kesehatan siswa: alergi, riwayat penyakit, kontraindikasi
+    aktivitas, kontak darurat, dan tingkat risiko. Dipakai guru sebelum
+    aktivitas fisik berat agar tahu kondisi khusus siswa.
+    """
+    profile = request.user.guruprofile
+    siswa = get_object_or_404(Siswa, id=siswa_id, guru=profile)  # pastikan siswa milik guru ini
+    kesehatan, _ = KondisiKesehatan.objects.get_or_create(siswa=siswa)
+
+    if request.method == 'POST':
+        form = KondisiKesehatanForm(request.POST, instance=kesehatan)
+        if form.is_valid():
+            form.save()
+            return redirect('pjok:data_kesehatan', siswa_id=siswa.id)
+    else:
+        form = KondisiKesehatanForm(instance=kesehatan)
+
+    return render(request, 'pjok/data_kesehatan.html', {
+        'siswa': siswa,
+        'kesehatan': kesehatan,
+        'form': form,
+        'riwayat_cedera': siswa.riwayat_cedera.all(),
+        'form_cedera': CatatanCederaForm(),
+    })
+
+
+@login_required
+def tambah_cedera(request, siswa_id):
+    """Catat kejadian cedera baru untuk siswa — riwayat ditampilkan kronologis di data_kesehatan."""
+    profile = request.user.guruprofile
+    siswa = get_object_or_404(Siswa, id=siswa_id, guru=profile)  # pastikan siswa milik guru ini
+
+    if request.method == 'POST':
+        form = CatatanCederaForm(request.POST)
+        if form.is_valid():
+            cedera = form.save(commit=False)
+            cedera.siswa = siswa
+            cedera.dicatat_oleh = profile
+            cedera.save()
+
+    return redirect('pjok:data_kesehatan', siswa_id=siswa.id)
 
 
 def _bikin_dokumen_dasar(judul, guru, fase, jenjang):

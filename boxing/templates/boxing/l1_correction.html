@@ -595,7 +595,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             <td class="mono x-small" style="color:var(--text2)">{{ audit.score_breathing|floatformat:1 }}</td>
             <td class="text-center">
               <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 me-1" title="Cetak PDF"
-                      onclick="cetakAudit({{ audit.id }},'{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}','{{ audit.atlet.gender }}','{{ audit.atlet.kelas_berat }}',{{ audit.score_rotation|default:0 }},{{ audit.score_extension|default:0 }},{{ audit.score_stability|default:0 }},{{ audit.score_ankle|default:0 }},{{ audit.score_posture|default:0 }},{{ audit.score_breathing|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.rekomendasi|default:''|escapejs }}','{{ audit.timestamp|date:"d/m/Y H:i" }}')">
+                      onclick="cetakAudit({{ audit.id }},'{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}','{{ audit.atlet.gender }}','{{ audit.atlet.kelas_berat }}',{{ audit.score_rotation|default:0 }},{{ audit.score_extension|default:0 }},{{ audit.score_stability|default:0 }},{{ audit.score_ankle|default:0 }},{{ audit.score_posture|default:0 }},{{ audit.score_breathing|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.rekomendasi|default:''|escapejs }}','{{ audit.timestamp|date:"d/m/Y H:i" }}','{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}','{{ audit.atlet.pelatih.get_full_name|default:audit.atlet.pelatih.username|default:'' }}')">
                 <i class="bi bi-printer-fill"></i>
               </button>
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
@@ -1074,7 +1074,221 @@ window.addEventListener('beforeunload',stopCam);
 function getCsrf(){return document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))?.split('=')[1]??'';}
 function konfirmasiHapus(auditId,namaAtlet){document.getElementById('modal_nama_atlet').textContent=namaAtlet;const b=document.getElementById('btn_hapus_confirm'),baru=b.cloneNode(true);b.parentNode.replaceChild(baru,b);baru.addEventListener('click',()=>eksekusiHapus(auditId,namaAtlet));new bootstrap.Modal(document.getElementById('modalHapus')).show();}
 function eksekusiHapus(auditId,namaAtlet){fetch(`/combat/boxing/l1-correction/hapus/${auditId}/`,{method:'POST',headers:{'X-CSRFToken':getCsrf(),'X-Requested-With':'XMLHttpRequest'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json().catch(()=>({status:'success'}));}).then(()=>{bootstrap.Modal.getInstance(document.getElementById('modalHapus'))?.hide();const row=document.getElementById('row-'+auditId);if(row){row.style.transition='opacity .35s,transform .35s';row.style.opacity='0';row.style.transform='translateX(-12px)';setTimeout(()=>row.remove(),380);}showToast('Data '+namaAtlet+' berhasil dihapus.','success');}).catch(e=>showToast('Gagal: '+e.message,'danger'));}
-function cetakAudit(id,nama,kategori,gender,berat,rotation,extension,stability,ankle,posture,breathing,totalScore,predikat,rekomendasi,tanggal){const warna={ELITE:'#20c997',READY:'#0dcaf0',DEVELOPING:'#ffc107',NOVICE:'#dc3545'}[predikat]||'#6c757d';const pilar=[{n:'Rotation',v:parseFloat(rotation)||0},{n:'Extension',v:parseFloat(extension)||0},{n:'Stability',v:parseFloat(stability)||0},{n:'Ankle Mobility',v:parseFloat(ankle)||0},{n:'Posture',v:parseFloat(posture)||0},{n:'Breathing',v:parseFloat(breathing)||0}];const pilarHTML=pilar.map(p=>{const pct=Math.min(100,(p.v/10)*100).toFixed(0);return `<div style="flex:1;min-width:90px;text-align:center;background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;padding:10px"><div style="font-size:9px;color:#888;text-transform:uppercase">${p.n}</div><div style="font-size:22px;font-weight:900;color:#0dcaf0">${p.v.toFixed(1)}</div><div style="height:5px;background:#e9ecef;border-radius:3px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pct}%;background:#0dcaf0;border-radius:3px"></div></div></div>`;}).join('');let rekoHTML='';pilar.forEach(p=>{const db=REKO_DB[p.n];if(!db||p.v===0)return;const tips=p.v<5.5?db.low:p.v<7.5?db.mid:db.high;rekoHTML+=`<div style="margin-bottom:10px"><div style="font-weight:700;font-size:11px;color:#0dcaf0;margin-bottom:4px">${p.n.toUpperCase()} — ${p.v.toFixed(1)}/10</div>`;tips.forEach(t=>{rekoHTML+=`<div style="padding:4px 8px;border-left:3px solid #0dcaf0;margin:2px 0;font-size:11px;color:#444">${t}</div>`;});rekoHTML+='</div>';});const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit L1 — ${nama}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:#fff;color:#111;padding:28px 36px;font-size:13px}</style></head><body><div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #0dcaf0;padding-bottom:14px;margin-bottom:18px"><div><div style="font-size:20px;font-weight:900;letter-spacing:2px;color:#0dcaf0">HPCS BOXING — AUDIT LEVEL 1</div><div style="font-size:11px;color:#555;margin-top:3px">High Performance Coaching System · Core Stability & Correction</div></div><div style="text-align:right;font-size:11px;color:#888"><div>Tanggal Audit</div><div style="font-weight:700;color:#111">${tanggal}</div></div></div><div style="background:#f0f8ff;border:1px solid #0dcaf0;border-radius:10px;padding:14px 18px;margin-bottom:18px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">${[['Nama Atlet',nama],['Kategori',kategori],['Gender',gender],['Berat',berat+' kg'],['Cabang','Boxing'],['Level','L1 — Correction']].map(([l,v])=>`<div><div style="font-size:9px;color:#555;text-transform:uppercase">${l}</div><div style="font-size:15px;font-weight:700">${v}</div></div>`).join('')}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:8px">Skor Pilar Analysis</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">${pilarHTML}</div><div style="display:flex;align-items:center;gap:20px;border:2px solid ${warna};border-radius:12px;padding:14px 22px;margin-bottom:18px"><div style="font-size:52px;font-weight:900;color:${warna};line-height:1">${parseFloat(totalScore).toFixed(1)}</div><div><div style="font-size:26px;font-weight:900;color:${warna};letter-spacing:3px">${predikat}</div></div></div><div style="background:#f8f9fa;border-left:4px solid #0dcaf0;border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:18px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;color:#0dcaf0;margin-bottom:10px">Rekomendasi Program HPCS</div>${rekoHTML||'<p style="font-size:12px;color:#444">Tidak ada catatan.</p>'}</div></body></html>`;const win=window.open('','_blank','width=900,height=700');if(!win){alert('Izinkan pop-up.');return;}win.document.write(html);win.document.close();win.focus();win.onload=()=>{setTimeout(()=>{win.print();win.onafterprint=()=>win.close();},500);};}
+function cetakAudit(id,nama,kategori,gender,berat,rotation,extension,stability,ankle,posture,breathing,totalScore,predikat,rekomendasi,tanggal,noHpCoach,namaCoach){
+  const warna={ELITE:'#10b981',READY:'#38bdf8',DEVELOPING:'#f59e0b',NOVICE:'#ef4444'}[predikat]||'#6b7280';
+  const warnaLight={ELITE:'#d1fae5',READY:'#e0f2fe',DEVELOPING:'#fef3c7',NOVICE:'#fee2e2'}[predikat]||'#f3f4f6';
+  const icon={ELITE:'★ ELITE',READY:'◆ READY',DEVELOPING:'▲ DEVELOPING',NOVICE:'● NOVICE'}[predikat]||predikat;
+
+  const pilar=[
+    {n:'Rotation',   v:parseFloat(rotation)||0,   icon:'↺'},
+    {n:'Extension',  v:parseFloat(extension)||0,  icon:'↕'},
+    {n:'Stability',  v:parseFloat(stability)||0,  icon:'⬡'},
+    {n:'Ankle Mob.', v:parseFloat(ankle)||0,       icon:'⚡'},
+    {n:'Posture',    v:parseFloat(posture)||0,     icon:'▲'},
+    {n:'Breathing',  v:parseFloat(breathing)||0,  icon:'◎'},
+  ];
+
+  // Hitung pilar terendah & tertinggi
+  const sorted = [...pilar].sort((a,b)=>a.v-b.v);
+  const terlemah = sorted[0];
+  const terkuat  = sorted[sorted.length-1];
+
+  const pilarHTML = pilar.map(p=>{
+    const pct = Math.min(100,(p.v/10)*100).toFixed(0);
+    const c = p.v>=8?'#10b981':p.v>=6?'#38bdf8':p.v>=4?'#f59e0b':'#ef4444';
+    const bg = p.v>=8?'#d1fae5':p.v>=6?'#e0f2fe':p.v>=4?'#fef3c7':'#fee2e2';
+    return `
+    <div style="background:${bg};border:1.5px solid ${c};border-radius:10px;padding:12px 8px;text-align:center;min-width:80px">
+      <div style="font-size:16px;margin-bottom:2px">${p.icon}</div>
+      <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${p.n}</div>
+      <div style="font-size:26px;font-weight:900;color:${c};line-height:1">${p.v.toFixed(1)}</div>
+      <div style="font-size:9px;color:#888;margin-top:2px">/10</div>
+      <div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:6px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${c};border-radius:2px;transition:width .3s"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  let rekoHTML='';
+  pilar.forEach(p=>{
+    const db=REKO_DB[p.n];
+    if(!db||p.v===0)return;
+    const tips=p.v<5.5?db.low:p.v<7.5?db.mid:db.high;
+    const c=p.v<5.5?'#ef4444':p.v<7.5?'#f59e0b':'#10b981';
+    const label=p.v<5.5?'PRIORITAS':p.v<7.5?'PERLU PERHATIAN':'PERTAHANKAN';
+    rekoHTML+=`
+    <div style="margin-bottom:12px;border-radius:8px;overflow:hidden">
+      <div style="background:${c};color:#fff;padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:1px">
+        ${p.n.toUpperCase()} — ${p.v.toFixed(1)}/10 &nbsp;|&nbsp; ${label}
+      </div>
+      <div style="background:#f9fafb;padding:8px 12px">
+        ${tips.map(t=>`<div style="padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:11px;color:#374151">▸ ${t}</div>`).join('')}
+      </div>
+    </div>`;
+  });
+
+  const overallPct = Math.min(100,(parseFloat(totalScore)/10)*100).toFixed(0);
+
+  const html=`<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>Audit L1 — ${nama}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#111;font-size:13px}
+  @media print{body{padding:0}@page{margin:15mm 12mm;size:A4}}
+</style>
+</head><body>
+
+<!-- HEADER -->
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center">
+  <div>
+    <div style="font-size:9px;letter-spacing:3px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">HIGH PERFORMANCE COACHING SYSTEM</div>
+    <div style="font-size:22px;font-weight:900;letter-spacing:2px">HPCS <span style="color:#38bdf8">BOXING</span></div>
+    <div style="font-size:11px;color:#cbd5e1;margin-top:2px">Audit Level 1 — Core Stability & Correction</div>
+  </div>
+  <div style="text-align:right">
+    <div style="background:${warna};color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:2px">${icon}</div>
+    <div style="font-size:10px;color:#94a3b8;margin-top:6px">${tanggal}</div>
+  </div>
+</div>
+
+<!-- IDENTITAS ATLET -->
+<div style="padding:16px 28px;background:#f8fafc;border-bottom:1px solid #e2e8f0">
+  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:10px">▌ Identitas Atlet</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+    ${[['Nama Atlet',nama,'👤'],['Kategori',kategori,'🏷'],['Gender',gender,'⚧'],['Berat Badan',berat+' kg','⚖'],['Cabang','Boxing 🥊','🏅'],['Level','L1 — Correction','📊']].map(([l,v,ic])=>`
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px">
+      <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px">${ic} ${l}</div>
+      <div style="font-size:15px;font-weight:700;color:#0f172a;margin-top:3px">${v}</div>
+    </div>`).join('')}
+  </div>
+</div>
+
+<!-- SKOR TOTAL -->
+<div style="padding:16px 28px;display:flex;align-items:center;gap:24px;background:${warnaLight};border-bottom:2px solid ${warna}">
+  <div style="text-align:center;min-width:100px">
+    <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total Skor</div>
+    <div style="font-size:56px;font-weight:900;color:${warna};line-height:1">${parseFloat(totalScore).toFixed(1)}</div>
+    <div style="font-size:10px;color:#888">/10.0</div>
+  </div>
+  <div style="flex:1">
+    <div style="height:12px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:8px">
+      <div style="height:100%;width:${overallPct}%;background:${warna};border-radius:6px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#888">
+      <span>0</span><span style="color:${warna};font-weight:700">${overallPct}%</span><span>10</span>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px">
+        <span style="color:#888">Pilar Terkuat:</span> <strong style="color:#10b981">${terkuat.n} (${terkuat.v.toFixed(1)})</strong>
+      </div>
+      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px">
+        <span style="color:#888">Prioritas Perbaikan:</span> <strong style="color:#ef4444">${terlemah.n} (${terlemah.v.toFixed(1)})</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKOR PILAR -->
+<div style="padding:16px 28px">
+  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Skor Pilar Analysis</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">${pilarHTML}</div>
+</div>
+
+<!-- REKOMENDASI -->
+<div style="padding:0 28px 20px">
+  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Rekomendasi Program HPCS</div>
+  ${rekoHTML||'<p style="font-size:12px;color:#888">Tidak ada rekomendasi khusus.</p>'}
+</div>
+
+<!-- FOOTER -->
+<div style="background:#0f172a;color:#94a3b8;padding:12px 28px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:8px">
+  <div>HPCS Boxing — High Performance Coaching System</div>
+  <div style="display:flex;gap:24px">
+    <div>Tanggal: <strong style="color:#fff">${tanggal}</strong></div>
+    <div>Dokumen ini dicetak otomatis oleh sistem HPCS</div>
+  </div>
+</div>
+
+<!-- TANDA TANGAN -->
+<div style="padding:16px 28px;display:flex;justify-content:flex-end">
+  <div style="text-align:center;min-width:180px">
+    <div style="border-top:1px solid #374151;padding-top:6px;margin-top:40px;font-size:10px;color:#555">
+      Coach / Pelatih<br>
+      <span style="font-size:9px;color:#94a3b8">(__________________________)</span>
+    </div>
+  </div>
+</div>
+
+</body></html>`;
+
+
+  // Bersihkan nomor HP untuk WhatsApp (hanya angka, ganti 0 depan dengan 62)
+  let waNumber = (noHpCoach||'').replace(/\D/g,'');
+  if(waNumber.startsWith('0')) waNumber = '62' + waNumber.slice(1);
+  if(!waNumber.startsWith('62')) waNumber = '62' + waNumber;
+
+  // Pesan WhatsApp ringkasan audit
+  const skorLabel = parseFloat(totalScore)>=9?'ELITE':parseFloat(totalScore)>=7?'READY':parseFloat(totalScore)>=5?'DEVELOPING':'NOVICE';
+  const pesanWA = encodeURIComponent(
+    `*LAPORAN AUDIT L1 — HPCS BOXING*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `👤 *Atlet:* ${nama}\n` +
+    `🏷 *Kategori:* ${kategori} | ${gender}\n` +
+    `⚖ *Berat:* ${berat} kg\n` +
+    `📅 *Tanggal:* ${tanggal}\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `📊 *HASIL AUDIT*\n` +
+    `Total Skor: *${parseFloat(totalScore).toFixed(1)}/10*\n` +
+    `Predikat: *${predikat}*\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `📋 *SKOR PILAR*\n` +
+    `↺ Rotation: ${parseFloat(rotation).toFixed(1)}\n` +
+    `↕ Extension: ${parseFloat(extension).toFixed(1)}\n` +
+    `⬡ Stability: ${parseFloat(stability).toFixed(1)}\n` +
+    `⚡ Ankle Mob: ${parseFloat(ankle).toFixed(1)}\n` +
+    `▲ Posture: ${parseFloat(posture).toFixed(1)}\n` +
+    `◎ Breathing: ${parseFloat(breathing).toFixed(1)}\n` +
+    `━━━━━━━━━━━━━━━━━━━━\n` +
+    `_Dikirim otomatis oleh HPCS Boxing System_`
+  );
+  const waUrl = `https://wa.me/${waNumber}?text=${pesanWA}`;
+
+  // Inject 3 tombol aksi ke dalam HTML sebelum </body>
+  const actionBar = `
+  <div id="action-bar" style="position:fixed;bottom:0;left:0;right:0;background:#0f172a;padding:12px 28px;display:flex;gap:12px;justify-content:center;align-items:center;z-index:999;border-top:2px solid #38bdf8">
+    <button onclick="window.print()" style="background:#38bdf8;color:#0f172a;border:none;padding:10px 24px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px">
+      🖨️ Print / Simpan PDF
+    </button>
+    <button onclick="downloadPDF()" style="background:#10b981;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px">
+      ⬇️ Download PDF
+    </button>
+    ${waNumber.length>5?`<a href="${waUrl}" target="_blank" style="background:#25D366;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:8px">
+      💬 Kirim WhatsApp
+    </a>`:'<span style="color:#6b7280;font-size:12px">WhatsApp: nomor HP coach belum diisi</span>'}
+    <button onclick="window.close()" style="background:transparent;color:#94a3b8;border:1px solid #374151;padding:10px 20px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer">
+      ✕ Tutup
+    </button>
+  </div>
+  <div style="height:60px"></div>
+  <script>
+  function downloadPDF(){
+    // Sembunyikan action bar saat print/save
+    document.getElementById('action-bar').style.display='none';
+    window.print();
+    setTimeout(()=>document.getElementById('action-bar').style.display='flex',1000);
+  }
+  <\/script>`;
+
+  const htmlFinal = html.replace('</body></html>', actionBar + '</body></html>');
+
+  const win=window.open('','_blank','width=960,height=800');
+  if(!win){alert('Izinkan pop-up di browser Anda.');return;}
+  win.document.write(htmlFinal);
+  win.document.close();
+  win.focus();
+}
 function showToast(msg,type){const el=document.createElement('div');el.className='toast-hpcs';el.style.background=type==='success'?'#20c997':'#e74c3c';el.style.color='#fff';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),420);},2800);}
 </script>
 {% endblock %}

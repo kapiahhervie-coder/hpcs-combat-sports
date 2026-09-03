@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import GuruProfile, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES, TujuanPembelajaran
+from .models import CatatanCedera, GuruProfile, KondisiKesehatan, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES, TujuanPembelajaran
 
 
 class GuruProfileForm(forms.ModelForm):
@@ -133,3 +133,50 @@ class TujuanPembelajaranForm(forms.ModelForm):
             'deskripsi': forms.Textarea(attrs={'rows': 3}),
             'kktp': forms.Textarea(attrs={'rows': 3}),
         }
+
+class KondisiKesehatanForm(forms.ModelForm):
+    class Meta:
+        model = KondisiKesehatan
+        fields = [
+            'golongan_darah', 'alergi', 'riwayat_penyakit', 'kontraindikasi_aktivitas',
+            'obat_darurat', 'kontak_darurat_nama', 'kontak_darurat_hubungan',
+            'kontak_darurat_telepon', 'tingkat_risiko', 'catatan_tambahan',
+        ]
+        widgets = {
+            'alergi': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Contoh: debu, kacang, obat tertentu'}),
+            'riwayat_penyakit': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Contoh: asma, jantung bawaan'}),
+            'kontraindikasi_aktivitas': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Contoh: hindari lari jarak jauh tanpa jeda'}),
+            'catatan_tambahan': forms.Textarea(attrs={'rows': 3}),
+            'tingkat_risiko': forms.RadioSelect,
+        }
+
+
+class CatatanCederaForm(forms.ModelForm):
+    class Meta:
+        model = CatatanCedera
+        fields = ['tanggal_kejadian', 'jenis_cedera', 'deskripsi', 'tindakan_diambil', 'status']
+        widgets = {
+            'tanggal_kejadian': forms.DateInput(attrs={'type': 'date'}),
+            'deskripsi': forms.Textarea(attrs={'rows': 3}),
+            'tindakan_diambil': forms.Textarea(attrs={'rows': 2}),
+            'status': forms.RadioSelect,
+        }
+
+
+class ImportSiswaForm(forms.Form):
+    """
+    Form unggah file CSV berisi banyak siswa sekaligus.
+    Kolom yang diharapkan: nama, kelas, jenis_kelamin (L/P), tanggal_lahir (YYYY-MM-DD)
+    """
+    file_csv = forms.FileField(
+        label='File CSV Siswa',
+        help_text='Kolom: nama, kelas, jenis_kelamin (L/P), tanggal_lahir (YYYY-MM-DD)',
+    )
+
+    def clean_file_csv(self):
+        f = self.cleaned_data['file_csv']
+        if not f.name.lower().endswith('.csv'):
+            raise forms.ValidationError('File harus berformat .csv (unduh dulu template kalau belum punya).')
+        if f.size > 2 * 1024 * 1024:  # 2MB — lebih dari cukup untuk ribuan baris siswa
+            raise forms.ValidationError('Ukuran file terlalu besar (maksimal 2MB).')
+        return f

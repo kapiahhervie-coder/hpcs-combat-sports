@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}HPCS - {{ program.nama_program }}{% endblock %}
+{% block page_title %}Detail Program Periodisasi{% endblock %}
+
+{% block extra_css %}
+<script src="{% static 'vendor/chart.umd.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+    <div>
+        <a href="{% url 'periodization:daftar_program' %}" style="color:#6b7280; text-decoration:none; font-size:13px;">&larr; Kembali ke Daftar Program</a>
+        <h2 style="margin:8px 0 4px;">{{ program.nama_program }}</h2>
+        <p style="color:#6b7280; margin:0;">
+            {{ program.atlet.nama_atlet }}
+            {% with cabor=program.atlet.cabor_obj %}
+                {% if cabor %}
+                    &middot; <span style="color:{{ cabor.warna_tema }}; font-weight:600;">{{ cabor.nama }}</span>
+                {% endif %}
+            {% endwith %}
+            &middot; {{ program.get_event_target_display }}{% if program.nama_event %} ({{ program.nama_event }}){% endif %}
+        </p>
+    </div>
+    {% if program.status == 'AKTIF' %}
+        <span style="background:#dcfce7; color:#166534; padding:5px 14px; border-radius:12px; font-size:13px; font-weight:600;">Aktif</span>
+    {% elif program.status == 'SELESAI' %}
+        <span style="background:#dbeafe; color:#1e40af; padding:5px 14px; border-radius:12px; font-size:13px; font-weight:600;">Selesai</span>
+    {% elif program.status == 'DIBATALKAN' %}
+        <span style="background:#fee2e2; color:#991b1b; padding:5px 14px; border-radius:12px; font-size:13px; font-weight:600;">Dibatalkan</span>
+    {% else %}
+        <span style="background:#f3f4f6; color:#374151; padding:5px 14px; border-radius:12px; font-size:13px; font-weight:600;">Draft</span>
+    {% endif %}
+</div>
+
+<!-- Ringkasan durasi -->
+<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:20px;">
+    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:16px;">
+        <small style="color:#6b7280; text-transform:uppercase; font-size:11px; font-weight:600;">Total Durasi</small>
+        <div style="font-size:22px; font-weight:700; margin-top:4px;">{{ program.durasi_minggu }} minggu</div>
+    </div>
+    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:16px;">
+        <small style="color:#6b7280; text-transform:uppercase; font-size:11px; font-weight:600;">Sisa Waktu</small>
+        <div style="font-size:22px; font-weight:700; margin-top:4px;">{{ program.sisa_minggu }} minggu</div>
+    </div>
+    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:16px;">
+        <small style="color:#6b7280; text-transform:uppercase; font-size:11px; font-weight:600;">Progres</small>
+        <div style="font-size:22px; font-weight:700; margin-top:4px;">{{ program.progres_persen }}%</div>
+        <div style="background:#f3f4f6; border-radius:6px; height:6px; overflow:hidden; margin-top:6px;">
+            <div style="background:#e63946; height:100%; width:{{ program.progres_persen }}%;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Kurva Volume vs Intensitas -->
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:20px; margin-bottom:20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="margin:0;">Kurva Volume vs Intensitas</h3>
+        <form method="post" action="{% url 'periodization:generate_otomatis' program.id %}" style="margin:0;">
+            {% csrf_token %}
+            <input type="hidden" name="hapus_lama" value="1">
+            <button type="submit"
+                    onclick="return confirm('Generate ulang akan menghapus semua MesoCycle yang ada sekarang dan bikin baru dari nol. Lanjutkan?');"
+                    style="background:#f3f4f6; border:1px solid #d1d5db; border-radius:8px; padding:8px 14px; font-size:13px; cursor:pointer;">
+                &#8635; {% if meso_list %}Generate Ulang{% else %}Generate Otomatis{% endif %}
+            </button>
+        </form>
+    </div>
+
+    {% if meso_list %}
+        <canvas id="kurvaChart" height="90"></canvas>
+    {% else %}
+        <p style="color:#9ca3af; text-align:center; padding:40px 0;">
+            Belum ada MesoCycle. Klik "Generate Otomatis" di atas buat bikin periodisasi (minimal durasi 4 minggu).
+        </p>
+    {% endif %}
+</div>
+
+<!-- Tabel detail fase -->
+{% if meso_list %}
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:20px;">
+    <h3 style="margin-top:0;">Detail Fase (MesoCycle)</h3>
+    <table style="width:100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
+                <th style="padding: 8px;">Fase</th>
+                <th style="padding: 8px;">Periode</th>
+                <th style="padding: 8px;">Durasi</th>
+                <th style="padding: 8px;">Volume</th>
+                <th style="padding: 8px;">Intensitas</th>
+                <th style="padding: 8px;">Fokus L1/L2/L3/L4</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meso in meso_list %}
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+                <td style="padding: 8px; font-weight:600;">{{ meso.get_nama_fase_display }}</td>
+                <td style="padding: 8px;">{{ meso.tanggal_mulai|date:"d M" }} - {{ meso.tanggal_selesai|date:"d M Y" }}</td>
+                <td style="padding: 8px;">{{ meso.durasi_minggu }} minggu</td>
+                <td style="padding: 8px;">{{ meso.volume_target }}/10</td>
+                <td style="padding: 8px;">{{ meso.intensitas_target }}/10</td>
+                <td style="padding: 8px; font-size:13px; color:#6b7280;">
+                    {{ meso.fokus_l1_persen }}% / {{ meso.fokus_l2_persen }}% / {{ meso.fokus_l3_persen }}% / {{ meso.fokus_l4_persen }}%
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+{% if meso_list %}
+<script>
+fetch("{% url 'periodization:kurva_data' program.id %}")
+    .then(res => res.json())
+    .then(data => {
+        const ctx = document.getElementById('kurvaChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Volume',
+                        data: data.volume,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59,130,246,0.1)',
+                        tension: 0.3,
+                        fill: true,
+                    },
+                    {
+                        label: 'Intensitas',
+                        data: data.intensitas,
+                        borderColor: '#e63946',
+                        backgroundColor: 'rgba(230,57,70,0.1)',
+                        tension: 0.3,
+                        fill: true,
+                    },
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { min: 0, max: 10, title: { display: true, text: 'Skala 1-10' } }
+                },
+                plugins: {
+                    legend: { position: 'top' }
+                }
+            }
+        });
+    })
+    .catch(err => console.error('Gagal load data kurva:', err));
+</script>
+{% endif %}
+{% endblock %}
