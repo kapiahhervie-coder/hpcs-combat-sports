@@ -36,6 +36,7 @@ urlpatterns = [
     path('daftar-coach/', views.DaftarCoachView.as_view(), name='daftar_coach'),
     path('tunggu-approval/', views.TungguApprovalView.as_view(), name='tunggu_approval'),
     path('admin-coach/', views.AdminCoachView.as_view(), name='admin_coach'),
+    path('user-monitor/', views.UserMonitorView.as_view(), name='user_monitor'),
     path('assign-atlet-coach/', views.AssignAtletCoachView.as_view(), name='assign_atlet_coach'),
 
     # Tambah atlet (oleh coach)

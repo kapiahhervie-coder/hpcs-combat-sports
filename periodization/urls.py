@@ -9,4 +9,25 @@ urlpatterns = [
     path('<int:program_id>/', views.DetailMacroProgramView.as_view(), name='detail_program'),
     path('<int:program_id>/generate-otomatis/', views.GenerateOtomatisView.as_view(), name='generate_otomatis'),
     path('<int:program_id>/kurva-data.json', views.KurvaVolumeIntensitasView.as_view(), name='kurva_data'),
+    path('<int:program_id>/cetak-blangko.pdf', views.CetakBlangkoTahunanView.as_view(), name='cetak_blangko'),
+
+    # Kalender Kompetisi
+    path('<int:program_id>/kompetisi/tambah/', views.TambahKompetisiView.as_view(), name='tambah_kompetisi'),
+    path('kompetisi/<int:kompetisi_id>/hapus/', views.HapusKompetisiView.as_view(), name='hapus_kompetisi'),
+
+    # MesoCycle detail + Target Performa + tambah MicroCycle manual
+    path('meso/<int:meso_id>/', views.DetailMesoCycleView.as_view(), name='detail_meso'),
+    path('meso/<int:meso_id>/target-performa/tambah/', views.TambahTargetPerformaView.as_view(), name='tambah_target_performa'),
+    path('target-performa/<int:target_id>/hapus/', views.HapusTargetPerformaView.as_view(), name='hapus_target_performa'),
+    path('meso/<int:meso_id>/microcycle/tambah/', views.TambahMicroCycleView.as_view(), name='tambah_microcycle'),
+
+    # MicroCycle detail (7 hari) + Sesi Latihan
+    path('microcycle/<int:micro_id>/', views.DetailMicroCycleView.as_view(), name='detail_micro'),
+    path('microcycle/<int:micro_id>/sesi/tambah/', views.TambahSesiLatihanView.as_view(), name='tambah_sesi'),
+    path('sesi/<int:sesi_id>/hapus/', views.HapusSesiLatihanView.as_view(), name='hapus_sesi'),
+
+    # Sesi Latihan detail + Latihan Item (exercise/set/rep)
+    path('sesi/<int:sesi_id>/', views.DetailSesiLatihanView.as_view(), name='detail_sesi'),
+    path('sesi/<int:sesi_id>/item/tambah/', views.TambahLatihanItemView.as_view(), name='tambah_item'),
+    path('item/<int:item_id>/hapus/', views.HapusLatihanItemView.as_view(), name='hapus_item'),
 ]

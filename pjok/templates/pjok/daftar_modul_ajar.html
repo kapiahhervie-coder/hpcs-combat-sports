@@ -1,0 +1,80 @@
+{% extends "base_pjok.html" %}
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:980px;
+  }
+  .pjok-topnav{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;flex-wrap:wrap;gap:12px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.6rem;letter-spacing:.02em;color:var(--text);}
+  .pjok-subtitle{color:var(--text-faint);font-size:13px;margin-top:4px;}
+  .pjok-back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-size:12.5px;font-family:'IBM Plex Mono',monospace;margin-bottom:22px;}
+  .pjok-back:hover{text-decoration:underline;}
+  .pjok-btn{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:700;padding:11px 18px;border-radius:8px;background:linear-gradient(90deg,#0f766e,#14b8a6);color:#fff;text-decoration:none;white-space:nowrap;border:none;}
+
+  .modul-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:20px;}
+  .modul-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;display:flex;flex-direction:column;}
+  .modul-judul{font-family:'Oswald',sans-serif;font-weight:600;font-size:16px;color:var(--text);margin-bottom:6px;line-height:1.3;}
+  .modul-meta{font-size:12px;color:var(--text-faint);margin-bottom:12px;}
+  .modul-tp-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;flex:1;}
+  .modul-tp-pill{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-dim);padding:3px 9px;border-radius:12px;}
+  .modul-tp-empty{font-size:12px;color:var(--text-faint);font-style:italic;}
+  .modul-actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .modul-actions a,.modul-actions button{font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:700;padding:7px 12px;border-radius:6px;text-decoration:none;border:1px solid var(--border);color:var(--text-dim);background:transparent;cursor:pointer;}
+  .modul-actions a.edit:hover{border-color:var(--gold-dim);color:var(--gold);}
+  .modul-actions a.export:hover{border-color:#4ade80;color:#4ade80;}
+  .modul-actions button.hapus:hover{border-color:var(--danger);color:var(--danger);}
+
+  .empty-state{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:40px;text-align:center;color:var(--text-faint);margin-top:20px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pjok-scope">
+  <a class="pjok-back" href="{% url 'pjok:dashboard_fase' fase %}">&larr; KEMBALI KE DASHBOARD</a>
+
+  <div class="pjok-topnav">
+    <div>
+      <div class="pjok-title">Modul Ajar</div>
+      <div class="pjok-subtitle">Fase {{ fase }} ({{ jenjang }}) &middot; Rencana pembelajaran per pertemuan, terhubung ke Tujuan Pembelajaran</div>
+    </div>
+    <a class="pjok-btn" href="{% url 'pjok:tambah_modul_ajar' fase %}">+ Modul Ajar Baru</a>
+  </div>
+
+  {% if modul_list %}
+  <div class="modul-grid">
+    {% for m in modul_list %}
+    <div class="modul-card">
+      <div class="modul-judul">{{ m.judul }}</div>
+      <div class="modul-meta">{{ m.alokasi_waktu }}{% if m.materi %} &middot; {{ m.materi.nama_materi }}{% endif %}</div>
+      <div class="modul-tp-list">
+        {% for tp in m.tp.all %}
+        <span class="modul-tp-pill">{{ tp.kode }}</span>
+        {% empty %}
+        <span class="modul-tp-empty">Belum ada TP terpilih</span>
+        {% endfor %}
+      </div>
+      <div class="modul-actions">
+        <a class="edit" href="{% url 'pjok:edit_modul_ajar' fase m.id %}">&#9998; Edit</a>
+        <a class="export" href="{% url 'pjok:export_modul_ajar' fase m.id %}">&#8595; Word</a>
+        <form method="post" action="{% url 'pjok:hapus_modul_ajar' fase m.id %}" style="display:inline;" onsubmit="return confirm('Hapus modul ajar ini?');">
+          {% csrf_token %}
+          <button type="submit" class="hapus">&#10005; Hapus</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    Belum ada Modul Ajar untuk fase ini.<br>
+    <a class="pjok-btn" style="margin-top:14px;display:inline-flex;" href="{% url 'pjok:tambah_modul_ajar' fase %}">+ Buat Modul Ajar Pertama</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Komposisi Tubuh (BMI & Persen Lemak)</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Berat Badan: <span id="bV">60</span> kg</label>
+  <input type="range" name="berat" min="30" max="150" value="60" oninput="bV.innerText=this.value">
+
+  <label>Tinggi Badan: <span id="tV">165</span> cm</label>
+  <input type="range" name="tinggi" min="120" max="220" value="165" oninput="tV.innerText=this.value">
+
+  <label>Usia: <span id="uV">20</span> tahun</label>
+  <input type="range" name="usia" min="10" max="80" value="20" oninput="uV.innerText=this.value">
+
+  <label>Jenis Kelamin</label>
+  <select name="gender">
+    <option value="L">Laki-laki</option>
+    <option value="P">Perempuan</option>
+  </select>
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <p>BMI: <strong>{{ hasil.bmi }}</strong> ({{ hasil.kategori }})</p>
+  <p>Estimasi Lemak Tubuh: <strong>{{ hasil.body_fat }}%</strong></p>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Geser slider sesuai berat, tinggi, dan usia atlet saat ini.</li>
+    <li>BMI dihitung dari berat (kg) dibagi kuadrat tinggi (m).</li>
+    <li>Estimasi lemak tubuh menggunakan rumus Deurenberg - cocok untuk skrining awal, bukan pengukuran presisi.</li>
+  </ol>
+</div>
+{% endblock %}

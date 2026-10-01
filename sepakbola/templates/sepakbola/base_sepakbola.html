@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}HPCS Sepak Bola{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; max-width: 100vw; }
+    body { overflow-x: hidden; font-family: 'Inter', sans-serif; font-size: 14px; background: #f3f4f6; color: #111827; min-height: 100vh; }
+
+    .main-wrapper { margin-left: 240px; transition: margin-left .25s ease; min-height: 100vh; display: flex; flex-direction: column; }
+    .topbar { background: #fff; border-bottom: 0.5px solid #e5e7eb; padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .topbar-title { font-size: 14px; font-weight: 500; color: #374151; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-user { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #374151; }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: #dcfce7; color: #15803d; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+    .page-content { flex: 1; padding: 24px; }
+
+    .messages { list-style: none; margin-bottom: 1rem; }
+    .messages li { padding: 10px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 8px; }
+    .messages .success { background: #EAF3DE; color: #3B6D11; }
+    .messages .error   { background: #FCEBEB; color: #A32D2D; }
+    .messages .warning { background: #FAEEDA; color: #854F0B; }
+    .messages .info    { background: #E6F1FB; color: #185FA5; }
+
+    :root{
+      --sb-panel:#0d1017;
+      --sb-line: rgba(255,255,255,0.07);
+      --sb-line2: rgba(255,255,255,0.13);
+      --sb-text-dim:#8b93a3;
+      --sb-text-dim2:#4b5361;
+      --sb-accent:#22c55e;
+      --sb-accent-dim:rgba(34,197,94,0.12);
+      --sb-accent-line:rgba(34,197,94,0.35);
+    }
+
+    .sidebar { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--sb-panel); border-right: 1px solid var(--sb-line); display: flex; flex-direction: column; z-index: 100; transition: width .22s ease; }
+    .sidebar.collapsed { width: 56px; }
+    .sidebar-brand { padding: 18px 20px 15px; border-bottom: 1px solid var(--sb-line); position: relative; }
+    .sidebar-brand::after { content:''; position:absolute; left:20px; bottom:-1px; width:26px; height:2px; background: var(--sb-accent); }
+    .sidebar-brand .brand-name { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+    .sidebar-brand .brand-name span { color: var(--sb-accent); }
+    .sidebar-brand .brand-sub { font-size: 9px; color: var(--sb-text-dim); text-transform: uppercase; letter-spacing: 1.8px; margin-top: 5px; }
+    .sidebar.collapsed .brand-sub { display: none; }
+    .sidebar.collapsed .brand-name { font-size: 12px; letter-spacing: 1px; }
+    .sidebar.collapsed .sidebar-brand { padding: 15px 0; text-align: center; }
+    .sidebar.collapsed .sidebar-brand::after { left: 50%; transform: translateX(-50%); }
+
+    .sidebar-nav { flex: 1; padding: 10px 0; overflow-y: auto; overflow-x: hidden; }
+    .nav-section { padding: 13px 16px 5px; font-size: 9.5px; font-weight: 700; color: var(--sb-text-dim2); text-transform: uppercase; letter-spacing: 1.6px; display: flex; align-items: center; gap: 8px; }
+    .nav-section::after { content:''; flex:1; height:1px; background: var(--sb-line); }
+    .sidebar.collapsed .nav-section { display: none; }
+
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 18px; margin: 1px 0; color: var(--sb-text-dim); text-decoration: none; font-size: 12px; font-weight: 500; border-left: 2px solid transparent; transition: background .15s, color .15s, border-color .15s; white-space: nowrap; overflow: hidden; }
+    .nav-link:hover { background: rgba(255,255,255,0.04); color: #f9fafb; }
+    .nav-link.active { background: var(--sb-accent-dim); color: #fff; border-left-color: var(--sb-accent); font-weight: 600; }
+    .nav-link .nav-icon { flex-shrink: 0; width: 20px; text-align: center; font-size: 14px; opacity: .85; display: inline-flex; align-items: center; justify-content: center; }
+    .nav-link .nav-icon svg { display: block; }
+    .nav-link .nav-link-text { flex: 1 1 auto; min-width: 0; max-width: 132px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; vertical-align: middle; }
+
+    .nav-link .nav-round { flex-shrink: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-family: 'DM Mono', 'Inter', monospace; font-size: 10px; font-weight: 600; color: var(--sb-text-dim2); border: 1px solid var(--sb-line2); }
+    .nav-link.active .nav-round { color: var(--sb-accent); border-color: var(--sb-accent-line); }
+    .nav-link .nav-badge { margin-left: auto; flex-shrink: 0; font-size: 8.5px; font-weight: 700; letter-spacing: .3px; padding: 2px 6px; border-radius: 3px; background: rgba(255,255,255,0.05); color: var(--sb-text-dim); }
+    .nav-link.active .nav-badge { background: var(--sb-accent-dim); color: var(--sb-accent); }
+    .sidebar.collapsed .nav-link { padding: 9px 0; justify-content: center; }
+    .sidebar.collapsed .nav-link-text, .sidebar.collapsed .nav-badge { display: none; }
+
+    .nav-divider { height: 1px; margin: 9px 18px; background: var(--sb-line); position: relative; }
+    .nav-divider::before { content:''; position:absolute; left:-7px; top:-2px; width:3px; height:5px; background: var(--sb-accent); opacity: .55; }
+    .sidebar.collapsed .nav-divider { margin: 9px 12px; }
+    .sidebar.collapsed .nav-divider::before { display: none; }
+
+    .sidebar-footer { padding: 13px 18px; border-top: 1px solid var(--sb-line); font-size: 12px; color: var(--sb-text-dim); display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-footer .user-name { font-weight: 600; color: var(--sb-text-dim); font-size: 11.5px; }
+    .sidebar.collapsed .user-name { display: none !important; }
+    .sidebar.collapsed .sidebar-footer { padding: 13px 0; align-items: center; }
+    .sidebar.collapsed .logout-link { display: none !important; }
+    .sidebar.collapsed .lang-switcher { display: none !important; }
+
+    .sidebar-toggle { position: absolute; top: 20px; right: -11px; width: 22px; height: 22px; background: var(--sb-panel); border: 1px solid var(--sb-line2); color: var(--sb-text-dim); display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; z-index: 200; transition: transform .22s, color .15s, border-color .15s; }
+    .sidebar-toggle:hover { color: var(--sb-accent); border-color: var(--sb-accent-line); }
+    .sidebar.collapsed .sidebar-toggle { transform: rotate(180deg); }
+
+    .main-content { transition: margin-left .25s ease; }
+    .main-content.expanded { margin-left: 56px; }
+
+    .mobile-menu-btn { display: none; }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%) !important; }
+      .sidebar.mobile-open { transform: translateX(0) !important; }
+      .main-wrapper { margin-left: 0 !important; }
+      .sidebar-toggle { display: none !important; }
+      .mobile-menu-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--sb-accent); border-radius: 6px; color: #fff; font-size: 16px; cursor: pointer; margin-right: 12px; flex-shrink: 0; }
+      .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 90; }
+      .sidebar-overlay.active { display: block; }
+    }
+
+    /* ---- Shared content card styles (dipakai semua halaman sepakbola) ---- */
+    .card { background: #fff; border-radius: 10px; padding: 22px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid #eef0f2; }
+    .card-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 14px; }
+    label { font-size: 12.5px; color: #6b7280; display: block; margin: 12px 0 4px; font-weight: 500; }
+    input, select, textarea { border: 1px solid #d1d5db; padding: 8px 10px; border-radius: 6px; width: 100%; font-family: inherit; font-size: 13px; background: #fff; color: #111827; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--sb-accent); }
+    .btn { background: var(--sb-accent); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+    .btn:hover { background: #16a34a; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; color: #6b7280; font-weight: 600; padding: 8px 10px; border-bottom: 2px solid #f1f5f9; }
+    td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+    .badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+    .badge-baik { background: #dcfce7; color: #15803d; }
+    .badge-cukup { background: #fef9c3; color: #854d0e; }
+    .badge-kurang { background: #fee2e2; color: #b91c1c; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <aside class="sidebar">
+    <div class="sidebar-toggle" onclick="toggleSidebar()">&#9664;</div>
+    <div class="sidebar-brand">
+      <div class="brand-name">&#9917; <span>HPCS</span></div>
+      <div class="brand-sub" data-i18n="brand_sub">High Performance Sepak Bola</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section" data-i18n="nav_dashboard">Dashboard</div>
+      <a href="{% url 'sepakbola:dashboard' %}" class="nav-link {% if request.resolver_match.namespace == 'sepakbola' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon">&#9917;</span> <span class="nav-link-text" data-i18n="nav_sepakbola">Sepak Bola</span>
+      </a>
+      <a href="{% url 'combat:tambah_atlet' %}" class="nav-link {% if request.resolver_match.url_name == 'tambah_atlet' %}active{% endif %}">
+        <span class="nav-icon">&#43;</span> <span class="nav-link-text">Tambah Atlet</span>
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_assessment">Assessment</div>
+      <a href="{% url 'sepakbola:l1_correction' %}" class="nav-link {% if request.resolver_match.namespace == 'sepakbola' and request.resolver_match.url_name == 'l1_correction' %}active{% endif %}">
+        <span class="nav-round">1</span> <span class="nav-link-text" data-i18n="nav_l1">Level 1 (Correction)</span><span class="nav-badge">MOB</span>
+      </a>
+      <a href="{% url 'sepakbola:l2_strength' %}" class="nav-link {% if request.resolver_match.namespace == 'sepakbola' and request.resolver_match.url_name == 'l2_strength' %}active{% endif %}">
+        <span class="nav-round">2</span> <span class="nav-link-text" data-i18n="nav_l2">Level 2 (Strength)</span><span class="nav-badge">STR</span>
+      </a>
+      <a href="{% url 'sepakbola:l3_power' %}" class="nav-link {% if request.resolver_match.namespace == 'sepakbola' and request.resolver_match.url_name == 'l3_power' %}active{% endif %}">
+        <span class="nav-round">3</span> <span class="nav-link-text" data-i18n="nav_l3">Level 3 (Power)</span><span class="nav-badge">PWR</span>
+      </a>
+      <a href="{% url 'sepakbola:l4_speed_agility' %}" class="nav-link {% if request.resolver_match.namespace == 'sepakbola' and request.resolver_match.url_name == 'l4_speed_agility' %}active{% endif %}">
+        <span class="nav-round">4</span> <span class="nav-link-text" data-i18n="nav_l4">Level 4 (Speed & Agility)</span><span class="nav-badge">SPD</span>
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_periodization">Periodisasi</div>
+      <a href="{% url 'periodization:daftar_program' %}" class="nav-link {% if request.resolver_match.namespace == 'periodization' %}active{% endif %}">
+        <span class="nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3v18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 14l4-4 3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <span class="nav-link-text" data-i18n="nav_periodization_link">Program Periodisasi</span>
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_fitness">Kalkulator</div>
+      <a href="{% url 'calc_bmi_bodyfat' %}" class="nav-link {% if '/fitness/' in request.path %}active{% endif %}">
+        <span class="nav-icon">&#9889;</span> <span class="nav-link-text" data-i18n="nav_fitness_link">Kalkulator Fitnes</span>
+      </a>
+      <div class="nav-divider"></div>
+      <div class="nav-section" data-i18n="nav_system">Sistem</div>
+      {% if request.user.is_superuser or request.user.is_staff %}
+      <a href="{% url 'admin:index' %}" class="nav-link">
+        <span class="nav-icon">&#9881;</span> <span class="nav-link-text" data-i18n="nav_admin">Admin Panel</span>
+      </a>
+      {% endif %}
+      <div class="nav-divider"></div>
+      <a href="{% url 'combat:dashboard' %}" class="nav-link">
+        <span class="nav-icon">&#8592;</span> <span class="nav-link-text">Ke Dashboard Cabor</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="user-name">{{ request.user.username }}</span>
+      <div class="lang-switcher" style="display:flex;gap:4px;margin-top:6px;">
+        <button onclick="setLang('id')" id="btn_id" style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:#9ca3af;border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;font-weight:600;">&#127470;&#127465; ID</button>
+        <button onclick="setLang('en')" id="btn_en" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#9ca3af;border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;font-weight:600;">&#127468;&#127463; EN</button>
+      </div>
+      <form method="post" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" style="background:none;border:none;color:#ef4444;font-size:11px;cursor:pointer;padding:0" title="Logout">
+          <span class="nav-link-text logout-link">&#9747; Logout</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;">
+        <div class="mobile-menu-btn" onclick="toggleMobileSidebar()">&#9776;</div>
+        <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
+      <div class="topbar-right">
+        {% if user.is_authenticated %}
+        <div class="topbar-user">
+          <div class="avatar">{{ user.username|first|upper }}</div>
+          {{ user.username }}
+        </div>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if messages %}
+    <div style="padding: 12px 24px 0;">
+      <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <main class="page-content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+<script>
+function toggleSidebar() {
+    var sb = document.querySelector('.sidebar');
+    var mw = document.querySelector('.main-wrapper');
+    sb.classList.toggle('collapsed');
+    if (mw) mw.style.marginLeft = sb.classList.contains('collapsed') ? '56px' : '240px';
+    localStorage.setItem('sidebar_collapsed_sb', sb.classList.contains('collapsed'));
+}
+function toggleMobileSidebar() {
+    var sb = document.querySelector('.sidebar');
+    var ov = document.getElementById('sidebarOverlay');
+    sb.classList.toggle('mobile-open');
+    ov.classList.toggle('active');
+}
+window.addEventListener('DOMContentLoaded', function() {
+    if (window.innerWidth > 768 && localStorage.getItem('sidebar_collapsed_sb') === 'true') {
+        var sb = document.querySelector('.sidebar');
+        var mw = document.querySelector('.main-wrapper');
+        if (sb) sb.classList.add('collapsed');
+        if (mw) mw.style.marginLeft = '56px';
+    }
+});
+</script>
+{% block extra_js %}{% endblock %}
+
+<script>
+var TRANSLATIONS = {
+  id: { nav_dashboard: 'Dashboard', nav_sepakbola: 'Sepak Bola', nav_assessment: 'Asesmen',
+        nav_l1: 'Level 1 (Koreksi)', nav_l2: 'Level 2 (Kekuatan)', nav_l3: 'Level 3 (Power)',
+        nav_l4: 'Level 4 (Kecepatan & Kelincahan)', nav_periodization: 'Periodisasi',
+        nav_periodization_link: 'Program Periodisasi', nav_fitness: 'Kalkulator',
+        nav_fitness_link: 'Kalkulator Fitnes', nav_system: 'Sistem', nav_admin: 'Panel Admin',
+        brand_sub: 'Performa Tinggi Sepak Bola', logout: 'Keluar' },
+  en: { nav_dashboard: 'Dashboard', nav_sepakbola: 'Football', nav_assessment: 'Assessment',
+        nav_l1: 'Level 1 (Correction)', nav_l2: 'Level 2 (Strength)', nav_l3: 'Level 3 (Power)',
+        nav_l4: 'Level 4 (Speed & Agility)', nav_periodization: 'Periodization',
+        nav_periodization_link: 'Periodization Program', nav_fitness: 'Calculator',
+        nav_fitness_link: 'Fitness Calculator', nav_system: 'System', nav_admin: 'Admin Panel',
+        brand_sub: 'High Performance Football', logout: 'Logout' }
+};
+function applyLang(lang) {
+  var t = TRANSLATIONS[lang] || TRANSLATIONS['id'];
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.documentElement.lang = lang;
+}
+function setLang(lang) { localStorage.setItem('hpcs_lang', lang); applyLang(lang); }
+window.addEventListener('DOMContentLoaded', function() {
+  applyLang(localStorage.getItem('hpcs_lang') || 'id');
+});
+</script>
+</body>
+</html>

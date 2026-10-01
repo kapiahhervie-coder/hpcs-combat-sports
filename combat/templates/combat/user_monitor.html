@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitor User -- HPCS Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh;padding:32px 20px}
+.container{max-width:1100px;margin:0 auto}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:1px}
+.logo span{color:#e63946}
+.back-btn{font-size:12px;color:#64748b;text-decoration:none;display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;transition:all .2s}
+.back-btn:hover{color:#e2e8f0;border-color:rgba(255,255,255,0.15)}
+.alert{padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:20px}
+.alert-error{background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.25);color:#fca5a5}
+.stat-row{display:flex;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.stat-card{background:#0d0f18;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px 20px;flex:1;min-width:140px}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;line-height:1}
+.stat-label{font-size:10px;color:#64748b;letter-spacing:.5px;margin-top:2px;text-transform:uppercase}
+
+.search-box{width:100%;background:#0d0f18;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 14px;color:#e2e8f0;font-size:13px;font-family:'Inter',sans-serif;outline:none;margin-bottom:16px}
+.search-box:focus{border-color:#3b82f6}
+
+table{width:100%;border-collapse:collapse;background:#0d0f18;border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden}
+thead th{background:#111626;text-align:left;font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#64748b;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+tbody td{padding:12px 16px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,0.02)}
+.user-cell{display:flex;flex-direction:column}
+.user-name{font-weight:600;color:#e2e8f0}
+.user-username{font-size:11px;color:#64748b}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.4px;padding:3px 9px;border-radius:5px}
+.badge-admin{background:rgba(96,165,250,0.12);color:#60a5fa;border:1px solid rgba(96,165,250,0.25)}
+.badge-pelatih{background:rgba(230,57,70,0.1);color:#e63946;border:1px solid rgba(230,57,70,0.2)}
+.badge-lain{background:rgba(148,163,184,0.1);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)}
+.sub-info{font-size:11px;color:#64748b;margin-top:2px}
+.time-val{color:#c8ccd8}
+.time-never{color:#475569;font-style:italic}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:6px}
+.dot-online{background:#10b981}
+.dot-offline{background:#475569}
+.empty{text-align:center;padding:40px;color:#334155;font-size:13px}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo"><span>HPCS</span> -- Monitor User</div>
+    <a href="{% url 'combat:dashboard' %}" class="back-btn">&#8592; Kembali ke Dashboard</a>
+  </div>
+
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alert alert-{{ msg.tags }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color:#e2e8f0">{{ total_user }}</div>
+      <div class="stat-label">Total Akun Terdaftar</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#f59e0b">{{ total_belum_pernah_login }}</div>
+      <div class="stat-label">Belum Pernah Login</div>
+    </div>
+  </div>
+
+  <input type="text" id="searchBox" class="search-box" placeholder="Cari nama atau username...">
+
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Role</th>
+        <th>Tanggal Daftar</th>
+        <th>Login Terakhir</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in data %}
+      <tr>
+        <td>
+          <div class="user-cell">
+            <span class="user-name">{{ d.nama }}</span>
+            <span class="user-username">@{{ d.username }}</span>
+          </div>
+        </td>
+        <td>
+          {% if d.role == 'Admin (Superuser)' or d.role == 'Staff' %}
+            <span class="badge badge-admin">{{ d.role }}</span>
+          {% elif d.role == 'Pelatih' %}
+            <span class="badge badge-pelatih">Pelatih</span>
+            <div class="sub-info">{{ d.sub }}</div>
+          {% else %}
+            <span class="badge badge-lain">{{ d.role }}</span>
+          {% endif %}
+        </td>
+        <td class="time-val">{{ d.tanggal_daftar|date:"d M Y, H:i" }}</td>
+        <td>
+          {% if d.login_terakhir %}
+            <span class="dot dot-online"></span><span class="time-val">{{ d.login_terakhir|date:"d M Y, H:i" }}</span>
+          {% else %}
+            <span class="dot dot-offline"></span><span class="time-never">Belum pernah login</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="empty">Belum ada user terdaftar.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+<script>
+document.getElementById('searchBox').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  document.querySelectorAll('#userTable tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+});
+</script>
+</body>
+</html>

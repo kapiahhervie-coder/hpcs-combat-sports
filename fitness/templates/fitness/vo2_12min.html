@@ -1,0 +1,27 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Tes Lari 12 Menit (Estimasi VO2 Max)</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Jarak Tempuh: <span id="jV">2000</span> meter</label>
+  <input type="range" name="jarak" min="800" max="4000" step="10" value="2000" oninput="jV.innerText=this.value">
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <p>Estimasi VO2 Max: <strong>{{ hasil.vo2max }} ml/kg/menit</strong></p>
+  <p>Rating: <strong>{{ hasil.rating }}</strong></p>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Atlet berlari secepat mungkin selama 12 menit di lintasan datar, lalu catat jarak yang ditempuh (meter).</li>
+    <li>Masukkan jarak tersebut ke slider untuk mendapat estimasi VO2 max (rumus Cooper).</li>
+    <li>Rating bersifat umum - bandingkan dengan norma cabor masing-masing untuk interpretasi lebih spesifik.</li>
+  </ol>
+</div>
+{% endblock %}

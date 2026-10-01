@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>HPCS - Daftar Atlet Basket</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+:root { --bg-dark:#060b13; --neon-orange:#f97316; --border-panel:rgba(249,115,22,0.25); --text-gray:#94a3b8; }
+body { background:var(--bg-dark); color:#fff; font-family:'Segoe UI',sans-serif; }
+.page-header { background:linear-gradient(135deg,#0a0f1a,#1a0a00); border-bottom:1px solid var(--border-panel); padding:16px 24px; }
+.card-dark { background:#0d1726; border:1px solid var(--border-panel); border-radius:12px; padding:24px; }
+.form-control, .form-select { background:#0a0f1a; border:1px solid var(--border-panel); color:#fff; }
+.form-control:focus, .form-select:focus { background:#0a0f1a; border-color:var(--neon-orange); color:#fff; box-shadow:none; }
+.form-select option { background:#0a0f1a; }
+.btn-save { background:var(--neon-orange); color:#000; font-weight:700; border:none; padding:10px 24px; border-radius:8px; }
+.table-dark-custom { --bs-table-bg:transparent; --bs-table-color:#fff; }
+.table-dark-custom thead th { color:var(--text-gray); font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; border-color:rgba(255,255,255,0.08); }
+.table-dark-custom td { border-color:rgba(255,255,255,0.05); font-size:0.85rem; vertical-align:middle; }
+.posisi-badge { background:rgba(249,115,22,0.15); color:var(--neon-orange); border:1px solid rgba(249,115,22,0.3); padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:700; }
+.form-label { color:var(--text-gray); font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+</style>
+</head>
+<body>
+<div class="page-header d-flex justify-content-between align-items-center">
+  <div>
+    <div style="font-size:1.1rem;font-weight:800;letter-spacing:2px">🏀 <span style="color:var(--neon-orange)">HPCS</span> BASKETBALL</div>
+    <div style="font-size:0.75rem;color:var(--text-gray)">Manajemen Atlet Basket</div>
+  </div>
+  <a href="{% url 'basketball:dashboard' %}" class="btn btn-sm" style="background:transparent;border:1px solid var(--border-panel);color:var(--neon-orange)">←  Dashboard</a>
+</div>
+
+<div class="container-fluid py-4 px-4">
+  {% if messages %}
+  {% for msg in messages %}
+  <div class="alert alert-{{ msg.tags }} alert-dismissible" style="background:rgba(249,115,22,0.1);border:1px solid var(--border-panel);color:#fff">
+    {{ msg }} <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="row g-4">
+    <!-- FORM TAMBAH ATLET -->
+    <div class="col-md-4">
+      <div class="card-dark">
+        <h6 style="color:var(--neon-orange);font-weight:700;letter-spacing:1px;margin-bottom:20px">+ TAMBAH ATLET BARU</h6>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Nama Atlet *</label>
+            <input type="text" name="nama_atlet" class="form-control" required placeholder="Nama lengkap">
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label">Kategori *</label>
+              <select name="kategori_umur" class="form-select">
+                <option value="ELITE">Elite</option>
+                <option value="SENIOR">Senior</option>
+                <option value="JUNIOR">Junior</option>
+                <option value="YOUTH">Youth</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Gender *</label>
+              <select name="gender" class="form-select">
+                <option value="Putra">Putra</option>
+                <option value="Putri">Putri</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Posisi</label>
+            <select name="posisi" class="form-select">
+              <option value="">— Pilih Posisi —</option>
+              <option value="PG">Point Guard (PG)</option>
+              <option value="SG">Shooting Guard (SG)</option>
+              <option value="SF">Small Forward (SF)</option>
+              <option value="PF">Power Forward (PF)</option>
+              <option value="C">Center (C)</option>
+            </select>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-4">
+              <label class="form-label">BB (kg) *</label>
+              <input type="number" name="kelas_berat" class="form-control" step="0.1" required placeholder="75">
+            </div>
+            <div class="col-4">
+              <label class="form-label">TB (cm)</label>
+              <input type="number" name="tinggi_badan" class="form-control" step="0.1" placeholder="185">
+            </div>
+            <div class="col-4">
+              <label class="form-label">Wingspan</label>
+              <input type="number" name="wingspan" class="form-control" step="0.1" placeholder="190">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tanggal Lahir</label>
+            <input type="date" name="tanggal_lahir" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tahap LTAD</label>
+            <select name="tahap_ltad" class="form-select">
+              <option value="">— Pilih —</option>
+              <option value="fundamental">FUNdamental (6-9 thn)</option>
+              <option value="learn_train">Learn to Train (9-12 thn)</option>
+              <option value="train_train">Train to Train (12-16 thn)</option>
+              <option value="train_compete">Train to Compete (16-19 thn)</option>
+              <option value="train_win">Train to Win (19+ thn)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-save w-100">🏀 Tambah Atlet</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- DAFTAR ATLET -->
+    <div class="col-md-8">
+      <div class="card-dark">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 style="color:var(--neon-orange);font-weight:700;letter-spacing:1px;margin:0">DAFTAR ATLET BASKET</h6>
+          <span style="background:rgba(249,115,22,0.15);color:var(--neon-orange);border:1px solid var(--border-panel);padding:2px 12px;border-radius:20px;font-size:0.75rem;font-weight:700">
+            {{ total_atlet }} Atlet
+          </span>
+        </div>
+        {% if daftar_atlet %}
+        <div class="table-responsive">
+          <table class="table table-dark-custom">
+            <thead>
+              <tr>
+                <th>#</th><th>Nama Atlet</th><th>Posisi</th><th>Kategori</th>
+                <th>BB</th><th>TB</th><th>Wingspan</th><th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for a in daftar_atlet %}
+              <tr>
+                <td style="color:var(--text-gray)">{{ forloop.counter }}</td>
+                <td style="font-weight:600">{{ a.nama_atlet }}</td>
+                <td><span class="posisi-badge">{{ a.get_posisi_display|default:"—" }}</span></td>
+                <td style="font-size:0.75rem">{{ a.get_kategori_umur_display }} | {{ a.gender }}</td>
+                <td>{{ a.kelas_berat }} kg</td>
+                <td>{{ a.tinggi_badan|default:"—" }} cm</td>
+                <td>{{ a.wingspan|default:"—" }} cm</td>
+                <td>
+                  <a href="{% url 'basketball:dashboard' %}?atlet_id={{ a.id }}"
+                     class="btn btn-sm" style="background:rgba(249,115,22,0.15);color:var(--neon-orange);border:1px solid var(--border-panel);font-size:0.75rem">
+                    Lihat
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div style="text-align:center;padding:40px;color:var(--text-gray)">
+          <div style="font-size:3rem">🏀</div>
+          <div style="margin-top:8px">Belum ada atlet. Tambah atlet pertama!</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

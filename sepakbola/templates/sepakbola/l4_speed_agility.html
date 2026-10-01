@@ -1,0 +1,551 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+:root{--bg:#0f1117;--bg2:#171b25;--bg3:#1e2333;--border:#252d3d;--bd2:#2f3a50;--cyan:#06b6d4;--cyan2:#22d3ee;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--text:#cbd5e1;--text2:#94a3b8;--text3:#4b5e78;--white:#f1f5f9}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6}
+.wrap{max-width:1300px;margin:0 auto;padding:24px 20px}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:16px}
+.badge-l4{display:inline-flex;align-items:center;gap:6px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);color:var(--cyan);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;padding:4px 10px;border-radius:4px;margin-bottom:8px;text-transform:uppercase}
+.badge-l4::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:var(--white);letter-spacing:2px;line-height:1}
+.page-title span{color:var(--cyan)}
+.page-sub{color:var(--text2);font-size:13px;margin-top:4px}
+.hdr-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none;text-decoration:none;transition:all .15s}
+.btn-ghost{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--bd2);color:var(--text)}
+.btn-outline-cyan{background:transparent;color:var(--cyan);border:1px solid rgba(6,182,212,.35)}
+.btn-outline-cyan:hover{background:rgba(6,182,212,.08)}
+.rubrik-panel{display:none;background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:10px;padding:16px 20px}
+.rubrik-panel.open{display:block}
+.l4doc h3{font-family:'Bebas Neue',sans-serif;font-size:14px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:1.5px;border-left:3px solid var(--cyan);padding:5px 0 5px 10px;margin:14px 0 8px;background:rgba(6,182,212,.06)}
+.l4doc h3:first-child{margin-top:0}
+.l4doc table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px}
+.l4doc th,.l4doc td{border:1px solid var(--bd2);padding:6px 8px;text-align:left}
+.l4doc th{background:#0a2733;color:var(--cyan);font-weight:700;font-size:9.5px;text-transform:uppercase}
+.l4doc td.kurang{background:rgba(239,68,68,.06);color:#e89090}
+.l4doc td.cukup{background:rgba(255,179,0,.06);color:#e8c870}
+.l4doc td.baik{background:rgba(6,182,212,.08);color:#7fd8e8}
+.l4doc .catatan{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:8px 12px;margin:6px 0 14px;font-size:10.5px;color:#e8c870}
+.main-grid{display:grid;grid-template-columns:360px 1fr 300px;gap:16px;margin-bottom:24px}
+@media(max-width:1100px){.main-grid{grid-template-columns:1fr 1fr}.col-right{grid-column:1/-1}}
+@media(max-width:700px){.main-grid{grid-template-columns:1fr}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+.card+.card{margin-top:16px}
+.card-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.fg{margin-bottom:12px}
+.fl{display:block;font-size:11px;color:var(--text2);margin-bottom:5px}
+.fc{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--white);border-radius:6px;padding:8px 11px;font-family:'DM Sans',sans-serif;font-size:13.5px;outline:none}
+.fc:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(6,182,212,.1)}
+select.fc{cursor:pointer}
+.fc-auto{background:rgba(6,182,212,.06);border-color:rgba(6,182,212,.25);color:var(--cyan);font-weight:600;cursor:not-allowed}
+.fl-auto{display:flex;align-items:center;gap:6px}
+.auto-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);padding:1px 6px;border-radius:10px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pilar{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px}
+.pilar:hover{border-color:rgba(6,182,212,.3)}
+.pilar-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--cyan);margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pilar-sub{font-size:10.5px;color:var(--text3);font-style:italic}
+.info-box{background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.15);border-radius:6px;padding:8px 12px;font-size:12px;color:var(--cyan);margin-top:8px}
+.info-val{font-family:'DM Mono',monospace;font-size:1.6rem;color:var(--cyan);font-weight:500}
+.vo2-val{font-family:'DM Mono',monospace;font-size:1.3rem;color:var(--green);font-weight:500}
+.cond-btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.cond-btn{padding:5px 12px;border-radius:5px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text2)}
+.cond-btn.active,.cond-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.08)}
+.radar-wrap{display:flex;flex-direction:column;align-items:center;height:100%}
+.radar-canvas-wrap{position:relative;width:100%;height:260px}
+.score-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
+.score-pill{background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);color:var(--cyan);font-family:'DM Mono',monospace;font-size:11px;padding:3px 9px;border-radius:20px}
+.result-score{font-family:'Bebas Neue',sans-serif;font-size:6rem;line-height:1;color:var(--cyan);text-align:center;letter-spacing:2px}
+.result-badge{display:block;width:fit-content;padding:6px 20px;border-radius:30px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;border:1.5px solid var(--bd2);color:var(--text2);margin:8px auto}
+.rb-elite{border-color:var(--green);color:var(--green);background:rgba(16,185,129,.08)}
+.rb-ready{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.08)}
+.rb-developing{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.08)}
+.rb-novice{border-color:var(--red);color:var(--red);background:rgba(239,68,68,.08)}
+.rekomendasi{background:rgba(6,182,212,.04);border:1px solid rgba(6,182,212,.15);border-radius:8px;padding:12px;margin-top:14px;font-size:12.5px;color:var(--text2);display:none}
+.rekomendasi.show{display:block}
+.rek-title{font-weight:600;color:var(--cyan);font-size:12px;margin-bottom:6px}
+.btn-save{width:100%;padding:12px;background:linear-gradient(135deg,#0891b2,var(--cyan));color:#000;font-weight:700;font-size:14px;border:none;border-radius:8px;cursor:pointer;margin-top:16px}
+.btn-save:hover{opacity:.9}
+.btn-print-sm{width:100%;margin-top:8px;padding:9px;background:transparent;color:var(--cyan);border:1px solid rgba(6,182,212,.25);border-radius:8px;font-size:13px;cursor:pointer}
+.btn-print-sm:hover{background:rgba(6,182,212,.06)}
+.history-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+.hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.hist-count{background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);color:var(--cyan);font-family:'DM Mono',monospace;font-size:11px;padding:3px 10px;border-radius:20px}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 12px;text-align:left;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--cyan);border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 12px;font-size:12.5px;border-bottom:1px solid rgba(37,45,61,.5);color:var(--text)}
+tbody tr:hover{background:rgba(6,182,212,.02)}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500}
+.b-elite{background:rgba(16,185,129,.1);color:#10b981;border:1px solid #10b981}
+.b-ready{background:rgba(6,182,212,.1);color:var(--cyan);border:1px solid var(--cyan)}
+.b-developing{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid var(--amber)}
+.b-novice{background:rgba(239,68,68,.1);color:var(--red);border:1px solid var(--red)}
+.pill{background:rgba(6,182,212,.08);color:var(--cyan);font-family:'DM Mono',monospace;font-size:11px;padding:2px 7px;border-radius:4px}
+.vo2-pill{background:rgba(16,185,129,.08);color:var(--green);font-family:'DM Mono',monospace;font-size:11px;padding:2px 7px;border-radius:4px}
+.btn-del-sm{background:rgba(239,68,68,.08);color:var(--red);border:1px solid rgba(239,68,68,.2);border-radius:5px;padding:4px 9px;font-size:12px;cursor:pointer}
+.btn-del-sm:hover{background:rgba(239,68,68,.15)}
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+</style>
+{% endblock %}
+
+{% block page_title %}HPCS Level 4 — Sepak Bola{% endblock %}
+
+{% block content %}
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <div class="badge-l4"><i class="bi bi-speedometer2"></i> SPEED & METABOLIC ASSESSMENT</div>
+      <div class="page-title">HPCS LEVEL 4 — <span>SPEED & AGILITY</span></div>
+      <div class="page-sub">Audit Speed-Agility-Metabolik Sepak Bola — Hex Jump, Quick Feet Ladder, Yo-Yo IR1 (Coach Fanny)</div>
+    </div>
+    <div class="hdr-actions">
+      <button type="button" class="btn btn-outline-cyan" onclick="toggleRubrik()"><i class="bi bi-journal-medical"></i> Rubrik & Protokol</button>
+      <button type="button" class="btn btn-ghost" onclick="window.print()"><i class="bi bi-printer-fill"></i> Print Report</button>
+    </div>
+  </div>
+
+  <div class="rubrik-panel" id="rubrikPanel">
+    <div class="l4doc">
+      <div class="catatan">⚠ DRAFT — norma di bawah telah disesuaikan untuk tuntutan aerobik sepak bola (lebih tinggi dari rata-rata olahraga tempur), belum divalidasi studi lapangan.</div>
+      <h3>A. Hexagon Jump — 3 Putaran (detik, makin rendah makin baik)</h3>
+      <table><thead><tr><th>Kategori</th><th>Novice</th><th>Fair</th><th>Good</th><th>Excellent</th></tr></thead>
+        <tbody><tr><td>Junior Putra</td><td class="kurang">&gt;15.00</td><td class="cukup">13.50-15.00</td><td class="baik">12.00-13.50</td><td class="baik">&lt;10.50</td></tr>
+        <tr><td>Senior/Elite Putra</td><td class="kurang">&gt;13.00</td><td class="cukup">11.50-13.00</td><td class="baik">10.00-11.50</td><td class="baik">&lt;8.80</td></tr>
+        <tr><td>Senior/Elite Putri</td><td class="kurang">&gt;14.50</td><td class="cukup">12.80-14.50</td><td class="baik">11.20-12.80</td><td class="baik">&lt;9.80</td></tr></tbody></table>
+
+      <h3>B. Quick Feet Ladder — 10 Detik (jumlah sentuhan, makin banyak makin baik)</h3>
+      <table><thead><tr><th>Kategori</th><th>Novice</th><th>Fair</th><th>Good</th><th>Excellent</th></tr></thead>
+        <tbody><tr><td>Junior Putra</td><td class="kurang">&lt;48</td><td class="cukup">48-58</td><td class="baik">58-68</td><td class="baik">&gt;78</td></tr>
+        <tr><td>Senior/Elite Putra</td><td class="kurang">&lt;58</td><td class="cukup">58-70</td><td class="baik">70-82</td><td class="baik">&gt;94</td></tr>
+        <tr><td>Senior/Elite Putri</td><td class="kurang">&lt;52</td><td class="cukup">52-63</td><td class="baik">63-73</td><td class="baik">&gt;83</td></tr></tbody></table>
+      <div class="catatan">⚠️ Jika postur/teknik tidak benar selama tes, skor otomatis dikurangi 1 poin (mengikuti pola Punch Boxing).</div>
+
+      <h3>C. Yo-Yo Intermittent Recovery Test Level 1 (jarak meter, makin jauh makin baik)</h3>
+      <table><thead><tr><th>Kategori</th><th>Novice</th><th>Fair</th><th>Good</th><th>Excellent</th></tr></thead>
+        <tbody><tr><td>Junior Putra</td><td class="kurang">&lt;640</td><td class="cukup">640-960</td><td class="baik">960-1320</td><td class="baik">&gt;1720</td></tr>
+        <tr><td>Senior/Elite Putra</td><td class="kurang">&lt;960</td><td class="cukup">960-1400</td><td class="baik">1400-1880</td><td class="baik">&gt;2320</td></tr>
+        <tr><td>Senior/Elite Putri</td><td class="kurang">&lt;720</td><td class="cukup">720-1080</td><td class="baik">1080-1480</td><td class="baik">&gt;1880</td></tr></tbody></table>
+      <div class="catatan">ℹ️ VO2 Max diestimasi dari jarak Yo-Yo (formula Bangsbo: VO2max = jarak × 0.0084 + 36.4). Norma dinaikkan dari standar olahraga tempur karena tuntutan aerobik sepak bola (90 menit lari terus-menerus) lebih berat.</div>
+
+      <h3 style="margin-top:22px">📋 SOP — Prosedur Pelaksanaan Tes</h3>
+      <div style="font-size:11px;color:var(--text2);line-height:1.6">
+        <p style="margin-bottom:8px"><strong style="color:var(--cyan)">1. Hexagon Jump:</strong> Lompat mengelilingi hexagon 66cm searah jarum jam, kembali ke tengah tiap lompatan, 3 putaran penuh, catat waktu tiap putaran.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--cyan)">2. Quick Feet Ladder:</strong> Footwork agility ladder secepat mungkin selama 10 detik, hitung total sentuhan kaki ke tanah di dalam kotak ladder. Amati postur tetap tegak & terkontrol.</p>
+        <p style="margin-bottom:8px"><strong style="color:var(--cyan)">3. Yo-Yo IR1:</strong> Lari bolak-balik 20m mengikuti bunyi bip dengan jeda istirahat aktif 10 detik tiap shuttle. Catat level & shuttle terakhir sebelum atlet gagal mengikuti tempo 2x berturut.</p>
+      </div>
+      <div style="font-size:9px;color:var(--text3);margin-top:10px;padding-top:8px;border-top:1px solid var(--bd2)">Rubrik draft internal HPCS Sepak Bola — struktur mengikuti pola L4 Boxing, norma disesuaikan untuk sepak bola.</div>
+    </div>
+  </div>
+
+  <form id="form-audit" action="{% url 'sepakbola:l4_speed_agility' %}" method="POST">
+    {% csrf_token %}
+    <div class="main-grid">
+      <div>
+        <div class="card">
+          <div class="card-title"><i class="bi bi-person-fill"></i> Identitas Atlet</div>
+          {% if atlet_list %}
+          <div class="fg">
+            <select id="sel_atlet" class="fc" onchange="onAtletChange(this)">
+              <option value="">Pilih Atlet</option>
+              {% for atlet in atlet_list %}
+              <option value="{{ atlet.id }}" data-nama="{{ atlet.nama_atlet }}" data-kategori="{{ atlet.kategori_umur }}" data-gender="{{ atlet.gender }}">{{ atlet.nama_atlet }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% else %}
+          <div style="color:var(--amber);font-size:12px">Belum ada atlet cabang Sepak Bola.</div>
+          {% endif %}
+          <input type="hidden" name="atlet_id" id="atlet_id">
+          <input type="hidden" name="kategori_usia" id="h_kat_l4" value="SENIOR">
+          <input type="hidden" name="gender" id="h_gen_l4" value="PUTRA">
+          <div class="fg">
+            <label class="fl">Kategori Usia</label>
+            <select class="fc" onchange="document.getElementById('h_kat_l4').value=this.value;syncKatGenManual();">
+              <option value="YOUTH">Youth (6-12)</option><option value="JUNIOR">Junior (13-17)</option>
+              <option value="SENIOR" selected>Senior (18-35)</option><option value="ELITE">Elite</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Gender</label>
+            <select class="fc" onchange="document.getElementById('h_gen_l4').value=this.value;syncKatGenManual();">
+              <option value="PUTRA">Putra</option><option value="PUTRI">Putri</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Kondisi Uji</label>
+            <div class="cond-btns">
+              <button type="button" class="cond-btn active" onclick="setKondisi('FRESH', this)">Fresh</button>
+              <button type="button" class="cond-btn" onclick="setKondisi('POST_MATCH', this)">Post-Match</button>
+              <button type="button" class="cond-btn" onclick="setKondisi('POST_CIRCUIT', this)">Post-Circuit</button>
+            </div>
+            <input type="hidden" name="kondisi_uji" id="kondisi_uji" value="FRESH">
+          </div>
+          <div class="fg">
+            <label class="fl">Catatan Coach</label>
+            <textarea name="catatan" class="fc" placeholder="Observasi kondisi atlet..." rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pilar 1 — Hexagon Jump Test</div>
+          <div class="pilar">
+            <div class="pilar-name">⬡ Hexagon Jump <span class="pilar-sub">3 putaran penuh, rerata diambil</span></div>
+            <div class="r3">
+              <div class="fg"><label class="fl">Putaran 1 (dtk)</label><input type="number" name="hex_waktu_putaran1" id="hex1" class="fc" step="any" placeholder="0.00" oninput="calcHex()"></div>
+              <div class="fg"><label class="fl">Putaran 2 (dtk)</label><input type="number" name="hex_waktu_putaran2" id="hex2" class="fc" step="any" placeholder="0.00" oninput="calcHex()"></div>
+              <div class="fg"><label class="fl">Putaran 3 (dtk)</label><input type="number" name="hex_waktu_putaran3" id="hex3" class="fc" step="any" placeholder="0.00" oninput="calcHex()"></div>
+            </div>
+            <div class="info-box" id="hex_result" style="display:none">Rata-rata: <span class="info-val" id="hex_avg">—</span> detik</div>
+            <div class="fg" style="margin-top:8px"><label class="fl fl-auto">Skor Hex Jump (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="text" id="score_hex_display" class="fc fc-auto" readonly tabindex="-1" placeholder="Isi waktu putaran di atas"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pilar 2 — Quick Feet Ladder (10 Detik)</div>
+          <div class="pilar">
+            <div class="pilar-name">🦶 Ladder Frequency <span class="pilar-sub">Sentuhan maksimal dalam 10 detik</span></div>
+            <div class="fg"><label class="fl">Jumlah Sentuhan (10 dtk)</label><input type="number" name="ladder_touch_10s" id="ladder_touch" class="fc" placeholder="0" oninput="autoScoreLadder()"></div>
+            <div class="fg">
+              <label class="fl">Postur Tetap Terkontrol?</label>
+              <div class="cond-btns">
+                <button type="button" class="cond-btn active" onclick="setPostur('true', this)">✓ Ya</button>
+                <button type="button" class="cond-btn" onclick="setPostur('false', this)">✗ Tidak (−1 poin)</button>
+              </div>
+              <input type="hidden" name="ladder_postur_ok" id="ladder_postur_ok" value="true">
+            </div>
+            <div class="fg" style="margin-top:8px"><label class="fl fl-auto">Skor Ladder (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="text" id="score_ladder_display" class="fc fc-auto" readonly tabindex="-1" placeholder="Isi jumlah sentuhan di atas"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Pilar 3 — Yo-Yo IR Test Level 1</div>
+          <div class="pilar">
+            <div class="pilar-name">🫀 Yo-Yo Intermittent Recovery <span class="pilar-sub">Estimasi VO2 Max dari level & shuttle</span></div>
+            <div class="r2">
+              <div class="fg"><label class="fl">Level Tercapai</label><input type="number" name="yoyo_level_tercapai" id="yoyo_level" class="fc" placeholder="0" oninput="calcYoYo()"></div>
+              <div class="fg"><label class="fl">Shuttle Tercapai</label><input type="number" name="yoyo_shuttle_tercapai" id="yoyo_shuttle" class="fc" placeholder="0" oninput="calcYoYo()"></div>
+            </div>
+            <div class="fg"><label class="fl">Total Jarak (m) — atau isi manual</label><input type="number" name="yoyo_total_jarak_m" id="yoyo_jarak" class="fc" step="any" placeholder="0" oninput="calcVO2Max()"></div>
+            <div class="info-box" id="vo2_result" style="display:none">Estimasi VO2 Max: <span class="vo2-val" id="vo2_val">—</span> mL/kg/min</div>
+            <div class="fg" style="margin-top:8px"><label class="fl fl-auto">Skor Yo-Yo (0–10) <span class="auto-tag">OTOMATIS</span></label>
+              <input type="text" id="score_yoyo_display" class="fc fc-auto" readonly tabindex="-1" placeholder="Isi level & shuttle di atas"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card radar-wrap">
+        <div class="card-title">Performance Radar</div>
+        <div class="radar-canvas-wrap"><canvas id="radarChart"></canvas></div>
+        <div class="score-pills">
+          <span class="score-pill" id="p_hex">Hex: —</span>
+          <span class="score-pill" id="p_ladder">Ladder: —</span>
+          <span class="score-pill" id="p_yoyo">Yo-Yo: —</span>
+        </div>
+      </div>
+
+      <div class="col-right" style="position:sticky;top:16px">
+        <div class="card" style="text-align:center">
+          <div class="card-title" style="justify-content:center">Audit Result</div>
+          <div class="result-score" id="res_total">0.0</div>
+          <div class="result-badge rb-novice" id="res_badge">NOVICE</div>
+
+          <div id="narasi_l4" style="display:none;margin-top:10px;text-align:left;max-height:350px;overflow-y:auto">
+            <div style="font-size:10px;font-weight:700;color:#06b6d4;letter-spacing:1px;margin-bottom:6px">⚡ PROFIL KONDISI ATLET</div>
+            <div id="narasi_box_l4" style="background:rgba(6,182,212,0.05);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;font-size:11px;line-height:1.7;color:#9ca3af;max-height:300px;overflow-y:auto"></div>
+          </div>
+
+          <div class="rekomendasi" id="rekomendasi">
+            <div class="rek-title">📋 Rekomendasi Pelatih:</div>
+            <div id="rek_text" style="font-size:11px;text-align:left"></div>
+          </div>
+
+          <button type="submit" class="btn-save"><i class="bi bi-save2-fill"></i> SIMPAN DATA L4</button>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div class="card-title">Referensi VO2 Max Sepak Bola</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Elite Putra</span><span style="color:var(--green);font-family:'DM Mono',monospace">&gt; 60 mL/kg/min</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Elite Putri</span><span style="color:var(--green);font-family:'DM Mono',monospace">&gt; 52 mL/kg/min</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>Amatir Putra</span><span style="color:var(--cyan);font-family:'DM Mono',monospace">54–60</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0"><span>Amatir Putri</span><span style="color:var(--cyan);font-family:'DM Mono',monospace">46–52</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="history-section">
+    <div class="hist-header">
+      <div class="card-title" style="margin-bottom:0"><i class="bi bi-clock-history"></i> History Audit L4 — Speed & Metabolic</div>
+      <span class="hist-count">{{ history|length }} Record</span>
+    </div>
+    {% if history %}
+    <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>#</th><th>Tanggal</th><th>Atlet</th><th>Kat.</th><th>Kondisi</th><th>Hex</th><th>Ladder</th><th>Yo-Yo</th><th>VO2Max</th><th>Total</th><th>Predikat</th><th>Aksi</th></tr></thead>
+        <tbody>
+          {% for item in history %}
+          <tr id="row-{{ item.id }}">
+            <td style="color:var(--text3)">{{ forloop.counter }}</td>
+            <td style="color:var(--text3);font-size:11px;white-space:nowrap">{{ item.timestamp|date:"d/m/Y H:i" }}</td>
+            <td style="font-weight:600;color:var(--white)">{{ item.atlet.nama_atlet }}</td>
+            <td style="font-size:11px">{{ item.kategori_usia }}</td>
+            <td style="font-size:10.5px;color:var(--text3)">{{ item.kondisi_uji }}</td>
+            <td><span class="pill">{{ item.score_hex|floatformat:1 }}</span></td>
+            <td><span class="pill">{{ item.score_ladder|floatformat:1 }}</span></td>
+            <td><span class="pill">{{ item.score_yoyo|floatformat:1 }}</span></td>
+            <td><span class="vo2-pill">{{ item.vo2max_estimasi|floatformat:1 }}</span></td>
+            <td style="font-family:'DM Mono',monospace;font-size:1.05rem;color:var(--cyan);font-weight:600">{{ item.total_skor }}</td>
+            <td>
+              {% if item.predikat == 'ELITE' %}<span class="badge b-elite">ELITE</span>
+              {% elif item.predikat == 'READY' %}<span class="badge b-ready">READY</span>
+              {% elif item.predikat == 'DEVELOPING' %}<span class="badge b-developing">DEVELOPING</span>
+              {% else %}<span class="badge b-novice">NOVICE</span>{% endif %}
+            </td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2" onclick="cetakL4Row('{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}','{{ item.gender }}','{{ item.timestamp|date:"d/m/Y H:i" }}',{{ item.score_hex|default:0 }},{{ item.score_ladder|default:0 }},{{ item.score_yoyo|default:0 }},{{ item.vo2max_estimasi|default:0 }},{{ item.total_skor|default:0 }},'{{ item.predikat }}')" title="Cetak PDF"><i class="bi bi-printer-fill"></i></button>
+              <button type="button" class="btn-del-sm" onclick="konfirmasiHapusL4({{ item.id }},'{{ item.atlet.nama_atlet|escapejs }}')" title="Hapus"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><i class="bi bi-inbox"></i><br>Belum ada data L4 tersimpan.</div>
+    {% endif %}
+  </div>
+</div>
+
+<div id="modalHapusL4" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:2000;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid rgba(239,68,68,.4);border-radius:12px;padding:20px;width:360px;max-width:90vw">
+    <div style="display:flex;gap:10px;align-items:flex-start"><i class="bi bi-exclamation-triangle-fill" style="color:#ef4444;font-size:1.3rem"></i>
+      <div><div style="font-weight:700;margin-bottom:4px">Hapus Data Audit?</div><div style="font-size:12px;color:var(--text2)">Data audit <strong id="modal_nama_l4" style="color:#fff"></strong> akan dihapus permanen.</div></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button type="button" class="btn btn-ghost" onclick="document.getElementById('modalHapusL4').style.display='none'">Batal</button>
+      <button type="button" class="btn" style="background:#ef4444;color:#fff" id="btn_hapus_l4_confirm">Ya, Hapus</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function toggleRubrik(){document.getElementById('rubrikPanel').classList.toggle('open');}
+
+var RUBRIK_L4 = {
+  YOUTH:{PUTRA:{hex:[[12.00,9.5],[14.00,7.5],[16.00,5.5],[18.00,3.5]],ladder:[[62,9.5],[54,7.5],[46,5.5],[38,3.5]],yoyo:[[960,9.5],[720,7.5],[480,5.5],[280,3.5]]},
+         PUTRI:{hex:[[13.50,9.5],[15.50,7.5],[17.50,5.5],[19.50,3.5]],ladder:[[56,9.5],[48,7.5],[40,5.5],[32,3.5]],yoyo:[[800,9.5],[600,7.5],[400,5.5],[200,3.5]]}},
+  JUNIOR:{PUTRA:{hex:[[10.50,9.5],[12.00,7.5],[13.50,5.5],[15.00,3.5]],ladder:[[78,9.5],[68,7.5],[58,5.5],[48,3.5]],yoyo:[[1720,9.5],[1320,7.5],[960,5.5],[640,3.5]]},
+          PUTRI:{hex:[[11.60,9.5],[13.20,7.5],[14.80,5.5],[16.50,3.5]],ladder:[[69,9.5],[61,7.5],[52,5.5],[43,3.5]],yoyo:[[1400,9.5],[1080,7.5],[760,5.5],[480,3.5]]}},
+  SENIOR:{PUTRA:{hex:[[8.80,9.5],[10.00,7.5],[11.50,5.5],[13.00,3.5]],ladder:[[94,9.5],[82,7.5],[70,5.5],[58,3.5]],yoyo:[[2320,9.5],[1880,7.5],[1400,5.5],[960,3.5]]},
+          PUTRI:{hex:[[9.80,9.5],[11.20,7.5],[12.80,5.5],[14.50,3.5]],ladder:[[83,9.5],[73,7.5],[63,5.5],[52,3.5]],yoyo:[[1880,9.5],[1480,7.5],[1080,5.5],[720,3.5]]}}
+};
+RUBRIK_L4.ELITE = RUBRIK_L4.SENIOR;
+
+const YOYO_JARAK = {
+  5:{1:40,2:80,3:120,4:160}, 7:{1:200,2:240,3:280,4:320,5:360,6:400,7:440,8:480},
+  9:{1:520,2:560,3:600,4:640,5:680,6:720,7:760,8:800}, 11:{1:840,2:880,3:920,4:960,5:1000,6:1040,7:1080,8:1120},
+  13:{1:1160,2:1200,3:1240,4:1280,5:1320,6:1360,7:1400,8:1440}, 15:{1:1480,2:1520,3:1560,4:1600,5:1640,6:1680,7:1720,8:1760},
+  17:{1:1800,2:1840,3:1880,4:1920,5:1960,6:2000,7:2040,8:2080}, 19:{1:2120,2:2160,3:2200,4:2240,5:2280,6:2320,7:2360,8:2400},
+  21:{1:2440,2:2480,3:2520}
+};
+
+function kategoriGenderL4(){
+  var kat=(document.getElementById('h_kat_l4').value||'SENIOR').toUpperCase();
+  var gen=document.getElementById('h_gen_l4').value||'PUTRA';
+  var tabelKat=RUBRIK_L4[kat]||RUBRIK_L4.SENIOR;
+  return tabelKat[gen]||tabelKat.PUTRA;
+}
+
+const scoresL4={hex:0,ladder:0,yoyo:0};
+function setDisp(id,val){const el=document.getElementById(id); if(el)el.value=val>0?val.toFixed(1):'';}
+
+function calcHex(){
+  const v=[parseFloat(document.getElementById('hex1').value),parseFloat(document.getElementById('hex2').value),parseFloat(document.getElementById('hex3').value)].filter(x=>!isNaN(x)&&x>0);
+  if(!v.length)return;
+  const avg=(v.reduce((a,b)=>a+b,0)/v.length).toFixed(2);
+  document.getElementById('hex_avg').textContent=avg;
+  document.getElementById('hex_result').style.display='block';
+  const t=parseFloat(avg); const ambang=kategoriGenderL4().hex; let s=1.5;
+  for(var i=0;i<ambang.length;i++){if(t<=ambang[i][0]){s=ambang[i][1];break;}}
+  scoresL4.hex=s; setDisp('score_hex_display',s); liveUpdateL4();
+}
+
+let ladderPosturOk=true;
+function setPostur(val,btn){document.querySelectorAll('.cond-btn').forEach(b=>{if(b.closest('.fg')===btn.closest('.fg'))b.classList.remove('active');});btn.classList.add('active');document.getElementById('ladder_postur_ok').value=val;ladderPosturOk=(val==='true');autoScoreLadder();}
+function autoScoreLadder(){
+  const p=parseInt(document.getElementById('ladder_touch').value); if(!p)return;
+  const ambang=kategoriGenderL4().ladder; let s=1.5;
+  for(var i=0;i<ambang.length;i++){if(p>=ambang[i][0]){s=ambang[i][1];break;}}
+  if(!ladderPosturOk)s=Math.max(1.5,Math.round((s-1)*10)/10);
+  scoresL4.ladder=s; setDisp('score_ladder_display',s); liveUpdateL4();
+}
+
+function calcYoYo(){
+  const lv=parseInt(document.getElementById('yoyo_level').value), sh=parseInt(document.getElementById('yoyo_shuttle').value);
+  if(!lv||!sh)return;
+  let jarak=lv*sh*20;
+  if(YOYO_JARAK[lv]&&YOYO_JARAK[lv][sh])jarak=YOYO_JARAK[lv][sh];
+  document.getElementById('yoyo_jarak').value=jarak;
+  calcVO2Max();
+}
+function calcVO2Max(){
+  const jarak=parseFloat(document.getElementById('yoyo_jarak').value); if(!jarak||jarak<=0)return;
+  const vo2=((jarak*0.0084)+36.4).toFixed(1);
+  document.getElementById('vo2_val').textContent=vo2;
+  document.getElementById('vo2_result').style.display='block';
+  const ambang=kategoriGenderL4().yoyo; let s=1.5;
+  for(var i=0;i<ambang.length;i++){if(jarak>=ambang[i][0]){s=ambang[i][1];break;}}
+  scoresL4.yoyo=s; setDisp('score_yoyo_display',s); liveUpdateL4();
+}
+
+function setKondisi(val,btn){document.querySelectorAll('.cond-btn').forEach(b=>{if(b.closest('.fg')===btn.closest('.fg'))b.classList.remove('active');});btn.classList.add('active');document.getElementById('kondisi_uji').value=val;}
+
+function onAtletChange(sel){
+  const opt=sel.options[sel.selectedIndex]; if(!opt||!opt.value)return;
+  document.getElementById('atlet_id').value=opt.value;
+  const kategori=(opt.dataset.kategori||'SENIOR').toUpperCase();
+  const gender=opt.dataset.gender==='Putri'?'PUTRI':'PUTRA';
+  document.getElementById('h_kat_l4').value=kategori;
+  document.getElementById('h_gen_l4').value=gender;
+  document.querySelectorAll('select.fc')[0].value=kategori;
+  document.querySelectorAll('select.fc')[1].value=gender;
+  calcHex();autoScoreLadder();calcYoYo();
+}
+function syncKatGenManual(){calcHex();autoScoreLadder();calcYoYo();}
+
+let radarChartL4=null;
+document.addEventListener('DOMContentLoaded',function(){
+  const ctx=document.getElementById('radarChart').getContext('2d');
+  radarChartL4=new Chart(ctx,{type:'radar',data:{labels:['HEX','LADDER','YOYO'],datasets:[{data:[0,0,0],backgroundColor:'rgba(6,182,212,0.12)',borderColor:'#06b6d4',borderWidth:2,pointBackgroundColor:'#22d3ee',pointRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:10,ticks:{display:false},grid:{color:'rgba(255,255,255,0.05)'},angleLines:{color:'rgba(255,255,255,0.05)'},pointLabels:{color:'#94a3b8',font:{family:"'DM Mono',monospace",size:10}}}},plugins:{legend:{display:false}}}});
+  const sel=document.getElementById('sel_atlet'); if(sel&&sel.value)onAtletChange(sel);
+});
+
+function liveUpdateL4(){
+  const s=[scoresL4.hex,scoresL4.ladder,scoresL4.yoyo];
+  const avg=(s.reduce((a,b)=>a+b,0)/3).toFixed(1);
+  if(radarChartL4){radarChartL4.data.datasets[0].data=s;radarChartL4.update();}
+  document.getElementById('res_total').textContent=avg;
+  document.getElementById('p_hex').textContent='Hex: '+(s[0]||'—');
+  document.getElementById('p_ladder').textContent='Ladder: '+(s[1]||'—');
+  document.getElementById('p_yoyo').textContent='Yo-Yo: '+(s[2]||'—');
+  const badge=document.getElementById('res_badge'); document.getElementById('rekomendasi').classList.add('show');
+  const a=parseFloat(avg); let pred='NOVICE';
+  if(a>=9.0){badge.className='result-badge rb-elite';badge.textContent='ELITE';pred='ELITE';}
+  else if(a>=7.0){badge.className='result-badge rb-ready';badge.textContent='READY';pred='READY';}
+  else if(a>=5.0){badge.className='result-badge rb-developing';badge.textContent='DEVELOPING';pred='DEVELOPING';}
+  else{badge.className='result-badge rb-novice';badge.textContent='NOVICE';pred='NOVICE';}
+
+  const pilarL4=[{nama:'Hex',val:s[0]},{nama:'Ladder',val:s[1]},{nama:'YoYo',val:s[2]}];
+  const filledL4=pilarL4.filter(p=>p.val>0);
+  const sortedL4=filledL4.slice().sort((a,b)=>a.val-b.val);
+  const lemahL4=sortedL4.slice(0,2), kuatL4=filledL4.slice().sort((a,b)=>b.val-a.val).slice(0,2);
+  function wrnL4(v){return v>=9?'#06b6d4':v>=7?'#38bdf8':v>=5?'#f59e0b':'#f87171';}
+  function lblL4(v){return v>=9?'sangat baik':v>=7?'baik':v>=5?'cukup':'perlu perhatian';}
+
+  const selEl=document.getElementById('sel_atlet');
+  let namaL4=(selEl&&selEl.selectedIndex>0)?selEl.options[selEl.selectedIndex].textContent.trim():'Atlet';
+  if(!namaL4||namaL4.includes('Pilih'))namaL4='Atlet';
+
+  let risikoL4=[];
+  if(s[0]<5&&s[0]>0)risikoL4.push('⚠ Hex Jump rendah — risiko ankle sprain & kurang koordinasi kaki');
+  if(s[1]<5&&s[1]>0)risikoL4.push('⚠ Ladder frequency rendah — risiko keterlambatan reaksi saat pressing/transisi');
+  if(s[2]<5&&s[2]>0)risikoL4.push('⚠ VO2 Max rendah — risiko drop performa di menit-menit akhir pertandingan');
+  if(risikoL4.length===0)risikoL4.push('✓ Profil risiko RENDAH — kapasitas speed-agility-metabolik seimbang');
+  const risikoHTML=risikoL4.map(r=>'<div style="margin-bottom:4px;font-size:10.5px;color:'+(r.includes('⚠')?'#f87171':'#10b981')+'">'+r+'</div>').join('');
+
+  const layakKomp=a>=9.0;
+  const layakStr=layakKomp?'<span style="color:#06b6d4;font-weight:700">🏆 ELITE — Atlet SIAP KOMPETISI PENUH</span>'
+    :a>=7.0?'<span style="color:#38bdf8;font-weight:700">✅ KOMPETEN — Latihan intensif 6 minggu untuk siap kompetisi</span>'
+    :'<span style="color:#f87171;font-weight:700">⛔ BELUM SIAP KOMPETISI — Perkuat L4 minimal 8 minggu lagi</span>';
+
+  const kPredL4={ELITE:'menunjukkan kapasitas speed-agility-metabolik <strong style="color:#06b6d4">ELIT</strong> — siap kompetisi penuh.',
+    READY:'berada di level <strong style="color:#38bdf8">KOMPETEN</strong> — tinggal optimasi detail untuk kompetisi.',
+    DEVELOPING:'sedang <strong style="color:#f59e0b">BERKEMBANG</strong> — kapasitas aerobik perlu ditingkatkan.',
+    NOVICE:'di level <strong style="color:#f87171">PEMULA</strong> — perlu kembali ke L3 Power 6-8 minggu.'};
+
+  const narBox=document.getElementById('narasi_box_l4');
+  if(narBox&&a>0){
+    narBox.innerHTML='<div style="margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(6,182,212,0.1)"><span style="color:#06b6d4;font-weight:700;font-size:12px">⚡ '+namaL4+'</span> '+(kPredL4[pred]||'')+' Total: <strong style="color:'+wrnL4(a)+'">'+a+'/10</strong></div>'
+      +'<div style="margin-bottom:8px"><div style="color:#6b7280;font-size:9px;letter-spacing:1px;margin-bottom:4px">▲ KEUNGGULAN</div>'+kuatL4.map(p=>'<div style="margin-bottom:3px"><strong style="color:#06b6d4">'+p.nama+'</strong> — '+lblL4(p.val)+' <span style="color:'+wrnL4(p.val)+';font-weight:700">('+p.val.toFixed(1)+')</span></div>').join('')+'</div>'
+      +'<div style="margin-bottom:8px"><div style="color:#6b7280;font-size:9px;letter-spacing:1px;margin-bottom:4px">▼ AREA KELEMAHAN</div>'+lemahL4.map(p=>'<div style="margin-bottom:3px"><strong style="color:'+wrnL4(p.val)+'">'+p.nama+'</strong> — '+lblL4(p.val)+' <span style="color:'+wrnL4(p.val)+';font-weight:700">('+p.val.toFixed(1)+')</span></div>').join('')+'</div>'
+      +'<div style="margin-bottom:8px"><div style="color:#6b7280;font-size:9px;letter-spacing:1px;margin-bottom:4px">⚠ ANALISIS RISIKO</div>'+risikoHTML+'</div>'
+      +'<div style="padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07)"><div style="color:#6b7280;font-size:9px;letter-spacing:1px;margin-bottom:4px">📋 STATUS KOMPETISI</div>'+layakStr+'<br><span style="color:#9ca3af;font-size:10px">'+(layakKomp?'Pertahankan volume latihan dan monitoring VO2 Max bulanan.':a>=7?'Fokus tingkatkan '+(lemahL4[0]?lemahL4[0].nama:'-')+' dengan program interval 3x/minggu.':'Kembali ke L3 Power, bangun fondasi sebelum re-test L4.')+'</span></div>';
+    document.getElementById('narasi_l4').style.display='block';
+  }
+
+  const REKO_L4={
+    Hex:{low:['Hexagon Drill 3x3 putaran fokus teknik footwork','Ladder Drill 2-in 2-out 3x panjang','4-Corner Cone Drill 3x koordinasi','Kembali ke L3 Agility drill dasar'],mid:['Hex Jump 4x3 putaran target <11 dtk','Reactive Hex dengan visual cue 3x3','Mini Hurdle Hop 3x6'],high:['Kompetitif Hex 5x3 putaran interval pendek','Sport-specific footwork sepak bola 3x1 menit']},
+    Ladder:{low:['Ladder Drill dasar 2-in 2-out 3x','Icky Shuffle 3x panjang ladder','Lateral Shuffle 4x10m','Kembali ke agility dasar'],mid:['Ladder Speed Drill kompleks 4x','In-Out Crossover 3x panjang'],high:['Reactive Ladder dengan cue visual 4x','Kompetitif footwork 5x10 detik interval pendek']},
+    YoYo:{low:['Lari Aerobik 30 menit 3x/minggu di 65% HRmax','Walk-Jog Interval 20 menit base aerobik','Kembali ke L3 tingkatkan VO2 Max base','Sepeda/Renang 30 menit 3x/minggu'],mid:['Yo-Yo Interval Training Level 1 2x/minggu','HIIT 20 menit: 1 menit kerja 1 menit rest','Fartlek Run 30 menit 2x/minggu'],high:['Yo-Yo IR1 monitoring bulanan','Supramaksimal Interval 3x/minggu','Match-simulation conditioning 90 menit']}
+  };
+  const rekT=document.getElementById('rek_text');
+  let rekoHTML='<div style="font-size:10px;font-weight:700;color:#06b6d4;margin-bottom:8px;letter-spacing:1px">PROGRAM REKOMENDASI PELATIH</div>';
+  const topL4=filledL4.length?sortedL4.slice(0,Math.min(3,sortedL4.length)):[];
+  topL4.forEach(p=>{const db=REKO_L4[p.nama];if(!db)return;const tips=p.val<5.5?db.low:p.val<7.5?db.mid:db.high;const col=p.val<5.5?'#f87171':p.val<7.5?'#f59e0b':'#06b6d4';
+    rekoHTML+='<div style="margin-bottom:8px;padding:7px 10px;background:rgba(6,182,212,0.04);border-radius:6px;border-left:3px solid '+col+'"><div style="font-size:10px;font-weight:700;color:'+col+';margin-bottom:4px">'+(p.val<5.5?'🔴':p.val<7.5?'🟡':'🟢')+' '+p.nama.toUpperCase()+' — '+p.val.toFixed(1)+'/10</div>';
+    tips.forEach(t=>{rekoHTML+='<div style="display:flex;gap:5px;margin-bottom:2px;font-size:10px;color:#9ca3af"><span style="color:'+col+'">→</span><span>'+t+'</span></div>';});
+    rekoHTML+='</div>';});
+  rekT.innerHTML=rekoHTML;
+}
+
+let hapusIdL4=null;
+function konfirmasiHapusL4(id,nama){hapusIdL4=id;document.getElementById('modal_nama_l4').textContent=nama;document.getElementById('modalHapusL4').style.display='flex';}
+document.getElementById('btn_hapus_l4_confirm').addEventListener('click',function(){
+  if(!hapusIdL4)return;
+  function getCsrf(){return document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))?.split('=')[1]??'';}
+  fetch(`/sepakbola/l4-speed-agility/hapus/${hapusIdL4}/`,{method:'POST',headers:{'X-CSRFToken':getCsrf()}})
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json().catch(()=>({}));})
+  .then(()=>{document.getElementById('modalHapusL4').style.display='none';const row=document.getElementById('row-'+hapusIdL4);if(row)row.remove();})
+  .catch(e=>alert('Gagal hapus: '+e.message));
+});
+
+document.getElementById('form-audit').addEventListener('submit',function(){
+  const btn=this.querySelector('button[type="submit"]');
+  if(btn.dataset.submitting==='1'){event.preventDefault();return;}
+  btn.dataset.submitting='1'; btn.disabled=true; btn.innerHTML='<i class="bi bi-hourglass-split"></i> Menyimpan...';
+});
+
+function cetakL4Row(nama,kategori,gender,tanggal,hex,ladder,yoyo,vo2,total,predikat){
+  const warna={ELITE:'#10b981',READY:'#06b6d4',DEVELOPING:'#f59e0b',NOVICE:'#ef4444'}[predikat]||'#6b7280';
+  const warnaLight={ELITE:'#d1fae5',READY:'#cffafe',DEVELOPING:'#fef3c7',NOVICE:'#fee2e2'}[predikat]||'#f3f4f6';
+  const pilar=[{n:'Hexagon Jump',v:parseFloat(hex)||0},{n:'Quick Feet Ladder',v:parseFloat(ladder)||0},{n:'Yo-Yo IR1',v:parseFloat(yoyo)||0}];
+  const sorted=[...pilar].sort((a,b)=>a.v-b.v); const terlemah=sorted[0],terkuat=sorted[sorted.length-1];
+  const pilarHTML=pilar.map(p=>{const pct=Math.min(100,(p.v/10)*100).toFixed(0);const c=p.v>=8?'#10b981':p.v>=6?'#06b6d4':p.v>=4?'#f59e0b':'#ef4444';const bg=p.v>=8?'#d1fae5':p.v>=6?'#cffafe':p.v>=4?'#fef3c7':'#fee2e2';
+    return `<div style="background:${bg};border:1.5px solid ${c};border-radius:10px;padding:12px 8px;text-align:center;min-width:100px"><div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${p.n}</div><div style="font-size:26px;font-weight:900;color:${c};line-height:1">${p.v.toFixed(1)}</div><div style="font-size:9px;color:#888;margin-top:2px">/10</div><div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${c};border-radius:2px"></div></div></div>`;}).join('');
+  const overallPct=Math.min(100,(parseFloat(total)/10)*100).toFixed(0);
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit L4 — ${nama}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#111;font-size:13px}@media print{@page{margin:15mm 12mm;size:A4}}</style></head><body>
+  <div style="background:linear-gradient(135deg,#0f172a 0%,#0d4a5c 100%);color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:9px;letter-spacing:3px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">HIGH PERFORMANCE COACHING SYSTEM</div><div style="font-size:22px;font-weight:900;letter-spacing:2px">HPCS <span style="color:#06b6d4">SEPAK BOLA</span></div><div style="font-size:11px;color:#cbd5e1;margin-top:2px">Audit Level 4 — Speed & Agility</div></div>
+    <div style="text-align:right"><div style="background:${warna};color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:2px">${predikat}</div><div style="font-size:10px;color:#94a3b8;margin-top:6px">${tanggal}</div></div>
+  </div>
+  <div style="padding:16px 28px;background:#f8fafc;border-bottom:1px solid #e2e8f0"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:10px">▌ Identitas Atlet</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">${[['Nama',nama],['Kategori',kategori],['Gender',gender],['Cabang','Sepak Bola'],['Level','L4 — Speed & Agility'],['VO2 Max Est.',vo2+' mL/kg/min']].map(([l,v])=>`<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px"><div style="font-size:9px;color:#94a3b8;text-transform:uppercase">${l}</div><div style="font-size:15px;font-weight:700;color:#0f172a;margin-top:3px">${v}</div></div>`).join('')}</div></div>
+  <div style="padding:16px 28px;display:flex;align-items:center;gap:24px;background:${warnaLight};border-bottom:2px solid ${warna}">
+    <div style="text-align:center;min-width:100px"><div style="font-size:9px;color:#555;text-transform:uppercase;margin-bottom:4px">Total Skor</div><div style="font-size:56px;font-weight:900;color:${warna};line-height:1">${parseFloat(total).toFixed(1)}</div><div style="font-size:10px;color:#888">/10.0</div></div>
+    <div style="flex:1"><div style="height:12px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:${overallPct}%;background:${warna};border-radius:6px"></div></div>
+    <div style="display:flex;gap:8px"><div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px"><span style="color:#888">Terkuat:</span> <strong style="color:#10b981">${terkuat.n} (${terkuat.v.toFixed(1)})</strong></div><div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px"><span style="color:#888">Prioritas:</span> <strong style="color:#ef4444">${terlemah.n} (${terlemah.v.toFixed(1)})</strong></div></div></div>
+  </div>
+  <div style="padding:16px 28px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Skor Pilar Speed & Metabolic</div><div style="display:flex;gap:8px;flex-wrap:wrap">${pilarHTML}</div></div>
+  <div style="background:#0f172a;color:#94a3b8;padding:12px 28px;display:flex;justify-content:space-between;font-size:10px;margin-top:8px"><div>HPCS Sepak Bola</div><div>Tanggal: <strong style="color:#fff">${tanggal}</strong></div></div>
+  </body></html>`;
+  const w=window.open('','_blank'); w.document.write(html); w.document.close(); setTimeout(()=>{w.print();},400);
+}
+</script>
+{% endblock %}

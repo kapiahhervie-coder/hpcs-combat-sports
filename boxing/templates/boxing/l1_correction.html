@@ -598,6 +598,10 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
                       onclick="cetakAudit({{ audit.id }},'{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}','{{ audit.atlet.gender }}','{{ audit.atlet.kelas_berat }}',{{ audit.score_rotation|default:0 }},{{ audit.score_extension|default:0 }},{{ audit.score_stability|default:0 }},{{ audit.score_ankle|default:0 }},{{ audit.score_posture|default:0 }},{{ audit.score_breathing|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.rekomendasi|default:''|escapejs }}','{{ audit.timestamp|date:"d/m/Y H:i" }}','{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}','{{ audit.atlet.pelatih.get_full_name|default:audit.atlet.pelatih.username|default:'' }}')">
                 <i class="bi bi-printer-fill"></i>
               </button>
+              <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 ms-1" title="Kirim WhatsApp"
+                      onclick="kirimWARowL1('{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}',{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.timestamp|date:"d/m/Y H:i" }}','{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}')">
+                <i class="bi bi-whatsapp"></i>
+              </button>
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
                       onclick="konfirmasiHapus({{ audit.id }}, '{{ audit.atlet.nama_atlet|escapejs }}')">
                 <i class="bi bi-trash3-fill"></i>
@@ -1074,6 +1078,33 @@ window.addEventListener('beforeunload',stopCam);
 function getCsrf(){return document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))?.split('=')[1]??'';}
 function konfirmasiHapus(auditId,namaAtlet){document.getElementById('modal_nama_atlet').textContent=namaAtlet;const b=document.getElementById('btn_hapus_confirm'),baru=b.cloneNode(true);b.parentNode.replaceChild(baru,b);baru.addEventListener('click',()=>eksekusiHapus(auditId,namaAtlet));new bootstrap.Modal(document.getElementById('modalHapus')).show();}
 function eksekusiHapus(auditId,namaAtlet){fetch(`/combat/boxing/l1-correction/hapus/${auditId}/`,{method:'POST',headers:{'X-CSRFToken':getCsrf(),'X-Requested-With':'XMLHttpRequest'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json().catch(()=>({status:'success'}));}).then(()=>{bootstrap.Modal.getInstance(document.getElementById('modalHapus'))?.hide();const row=document.getElementById('row-'+auditId);if(row){row.style.transition='opacity .35s,transform .35s';row.style.opacity='0';row.style.transform='translateX(-12px)';setTimeout(()=>row.remove(),380);}showToast('Data '+namaAtlet+' berhasil dihapus.','success');}).catch(e=>showToast('Gagal: '+e.message,'danger'));}
+function kirimWARowL1(nama,kat,total,predikat,tgl,noHpCoach){
+  var waNum=(noHpCoach||"").replace(/[^0-9]/g,"");
+  if(waNum.startsWith("0"))waNum="62"+waNum.slice(1);
+  else if(!waNum.startsWith("62")&&waNum.length>0)waNum="62"+waNum;
+  var pesan=encodeURIComponent(
+    "*LAPORAN AUDIT L1 - HPCS BOXING*\n"+
+    "========================\n"+
+    "Atlet: "+nama+"\n"+
+    "Kategori: "+kat+"\n"+
+    "Tanggal: "+tgl+"\n"+
+    "========================\n"+
+    "Total Skor: "+parseFloat(total).toFixed(1)+"/10\n"+
+    "Predikat: "+predikat+"\n"+
+    "========================\n"+
+    "Dikirim otomatis oleh HPCS Boxing System"
+  );
+  if(waNum.length>8){
+    window.open("https://wa.me/"+waNum+"?text="+pesan,"_blank");
+  } else {
+    var n=prompt("Nomor WhatsApp tujuan (contoh: 08123456789):");
+    if(!n)return;
+    var num=n.replace(/[^0-9]/g,"");
+    if(num.startsWith("0"))num="62"+num.slice(1);
+    window.open("https://wa.me/"+num+"?text="+pesan,"_blank");
+  }
+}
+
 function cetakAudit(id,nama,kategori,gender,berat,rotation,extension,stability,ankle,posture,breathing,totalScore,predikat,rekomendasi,tanggal,noHpCoach,namaCoach){
   const warna={ELITE:'#10b981',READY:'#38bdf8',DEVELOPING:'#f59e0b',NOVICE:'#ef4444'}[predikat]||'#6b7280';
   const warnaLight={ELITE:'#d1fae5',READY:'#e0f2fe',DEVELOPING:'#fef3c7',NOVICE:'#fee2e2'}[predikat]||'#f3f4f6';

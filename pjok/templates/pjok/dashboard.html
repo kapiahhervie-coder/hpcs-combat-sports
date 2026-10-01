@@ -123,6 +123,8 @@
       <div class="pjok-guru-line">Guru Pengampu: <strong style="color:var(--text);">{{ profile.nama_lengkap }}</strong> &mdash; {{ profile.sekolah }}</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a class="pjok-btn-outline" href="{% url 'pjok:offline_tes_fisik' fase %}" style="border-color:#38bdf8;color:#38bdf8;">&#128246; Tes Fisik Offline</a>
+      <a class="pjok-btn-outline" href="{% url 'pjok:export_lembar_kosong' fase %}">&#8595; Lembar Kosong</a>
       <a class="pjok-btn-outline" href="{% url 'pjok:import_siswa' fase=fase %}">&#8593; Impor Siswa</a>
       <a class="pjok-btn-outline" href="{% url 'pjok:tambah_siswa' %}?fase={{ fase }}">+ Tambah Siswa</a>
     </div>

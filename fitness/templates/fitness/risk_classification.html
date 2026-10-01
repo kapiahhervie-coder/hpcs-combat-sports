@@ -1,0 +1,32 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Klasifikasi Risiko Kesehatan (Pra-Latihan)</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Jumlah Faktor Risiko yang Diketahui (riwayat penyakit jantung, tekanan darah tinggi, kolesterol tinggi, merokok, dsb): <span id="fV">0</span></label>
+  <input type="range" name="jumlah_faktor" min="0" max="6" value="0" oninput="fV.innerText=this.value">
+
+  <label style="display:flex; align-items:center; gap:.5rem; margin-top:1rem;">
+    <input type="checkbox" name="ada_gejala" style="width:auto;">
+    Ada gejala saat ini (nyeri dada, sesak napas tidak biasa, pusing, jantung berdebar tidak normal)
+  </label>
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <p>Tingkat Risiko: <strong>{{ hasil.level }}</strong></p>
+  <p>{{ hasil.saran }}</p>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Hitung jumlah faktor risiko kesehatan yang diketahui pada atlet (bukan diagnosis, hanya skrining awal).</li>
+    <li>Centang jika atlet sedang mengalami gejala tidak biasa.</li>
+    <li>Alat ini bukan pengganti pemeriksaan medis - hasil "Sedang" atau "Tinggi" wajib ditindaklanjuti dengan konsultasi ke dokter/tenaga medis olahraga.</li>
+  </ol>
+</div>
+{% endblock %}

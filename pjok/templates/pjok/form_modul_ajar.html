@@ -1,0 +1,136 @@
+{% extends "base_pjok.html" %}
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --gold:#38bdf8; --gold-dim:#2b6f8f;
+    --ok:#22c55e; --warn:#f59e0b; --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:900px;
+  }
+  .pjok-back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-size:12.5px;font-family:'IBM Plex Mono',monospace;margin-bottom:22px;}
+  .pjok-back:hover{text-decoration:underline;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.6rem;letter-spacing:.02em;color:var(--text);}
+  .pjok-subtitle{color:var(--text-faint);font-size:13px;margin-top:4px;margin-bottom:20px;}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;}
+  .card-head{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:18px;}
+  .card-hint{font-size:12px;color:var(--text-faint);margin-top:-12px;margin-bottom:16px;line-height:1.5;}
+
+  .field-group{margin-bottom:16px;}
+  .field-group:last-child{margin-bottom:0;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:560px){.field-row{grid-template-columns:1fr;}}
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
+  .field-input,select.field-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-size:14px;box-sizing:border-box;font-family:'Inter',sans-serif;}
+  .field-input:focus{outline:none;border-color:var(--gold);}
+  textarea.field-input{resize:vertical;min-height:70px;}
+
+  .tp-checklist{display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;}
+  .tp-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);cursor:pointer;transition:all .15s ease;}
+  .tp-item:hover{border-color:var(--gold-dim);}
+  .tp-item input[type=checkbox]{accent-color:var(--gold);width:16px;height:16px;flex-shrink:0;margin-top:2px;}
+  .tp-item-label{font-size:13px;color:var(--text);}
+  .tp-item-kode{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);font-weight:700;margin-right:6px;}
+  .tp-empty{font-size:13px;color:var(--text-faint);padding:12px 0;}
+
+  .btn-save{border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13.5px;padding:14px 26px;border-radius:8px;cursor:pointer;background:linear-gradient(90deg,#0f766e,#14b8a6);transition:opacity .15s ease;}
+  .btn-save:hover{opacity:.9;}
+  .btn-cancel{display:inline-flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim);text-decoration:none;padding:14px 18px;}
+  .btn-cancel:hover{color:var(--text);}
+  .form-actions{display:flex;align-items:center;gap:4px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pjok-scope">
+  <a class="pjok-back" href="{% url 'pjok:daftar_modul_ajar' fase %}">&larr; KEMBALI KE DAFTAR MODUL AJAR</a>
+
+  <div class="pjok-title">{% if mode == 'edit' %}Edit Modul Ajar{% else %}Modul Ajar Baru{% endif %}</div>
+  <div class="pjok-subtitle">Fase {{ fase }} ({{ jenjang }}) &middot; Rencana pembelajaran per pertemuan, terhubung ke Tujuan Pembelajaran</div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="card">
+      <div class="card-head">Informasi Umum</div>
+      <div class="field-group">
+        <label class="field-label">Judul Modul Ajar</label>
+        {{ form.judul }}
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Materi (opsional)</label>
+          {{ form.materi }}
+        </div>
+        <div class="field-group">
+          <label class="field-label">Alokasi Waktu</label>
+          {{ form.alokasi_waktu }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">Tujuan Pembelajaran Terkait</div>
+      <div class="card-hint">Pilih satu atau lebih TP yang sudah dirumuskan untuk fase ini. Belum ada TP yang cocok? <a href="{% url 'pjok:daftar_tp' fase %}" style="color:var(--gold);">Tambah TP dulu di sini</a>.</div>
+      <div class="tp-checklist">
+        {% for checkbox in form.tp %}
+        <label class="tp-item">
+          {{ checkbox.tag }}
+          <span class="tp-item-label">{{ checkbox.choice_label }}</span>
+        </label>
+        {% empty %}
+        <div class="tp-empty">Belum ada Tujuan Pembelajaran untuk fase ini. <a href="{% url 'pjok:daftar_tp' fase %}" style="color:var(--gold);">Buat TP dulu &rarr;</a></div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">Pemahaman Bermakna &amp; Pertanyaan Pemantik</div>
+      <div class="field-group">
+        <label class="field-label">Pemahaman Bermakna</label>
+        {{ form.pemahaman_bermakna }}
+      </div>
+      <div class="field-group">
+        <label class="field-label">Pertanyaan Pemantik</label>
+        {{ form.pertanyaan_pemantik }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">Kegiatan Pembelajaran</div>
+      <div class="field-group">
+        <label class="field-label">Pendahuluan</label>
+        {{ form.kegiatan_pendahuluan }}
+      </div>
+      <div class="field-group">
+        <label class="field-label">Inti</label>
+        {{ form.kegiatan_inti }}
+      </div>
+      <div class="field-group">
+        <label class="field-label">Penutup</label>
+        {{ form.kegiatan_penutup }}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">Asesmen &amp; Sumber Belajar</div>
+      <div class="field-group">
+        <label class="field-label">Asesmen</label>
+        {{ form.asesmen }}
+      </div>
+      <div class="field-group">
+        <label class="field-label">Sumber &amp; Media Belajar</label>
+        {{ form.sumber_media }}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-save">{% if mode == 'edit' %}Simpan Perubahan{% else %}Simpan Modul Ajar{% endif %}</button>
+      <a href="{% url 'pjok:daftar_modul_ajar' fase %}" class="btn-cancel">Batal</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

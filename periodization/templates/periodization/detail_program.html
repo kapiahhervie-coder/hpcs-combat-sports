@@ -31,6 +31,12 @@
     {% else %}
         <span style="background:#f3f4f6; color:#374151; padding:5px 14px; border-radius:12px; font-size:13px; font-weight:600;">Draft</span>
     {% endif %}
+    {% if meso_list %}
+        <a href="{% url 'periodization:cetak_blangko' program.id %}"
+           style="background:#111826; color:#fff; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none; display:inline-block;">
+            &#8681; Cetak Blangko Tahunan (PDF)
+        </a>
+    {% endif %}
 </div>
 
 <!-- Ringkasan durasi -->
@@ -50,6 +56,104 @@
             <div style="background:#e63946; height:100%; width:{{ program.progres_persen }}%;"></div>
         </div>
     </div>
+</div>
+
+<!-- Kalender Kompetisi -->
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:20px; margin-bottom:20px;">
+    <h3 style="margin-top:0; margin-bottom:14px;">Kalender Kompetisi</h3>
+
+    {% if program.kompetisi_list.all %}
+    <table style="width:100%; border-collapse: collapse; margin-bottom:16px;">
+        <thead>
+            <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
+                <th style="padding: 8px;">Nama Kompetisi</th>
+                <th style="padding: 8px;">Tanggal</th>
+                <th style="padding: 8px;">Level</th>
+                <th style="padding: 8px;">Status</th>
+                <th style="padding: 8px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for k in program.kompetisi_list.all %}
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+                <td style="padding: 8px; font-weight:600;">{{ k.nama_kompetisi }}</td>
+                <td style="padding: 8px;">
+                    {{ k.tanggal_mulai|date:"d M Y" }}{% if k.tanggal_selesai %} - {{ k.tanggal_selesai|date:"d M Y" }}{% endif %}
+                </td>
+                <td style="padding: 8px;">{{ k.get_level_display }}</td>
+                <td style="padding: 8px;">
+                    {% if k.status == 'TARGET_UTAMA' %}
+                        <span style="background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">Target Utama</span>
+                    {% elif k.status == 'OPSIONAL' %}
+                        <span style="background:#f3f4f6; color:#374151; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">Opsional</span>
+                    {% else %}
+                        <span style="background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">Pertimbangan Pelatih</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 8px; text-align:right;">
+                    <form method="post" action="{% url 'periodization:hapus_kompetisi' k.id %}" style="margin:0; display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Hapus kompetisi ini dari kalender?');"
+                                style="background:none; border:none; color:#991b1b; cursor:pointer; font-size:12px;">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p style="color:#9ca3af; font-size:13px; margin-bottom:16px;">Belum ada kompetisi di kalender.</p>
+    {% endif %}
+
+    <details>
+        <summary style="cursor:pointer; color:#e63946; font-size:13px; font-weight:600;">+ Tambah Kompetisi</summary>
+        <form method="post" action="{% url 'periodization:tambah_kompetisi' program.id %}" style="margin-top:14px; display:grid; gap:10px; max-width:640px;">
+            {% csrf_token %}
+            <div>
+                <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Nama Kompetisi *</label>
+                <input type="text" name="nama_kompetisi" placeholder="mis. Kejurda Sumut 2027" required
+                       style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Tanggal Mulai *</label>
+                    <input type="date" name="tanggal_mulai" required
+                           style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Tanggal Selesai</label>
+                    <input type="date" name="tanggal_selesai"
+                           style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Level</label>
+                    <select name="level" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                        <option value="domestik">Domestik</option>
+                        <option value="internasional">Internasional</option>
+                        <option value="kualifikasi">Kualifikasi</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Status</label>
+                    <select name="status" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                        <option value="TARGET_UTAMA">Target Utama</option>
+                        <option value="OPSIONAL" selected>Opsional</option>
+                        <option value="PERTIMBANGAN_PELATIH">Pertimbangan Pelatih</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Catatan</label>
+                <textarea name="catatan" rows="2" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;"></textarea>
+            </div>
+            <button type="submit"
+                    style="background:#e63946; color:#fff; border:none; border-radius:8px; padding:10px 16px; font-size:13px; font-weight:600; cursor:pointer; justify-self:start;">
+                Simpan Kompetisi
+            </button>
+        </form>
+    </details>
 </div>
 
 <!-- Kurva Volume vs Intensitas -->
@@ -89,6 +193,7 @@
                 <th style="padding: 8px;">Volume</th>
                 <th style="padding: 8px;">Intensitas</th>
                 <th style="padding: 8px;">Fokus L1/L2/L3/L4</th>
+                <th style="padding: 8px;"></th>
             </tr>
         </thead>
         <tbody>
@@ -101,6 +206,10 @@
                 <td style="padding: 8px;">{{ meso.intensitas_target }}/10</td>
                 <td style="padding: 8px; font-size:13px; color:#6b7280;">
                     {{ meso.fokus_l1_persen }}% / {{ meso.fokus_l2_persen }}% / {{ meso.fokus_l3_persen }}% / {{ meso.fokus_l4_persen }}%
+                </td>
+                <td style="padding: 8px; text-align:right;">
+                    <a href="{% url 'periodization:detail_meso' meso.id %}"
+                       style="color:#e63946; text-decoration:none; font-size:13px; font-weight:600;">Detail &rarr;</a>
                 </td>
             </tr>
             {% endfor %}

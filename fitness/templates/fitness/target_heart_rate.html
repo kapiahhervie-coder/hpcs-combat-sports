@@ -1,0 +1,30 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Target Denyut Jantung (Zona Latihan)</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Usia: <span id="uV">20</span> tahun</label>
+  <input type="range" name="usia" min="10" max="80" value="20" oninput="uV.innerText=this.value">
+
+  <label>Denyut Jantung Istirahat (opsional): <span id="rV">70</span> bpm</label>
+  <input type="range" name="hr_istirahat" min="40" max="100" value="70" oninput="rV.innerText=this.value">
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <p>Denyut Jantung Maksimal: <strong>{{ hasil.hr_max }} bpm</strong></p>
+  <p>Zona Latihan (60-80%): <strong>{{ hasil.zona_bawah }} - {{ hasil.zona_atas }} bpm</strong></p>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Masukkan usia atlet - HR maksimal diestimasi dengan rumus 220 minus usia.</li>
+    <li>Jika tersedia data denyut jantung istirahat (diukur pagi hari sebelum bangun), zona dihitung dengan metode Karvonen yang lebih akurat.</li>
+    <li>Zona 60-80% cocok untuk latihan aerobik umum; sesuaikan untuk latihan intensitas tinggi atau pemulihan.</li>
+  </ol>
+</div>
+{% endblock %}

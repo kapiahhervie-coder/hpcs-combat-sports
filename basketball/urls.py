@@ -1,0 +1,17 @@
+from django.urls import path
+from . import views
+
+app_name = 'basketball'
+
+urlpatterns = [
+    path('dashboard/', views.DashboardBasketballView.as_view(), name='dashboard'),
+    path('daftar-atlet/', views.DaftarAtletBasketView.as_view(), name='daftar_atlet'),
+    path('l1-correction/', views.L1CorrectionBasketView.as_view(), name='l1_correction'),
+    path('l1-correction/hapus/<int:pk>/', views.hapus_l1_basket, name='hapus_l1'),
+    path('l2-strength/', views.L2StrengthBasketView.as_view(), name='l2_strength'),
+    path('l2-strength/hapus/<int:pk>/', views.hapus_l2_basket, name='hapus_l2'),
+    path('l3-power/', views.L3PowerBasketView.as_view(), name='l3_power'),
+    path('l3-power/hapus/<int:pk>/', views.hapus_l3_basket, name='hapus_l3'),
+    path('l4-specific/', views.L4SpecificBasketView.as_view(), name='l4_specific'),
+    path('l4-specific/hapus/<int:pk>/', views.hapus_l4_basket, name='hapus_l4'),
+]

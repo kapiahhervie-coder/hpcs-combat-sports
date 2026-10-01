@@ -6,6 +6,10 @@ Fungsi utama: generate_periodisasi_otomatis(macro_program) -- otomatis
 bikin MesoCycle (GPP/SPP/Pre-Comp/Comp) dari 1 MacroProgram, berdasarkan
 rasio periodisasi klasik dan kurva volume/intensitas standar.
 
+Fungsi kedua: bangun_pertimbangan(meso) -- kasih daftar "pertimbangan"
+sederhana ke pelatih berdasarkan data yang sudah diisi sendiri (bukan
+analisis AI/ilmiah), ditulis santai kayak obrolan sesama pelatih.
+
 Ini logika murni (gak ada model baru), aman diubah kapan saja.
 """
 from datetime import timedelta
@@ -137,3 +141,69 @@ def generate_periodisasi_otomatis(macro_program, hapus_lama=False):
         'pesan': f"Berhasil generate {len(meso_cycles_dibuat)} fase MesoCycle dari total {total_minggu} minggu.",
         'meso_cycles': meso_cycles_dibuat,
     }
+
+
+def bangun_pertimbangan(meso):
+    """
+    Bikin daftar 'pertimbangan' buat 1 fase -- BUKAN analisis AI atau
+    rekomendasi ilmiah, cuma perbandingan angka sederhana dari data
+    yang sudah diisi pelatih sendiri, ditulis dalam bahasa santai ala
+    obrolan sesama pelatih (bukan bahasa ilmiah/kaku) supaya gampang
+    dicerna dan gampang dicek ulang sendiri kebenarannya.
+
+    Tiap item: {'level': 'warning'|'info', 'pesan': str}
+    Pelatih tetap yang mutusin mau ditindaklanjuti atau diabaikan.
+    """
+    from django.utils import timezone
+
+    catatan = []
+
+    if meso.total_fokus_persen != 100:
+        catatan.append({
+            'level': 'warning',
+            'pesan': f"Total porsi fokus L1-L4 masih {meso.total_fokus_persen}%, belum pas 100% -- ada yang kelewat diisi atau kelebihan.",
+        })
+
+    if not meso.objektif_fisik.strip():
+        catatan.append({
+            'level': 'info',
+            'pesan': "Objektif fisik fase ini belum diisi -- isi dulu biar arah latihannya jelas buat semua yang lihat program ini.",
+        })
+
+    hari_ini = timezone.now().date()
+    if meso.tanggal_mulai <= hari_ini and not meso.micro_cycles.exists():
+        catatan.append({
+            'level': 'warning',
+            'pesan': f"Fase ini sudah mulai sejak {meso.tanggal_mulai.strftime('%d %b %Y')}, tapi belum ada minggu latihan yang diisi.",
+        })
+
+    if meso.durasi_minggu < 3:
+        catatan.append({
+            'level': 'info',
+            'pesan': f"Durasi fase ini cuma {meso.durasi_minggu} minggu -- cukup singkat, pertimbangkan apakah cukup buat capai objektifnya.",
+        })
+
+    if not meso.target_performa.exists():
+        catatan.append({
+            'level': 'info',
+            'pesan': "Belum ada target performa spesifik di fase ini -- tambahkan biar progres atlet gampang dipantau.",
+        })
+
+    fase_sebelumnya = meso.macro_program.meso_cycles.filter(urutan=meso.urutan - 1).first()
+    if fase_sebelumnya:
+        selisih = meso.intensitas_target - fase_sebelumnya.intensitas_target
+        if selisih >= 4:
+            catatan.append({
+                'level': 'warning',
+                'pesan': f"Intensitas naik cukup tajam dari fase sebelumnya ({fase_sebelumnya.intensitas_target} -> {meso.intensitas_target}) -- pastikan atletnya udah siap sebelum lanjut.",
+            })
+
+    if meso.nama_fase == 'COMP':
+        for k in meso.macro_program.kompetisi_list.filter(status='TARGET_UTAMA'):
+            if not (meso.tanggal_mulai <= k.tanggal_mulai <= meso.tanggal_selesai):
+                catatan.append({
+                    'level': 'info',
+                    'pesan': f"Kompetisi target utama '{k.nama_kompetisi}' ({k.tanggal_mulai.strftime('%d %b %Y')}) nggak masuk rentang fase Kompetisi ini -- coba dicek ulang jadwalnya.",
+                })
+
+    return catatan

@@ -1,0 +1,31 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Tes Plank</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Usia: <span id="uV">20</span> tahun</label>
+  <input type="range" name="usia" min="10" max="80" value="20" oninput="uV.innerText=this.value">
+
+  <label>Lama Tahan Plank: <span id="dV">45</span> detik</label>
+  <input type="range" name="detik" min="0" max="300" step="5" value="45" oninput="dV.innerText=this.value">
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <p>Kategori Usia: <strong>{{ hasil.kategori_usia }}</strong></p>
+  <p>Waktu: <strong>{{ hasil.detik }} detik</strong></p>
+  <p>Kategori: <strong>{{ hasil.kategori }}</strong></p>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Posisi plank: bertumpu pada lengan bawah dan ujung kaki, tubuh membentuk garis lurus dari kepala hingga tumit.</li>
+    <li>Catat waktu maksimal atlet mampu mempertahankan posisi dengan teknik benar (pinggul tidak turun/naik).</li>
+    <li>Norma disesuaikan otomatis berdasarkan kategori usia: Yunior (&lt;18 th), Dewasa (18-39 th), Senior (40+ th).</li>
+  </ol>
+</div>
+{% endblock %}

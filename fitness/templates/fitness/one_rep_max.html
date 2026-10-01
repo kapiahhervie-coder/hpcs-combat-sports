@@ -1,0 +1,31 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Kalkulator 1 Rep Max (1RM)</h2>
+<p>Prediksi beban maksimal angkatan tunggal dari beban yang sanggup diangkat berulang kali.</p>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Beban yang diangkat: <span id="bVal">40</span> kg</label>
+  <input type="range" name="berat_angkat" min="5" max="200" value="40" oninput="bVal.innerText=this.value">
+
+  <label>Jumlah pengulangan: <span id="rVal">8</span>x</label>
+  <input type="range" name="repetisi" min="1" max="15" value="8" oninput="rVal.innerText=this.value">
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <strong>Estimasi 1RM: {{ hasil }} kg</strong>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Masukkan beban (kg) yang mampu diangkat dalam satu set.</li>
+    <li>Masukkan jumlah pengulangan maksimal dengan beban tersebut (idealnya 2-10 repetisi agar estimasi akurat).</li>
+    <li>Hasil merupakan estimasi menggunakan rumus Epley, bukan pengukuran langsung.</li>
+  </ol>
+</div>
+{% endblock %}

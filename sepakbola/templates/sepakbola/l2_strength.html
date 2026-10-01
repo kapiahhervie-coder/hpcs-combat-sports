@@ -1,0 +1,419 @@
+﻿{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#070a09;--bg2:#0f1512;--card:#131c18;--border:rgba(0,229,176,0.12);--border2:rgba(0,229,176,0.22);
+  --text:#e4f4ee;--text2:#8aa89c;--text3:#455a51;--accent:#00e5b0;--gold:#f5a623;--red:#f87171;--blue:#3498db;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;min-height:100vh;}
+.barlow{font-family:'Barlow Condensed',sans-serif} .mono{font-family:'JetBrains Mono',monospace} .x-small{font-size:0.72rem}
+.main{padding:20px 28px;max-width:1500px;margin:0 auto}
+.header-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:1px;color:var(--accent);line-height:1;}
+.header-subtitle{font-size:12px;color:var(--text3);margin-top:3px;}
+.card-x{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;height:100%;}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:800;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;border-left:3px solid var(--accent);padding-left:10px;}
+.form-control,.form-select{background:#0d1512!important;border:1px solid #1c2a24;color:var(--text)!important;border-radius:8px;font-size:13px;}
+.form-control:focus,.form-select:focus{background:#101c17!important;border-color:var(--accent)!important;box-shadow:0 0 0 2px rgba(0,229,176,0.12)!important;color:var(--text)!important;}
+.form-select option{background:#0d1512!important;color:var(--text)!important}
+label{font-size:11px;color:var(--text2);margin-bottom:4px;display:block;font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+label.acc{color:var(--accent)} label.gold{color:var(--gold)}
+#radarChart{max-height:300px}
+.score-big{font-family:'Barlow Condensed',sans-serif;font-size:76px;font-weight:900;line-height:1;color:var(--accent);transition:color .4s;}
+.predikat-pill{display:inline-block;padding:6px 22px;border-radius:30px;font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:800;letter-spacing:2px;border:2px solid;}
+.pred-ELITE{border-color:#34d399;color:#34d399;background:rgba(52,211,153,0.1)}
+.pred-READY{border-color:var(--accent);color:var(--accent);background:rgba(0,229,176,0.1)}
+.pred-DEVELOPING{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,0.1)}
+.pred-NOVICE{border-color:var(--red);color:var(--red);background:rgba(248,113,113,0.1)}
+.reko-item{display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border-radius:8px;margin-bottom:5px;background:rgba(0,229,176,0.05);border:1px solid rgba(0,229,176,0.12);font-size:11px;line-height:1.55;}
+.rubrik-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);cursor:pointer;padding:4px 10px;border-radius:6px;border:1px solid rgba(0,229,176,0.25);}
+.rubrik-panel{margin-top:12px;border:1px solid var(--border2);border-radius:12px;overflow:hidden;display:none;}
+.l2doc{font-size:11px;color:var(--text2);line-height:1.55;padding:14px 16px}
+.l2doc h3{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;border-left:3px solid var(--accent);padding:5px 0 5px 10px;margin:18px 0 8px;background:rgba(0,229,176,0.06)}
+.l2doc h3:first-child{margin-top:0}
+.l2doc table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:10.5px}
+.l2doc th,.l2doc td{border:1px solid var(--border2);padding:6px 8px;text-align:left;vertical-align:middle}
+.l2doc th{background:#0a1f18;color:var(--accent);font-weight:700;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px}
+.l2doc td.kurang{background:rgba(248,113,113,0.06);color:#e89090}
+.l2doc td.cukup{background:rgba(255,179,0,0.06);color:#e8c870}
+.l2doc td.baik{background:rgba(0,229,176,0.08);color:#7fe8c9}
+.l2doc .catatan-box{background:rgba(255,179,0,0.06);border:1px solid rgba(255,179,0,0.25);border-radius:8px;padding:8px 12px;margin:6px 0 14px;font-size:10.5px;color:#e8c870}
+.l2doc .sop-test{background:rgba(255,255,255,0.02);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.l2doc .sop-test .judul{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent);font-size:11px;margin-bottom:2px}
+.l2doc .sop-test .alt{font-size:9.5px;color:var(--text3);margin-bottom:6px;font-style:italic}
+.l2doc .sop-test ol{margin:0;padding-left:18px} .l2doc .sop-test li{margin-bottom:3px}
+.auto-score-row{display:flex;align-items:center;gap:8px;margin:2px 0 6px;}
+.auto-score-label{font-size:0.65rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;}
+.auto-score-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;color:var(--accent);background:rgba(0,229,176,0.1);border:1px solid rgba(0,229,176,0.3);border-radius:6px;padding:2px 10px;margin-left:auto;min-width:44px;text-align:center;}
+.auto-score-badge.as-elite{color:#34d399;background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.3);}
+.auto-score-badge.as-ready{color:var(--accent);background:rgba(0,229,176,0.1);border-color:rgba(0,229,176,0.3);}
+.auto-score-badge.as-novice{color:var(--red);background:rgba(248,113,113,0.1);border-color:rgba(248,113,113,0.3);}
+.table thead th{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border2)!important;padding:10px 12px;}
+.table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04)!important;vertical-align:middle}
+.modal-content{background:var(--card);border:1px solid var(--border2)}
+</style>
+{% endblock %}
+
+{% block page_title %}HPCS Level 2 — Sepak Bola{% endblock %}
+
+{% block content %}
+<div class="main">
+  <h1 class="header-title">HPCS LEVEL 2 — LOW VELOCITY POWER</h1>
+  <div class="header-subtitle">Strength Audit Sepak Bola — 5RM Protocol + Isometric Hold (Coach Fanny)</div>
+
+  <div class="d-flex align-items-center justify-content-between" style="margin-top:14px;flex-wrap:wrap;gap:8px">
+    <a class="rubrik-toggle" onclick="toggleRubrik()" id="btnRubrik"><i class="bi bi-table"></i> RUBRIK STANDAR SKORING <i class="bi bi-chevron-down" id="rubrik-chevron"></i></a>
+    <button type="button" onclick="window.print()" style="background:rgba(0,229,176,0.12);border:1px solid var(--accent);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:5px 12px;border-radius:6px;cursor:pointer"><i class="bi bi-printer-fill me-1"></i>PRINT REPORT</button>
+  </div>
+
+  <div class="rubrik-panel" id="rubrikPanel">
+  <div class="l2doc">
+    <h3>📊 Rubrik Norma Penilaian & Skoring (1–10)</h3>
+    <div class="catatan-box">⚠ DRAFT — seluruh angka norma di bawah ini belum berdasarkan SOP resmi sepak bola dan belum divalidasi studi/lapangan. Menunggu finalisasi Coach Fanny.</div>
+
+    <b style="font-size:10.5px;color:var(--text)">A. Lower Body — Back Squat 5RM <span style="color:var(--text3);font-weight:400">(Rasio Beban ÷ Berat Badan)</span></b>
+    <table><thead><tr><th>Kategori</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Youth</td><td class="kurang">&lt; 0.7×BB</td><td class="cukup">0.7 – 1.0×BB</td><td class="baik">&gt; 1.0×BB</td></tr>
+        <tr><td>Junior</td><td class="kurang">&lt; 0.9×BB</td><td class="cukup">0.9 – 1.3×BB</td><td class="baik">&gt; 1.3×BB</td></tr>
+        <tr><td>Senior/Elite</td><td class="kurang">&lt; 1.2×BB</td><td class="cukup">1.2 – 1.6×BB</td><td class="baik">&gt; 1.6×BB</td></tr>
+      </tbody></table>
+
+    <b style="font-size:10.5px;color:var(--text)">B. Posterior Chain — Romanian Deadlift 5RM <span style="color:var(--text3);font-weight:400">(Rasio Beban ÷ Berat Badan)</span></b>
+    <table><thead><tr><th>Kategori</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Youth</td><td class="kurang">&lt; 0.8×BB</td><td class="cukup">0.8 – 1.1×BB</td><td class="baik">&gt; 1.1×BB</td></tr>
+        <tr><td>Junior</td><td class="kurang">&lt; 1.0×BB</td><td class="cukup">1.0 – 1.4×BB</td><td class="baik">&gt; 1.4×BB</td></tr>
+        <tr><td>Senior/Elite</td><td class="kurang">&lt; 1.3×BB</td><td class="cukup">1.3 – 1.8×BB</td><td class="baik">&gt; 1.8×BB</td></tr>
+      </tbody></table>
+
+    <b style="font-size:10.5px;color:var(--text)">C. Single-Leg Strength — Bulgarian Split Squat 5RM per kaki <span style="color:var(--text3);font-weight:400">(Rasio Beban ÷ Berat Badan)</span></b>
+    <table><thead><tr><th>Kategori</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Youth</td><td class="kurang">&lt; 0.25×BB</td><td class="cukup">0.25 – 0.4×BB</td><td class="baik">&gt; 0.4×BB</td></tr>
+        <tr><td>Junior</td><td class="kurang">&lt; 0.35×BB</td><td class="cukup">0.35 – 0.55×BB</td><td class="baik">&gt; 0.55×BB</td></tr>
+        <tr><td>Senior/Elite</td><td class="kurang">&lt; 0.45×BB</td><td class="cukup">0.45 – 0.7×BB</td><td class="baik">&gt; 0.7×BB</td></tr>
+      </tbody></table>
+    <div class="catatan-box">⚠️ <b>Penalti Asimetri:</b> jika selisih Kiri vs Kanan &gt; 15% dari kaki terkuat, skor Single-Leg otomatis dikurangi <b>2 poin</b> (dihitung server, mengikuti pola Pull Boxing).</div>
+
+    <b style="font-size:10.5px;color:var(--text)">D. Core & Isometric <span style="color:var(--text3);font-weight:400">(Durasi Tahan)</span></b>
+    <table><thead><tr><th>Kategori</th><th>Kurang (1–4)</th><th>Cukup (5–7)</th><th>Baik/Ideal (8–10)</th></tr></thead>
+      <tbody>
+        <tr><td>Youth</td><td class="kurang">&lt; 40 detik</td><td class="cukup">40 – 60 detik</td><td class="baik">&gt; 60 detik</td></tr>
+        <tr><td>Junior</td><td class="kurang">&lt; 60 detik</td><td class="cukup">60 – 90 detik</td><td class="baik">&gt; 90 detik</td></tr>
+        <tr><td>Senior/Elite</td><td class="kurang">&lt; 90 detik</td><td class="cukup">90 – 120 detik</td><td class="baik">&gt; 120 detik</td></tr>
+      </tbody></table>
+    <div class="catatan-box">ℹ️ <b>Tremor Onset</b> (Isometric) bersifat informasional saja — menunjukkan detik pertama kali tremor otot terlihat, indikasi kelelahan CNS. Belum memengaruhi skor.</div>
+
+    <h3 style="margin-top:22px">📋 SOP — Prosedur Pelaksanaan Tes</h3>
+    <div class="sop-test"><div class="judul">1. Lower Body</div><div class="alt">Back Squat 5RM</div>
+      <ol><li>Pemanasan progresif menuju beban berat.</li><li>Squat sampai paha sejajar lantai (parallel/di bawahnya).</li><li>Cari beban terberat yang mampu diangkat 5 repetisi sah dengan teknik benar.</li><li>Input: Beban (kg) + Berat Badan (kg) → dihitung rasio otomatis.</li></ol></div>
+    <div class="sop-test"><div class="judul">2. Posterior Chain</div><div class="alt">Romanian Deadlift 5RM</div>
+      <ol><li>Bar/dumbbell di depan paha, punggung netral.</li><li>Turunkan beban menyusuri tungkai sampai peregangan hamstring maksimal.</li><li>Cari beban terberat 5RM dengan teknik aman.</li></ol></div>
+    <div class="sop-test"><div class="judul">3. Single-Leg Strength</div><div class="alt">Bulgarian Split Squat 5RM</div>
+      <ol><li>Kaki belakang di atas bangku, kaki depan menahan beban utama.</li><li>Turun sampai lutut belakang mendekati lantai.</li><li>Cari beban 5RM per kaki, catat Kiri & Kanan terpisah.</li></ol></div>
+    <div class="sop-test"><div class="judul">4. Core</div><div class="alt">Weighted Plank</div>
+      <ol><li>Posisi plank standar, beban diletakkan di punggung bawah.</li><li>Tahan selama mungkin dengan bentuk tubuh tetap lurus.</li><li>Catat waktu hingga bentuk plank rusak.</li></ol></div>
+    <div class="sop-test"><div class="judul">5. Isometric</div><div class="alt">Wall Sit Hold</div>
+      <ol><li>Punggung menempel dinding, paha sejajar lantai (90°).</li><li>Tahan selagi mungkin, catat detik pertama tremor terlihat (opsional).</li><li>Catat total durasi hingga gagal mempertahankan posisi.</li></ol></div>
+
+    <div style="font-size:9px;color:var(--text3);margin-top:6px;padding-top:8px;border-top:1px solid var(--border2)">Rubrik draft internal HPCS Sepak Bola — belum divalidasi studi/SOP resmi. Struktur mengikuti pola L2 Boxing.</div>
+  </div>
+  </div>
+
+  <form id="form-audit" action="{% url 'sepakbola:l2_strength' %}" method="POST">
+    {% csrf_token %}
+    <div class="row g-3 mb-3" style="margin-top:6px">
+      <div class="col-lg-4">
+        <div class="card-x">
+          <div class="card-title"><i class="bi bi-person-fill"></i> Identitas Atlet</div>
+          {% if atlet_list %}
+          <div class="mb-3">
+            <label>Pilih Atlet</label>
+            <select id="select-atlet" class="form-select" onchange="onAtletChange(this)">
+              <option value=""> Pilih Atlet </option>
+              {% for atlet in atlet_list %}
+              <option value="{{ atlet.id }}" data-nama="{{ atlet.nama_atlet }}" data-kategori="{{ atlet.kategori_umur }}" data-gender="{{ atlet.gender }}">{{ atlet.nama_atlet }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% else %}
+          <div class="alert alert-warning py-2 small">Belum ada atlet cabang Sepak Bola.</div>
+          {% endif %}
+          <input type="hidden" name="atlet_id" id="id_atlet_hidden">
+          <input type="hidden" name="kategori_usia" id="kategori_usia_hidden" value="SENIOR">
+          <input type="hidden" name="gender" id="gender_hidden" value="PUTRA">
+
+          <label class="acc">Berat Badan (kg)</label>
+          <input type="number" name="berat_badan_kg" id="berat_badan_kg" class="form-control" step="0.1" min="0" oninput="calcAll(); liveUpdate();">
+
+          <div class="card-title mt-3"><i class="bi bi-bar-chart-fill"></i> Pilar Analysis</div>
+          <div class="row g-2">
+            <div class="col-12"><label class="acc">Kategori Usia</label>
+              <select id="kategori_select" class="form-control" onchange="onKategoriChange(this)">
+                <option value="YOUTH">Youth (6-12)</option><option value="JUNIOR">Junior (13-17)</option>
+                <option value="SENIOR" selected>Senior (18-35)</option><option value="ELITE">Elite</option>
+              </select></div>
+            <div class="col-12"><label class="acc">Gender</label>
+              <select id="gender_select" class="form-control" onchange="onGenderChange(this)">
+                <option value="PUTRA">Putra</option><option value="PUTRI">Putri</option>
+              </select></div>
+
+            <div class="col-12"><label class="gold">Lower Body — Back Squat 5RM (kg)</label><input type="number" name="lower_5rm_kg" id="lower_5rm_kg" class="form-control" step="0.5" min="0" oninput="calcLower(); liveUpdate();"></div>
+            <div class="col-12 auto-score-row"><span class="auto-score-label">Skor Lower Body</span><span class="auto-score-badge" id="badge_lower">—</span><input type="hidden" id="score_lower"></div>
+
+            <div class="col-12"><label class="acc">Posterior Chain — RDL 5RM (kg)</label><input type="number" name="posterior_5rm_kg" id="posterior_5rm_kg" class="form-control" step="0.5" min="0" oninput="calcPosterior(); liveUpdate();"></div>
+            <div class="col-12 auto-score-row"><span class="auto-score-label">Skor Posterior Chain</span><span class="auto-score-badge" id="badge_posterior">—</span><input type="hidden" id="score_posterior"></div>
+
+            <div class="col-6"><label class="acc">Single-Leg Kiri (kg)</label><input type="number" name="singleleg_kiri_kg" id="singleleg_kiri_kg" class="form-control" step="0.5" min="0" oninput="calcSingleLeg(); liveUpdate();"></div>
+            <div class="col-6"><label class="acc">Single-Leg Kanan (kg)</label><input type="number" name="singleleg_kanan_kg" id="singleleg_kanan_kg" class="form-control" step="0.5" min="0" oninput="calcSingleLeg(); liveUpdate();"></div>
+            <div class="col-12 auto-score-row"><span class="auto-score-label">Skor Single-Leg</span><span class="auto-score-badge" id="badge_singleleg">—</span><input type="hidden" id="score_singleleg"></div>
+            <div class="col-12" id="flag_penalti_sl" style="display:none;margin:-4px 0 10px;font-size:9.5px;font-family:'JetBrains Mono',monospace;color:var(--red);background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);border-radius:6px;padding:5px 8px">⚠️ Asimetri &gt; 15% — skor dikurangi 2 poin</div>
+
+            <div class="col-12"><label class="gold">Core — Weighted Plank (detik)</label><input type="number" name="core_durasi_detik" id="core_durasi_detik" class="form-control" step="1" min="0" oninput="calcCore(); liveUpdate();"></div>
+            <div class="col-12 auto-score-row"><span class="auto-score-label">Skor Core</span><span class="auto-score-badge" id="badge_core">—</span><input type="hidden" id="score_core"></div>
+
+            <div class="col-6"><label class="gold">Isometric — Wall Sit (detik)</label><input type="number" name="iso_durasi_detik" id="iso_durasi_detik" class="form-control" step="1" min="0" oninput="calcIso(); liveUpdate();"></div>
+            <div class="col-6"><label>Tremor Onset (detik)</label><input type="number" name="iso_tremor_onset_detik" id="iso_tremor_onset_detik" class="form-control" step="1" min="0"></div>
+            <div class="col-12 auto-score-row"><span class="auto-score-label">Skor Isometric</span><span class="auto-score-badge" id="badge_iso">—</span><input type="hidden" id="score_iso"></div>
+
+            <div class="col-12"><label>Catatan Pelatih</label><textarea name="catatan" class="form-control" rows="2"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card-x text-center">
+          <div class="card-title"><i class="bi bi-radar"></i> Strength Distribution Radar</div>
+          <div style="height:300px;display:flex;align-items:center;justify-content:center"><canvas id="radarChart"></canvas></div>
+          <div class="text-center mt-2">
+            <div class="score-big" id="res_total">0.0</div>
+            <div class="predikat-pill pred-NOVICE" id="res_predikat">—</div>
+          </div>
+          <div id="narasi_panel" class="mt-3 text-start" style="display:none">
+            <div id="narasi_box" style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:11.5px;line-height:1.6"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card-x">
+          <div class="card-title"><i class="bi bi-lightbulb-fill"></i> Rekomendasi Program</div>
+          <div id="reko_panel" style="display:none"><div id="reko_list"></div></div>
+          <button type="submit" class="btn btn-primary w-100 mt-2" style="background:var(--accent);border:none;color:#000;font-weight:700"><i class="bi bi-save-fill me-1"></i> SIMPAN AUDIT</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="card-x mt-3">
+    <div class="card-title"><i class="bi bi-clock-history"></i> History Audit L2</div>
+    <div class="table-responsive">
+      <table class="table table-dark">
+        <thead><tr><th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Total</th><th>Predikat</th><th>Lower</th><th>Posterior</th><th>SingleLeg</th><th>Core</th><th>Iso</th><th class="text-center">Aksi</th></tr></thead>
+        <tbody>
+        {% for audit in history %}
+        <tr id="row-{{ audit.id }}">
+          <td class="mono x-small" style="color:var(--text3)">{{ audit.timestamp|date:"d/m/Y H:i" }}</td>
+          <td class="fw-bold">{{ audit.atlet.nama_atlet }}</td>
+          <td><span class="mono x-small" style="color:var(--accent)">{{ audit.kategori_usia }}</span></td>
+          <td><span class="barlow" style="font-size:1.2rem;font-weight:800;color:var(--accent)">{{ audit.total_skor }}</span></td>
+          <td><span class="badge rounded-pill {% if audit.predikat == 'ELITE' %}bg-success{% elif audit.predikat == 'READY' %}bg-info text-dark{% elif audit.predikat == 'DEVELOPING' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ audit.predikat }}</span></td>
+          <td class="mono x-small" style="color:var(--text2)">{{ audit.score_lower|floatformat:1 }}</td>
+          <td class="mono x-small" style="color:var(--text2)">{{ audit.score_posterior|floatformat:1 }}</td>
+          <td class="mono x-small" style="color:var(--text2)">{{ audit.score_singleleg|floatformat:1 }}</td>
+          <td class="mono x-small" style="color:var(--text2)">{{ audit.score_core|floatformat:1 }}</td>
+          <td class="mono x-small" style="color:var(--text2)">{{ audit.score_isometric|floatformat:1 }}</td>
+          <td class="text-center">
+            <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 me-1" title="Cetak PDF"
+                    onclick="cetakAudit({{ audit.id }},'{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}','{{ audit.gender }}',{{ audit.score_lower|default:0 }},{{ audit.score_posterior|default:0 }},{{ audit.score_singleleg|default:0 }},{{ audit.score_core|default:0 }},{{ audit.score_isometric|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.timestamp|date:"d/m/Y H:i" }}')">
+              <i class="bi bi-printer-fill"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus" onclick="konfirmasiHapus({{ audit.id }}, '{{ audit.atlet.nama_atlet|escapejs }}')"><i class="bi bi-trash3-fill"></i></button>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="11" class="text-center py-5" style="color:var(--text3)">Belum ada data.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalHapus" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-color:rgba(248,113,113,0.4)">
+      <div class="modal-body p-4">
+        <div class="d-flex gap-3 align-items-start">
+          <i class="bi bi-exclamation-triangle-fill text-danger fs-4 mt-1"></i>
+          <div><div class="fw-bold mb-1">Hapus Data Audit?</div><div class="small" style="color:var(--text2)">Data audit <strong id="modal_nama_atlet" class="text-white"></strong> akan dihapus permanen.</div></div>
+        </div>
+        <div class="d-flex gap-2 justify-content-end mt-3">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-sm btn-danger fw-bold" id="btn_hapus_confirm">Ya, Hapus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function toggleRubrik(){const p=document.getElementById('rubrikPanel'),c=document.getElementById('rubrik-chevron'),show=p.style.display!=='block';p.style.display=show?'block':'none';c.className=show?'bi bi-chevron-up':'bi bi-chevron-down';}
+
+function onAtletChange(sel){
+  const opt=sel.options[sel.selectedIndex]; if(!opt||!opt.value)return;
+  document.getElementById('id_atlet_hidden').value=opt.value;
+  const kategori=(opt.dataset.kategori||'SENIOR').toUpperCase();
+  const gender=opt.dataset.gender==='Putri'?'PUTRI':'PUTRA';
+  document.getElementById('kategori_select').value=kategori;
+  document.getElementById('gender_select').value=gender;
+  document.getElementById('kategori_usia_hidden').value=kategori;
+  document.getElementById('gender_hidden').value=gender;
+  calcAll(); liveUpdate();
+}
+function onKategoriChange(sel){document.getElementById('kategori_usia_hidden').value=sel.value;calcAll();liveUpdate();}
+function onGenderChange(sel){document.getElementById('gender_hidden').value=sel.value;calcAll();liveUpdate();}
+
+var NORMA_LOWER={'YOUTH':[0.7,1.0],'JUNIOR':[0.9,1.3],'SENIOR':[1.2,1.6],'ELITE':[1.2,1.6]};
+var NORMA_POSTERIOR={'YOUTH':[0.8,1.1],'JUNIOR':[1.0,1.4],'SENIOR':[1.3,1.8],'ELITE':[1.3,1.8]};
+var NORMA_SINGLELEG={'YOUTH':[0.25,0.4],'JUNIOR':[0.35,0.55],'SENIOR':[0.45,0.7],'ELITE':[0.45,0.7]};
+var NORMA_CORE={'YOUTH':[40,60],'JUNIOR':[60,90],'SENIOR':[90,120],'ELITE':[90,120]};
+var NORMA_ISO={'YOUTH':[40,60],'JUNIOR':[60,90],'SENIOR':[90,120],'ELITE':[90,120]};
+var BATAS_ASIMETRI_SL=0.15, PENALTI_SL=2;
+function kategori(){return document.getElementById('kategori_usia_hidden').value;}
+function beratBadan(){return parseFloat(document.getElementById('berat_badan_kg').value)||0;}
+
+function interpolasiSkor(nilai,bawah,atas){if(nilai===null||isNaN(nilai)||nilai<=0)return null;if(nilai<bawah)return Math.min(1+3*(nilai/bawah),4.0);if(nilai<=atas){var p=(atas>bawah)?(nilai-bawah)/(atas-bawah):1;return 5+2*p;}var rentang=atas>0?atas*0.5:1;var p2=Math.min((nilai-atas)/rentang,1.0);return Math.min(8+2*p2,10.0);}
+function setBadge(badgeId,hiddenId,skor){var badge=document.getElementById(badgeId),hidden=hiddenId?document.getElementById(hiddenId):null;if(skor===null||skor===undefined){if(badge){badge.textContent='—';badge.className='auto-score-badge';}if(hidden)hidden.value='';return;}skor=Math.round(skor*10)/10;if(badge){badge.textContent=skor.toFixed(1);badge.className='auto-score-badge '+(skor>=8?'as-elite':skor>=5?'as-ready':'as-novice');}if(hidden)hidden.value=skor;}
+
+function skorRasioBB(beban){const berat=beratBadan();if(!beban||!berat)return null;return beban/berat;}
+
+function calcLower(){const beban=parseFloat(document.getElementById('lower_5rm_kg').value);const rasio=skorRasioBB(beban);const [b,a]=NORMA_LOWER[kategori()]||[1.2,1.6];setBadge('badge_lower','score_lower',rasio!==null?interpolasiSkor(rasio,b,a):null);}
+function calcPosterior(){const beban=parseFloat(document.getElementById('posterior_5rm_kg').value);const rasio=skorRasioBB(beban);const [b,a]=NORMA_POSTERIOR[kategori()]||[1.3,1.8];setBadge('badge_posterior','score_posterior',rasio!==null?interpolasiSkor(rasio,b,a):null);}
+function calcSingleLeg(){
+  const kiri=parseFloat(document.getElementById('singleleg_kiri_kg').value),kanan=parseFloat(document.getElementById('singleleg_kanan_kg').value);
+  const [b,a]=NORMA_SINGLELEG[kategori()]||[0.45,0.7];
+  const rK=skorRasioBB(kiri),rN=skorRasioBB(kanan);
+  const sK=rK!==null?interpolasiSkor(rK,b,a):null, sN=rN!==null?interpolasiSkor(rN,b,a):null;
+  const nilai=[sK,sN].filter(v=>v!==null);
+  const flag=document.getElementById('flag_penalti_sl');
+  if(!nilai.length){setBadge('badge_singleleg','score_singleleg',null);if(flag)flag.style.display='none';return;}
+  let rata=nilai.reduce((a,b)=>a+b,0)/nilai.length;
+  let kena=false;
+  if(!isNaN(kiri)&&!isNaN(kanan)&&Math.max(kiri,kanan)>0)kena=Math.abs(kiri-kanan)/Math.max(kiri,kanan)>BATAS_ASIMETRI_SL;
+  if(kena)rata=Math.max(1.0,rata-PENALTI_SL);
+  if(flag)flag.style.display=kena?'block':'none';
+  setBadge('badge_singleleg','score_singleleg',rata);
+}
+function calcCore(){const detik=parseFloat(document.getElementById('core_durasi_detik').value);const [b,a]=NORMA_CORE[kategori()]||[90,120];setBadge('badge_core','score_core',!isNaN(detik)?interpolasiSkor(detik,b,a):null);}
+function calcIso(){const detik=parseFloat(document.getElementById('iso_durasi_detik').value);const [b,a]=NORMA_ISO[kategori()]||[90,120];setBadge('badge_iso','score_iso',!isNaN(detik)?interpolasiSkor(detik,b,a):null);}
+function calcAll(){calcLower();calcPosterior();calcSingleLeg();calcCore();calcIso();}
+function g(id){return parseFloat(document.getElementById(id)?.value)||0}
+
+function liveUpdate(){
+  const lower=g('score_lower'),post=g('score_posterior'),sl=g('score_singleleg'),core=g('score_core'),iso=g('score_iso');
+  const filled=[lower,post,sl,core,iso].filter(s=>s>0);
+  const total=filled.length?+(filled.reduce((a,b)=>a+b,0)/filled.length).toFixed(1):0;
+  document.getElementById('res_total').textContent=total.toFixed(1);
+  let pred,col;
+  if(total>=9.0){pred='ELITE';col='#34d399'} else if(total>=7.0){pred='READY';col='var(--accent)'} else if(total>=5.0){pred='DEVELOPING';col='var(--gold)'} else{pred='NOVICE';col='var(--red)'}
+  const predEl=document.getElementById('res_predikat');predEl.textContent=pred;predEl.className='predikat-pill pred-'+pred;
+  document.getElementById('res_total').style.color=col;
+  const pilars=[{nama:'Lower Body',val:lower},{nama:'Posterior Chain',val:post},{nama:'Single-Leg',val:sl},{nama:'Core',val:core},{nama:'Isometric',val:iso}];
+  updateRadar([lower,post,sl,core,iso]);
+  generateReko(pilars);
+  generateNarasi(pilars,total,pred);
+}
+
+function generateNarasi(pilars,total,pred){
+  var panel=document.getElementById('narasi_panel'),box=document.getElementById('narasi_box');
+  var filled=pilars.filter(p=>p.val>0); if(!filled.length){panel.style.display='none';return;}
+  var selEl=document.getElementById('select-atlet');
+  var namaAtlet=(selEl&&selEl.selectedIndex>0)?selEl.options[selEl.selectedIndex].textContent.trim():'Atlet';
+  function lbl(v){return v>=9?'sangat baik':v>=7.5?'baik':v>=5.5?'cukup':'perlu perhatian khusus';}
+  function wrn(v){return v>=9?'#34d399':v>=7.5?'var(--accent)':v>=5.5?'var(--gold)':'var(--red)';}
+  var sorted=[...filled].sort((a,b)=>b.val-a.val); var kuat=sorted.slice(0,2),lemah=sorted.slice(-2).reverse();
+  var layak=total>=7.5;
+  var layakStr=layak?'<span style="color:#34d399;font-weight:700">✔ LAYAK ke L3 Power</span>':'<span style="color:var(--red);font-weight:700">✖ BELUM LAYAK ke L3 — perkuat dulu pilar lemah</span>';
+  var kuatHTML=kuat.map(p=>`<div style="margin-bottom:4px"><strong style="color:#34d399">${p.nama}</strong> — ${lbl(p.val)} <span style="color:${wrn(p.val)};font-weight:700">(${p.val.toFixed(1)}/10)</span></div>`).join('');
+  var lemahHTML=lemah.map(p=>`<div style="margin-bottom:4px"><strong style="color:${wrn(p.val)}">${p.nama}</strong> — ${lbl(p.val)} <span style="color:${wrn(p.val)};font-weight:700">(${p.val.toFixed(1)}/10)</span></div>`).join('');
+  box.innerHTML=`<div style="margin-bottom:8px"><strong style="color:var(--accent)">👤 ${namaAtlet}</strong> — Total: <strong style="color:${wrn(total)}">${total.toFixed(1)}/10</strong> (${pred})</div><div style="margin-bottom:8px"><div style="color:var(--text3);font-size:10px">▲ KEUNGGULAN</div>${kuatHTML}</div><div style="margin-bottom:8px"><div style="color:var(--text3);font-size:10px">▼ AREA KELEMAHAN</div>${lemahHTML}</div><div style="padding:8px;border-radius:6px;background:rgba(0,0,0,0.2)">${layakStr}</div>`;
+  panel.style.display='block';
+}
+
+let radarInst=null;
+function updateRadar(vals){
+  const ctx=document.getElementById('radarChart').getContext('2d'); if(radarInst)radarInst.destroy();
+  radarInst=new Chart(ctx,{type:'radar',data:{labels:['Lower','Posterior','Single-Leg','Core','Isometric'],
+    datasets:[{label:'Atlet',data:vals,fill:true,backgroundColor:'rgba(0,229,176,0.12)',borderColor:'#00e5b0',borderWidth:2,pointBackgroundColor:'#00e5b0',pointRadius:4},
+    {label:'Elite',data:[9,9,9,9,9],fill:false,borderColor:'rgba(255,255,255,0.1)',borderWidth:1,borderDash:[4,4],pointRadius:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'rgba(255,255,255,0.2)',font:{size:9},backdropColor:'transparent'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}}}});
+}
+updateRadar([0,0,0,0,0]);
+
+const REKO_DB={
+  'Lower Body':{low:['Goblet Squat 3x12 fokus teknik','Box Squat 3x8 bertahap','Latihan pola gerak squat 2x/minggu'],mid:['Back Squat progresif 4x6'],high:['Pertahankan progresi beban']},
+  'Posterior Chain':{low:['Romanian Deadlift ringan 3x10 fokus hip hinge','Glute Bridge 3x15','Good Morning ringan 3x10'],mid:['RDL progresif 4x6'],high:['Pertahankan progresi beban']},
+  'Single-Leg':{low:['Split Squat bodyweight 3x10/kaki','Step Up 3x10/kaki','Single-Leg Glute Bridge 3x12'],mid:['Bulgarian Split Squat progresif'],high:['Pertahankan simetri kanan-kiri']},
+  'Core':{low:['Plank bodyweight 3x30 detik','Dead Bug 3x10','Bird Dog 3x10'],mid:['Weighted Plank progresif'],high:['Pertahankan durasi core']},
+  'Isometric':{low:['Wall Sit bodyweight 3x20 detik','Isometric Squat Hold 3x15 detik'],mid:['Wall Sit progresif dengan beban'],high:['Pertahankan daya tahan isometrik']}
+};
+function generateReko(pilars){
+  const panel=document.getElementById('reko_panel'),list=document.getElementById('reko_list');
+  const filled=pilars.filter(p=>p.val>0); if(!filled.length){panel.style.display='none';return;}
+  const weakest=[...filled].sort((a,b)=>a.val-b.val).slice(0,3); let html='';
+  weakest.forEach(p=>{const db=REKO_DB[p.nama];if(!db)return;const tips=p.val<5.5?db.low:p.val<7.5?db.mid:db.high;const icon=p.val<5.5?'🔴':p.val<7.5?'🟡':'🟢';html+=`<div style="margin-bottom:8px"><div class="x-small mono mb-1" style="color:var(--accent)">${icon} ${p.nama.toUpperCase()} — ${p.val.toFixed(1)}/10</div>${tips.map(t=>`<div class="reko-item"><span>→</span><span>${t}</span></div>`).join('')}</div>`;});
+  list.innerHTML=html; panel.style.display='block';
+}
+
+function getCsrf(){return document.cookie.split(';').find(c=>c.trim().startsWith('csrftoken='))?.split('=')[1]??'';}
+function konfirmasiHapus(auditId,namaAtlet){document.getElementById('modal_nama_atlet').textContent=namaAtlet;const b=document.getElementById('btn_hapus_confirm'),baru=b.cloneNode(true);b.parentNode.replaceChild(baru,b);baru.addEventListener('click',()=>eksekusiHapus(auditId));new bootstrap.Modal(document.getElementById('modalHapus')).show();}
+function eksekusiHapus(auditId){
+  fetch(`/sepakbola/l2-strength/hapus/${auditId}/`,{method:'POST',headers:{'X-CSRFToken':getCsrf(),'X-Requested-With':'XMLHttpRequest'}})
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json().catch(()=>({status:'success'}));})
+  .then(()=>{bootstrap.Modal.getInstance(document.getElementById('modalHapus'))?.hide();const row=document.getElementById('row-'+auditId);if(row){row.style.transition='opacity .35s,transform .35s';row.style.opacity='0';row.style.transform='translateX(-12px)';setTimeout(()=>row.remove(),380);}})
+  .catch(e=>alert('Gagal hapus: '+e.message));
+}
+
+function cetakAudit(id,nama,kategori,gender,lower,post,sl,core,iso,totalScore,predikat,tanggal){
+  const warna={ELITE:'#10b981',READY:'#14b8a6',DEVELOPING:'#f59e0b',NOVICE:'#ef4444'}[predikat]||'#6b7280';
+  const warnaLight={ELITE:'#d1fae5',READY:'#ccfbf1',DEVELOPING:'#fef3c7',NOVICE:'#fee2e2'}[predikat]||'#f3f4f6';
+  const pilar=[{n:'Lower Body',v:parseFloat(lower)||0,icon:'🦵'},{n:'Posterior Chain',v:parseFloat(post)||0,icon:'⛓'},{n:'Single-Leg',v:parseFloat(sl)||0,icon:'🦶'},{n:'Core',v:parseFloat(core)||0,icon:'🧱'},{n:'Isometric',v:parseFloat(iso)||0,icon:'⏱'}];
+  const sorted=[...pilar].sort((a,b)=>a.v-b.v); const terlemah=sorted[0],terkuat=sorted[sorted.length-1];
+  const pilarHTML=pilar.map(p=>{const pct=Math.min(100,(p.v/10)*100).toFixed(0);const c=p.v>=8?'#10b981':p.v>=6?'#14b8a6':p.v>=4?'#f59e0b':'#ef4444';const bg=p.v>=8?'#d1fae5':p.v>=6?'#ccfbf1':p.v>=4?'#fef3c7':'#fee2e2';return `<div style="background:${bg};border:1.5px solid ${c};border-radius:10px;padding:12px 8px;text-align:center;min-width:80px"><div style="font-size:16px;margin-bottom:2px">${p.icon}</div><div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${p.n}</div><div style="font-size:26px;font-weight:900;color:${c};line-height:1">${p.v.toFixed(1)}</div><div style="font-size:9px;color:#888;margin-top:2px">/10</div><div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:6px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${c};border-radius:2px"></div></div></div>`;}).join('');
+  let rekoHTML=''; pilar.forEach(p=>{const db=REKO_DB[p.n];if(!db||p.v===0)return;const tips=p.v<5.5?db.low:p.v<7.5?db.mid:db.high;const c=p.v<5.5?'#ef4444':p.v<7.5?'#f59e0b':'#10b981';const label=p.v<5.5?'PRIORITAS':p.v<7.5?'PERLU PERHATIAN':'PERTAHANKAN';rekoHTML+=`<div style="margin-bottom:12px;border-radius:8px;overflow:hidden"><div style="background:${c};color:#fff;padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:1px">${p.n.toUpperCase()} — ${p.v.toFixed(1)}/10 &nbsp;|&nbsp; ${label}</div><div style="background:#f9fafb;padding:8px 12px">${tips.map(t=>`<div style="padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:11px;color:#374151">▸ ${t}</div>`).join('')}</div></div>`;});
+  const overallPct=Math.min(100,(parseFloat(totalScore)/10)*100).toFixed(0);
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Audit L2 — ${nama}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#111;font-size:13px}@media print{body{padding:0}@page{margin:15mm 12mm;size:A4}}</style></head><body>
+  <div style="background:linear-gradient(135deg,#0f172a 0%,#0d4a3a 100%);color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:9px;letter-spacing:3px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">HIGH PERFORMANCE COACHING SYSTEM</div><div style="font-size:22px;font-weight:900;letter-spacing:2px">HPCS <span style="color:#00e5b0">SEPAK BOLA</span></div><div style="font-size:11px;color:#cbd5e1;margin-top:2px">Audit Level 2 — Low Velocity Power</div></div>
+    <div style="text-align:right"><div style="background:${warna};color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:2px">${predikat}</div><div style="font-size:10px;color:#94a3b8;margin-top:6px">${tanggal}</div></div>
+  </div>
+  <div style="padding:16px 28px;background:#f8fafc;border-bottom:1px solid #e2e8f0">
+    <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:10px">▌ Identitas Atlet</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">${[['Nama Atlet',nama],['Kategori',kategori],['Gender',gender],['Cabang','Sepak Bola'],['Level','L2 — Strength']].map(([l,v])=>`<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px"><div style="font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px">${l}</div><div style="font-size:15px;font-weight:700;color:#0f172a;margin-top:3px">${v}</div></div>`).join('')}</div>
+  </div>
+  <div style="padding:16px 28px;display:flex;align-items:center;gap:24px;background:${warnaLight};border-bottom:2px solid ${warna}">
+    <div style="text-align:center;min-width:100px"><div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total Skor</div><div style="font-size:56px;font-weight:900;color:${warna};line-height:1">${parseFloat(totalScore).toFixed(1)}</div><div style="font-size:10px;color:#888">/10.0</div></div>
+    <div style="flex:1"><div style="height:12px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:8px"><div style="height:100%;width:${overallPct}%;background:${warna};border-radius:6px"></div></div>
+    <div style="margin-top:10px;display:flex;gap:8px"><div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px"><span style="color:#888">Pilar Terkuat:</span> <strong style="color:#10b981">${terkuat.n} (${terkuat.v.toFixed(1)})</strong></div><div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px"><span style="color:#888">Prioritas Perbaikan:</span> <strong style="color:#ef4444">${terlemah.n} (${terlemah.v.toFixed(1)})</strong></div></div></div>
+  </div>
+  <div style="padding:16px 28px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Skor Pilar Analysis</div><div style="display:flex;gap:8px;flex-wrap:wrap">${pilarHTML}</div></div>
+  <div style="padding:0 28px 20px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Rekomendasi Program HPCS</div>${rekoHTML||'<p style="font-size:12px;color:#888">Tidak ada rekomendasi khusus.</p>'}</div>
+  <div style="background:#0f172a;color:#94a3b8;padding:12px 28px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:8px"><div>HPCS Sepak Bola — High Performance Coaching System</div><div>Tanggal: <strong style="color:#fff">${tanggal}</strong></div></div>
+  </body></html>`;
+  const w=window.open('','_blank'); w.document.write(html); w.document.close();
+  setTimeout(()=>{w.print();},400);
+}
+
+document.addEventListener('DOMContentLoaded',function(){const sel=document.getElementById('select-atlet');if(sel&&sel.value)onAtletChange(sel);});
+</script>
+{% endblock %}

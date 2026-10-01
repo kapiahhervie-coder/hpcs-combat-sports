@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>HPCS Basketball - L3 Power</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--bg:#060b13;--surface:#0d1726;--amber:#f59e0b;--border:rgba(245,158,11,0.25);--gray:#94a3b8}
+body{background:var(--bg);color:#fff;font-family:'Segoe UI',sans-serif}
+.page-header{background:linear-gradient(135deg,#0a0f1a,#1a1000);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+.card-dark{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.section-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--amber);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.form-control,.form-select{background:#0a0f1a;border:1px solid var(--border);color:#fff;font-size:.85rem}
+.form-control:focus,.form-select:focus{background:#0a0f1a;border-color:var(--amber);color:#fff;box-shadow:none}
+.form-select option{background:#0a0f1a}
+.form-label{color:var(--gray);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.score-display{font-size:2rem;font-weight:900;color:var(--amber);text-align:center;line-height:1}
+.score-bar{height:6px;background:#1a2535;border-radius:3px;overflow:hidden;margin-top:4px}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--amber),#fcd34d);border-radius:3px;transition:width .3s}
+.btn-save{background:var(--amber);color:#000;font-weight:800;border:none;padding:12px 24px;border-radius:8px;width:100%;font-size:.9rem;cursor:pointer}
+.table-custom{--bs-table-bg:transparent;--bs-table-color:#fff}
+.table-custom thead th{color:var(--gray);font-size:.7rem;text-transform:uppercase;letter-spacing:1px;border-color:rgba(255,255,255,.08)}
+.table-custom td{border-color:rgba(255,255,255,.05);font-size:.82rem;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div>
+    <div style="font-size:1rem;font-weight:800;letter-spacing:2px">🏀 <span style="color:var(--amber)">HPCS</span> BASKETBALL</div>
+    <div style="font-size:.75rem;color:var(--gray)">Level 3 — Daya Ledak & Athleticism</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'basketball:l2_strength' %}" class="btn btn-sm" style="background:transparent;border:1px solid var(--border);color:var(--amber)">← L2</a>
+    <a href="{% url 'basketball:dashboard' %}" class="btn btn-sm" style="background:transparent;border:1px solid var(--border);color:var(--amber)">Dashboard</a>
+  </div>
+</div>
+
+{% if messages %}
+<div style="padding:12px 24px 0">{% for msg in messages %}
+<div class="alert alert-dismissible" style="background:rgba(245,158,11,.1);border:1px solid var(--border);color:#fff;font-size:.85rem">
+{{ msg }}<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button></div>
+{% endfor %}</div>
+{% endif %}
+
+<div class="container-fluid py-3 px-4">
+<div class="row g-3">
+
+<div class="col-lg-4">
+<form method="post">{% csrf_token %}
+  <div class="card-dark">
+    <div class="section-title">▌ Identitas Atlet</div>
+    <div class="mb-2"><label class="form-label">Pilih Atlet</label>
+      <select name="atlet_id" class="form-select">
+        <option value="">— Pilih Atlet —</option>
+        {% for a in atlet_list %}<option value="{{ a.id }}">{{ a.nama_atlet }} ({{ a.get_posisi_display|default:"-" }})</option>{% endfor %}
+      </select>
+    </div>
+    <div class="row g-2">
+      <div class="col-6"><label class="form-label">Kategori</label>
+        <select name="kategori_usia" class="form-select"><option value="ELITE">Elite</option><option value="SENIOR">Senior</option><option value="JUNIOR">Junior</option><option value="YOUTH">Youth</option></select>
+      </div>
+      <div class="col-6"><label class="form-label">Posisi</label>
+        <select name="posisi" class="form-select">
+          <option value="">—</option><option value="PG">PG</option><option value="SG">SG</option>
+          <option value="SF">SF</option><option value="PF">PF</option><option value="C">C</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERTICAL JUMP -->
+  <div class="card-dark">
+    <div class="section-title">⬆️ Pilar 1 — Vertical Jump</div>
+    <div class="row g-2 mb-2">
+      <div class="col-4"><label class="form-label">Jump (cm)</label>
+        <input type="number" name="vertical_jump_cm" class="form-control" step="0.5" placeholder="mis. 65" id="inp_jump" oninput="calcReach()">
+      </div>
+      <div class="col-4"><label class="form-label">Stand Reach (cm)</label>
+        <input type="number" name="standing_reach_cm" class="form-control" step="1" placeholder="mis. 240" id="inp_reach" oninput="calcReach()">
+      </div>
+      <div class="col-4"><label class="form-label">Max Reach</label>
+        <div class="form-control text-center" id="max_reach" style="color:var(--amber);font-weight:700">—</div>
+      </div>
+    </div>
+    <div class="row g-2 align-items-center">
+      <div class="col-8"><label class="form-label">Skor Jump (0-10)</label>
+        <input type="number" name="score_jump" id="score_jump" class="form-control" step="0.1" min="0" max="10" oninput="updateAll()">
+      </div>
+      <div class="col-4 text-center"><div class="score-display" id="disp_jump">—</div>
+        <div class="score-bar"><div class="score-fill" id="bar_jump" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPRINT -->
+  <div class="card-dark">
+    <div class="section-title">⚡ Pilar 2 — Sprint</div>
+    <div class="row g-2 mb-2">
+      <div class="col-6"><label class="form-label">Sprint 30m (dtk)</label>
+        <input type="number" name="sprint_30m_detik" class="form-control" step="0.01" placeholder="mis. 4.2">
+      </div>
+      <div class="col-6"><label class="form-label">Full Court (dtk)</label>
+        <input type="number" name="sprint_court_detik" class="form-control" step="0.01" placeholder="mis. 3.8">
+      </div>
+    </div>
+    <div class="row g-2 align-items-center">
+      <div class="col-8"><label class="form-label">Skor Sprint (0-10)</label>
+        <input type="number" name="score_sprint" id="score_sprint" class="form-control" step="0.1" min="0" max="10" oninput="updateAll()">
+      </div>
+      <div class="col-4 text-center"><div class="score-display" id="disp_sprint">—</div>
+        <div class="score-bar"><div class="score-fill" id="bar_sprint" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANE AGILITY -->
+  <div class="card-dark">
+    <div class="section-title">🔀 Pilar 3 — Lane Agility</div>
+    <div class="mb-2"><label class="form-label">Lane Agility Test (dtk)</label>
+      <input type="number" name="lane_agility_detik" class="form-control" step="0.01" placeholder="mis. 11.2">
+    </div>
+    <div class="row g-2 align-items-center">
+      <div class="col-8"><label class="form-label">Skor Agility (0-10)</label>
+        <input type="number" name="score_agility" id="score_agility" class="form-control" step="0.1" min="0" max="10" oninput="updateAll()">
+      </div>
+      <div class="col-4 text-center"><div class="score-display" id="disp_agility">—</div>
+        <div class="score-bar"><div class="score-fill" id="bar_agility" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RSI -->
+  <div class="card-dark">
+    <div class="section-title">🔄 Pilar 4 — Reactive Strength</div>
+    <div class="row g-2 mb-2">
+      <div class="col-6"><label class="form-label">Drop Jump (cm)</label>
+        <input type="number" name="drop_jump_cm" class="form-control" step="0.5" placeholder="mis. 55">
+      </div>
+      <div class="col-6"><label class="form-label">RSI Value</label>
+        <input type="number" name="rsi_value" class="form-control" step="0.01" placeholder="mis. 1.8">
+      </div>
+    </div>
+    <div class="row g-2 align-items-center">
+      <div class="col-8"><label class="form-label">Skor RSI (0-10)</label>
+        <input type="number" name="score_rsi" id="score_rsi" class="form-control" step="0.1" min="0" max="10" oninput="updateAll()">
+      </div>
+      <div class="col-4 text-center"><div class="score-display" id="disp_rsi">—</div>
+        <div class="score-bar"><div class="score-fill" id="bar_rsi" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COD -->
+  <div class="card-dark">
+    <div class="section-title">↩️ Pilar 5 — Change of Direction</div>
+    <div class="mb-2"><label class="form-label">COD T-Test (dtk)</label>
+      <input type="number" name="cod_detik" class="form-control" step="0.01" placeholder="mis. 9.5">
+    </div>
+    <div class="row g-2 align-items-center">
+      <div class="col-8"><label class="form-label">Skor COD (0-10)</label>
+        <input type="number" name="score_cod" id="score_cod" class="form-control" step="0.1" min="0" max="10" oninput="updateAll()">
+      </div>
+      <div class="col-4 text-center"><div class="score-display" id="disp_cod">—</div>
+        <div class="score-bar"><div class="score-fill" id="bar_cod" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="mt-2"><label class="form-label">Catatan</label>
+      <textarea name="catatan" class="form-control" rows="2"></textarea>
+    </div>
+  </div>
+  <button type="submit" class="btn-save">💾 SIMPAN AUDIT L3</button>
+</form>
+</div>
+
+<!-- RADAR & HASIL -->
+<div class="col-lg-4">
+  <div class="card-dark">
+    <div class="section-title">📊 Power Distribution Radar</div>
+    <div style="position:relative;height:220px"><canvas id="radarChart"></canvas></div>
+  </div>
+  <div class="card-dark">
+    <div class="section-title">🏆 Audit Result</div>
+    <div class="text-center py-3">
+      <div style="font-size:3.5rem;font-weight:900;color:var(--amber)" id="total_display">0.0</div>
+      <div id="predikat_display" style="font-size:1rem;font-weight:800;letter-spacing:2px;margin-top:4px;color:var(--gray)">NOVICE</div>
+      <div id="layak_display" style="font-size:.8rem;margin-top:8px;color:var(--gray)">Isi data untuk melihat hasil</div>
+    </div>
+    <div id="reko_section" style="display:none">
+      <div class="section-title">💡 Rekomendasi</div>
+      <div id="reko_content" style="font-size:.8rem;color:var(--gray);line-height:1.6"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="col-lg-4">
+  <div class="card-dark">
+    <div class="section-title">📋 History Audit L3</div>
+    {% if history %}
+    <div class="table-responsive">
+      <table class="table table-custom">
+        <thead><tr><th>Tanggal</th><th>Atlet</th><th>Jump</th><th>Sprint</th><th>Total</th><th>Aksi</th></tr></thead>
+        <tbody>{% for h in history %}
+        <tr>
+          <td style="color:var(--gray);white-space:nowrap">{{ h.timestamp|date:"d/m/Y" }}</td>
+          <td style="font-weight:600">{{ h.atlet_name }}</td>
+          <td style="font-family:monospace">{{ h.score_jump }}</td>
+          <td style="font-family:monospace">{{ h.score_sprint }}</td>
+          <td style="color:var(--amber);font-weight:700;font-family:monospace">{{ h.total_skor }}</td>
+          <td><a href="{% url 'basketball:hapus_l3' h.pk %}" onclick="return confirm('Hapus?')"
+             style="background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);padding:3px 8px;border-radius:5px;font-size:.75rem;text-decoration:none">🗑</a></td>
+        </tr>{% endfor %}</tbody>
+      </table>
+    </div>
+    {% else %}
+    <div style="text-align:center;padding:30px;color:var(--gray)"><div style="font-size:2rem">⚡</div><div style="margin-top:6px;font-size:.85rem">Belum ada data</div></div>
+    {% endif %}
+  </div>
+</div>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const radar=new Chart(document.getElementById('radarChart').getContext('2d'),{
+  type:'radar',data:{labels:['Jump','Sprint','Agility','RSI','COD'],
+    datasets:[{label:'Skor',data:[0,0,0,0,0],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.15)',pointBackgroundColor:'#f59e0b',pointRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,
+    scales:{r:{min:0,max:10,ticks:{display:false},grid:{color:'rgba(255,255,255,0.1)'},
+      pointLabels:{color:'#94a3b8',font:{size:11}},angleLines:{color:'rgba(255,255,255,0.1)'}}},
+    plugins:{legend:{display:false}}}
+});
+function gv(id){return parseFloat(document.getElementById(id)?.value)||0;}
+function calcReach(){
+  const j=parseFloat(document.getElementById('inp_jump').value)||0;
+  const r=parseFloat(document.getElementById('inp_reach').value)||0;
+  document.getElementById('max_reach').textContent=j&&r?(r+j).toFixed(0)+' cm':'—';
+}
+function updateAll(){
+  const pilar=['jump','sprint','agility','rsi','cod'];
+  const scores=pilar.map(p=>{
+    const v=gv('score_'+p);
+    const el=document.getElementById('disp_'+p);const bar=document.getElementById('bar_'+p);
+    if(el)el.textContent=v>0?v.toFixed(1):'—';if(bar)bar.style.width=(v*10)+'%';return v;
+  });
+  radar.data.datasets[0].data=scores;radar.update();
+  const valid=scores.filter(s=>s>0);
+  const total=valid.length?(valid.reduce((a,b)=>a+b,0)/valid.length):0;
+  document.getElementById('total_display').textContent=total.toFixed(1);
+  const pred=total>=9?'ELITE':total>=7?'READY':total>=5?'DEVELOPING':'NOVICE';
+  const c=total>=9?'#10b981':total>=7?'#38bdf8':total>=5?'#f59e0b':'#ef4444';
+  const pel=document.getElementById('predikat_display');pel.textContent=pred;pel.style.color=c;
+  const layak=total>=9;const layakBertahan=total>=7;
+  const lel=document.getElementById('layak_display');
+  lel.textContent=layak?'🏆 LAYAK KOMPETISI!':layakBertahan?'✅ Layak bertahan di L3':'⚠️ Perlu peningkatan';
+  lel.style.color=layak?'#10b981':layakBertahan?'#4ade80':'#f59e0b';
+  if(total>0){
+    const names=['Jump','Sprint','Agility','RSI','COD'];
+    const valid2=scores.map((v,i)=>({v,n:names[i]})).filter(x=>x.v>0);
+    const terlemah=valid2.sort((a,b)=>a.v-b.v)[0]?.n||'—';
+    document.getElementById('reko_content').innerHTML=
+      total>=9?'Power output ELITE. Atlet SIAP KOMPETISI!':
+      total>=7?`Belum layak kompetisi. Tingkatkan <strong style="color:var(--amber)">${terlemah}</strong>: plyometric 3x/minggu.`:
+      total>=5?`Kembali ke L2 Strength. Pilar terlemah: <strong style="color:var(--amber)">${terlemah}</strong>.`:
+      `Turun ke L1 evaluasi ulang. Pilar kritis: <strong style="color:#ef4444">${terlemah}</strong>.`;
+    document.getElementById('reko_section').style.display='block';
+  }
+}
+</script>
+</body></html>

@@ -1,15 +1,16 @@
 import json
 from datetime import date
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from docx import Document
 from docx.shared import Pt, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages as messages_lib
 from django.db import models
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-from .models import CatatanCedera, KondisiKesehatan, Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan, TujuanPembelajaran, TujuanPembelajaran
+from .models import CatatanCedera, KondisiKesehatan, ModulAjar, PenilaianFisik, Siswa, FASE_CHOICES, JENJANG_PER_FASE, SesiAbsensi, Absensi, RencanaMingguan, TujuanPembelajaran, TujuanPembelajaran
 
 from .diagnostik import (
     KOMPONEN_LABEL,
@@ -18,7 +19,7 @@ from .diagnostik import (
     rubrik_label,
 )
 from .import_siswa import baca_csv_siswa, buat_template_csv, validasi_baris_siswa
-from .forms import CatatanCederaForm, EditSiswaForm, GuruProfileForm, ImportSiswaForm, KondisiKesehatanForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, RencanaMingguanForm, SiswaForm, TujuanPembelajaranForm
+from .forms import CatatanCederaForm, EditSiswaForm, GuruProfileForm, ImportSiswaForm, KondisiKesehatanForm, ModulAjarForm, PenilaianFisikForm, PenilaianKarakterForm, PenilaianPengetahuanForm, PenilaianTeknikForm, PindahFaseForm, RencanaMingguanForm, SiswaForm, TujuanPembelajaranForm
 from .models import GuruProfile, MateriFase, Siswa
 
 
@@ -302,6 +303,74 @@ def daftar_tp(request, fase):
 
 
 @login_required
+def daftar_modul_ajar(request, fase):
+    """Daftar semua Modul Ajar yang sudah dibuat guru untuk fase ini."""
+    profile = request.user.guruprofile
+    modul_list = ModulAjar.objects.filter(guru=profile, fase=fase).prefetch_related('tp').select_related('materi')
+    return render(request, 'pjok/daftar_modul_ajar.html', {
+        'modul_list': modul_list,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+    })
+
+
+@login_required
+def tambah_modul_ajar(request, fase):
+    """Buat Modul Ajar baru, terhubung ke TP yang sudah dirumuskan guru untuk fase ini."""
+    profile = request.user.guruprofile
+
+    if request.method == 'POST':
+        form = ModulAjarForm(request.POST, fase=fase, guru=profile)
+        if form.is_valid():
+            modul = form.save(commit=False)
+            modul.guru = profile
+            modul.fase = fase
+            modul.save()
+            form.save_m2m()  # simpan relasi many-to-many ke TP setelah objek induk tersimpan
+            return redirect('pjok:daftar_modul_ajar', fase=fase)
+    else:
+        form = ModulAjarForm(fase=fase, guru=profile)
+
+    return render(request, 'pjok/form_modul_ajar.html', {
+        'form': form,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'mode': 'tambah',
+    })
+
+
+@login_required
+def edit_modul_ajar(request, fase, modul_id):
+    """Edit Modul Ajar yang sudah ada."""
+    profile = request.user.guruprofile
+    modul = get_object_or_404(ModulAjar, id=modul_id, guru=profile, fase=fase)
+
+    if request.method == 'POST':
+        form = ModulAjarForm(request.POST, instance=modul, fase=fase, guru=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('pjok:daftar_modul_ajar', fase=fase)
+    else:
+        form = ModulAjarForm(instance=modul, fase=fase, guru=profile)
+
+    return render(request, 'pjok/form_modul_ajar.html', {
+        'form': form,
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'mode': 'edit',
+        'modul': modul,
+    })
+
+
+@login_required
+def hapus_modul_ajar(request, fase, modul_id):
+    """Hapus Modul Ajar."""
+    profile = request.user.guruprofile
+    ModulAjar.objects.filter(id=modul_id, guru=profile, fase=fase).delete()
+    return redirect('pjok:daftar_modul_ajar', fase=fase)
+
+
+@login_required
 def daftar_absensi(request, fase):
     """Daftar semua sesi absensi yang pernah diambil untuk fase ini."""
     profile = request.user.guruprofile
@@ -385,7 +454,11 @@ def ambil_absensi(request, fase):
 
 @login_required
 def edit_siswa(request, siswa_id):
-    """Guru bisa mengedit data siswa miliknya sendiri, termasuk memindahkan fase."""
+    """
+    Guru mengedit data dasar siswa miliknya sendiri (nama, kelas, jenis
+    kelamin, tanggal lahir). Fase TIDAK bisa diubah di sini — pakai
+    pindah_fase_siswa kalau memang perlu memindahkan siswa antar fase.
+    """
     profile = request.user.guruprofile
     siswa = get_object_or_404(Siswa, id=siswa_id, guru=profile)
 
@@ -398,6 +471,40 @@ def edit_siswa(request, siswa_id):
         form = EditSiswaForm(instance=siswa)
 
     return render(request, 'pjok/edit_siswa.html', {'form': form, 'siswa': siswa})
+
+
+@login_required
+def pindah_fase_siswa(request, siswa_id):
+    """
+    Pindahkan siswa ke fase lain — SENGAJA dipisah dari edit_siswa dan
+    butuh konfirmasi eksplisit, supaya siswa tidak bisa "kesenggol" pindah
+    fase tanpa sadar. Dipakai untuk kasus sah: kenaikan kelas tahun ajaran baru.
+    """
+    profile = request.user.guruprofile
+    siswa = get_object_or_404(Siswa, id=siswa_id, guru=profile)
+    fase_lama = siswa.fase
+
+    if request.method == 'POST':
+        if request.POST.get('konfirmasi') != 'ya':
+            messages_lib.error(request, "Pemindahan fase dibatalkan — konfirmasi belum dicentang.")
+            return redirect('pjok:pindah_fase_siswa', siswa_id=siswa.id)
+
+        form = PindahFaseForm(request.POST, instance=siswa)
+        if form.is_valid():
+            siswa = form.save()
+            messages_lib.success(
+                request,
+                f"{siswa.nama} dipindahkan dari Fase {fase_lama} ke Fase {siswa.fase}."
+            )
+            return redirect('pjok:dashboard_fase', fase=siswa.fase)
+    else:
+        form = PindahFaseForm(instance=siswa)
+
+    return render(request, 'pjok/pindah_fase_siswa.html', {
+        'form': form,
+        'siswa': siswa,
+        'fase_lama': fase_lama,
+    })
 
 
 @login_required
@@ -602,6 +709,118 @@ def detail_siswa(request, siswa_id):
 
 
 @login_required
+def offline_tes_fisik(request, fase):
+    """
+    Halaman input Tes Fisik yang bisa dipakai TANPA internet.
+    Data siswa di-embed langsung ke halaman (bukan diambil via AJAX) supaya
+    tetap bisa dipakai walau koneksi putus setelah halaman ini dimuat.
+    Isian disimpan ke IndexedDB di browser dulu, baru disinkronkan ke server
+    lewat endpoint api_sync_fisik saat koneksi tersedia lagi.
+    """
+    profile = request.user.guruprofile
+    siswa_list = Siswa.objects.filter(guru=profile, fase=fase).order_by('nama')
+    siswa_json = json.dumps([{'id': s.id, 'nama': s.nama, 'kelas': s.kelas} for s in siswa_list])
+
+    return render(request, 'pjok/offline_tes_fisik.html', {
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'siswa_json': siswa_json,
+    })
+
+
+def offline_sw(request, fase):
+    """
+    Service worker untuk fitur offline. Di-serve lewat view (bukan file statis)
+    supaya scope-nya jelas dan gampang di-versioning lewat CACHE_NAME.
+    """
+    sw_code = """
+const CACHE_NAME = 'pjok-offline-v1';
+const URL_HALAMAN = '/pjok/offline/""" + fase + """/';
+
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll([URL_HALAMAN]);
+    })
+  );
+});
+
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', function(event) {
+  // Hanya tangani navigasi ke halaman offline itu sendiri — biarkan request
+  // lain (API sync, admin, dll) berjalan normal lewat network.
+  if (event.request.mode === 'navigate' && event.request.url.indexOf(URL_HALAMAN) !== -1) {
+    event.respondWith(
+      fetch(event.request).then(function(response) {
+        var responseClone = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, responseClone); });
+        return response;
+      }).catch(function() {
+        return caches.match(event.request);
+      })
+    );
+  }
+});
+"""
+    return HttpResponse(sw_code, content_type='application/javascript')
+
+
+@login_required
+def api_sync_tes_fisik(request):
+    """
+    Endpoint JSON untuk menyinkronkan isian Tes Fisik yang tadinya disimpan
+    offline di localStorage browser. Menerima array entri sekaligus; tiap
+    entri diproses independen supaya satu entri gagal tidak menggagalkan yang lain.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    profile = request.user.guruprofile
+    try:
+        payload = json.loads(request.body)
+        entri_list = payload.get('entries', [])
+    except (json.JSONDecodeError, AttributeError):
+        return JsonResponse({'error': 'Payload tidak valid'}, status=400)
+
+    hasil = []
+    field_wajib = [
+        'plank_hold_detik', 'sit_and_reach_cm', 'gantung_durasi_tercapai_detik',
+        'sit_up_repetisi', 'vertical_jump_cm', 'lari_cepat_detik', 'lari_menengah_detik',
+    ]
+
+    for entri in entri_list:
+        local_id = entri.get('local_id', '')
+        siswa_id = entri.get('siswa_id')
+        try:
+            siswa = Siswa.objects.get(id=siswa_id, guru=profile)
+            data_bersih = {}
+            for f in field_wajib:
+                nilai = entri.get(f)
+                if nilai in (None, ''):
+                    raise ValueError(f"Kolom '{f}' kosong")
+                data_bersih[f] = int(float(nilai)) if f == 'sit_up_repetisi' else float(nilai)
+
+            standing_broad = entri.get('standing_broad_jump_cm')
+            if standing_broad not in (None, ''):
+                data_bersih['standing_broad_jump_cm'] = float(standing_broad)
+
+            fisik = PenilaianFisik(siswa=siswa, **data_bersih)
+            fisik.save()  # skor_l1-l4 dihitung otomatis di save()
+
+            hasil.append({'local_id': local_id, 'status': 'ok', 'id': fisik.id})
+        except Siswa.DoesNotExist:
+            hasil.append({'local_id': local_id, 'status': 'error', 'pesan': 'Siswa tidak ditemukan / bukan milik Anda'})
+        except (ValueError, TypeError) as e:
+            hasil.append({'local_id': local_id, 'status': 'error', 'pesan': str(e)})
+
+    return JsonResponse({'hasil': hasil})
+
+
+@login_required
 def data_kesehatan(request, siswa_id):
     """
     Kelola data kesehatan siswa: alergi, riwayat penyakit, kontraindikasi
@@ -644,6 +863,159 @@ def tambah_cedera(request, siswa_id):
             cedera.save()
 
     return redirect('pjok:data_kesehatan', siswa_id=siswa.id)
+
+
+
+
+@login_required
+def export_lembar_kosong(request, fase):
+    """
+    Lembar Penilaian Fisik kosong (Word/docx, siap cetak) untuk diisi manual
+    di lapangan saat tidak ada koneksi internet — hasilnya diinput ulang lewat
+    form Tes Fisik setelah kembali online.
+    """
+    profile = request.user.guruprofile
+    siswa_list = Siswa.objects.filter(guru=profile, fase=fase).order_by('nama')
+
+    doc = _bikin_dokumen_dasar(
+        "LEMBAR PENILAIAN FISIK (KOSONG)\nUntuk diisi manual / offline",
+        profile, fase, JENJANG_PER_FASE.get(fase, ''),
+    )
+
+    p = doc.add_paragraph()
+    p.add_run(f"Tanggal Tes: _______________________          Materi/Sesi: _______________________________").font.size = Pt(10)
+    doc.add_paragraph()
+
+    kolom = ['No', 'Nama Siswa', 'Plank\n(detik)', 'Sit&Reach\n(cm)', 'Gantung\n(detik)', 'Sit Up\n(rep)', 'Vert. Jump\n(cm)', 'Lari Cepat\n(detik)', 'Lari Menengah\n(detik)']
+    table = doc.add_table(rows=1, cols=len(kolom))
+    table.style = 'Light Grid Accent 1'
+    hdr = table.rows[0].cells
+    for i, judul in enumerate(kolom):
+        hdr[i].text = judul
+
+    if siswa_list:
+        for i, s in enumerate(siswa_list, start=1):
+            cells = table.add_row().cells
+            cells[0].text = str(i)
+            cells[1].text = s.nama
+            for j in range(2, len(kolom)):
+                cells[j].text = ''
+    else:
+        cells = table.add_row().cells
+        cells[1].text = '(belum ada siswa terdaftar di fase ini)'
+
+    doc.add_paragraph()
+    doc.add_paragraph("Catatan: setelah kembali online, salin hasil pengisian ini ke menu Tes Fisik masing-masing siswa.")
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    response['Content-Disposition'] = f'attachment; filename="Lembar_Kosong_Fisik_Fase{fase}.docx"'
+    doc.save(response)
+    return response
+
+
+@login_required
+def offline_tes_fisik(request, fase):
+    """
+    Halaman Input Tes Fisik yang bisa dipakai TANPA internet setelah dibuka
+    sekali. Data disimpan dulu di penyimpanan lokal perangkat (localStorage),
+    lalu disinkronkan otomatis ke server begitu koneksi kembali tersedia.
+    """
+    profile = request.user.guruprofile
+    siswa_list = list(
+        Siswa.objects.filter(guru=profile, fase=fase).order_by('nama').values('id', 'nama', 'kelas')
+    )
+    return render(request, 'pjok/offline_tes_fisik.html', {
+        'fase': fase,
+        'jenjang': JENJANG_PER_FASE.get(fase, ''),
+        'siswa_json': json.dumps(siswa_list),
+    })
+
+
+def offline_sw(request, fase):
+    """
+    Service Worker untuk halaman offline_tes_fisik. Di-serve sebagai view
+    (bukan file static) supaya scope-nya otomatis terbatas ke /pjok/offline/<fase>/
+    saja — sesuai lokasi URL file ini sendiri.
+    """
+    js = """
+const CACHE_NAME = 'pjok-offline-tesfisik-v1';
+
+self.addEventListener('install', function (event) {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(function (cache) {
+      return cache.add(self.registration.scope);
+    })
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function (event) {
+  event.waitUntil(self.clients.claim());
+});
+
+// Strategi: coba jaringan dulu (data selalu fresh kalau online),
+// kalau gagal (offline) pakai versi tersimpan di cache.
+self.addEventListener('fetch', function (event) {
+  if (event.request.method !== 'GET') return;
+  event.respondWith(
+    fetch(event.request)
+      .then(function (response) {
+        var copy = response.clone();
+        caches.open(CACHE_NAME).then(function (cache) { cache.put(event.request, copy); });
+        return response;
+      })
+      .catch(function () {
+        return caches.match(event.request);
+      })
+  );
+});
+"""
+    return HttpResponse(js, content_type='application/javascript')
+
+
+@login_required
+def api_sync_tes_fisik(request):
+    """
+    Endpoint sinkronisasi: menerima daftar entri Tes Fisik yang tadinya
+    disimpan offline di localStorage klien, lalu menyimpannya ke database.
+    Menerima banyak entri sekaligus dalam satu request (payload JSON).
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    profile = request.user.guruprofile
+    try:
+        payload = json.loads(request.body.decode('utf-8'))
+    except (ValueError, UnicodeDecodeError):
+        return JsonResponse({'error': 'Payload JSON tidak valid'}, status=400)
+
+    entries = payload.get('entries', [])
+    hasil = []
+
+    for entry in entries:
+        local_id = entry.get('local_id', '')
+        try:
+            siswa = Siswa.objects.get(id=entry['siswa_id'], guru=profile)
+            PenilaianFisik.objects.create(
+                siswa=siswa,
+                plank_hold_detik=float(entry['plank_hold_detik']),
+                sit_and_reach_cm=float(entry['sit_and_reach_cm']),
+                gantung_durasi_tercapai_detik=float(entry['gantung_durasi_tercapai_detik']),
+                sit_up_repetisi=int(entry['sit_up_repetisi']),
+                vertical_jump_cm=float(entry['vertical_jump_cm']),
+                standing_broad_jump_cm=float(entry['standing_broad_jump_cm']) if entry.get('standing_broad_jump_cm') else None,
+                lari_cepat_detik=float(entry['lari_cepat_detik']),
+                lari_menengah_detik=float(entry['lari_menengah_detik']),
+            )
+            hasil.append({'local_id': local_id, 'status': 'ok', 'siswa': siswa.nama})
+        except Siswa.DoesNotExist:
+            hasil.append({'local_id': local_id, 'status': 'error', 'pesan': 'Siswa tidak ditemukan (mungkin sudah dihapus)'})
+        except (KeyError, ValueError, TypeError) as e:
+            hasil.append({'local_id': local_id, 'status': 'error', 'pesan': f'Data tidak lengkap/salah format: {e}'})
+
+    return JsonResponse({'hasil': hasil})
 
 
 def _bikin_dokumen_dasar(judul, guru, fase, jenjang):
@@ -752,5 +1124,70 @@ def export_prota(request, fase):
         content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
     response['Content-Disposition'] = f'attachment; filename="Prota_{fase}_{tahun_ajaran.replace("/", "-")}.docx"'
+    doc.save(response)
+    return response
+
+
+@login_required
+def export_modul_ajar(request, fase, modul_id):
+    """Generate dokumen Word Modul Ajar — siap cetak/dibagikan, mengikuti format Kurikulum Merdeka."""
+    profile = request.user.guruprofile
+    modul = get_object_or_404(ModulAjar, id=modul_id, guru=profile, fase=fase)
+
+    doc = _bikin_dokumen_dasar(
+        f"MODUL AJAR\n{modul.judul}",
+        profile, fase, JENJANG_PER_FASE.get(fase, ''),
+    )
+
+    doc.add_heading('A. Informasi Umum', level=2)
+    tabel_info = doc.add_table(rows=0, cols=2)
+    tabel_info.style = 'Light Grid Accent 1'
+    for label, isi in [
+        ('Materi', modul.materi.nama_materi if modul.materi else '-'),
+        ('Alokasi Waktu', modul.alokasi_waktu),
+    ]:
+        row = tabel_info.add_row().cells
+        row[0].text = label
+        row[1].text = isi
+    doc.add_paragraph()
+
+    doc.add_heading('B. Tujuan Pembelajaran', level=2)
+    tp_list = modul.tp.all()
+    if tp_list:
+        for tp in tp_list:
+            doc.add_paragraph(f"{tp.kode} — {tp.deskripsi}", style='List Bullet')
+    else:
+        doc.add_paragraph('(Belum ada TP yang dipilih untuk modul ini)')
+
+    if modul.pemahaman_bermakna:
+        doc.add_heading('C. Pemahaman Bermakna', level=2)
+        doc.add_paragraph(modul.pemahaman_bermakna)
+
+    if modul.pertanyaan_pemantik:
+        doc.add_heading('D. Pertanyaan Pemantik', level=2)
+        doc.add_paragraph(modul.pertanyaan_pemantik)
+
+    doc.add_heading('E. Kegiatan Pembelajaran', level=2)
+    for sub_judul, isi in [
+        ('Pendahuluan', modul.kegiatan_pendahuluan),
+        ('Inti', modul.kegiatan_inti),
+        ('Penutup', modul.kegiatan_penutup),
+    ]:
+        doc.add_heading(sub_judul, level=3)
+        doc.add_paragraph(isi or '(belum diisi)')
+
+    if modul.asesmen:
+        doc.add_heading('F. Asesmen', level=2)
+        doc.add_paragraph(modul.asesmen)
+
+    if modul.sumber_media:
+        doc.add_heading('G. Sumber & Media Belajar', level=2)
+        doc.add_paragraph(modul.sumber_media)
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+    nama_file = modul.judul.replace('/', '-')
+    response['Content-Disposition'] = f'attachment; filename="ModulAjar_{nama_file}.docx"'
     doc.save(response)
     return response

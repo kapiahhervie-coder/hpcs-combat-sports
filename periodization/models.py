@@ -4,13 +4,15 @@ Pilar 3 HPCS -- Engine Periodisasi Otomatis (Makro, Meso, Mikro).
 
 Referensi konsep:
 - Makrosiklus (1-4 tahun): roadmap jangka panjang menuju event kompetisi
-  (Kejurda/Kejurnas/PON), menampilkan kurva Volume vs Intensitas.
+  (Kejurda/Kejurnas/PON), menampilkan kurva Volume vs Intensitas, plus
+  kalender kompetisi (KompetisiTarget) sepanjang roadmap-nya.
 - Mesosiklus (4-6 minggu): fase spesifik (GPP/SPP/Pre-Comp/Comp) dengan
-  porsi fokus L1-L4 tersendiri.
-- Mikrosiklus (7 hari): kontainer mingguan -- isi latihan harian
-  detailnya nanti nempel dari app workout_prescription (tahap
-  berikutnya), supaya periodization tetap fokus di 'kerangka jadwal',
-  bukan 'isi latihan'.
+  porsi fokus L1-L4 tersendiri, objektif fisik per fase, dan target
+  performa spesifik (TargetPerforma) yang mau dicapai di fase itu.
+- Mikrosiklus (7 hari): kontainer mingguan, isinya SesiLatihan per hari
+  (1-7) dengan pilar fokus mengikuti prinsip hard-easy alternation
+  (selang-seling berat-ringan ala program elite/Olimpiade), dan tiap
+  sesi bisa dirinci sampai LatihanItem (exercise/set/rep/istirahat).
 """
 from django.db import models
 from django.utils import timezone
@@ -39,6 +41,50 @@ FASE_MESO_CHOICES = [
     ('PRE_COMP', 'Pre-Competition'),
     ('COMP',     'Competition'),
     ('TRANSISI', 'Transisi / Recovery'),
+]
+
+LEVEL_KOMPETISI_CHOICES = [
+    ('domestik',      'Domestik'),
+    ('internasional', 'Internasional'),
+    ('kualifikasi',   'Kualifikasi'),
+]
+
+STATUS_TARGET_KOMPETISI_CHOICES = [
+    ('TARGET_UTAMA',        'Target Utama'),
+    ('OPSIONAL',             'Opsional'),
+    ('PERTIMBANGAN_PELATIH', 'Berdasarkan Pertimbangan Pelatih'),
+]
+
+PILAR_CHOICES = [
+    ('L1',     'L1 - Correction / Mobility'),
+    ('L2',     'L2 - Strength'),
+    ('L3',     'L3 - Power'),
+    ('L4',     'L4 - Speed & Agility'),
+    ('CUSTOM', 'Target Kustom Pelatih'),
+]
+
+PILAR_FOKUS_HARIAN_CHOICES = [
+    ('L1',        'L1 - Correction / Mobility'),
+    ('L2',        'L2 - Strength'),
+    ('L3',        'L3 - Power'),
+    ('L4',        'L4 - Speed & Agility'),
+    ('TEKNIK',    'Teknik / Skill'),
+    ('RECOVERY',  'Recovery / Regenerasi'),
+    ('REST',      'Istirahat Penuh'),
+    ('KOMPETISI', 'Kompetisi / Try-Out'),
+]
+
+KATEGORI_LATIHAN_CHOICES = [
+    ('PEMANASAN',   'Pemanasan'),
+    ('INTI',        'Latihan Inti'),
+    ('PENDINGINAN', 'Pendinginan'),
+]
+
+WAKTU_SESI_CHOICES = [
+    ('PAGI',  'Pagi'),
+    ('SIANG', 'Siang'),
+    ('SORE',  'Sore'),
+    ('MALAM', 'Malam'),
 ]
 
 
@@ -85,6 +131,29 @@ class MacroProgram(models.Model):
         return min(round((terlewati / total) * 100), 100)
 
 
+class KompetisiTarget(models.Model):
+    """
+    Kalender kompetisi di sepanjang 1 MacroProgram -- bukan cuma 1
+    event target di akhir, tapi bisa banyak kompetisi try-out/
+    kualifikasi/kejuaraan di tengah jalan menuju event puncak.
+    """
+    macro_program   = models.ForeignKey(MacroProgram, on_delete=models.CASCADE, related_name='kompetisi_list')
+    nama_kompetisi  = models.CharField(max_length=150, help_text="mis. 'Kejurda Sumut 2027'")
+    tanggal_mulai   = models.DateField()
+    tanggal_selesai = models.DateField(blank=True, null=True, help_text="Kosongkan kalau kompetisi cuma 1 hari")
+    level           = models.CharField(max_length=20, choices=LEVEL_KOMPETISI_CHOICES, default='domestik')
+    status          = models.CharField(max_length=25, choices=STATUS_TARGET_KOMPETISI_CHOICES, default='OPSIONAL')
+    catatan         = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name        = 'Target Kompetisi'
+        verbose_name_plural = 'Kalender Kompetisi'
+        ordering            = ['tanggal_mulai']
+
+    def __str__(self):
+        return f"{self.nama_kompetisi} ({self.tanggal_mulai})"
+
+
 class MesoCycle(models.Model):
     """
     Fase 4-6 minggu di dalam 1 MacroProgram, dengan fokus & target
@@ -105,6 +174,14 @@ class MesoCycle(models.Model):
     # Buat kurva Volume vs Intensitas (skala 1-10, diisi pelatih)
     volume_target     = models.PositiveIntegerField(default=5, help_text="Skala 1-10")
     intensitas_target = models.PositiveIntegerField(default=5, help_text="Skala 1-10")
+
+    # Objektif fisik per fase -- deskripsi tujuan, melengkapi porsi %
+    # fokus_l1-l4 di atas yang sifatnya angka. Sengaja fokus fisik saja
+    # dulu (bukan teknik/taktik/psikologis).
+    objektif_fisik    = models.TextField(blank=True, help_text="mis. 'Bangun basis kekuatan umum & daya tahan aerobik'")
+    objektif_teknik   = models.TextField(blank=True, help_text="Objektif teknik/skill fase ini")
+    objektif_taktik   = models.TextField(blank=True, help_text="Objektif taktik fase ini")
+    objektif_mental   = models.TextField(blank=True, help_text="Objektif mental/psikologis fase ini")
 
     catatan           = models.TextField(blank=True)
 
@@ -131,12 +208,34 @@ class MesoCycle(models.Model):
         return self.fokus_l1_persen + self.fokus_l2_persen + self.fokus_l3_persen + self.fokus_l4_persen
 
 
+class TargetPerforma(models.Model):
+    """
+    Target performa fisik spesifik yang mau dicapai di 1 fase (mis.
+    'Sprint 20m: 3.1 detik'). Bisa nempel ke pilar L1-L4 standar HPCS,
+    atau custom -- pelatih bikin test/nama target sendiri di luar
+    battery standar.
+    """
+    meso_cycle    = models.ForeignKey(MesoCycle, on_delete=models.CASCADE, related_name='target_performa')
+    pilar         = models.CharField(max_length=10, choices=PILAR_CHOICES, default='CUSTOM')
+    nama_test     = models.CharField(max_length=150, help_text="mis. '20m Sprint', 'Vertical Jump', atau nama test custom pelatih")
+    nilai_target  = models.FloatField(help_text="Nilai target yang mau dicapai")
+    satuan        = models.CharField(max_length=20, help_text="mis. 'detik', 'cm', 'kg', 'reps'")
+    catatan       = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name        = 'Target Performa'
+        verbose_name_plural = 'Target Performa per Fase'
+        ordering            = ['meso_cycle', 'pilar', 'nama_test']
+
+    def __str__(self):
+        return f"{self.nama_test}: {self.nilai_target} {self.satuan} ({self.meso_cycle})"
+
+
 class MicroCycle(models.Model):
     """
     Kontainer 1 minggu latihan di dalam 1 MesoCycle. Isi latihan
-    harian detail (dosis, video, dst) dihubungkan nanti dari app
-    workout_prescription lewat ForeignKey ke sini -- MicroCycle di
-    sini sengaja tetap ringan, cuma kerangka jadwalnya.
+    harian ada di SesiLatihan (per hari, 1-7) dan LatihanItem
+    (exercise/set/rep di dalam 1 sesi).
     """
     meso_cycle    = models.ForeignKey(MesoCycle, on_delete=models.CASCADE, related_name='micro_cycles')
     minggu_ke     = models.PositiveIntegerField(help_text="Minggu ke berapa dalam mesocycle ini, mis. 1, 2, 3")
@@ -155,3 +254,70 @@ class MicroCycle(models.Model):
     @property
     def tanggal_selesai(self):
         return self.tanggal_mulai + timedelta(days=6)
+
+
+class SesiLatihan(models.Model):
+    """
+    Sesi latihan di dalam 1 MicroCycle. Satu hari (hari_ke 1-7) BISA
+    punya lebih dari 1 sesi -- dibedakan lewat waktu_sesi (Pagi/Siang/
+    Sore/Malam), bukan dipatok 1 sesi/hari. Realitanya kebutuhan ini
+    tergantung posisi di periodisasi (mis. mendekati PON biasanya 2x
+    sehari, persiapan Kejurda seringnya cukup 1x sore) -- jadi
+    pelatih bebas nambah sesi sebanyak yang dia perlu per hari,
+    bukan dihardcode berdasar jenis event.
+
+    Pilar fokus per sesi sebaiknya mengikuti prinsip hard-easy
+    alternation (hari berat & ringan selang-seling, ala program elite/
+    Olimpiade) dan proporsi fokus_l1-l4_persen di MesoCycle induknya --
+    tapi field ini tetap manual/fleksibel, pelatih yang menentukan sendiri.
+    """
+    micro_cycle   = models.ForeignKey(MicroCycle, on_delete=models.CASCADE, related_name='sesi_latihan')
+    hari_ke       = models.PositiveSmallIntegerField(help_text="1=Senin ... 7=Minggu")
+    waktu_sesi    = models.CharField(max_length=10, choices=WAKTU_SESI_CHOICES, default='SORE', help_text="Buat bedain kalau 1 hari ada lebih dari 1 sesi")
+    nama_sesi     = models.CharField(max_length=150, help_text="mis. 'Strength AM', 'Speed & Agility'")
+    pilar_fokus   = models.CharField(max_length=10, choices=PILAR_FOKUS_HARIAN_CHOICES, default='REST')
+    durasi_menit  = models.PositiveIntegerField(default=0, help_text="Total durasi sesi (menit)")
+    intensitas    = models.PositiveIntegerField(default=5, help_text="Skala 1-10")
+    catatan       = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name        = 'Sesi Latihan Harian'
+        verbose_name_plural = 'Sesi Latihan Harian'
+        ordering            = ['micro_cycle', 'hari_ke', 'waktu_sesi']
+
+    def __str__(self):
+        return f"Hari {self.hari_ke} ({self.get_waktu_sesi_display()}) - {self.nama_sesi} ({self.micro_cycle})"
+
+    @property
+    def tanggal(self):
+        return self.micro_cycle.tanggal_mulai + timedelta(days=self.hari_ke - 1)
+
+
+class LatihanItem(models.Model):
+    """
+    1 exercise di dalam 1 SesiLatihan -- level paling detail: set,
+    rep, beban/intensitas, dan durasi istirahat antar set.
+
+    Dikelompokkan per kategori (Pemanasan/Latihan Inti/Pendinginan)
+    supaya tampilannya mirip format program latihan yang biasa dipakai
+    pelatih di spreadsheet -- section per bagian, bukan daftar flat.
+    """
+    sesi_latihan            = models.ForeignKey(SesiLatihan, on_delete=models.CASCADE, related_name='latihan_items')
+    urutan                  = models.PositiveIntegerField(default=1)
+    kategori                = models.CharField(max_length=15, choices=KATEGORI_LATIHAN_CHOICES, default='INTI')
+    nama_latihan            = models.CharField(max_length=150, help_text="mis. 'Barbell Back Squat'")
+    jumlah_set              = models.PositiveIntegerField(default=1)
+    jumlah_rep              = models.CharField(max_length=30, blank=True, help_text="mis. '8', '8-12', 'AMRAP'")
+    waktu                   = models.CharField(max_length=30, blank=True, help_text="mis. '30 detik', '20+' -- buat latihan berbasis durasi/jarak, terpisah dari jumlah_rep")
+    beban_intensitas        = models.CharField(max_length=50, blank=True, help_text="mis. '70% 1RM', 'RPE 7', '20kg'")
+    durasi_istirahat_detik  = models.PositiveIntegerField(default=60, help_text="Istirahat antar set (detik)")
+    link_video               = models.URLField(blank=True, help_text="Link video contoh gerakan (opsional)")
+    catatan                  = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name        = 'Item Latihan (Exercise)'
+        verbose_name_plural = 'Item Latihan (Exercise)'
+        ordering            = ['sesi_latihan', 'urutan']
+
+    def __str__(self):
+        return f"{self.nama_latihan} - {self.jumlah_set}x{self.jumlah_rep} ({self.sesi_latihan})"

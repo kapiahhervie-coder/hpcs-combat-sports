@@ -33,10 +33,14 @@ PREDIKAT_CHOICES = [
 ]
 
 CABANG_CHOICES = [
-    ('boxing',  'Boxing'),
+    ('boxing', 'Boxing'),
     ('muaythai', 'Muay Thai'),
-    ('tkd',     'Taekwondo'),
-    ('krt',     'Karate'),
+    ('tkd', 'Taekwondo'),
+    ('krt', 'Karate'),
+    ('sepakbola', 'Sepak Bola'),
+    ('basketball', 'Bola Basket'),
+    ('volleyball', 'Bola Voli'),
+    ('badminton', 'Bulutangkis'),
 ]
 
 LTAD_CHOICES = [

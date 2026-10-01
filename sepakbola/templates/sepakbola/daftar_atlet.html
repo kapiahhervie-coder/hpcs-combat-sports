@@ -1,0 +1,43 @@
+﻿{% extends 'base.html' %}
+{% block title %}HPCS - Daftar Atlet Sepak Bola{% endblock %}
+{% block page_title %}Daftar Atlet Sepak Bola{% endblock %}
+
+{% block content %}
+<div style="background:#fff; border:1px solid #e5e7eb; border-radius: 10px; padding: 24px;">
+    <h2 style="margin-top:0;">Daftar Atlet Sepak Bola</h2>
+    <p>Total: {{ total_atlet }} atlet</p>
+
+    {% if daftar_atlet %}
+    <table style="width:100%; border-collapse: collapse; margin-top: 16px;">
+        <thead>
+            <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
+                <th style="padding: 8px;">Nama Atlet</th>
+                <th style="padding: 8px;">Kategori Usia</th>
+                <th style="padding: 8px;">Gender</th>
+                <th style="padding: 8px;">Berat (kg)</th>
+                <th style="padding: 8px;">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atlet in daftar_atlet %}
+            <tr style="border-bottom: 1px solid #f3f4f6;">
+                <td style="padding: 8px;">{{ atlet.nama_atlet }}</td>
+                <td style="padding: 8px;">{{ atlet.get_kategori_umur_display }}</td>
+                <td style="padding: 8px;">{{ atlet.get_gender_display }}</td>
+                <td style="padding: 8px;">{{ atlet.kelas_berat|default:"-" }}</td>
+                <td style="padding: 8px;">
+                    <a href="{% url 'sepakbola:dashboard' %}?atlet_id={{ atlet.id }}" style="font-size:12px;color:#0891b2;text-decoration:none;">Lihat Profil →</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color:#888;">Belum ada atlet Sepak Bola yang terdaftar untuk pelatih ini.</p>
+    {% endif %}
+
+    <div style="margin-top:20px;">
+        <a href="{% url 'combat:tambah_atlet' %}" class="btn btn-sm btn-outline-info">+ Tambah Atlet Baru</a>
+    </div>
+</div>
+{% endblock %}

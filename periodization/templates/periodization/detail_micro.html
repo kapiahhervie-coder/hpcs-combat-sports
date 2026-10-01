@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}HPCS - Minggu {{ micro.minggu_ke }}{% endblock %}
+{% block page_title %}Program Harian{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:8px; font-size:12px; color:#9ca3af;">
+    <a href="{% url 'periodization:daftar_program' %}" style="color:#9ca3af; text-decoration:none;">Daftar Program</a>
+    <span style="margin:0 4px;">/</span>
+    <a href="{% url 'periodization:detail_program' micro.meso_cycle.macro_program.id %}" style="color:#9ca3af; text-decoration:none;">{{ micro.meso_cycle.macro_program.nama_program }}</a>
+    <span style="margin:0 4px;">/</span>
+    <a href="{% url 'periodization:detail_meso' micro.meso_cycle.id %}" style="color:#9ca3af; text-decoration:none;">{{ micro.meso_cycle.get_nama_fase_display }}</a>
+    <span style="margin:0 4px;">/</span>
+    <span style="color:#374151; font-weight:600;">Minggu {{ micro.minggu_ke }}</span>
+</div>
+
+<div style="margin-bottom:14px;">
+    <h2 style="margin:8px 0 4px;">Minggu {{ micro.minggu_ke }}</h2>
+    <p style="color:#6b7280; margin:0;">
+        {{ micro.tanggal_mulai|date:"d M Y" }} - {{ micro.tanggal_selesai|date:"d M Y" }}
+        &middot; {{ micro.meso_cycle.macro_program.atlet.nama_atlet }}
+    </p>
+</div>
+
+{% if sibling_micro_list|length > 1 %}
+<div style="display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap;">
+    {% for s in sibling_micro_list %}
+        {% if s.id == micro.id %}
+            <span style="background:#e63946; color:#fff; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:600;">Minggu {{ s.minggu_ke }}</span>
+        {% else %}
+            <a href="{% url 'periodization:detail_micro' s.id %}" style="background:#f3f4f6; color:#374151; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:600; text-decoration:none;">Minggu {{ s.minggu_ke }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<div style="display:grid; gap:14px;">
+{% for h in hari_list %}
+    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:18px;">
+        <strong>{{ h.nama_hari }}</strong>
+
+        {% for s in h.sesi_list %}
+        <div style="margin-top:10px; padding:10px 12px; background:#f9fafb; border-radius:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="background:#111826; color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600;">{{ s.get_waktu_sesi_display }}</span>
+                    {% if s.pilar_fokus == 'REST' %}
+                        <span style="background:#f3f4f6; color:#374151; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">{{ s.get_pilar_fokus_display }}</span>
+                    {% elif s.pilar_fokus == 'RECOVERY' %}
+                        <span style="background:#dbeafe; color:#1e40af; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">{{ s.get_pilar_fokus_display }}</span>
+                    {% elif s.pilar_fokus == 'KOMPETISI' %}
+                        <span style="background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">{{ s.get_pilar_fokus_display }}</span>
+                    {% else %}
+                        <span style="background:#fef3c7; color:#92400e; padding:3px 10px; border-radius:10px; font-size:12px; font-weight:600;">{{ s.get_pilar_fokus_display }}</span>
+                    {% endif %}
+                </div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <a href="{% url 'periodization:detail_sesi' s.id %}" style="color:#e63946; text-decoration:none; font-size:13px; font-weight:600;">Exercise &rarr;</a>
+                    <form method="post" action="{% url 'periodization:hapus_sesi' s.id %}" style="margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Hapus sesi ini?');"
+                                style="background:none; border:none; color:#991b1b; cursor:pointer; font-size:12px;">Hapus</button>
+                    </form>
+                </div>
+            </div>
+            <p style="margin:0 0 4px; font-size:14px;">{{ s.nama_sesi }}</p>
+            <p style="margin:0; color:#6b7280; font-size:12px;">
+                {{ s.durasi_menit }} menit &middot; Intensitas {{ s.intensitas }}/10
+                {% if s.catatan %} &middot; {{ s.catatan }}{% endif %}
+            </p>
+        </div>
+        {% endfor %}
+
+        <details style="margin-top:10px;">
+            <summary style="cursor:pointer; color:#e63946; font-size:12px; font-weight:600;">
+                + {% if h.sesi_list %}Tambah Sesi Lagi{% else %}Isi Sesi Hari Ini{% endif %}
+            </summary>
+            <form method="post" action="{% url 'periodization:tambah_sesi' micro.id %}" style="margin-top:12px; display:grid; gap:10px; max-width:640px;">
+                {% csrf_token %}
+                <input type="hidden" name="hari_ke" value="{{ h.hari_ke }}">
+                <div style="display:grid; grid-template-columns:1fr 2fr 1fr; gap:10px;">
+                    <div>
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Waktu Sesi</label>
+                        <select name="waktu_sesi" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                            {% for val, label in waktu_sesi_choices %}
+                                <option value="{{ val }}" {% if val == 'SORE' %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Nama Sesi</label>
+                        <input type="text" name="nama_sesi" placeholder="mis. Strength AM"
+                               style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Pilar Fokus</label>
+                        <select name="pilar_fokus" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                            {% for val, label in pilar_fokus_choices %}
+                                <option value="{{ val }}" {% if val == 'REST' %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Durasi (menit)</label>
+                        <input type="number" name="durasi_menit" min="0" value="0"
+                               style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Intensitas (1-10)</label>
+                        <input type="number" name="intensitas" min="1" max="10" value="5"
+                               style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
+                    </div>
+                </div>
+                <div>
+                    <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Catatan</label>
+                    <textarea name="catatan" rows="2" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;"></textarea>
+                </div>
+                <p style="color:#9ca3af; font-size:11px; margin:0;">
+                    Isi lagi form ini dengan Waktu Sesi berbeda (mis. Pagi lalu Sore) kalau hari ini butuh lebih dari 1 sesi.
+                </p>
+                <button type="submit"
+                        style="background:#e63946; color:#fff; border:none; border-radius:8px; padding:8px 14px; font-size:13px; font-weight:600; cursor:pointer; justify-self:start;">
+                    Simpan Sesi
+                </button>
+            </form>
+        </details>
+    </div>
+{% endfor %}
+</div>
+
+{% endblock %}

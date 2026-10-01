@@ -419,3 +419,40 @@ class CatatanCedera(models.Model):
 
     def __str__(self):
         return f"{self.siswa.nama} - {self.jenis_cedera} ({self.tanggal_kejadian})"
+
+# ---------------------------------------------------------------------------
+# Modul Ajar — dokumen rencana pembelajaran per pertemuan, terhubung ke TP
+# ---------------------------------------------------------------------------
+
+class ModulAjar(models.Model):
+    """
+    Modul Ajar per pertemuan/sesi, terhubung langsung ke satu atau lebih
+    Tujuan Pembelajaran (TP) yang sudah dirumuskan guru. Berbeda dari
+    RencanaMingguan (jadwal garis besar Prota/Prosem), ini adalah dokumen
+    rencana pembelajaran yang lebih rinci & siap dicetak/diajarkan.
+    """
+    guru = models.ForeignKey(GuruProfile, on_delete=models.CASCADE, related_name='modul_ajar')
+    fase = models.CharField(max_length=1, choices=FASE_CHOICES)
+    judul = models.CharField(max_length=150, help_text="Contoh: Passing Bawah Bola Voli - Pertemuan 1")
+    materi = models.ForeignKey(MateriFase, on_delete=models.SET_NULL, null=True, blank=True, related_name='modul_ajar')
+    tp = models.ManyToManyField(TujuanPembelajaran, blank=True, related_name='modul_ajar')
+    alokasi_waktu = models.CharField(max_length=50, default="2 x 35 menit", help_text="Contoh: 2 x 35 menit")
+
+    pemahaman_bermakna = models.TextField(blank=True, help_text="Manfaat/kebermaknaan materi bagi kehidupan siswa")
+    pertanyaan_pemantik = models.TextField(blank=True, help_text="Pertanyaan pembuka untuk memancing rasa ingin tahu siswa")
+
+    kegiatan_pendahuluan = models.TextField(blank=True)
+    kegiatan_inti = models.TextField(blank=True)
+    kegiatan_penutup = models.TextField(blank=True)
+
+    asesmen = models.TextField(blank=True, help_text="Bentuk & teknik asesmen yang dipakai di pertemuan ini")
+    sumber_media = models.TextField(blank=True, help_text="Alat, media, dan sumber belajar yang dipakai")
+
+    dibuat_pada = models.DateTimeField(auto_now_add=True)
+    diperbarui_pada = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-dibuat_pada']
+
+    def __str__(self):
+        return f"{self.judul} (Fase {self.fase})"

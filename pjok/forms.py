@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import CatatanCedera, GuruProfile, KondisiKesehatan, MateriFase, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES, TujuanPembelajaran
+from .models import CatatanCedera, GuruProfile, KondisiKesehatan, MateriFase, ModulAjar, PenilaianFisik, PenilaianKarakter, PenilaianPengetahuan, PenilaianTeknik, RencanaMingguan, Siswa, TINGKAT_CHOICES, TujuanPembelajaran
 
 
 class GuruProfileForm(forms.ModelForm):
@@ -19,12 +19,25 @@ class SiswaForm(forms.ModelForm):
 
 
 class EditSiswaForm(forms.ModelForm):
+    """
+    Form edit data siswa sehari-hari. `fase` SENGAJA TIDAK dimasukkan di sini
+    supaya siswa tidak bisa "kesenggol" pindah fase tanpa sadar saat guru
+    edit nama/kelas/dsb. Pemindahan fase (kenaikan kelas antar tahun ajaran)
+    harus lewat PindahFaseForm yang eksplisit + konfirmasi.
+    """
     class Meta:
         model = Siswa
-        fields = ['nama', 'kelas', 'jenis_kelamin', 'tanggal_lahir', 'fase']
+        fields = ['nama', 'kelas', 'jenis_kelamin', 'tanggal_lahir']
         widgets = {
             'tanggal_lahir': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+class PindahFaseForm(forms.ModelForm):
+    """Form khusus untuk memindahkan siswa ke fase lain — dipakai terpisah, butuh konfirmasi eksplisit."""
+    class Meta:
+        model = Siswa
+        fields = ['fase']
 
 
 class PenilaianFisikForm(forms.ModelForm):
@@ -180,3 +193,33 @@ class ImportSiswaForm(forms.Form):
         if f.size > 2 * 1024 * 1024:  # 2MB — lebih dari cukup untuk ribuan baris siswa
             raise forms.ValidationError('Ukuran file terlalu besar (maksimal 2MB).')
         return f
+
+
+class ModulAjarForm(forms.ModelForm):
+    class Meta:
+        model = ModulAjar
+        fields = [
+            'judul', 'materi', 'tp', 'alokasi_waktu',
+            'pemahaman_bermakna', 'pertanyaan_pemantik',
+            'kegiatan_pendahuluan', 'kegiatan_inti', 'kegiatan_penutup',
+            'asesmen', 'sumber_media',
+        ]
+        widgets = {
+            'tp': forms.CheckboxSelectMultiple,
+            'pemahaman_bermakna': forms.Textarea(attrs={'rows': 2}),
+            'pertanyaan_pemantik': forms.Textarea(attrs={'rows': 2}),
+            'kegiatan_pendahuluan': forms.Textarea(attrs={'rows': 4}),
+            'kegiatan_inti': forms.Textarea(attrs={'rows': 6}),
+            'kegiatan_penutup': forms.Textarea(attrs={'rows': 4}),
+            'asesmen': forms.Textarea(attrs={'rows': 3}),
+            'sumber_media': forms.Textarea(attrs={'rows': 2}),
+        }
+
+    def __init__(self, *args, fase=None, guru=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if fase:
+            self.fields['materi'].queryset = MateriFase.objects.filter(fase=fase)
+        if fase and guru:
+            self.fields['tp'].queryset = TujuanPembelajaran.objects.filter(fase=fase, guru=guru)
+        self.fields['materi'].required = False
+        self.fields['tp'].required = False

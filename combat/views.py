@@ -36,7 +36,78 @@ CABOR_DASHBOARD_URL = {
 }
 
 
-class DashboardView(LoginRequiredMixin, View):
+class CoachApprovedRequiredMixin:
+    """
+    PERBAIKAN (revisi ke-2, menyesuaikan keputusan desain HPCS):
+    - status 'pending' DAN 'approved' -> akses dashboard tetap jalan seperti
+      biasa. Approval bukan gerbang akses, cuma catatan/label untuk admin.
+    - status 'rejected' -> BENAR-BENAR diblokir. Ini satu-satunya kondisi
+      yang menutup akses, dipakai saat admin klik 'Tolak' atau 'Cabut Akses'.
+
+    Superuser/staff selalu lolos (mereka admin, bukan coach).
+    """
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and not (request.user.is_superuser or request.user.is_staff):
+            profil = getattr(request.user, 'profil_pelatih', None)
+            if profil and profil.status == 'rejected':
+                return redirect('combat:tunggu_approval')
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UserMonitorView(LoginRequiredMixin, View):
+    """
+    Halaman pantau semua akun user di HPCS (Admin, Pelatih, dan role lain
+    kalau ada) -- lengkap dengan tanggal daftar & login terakhir, supaya
+    admin tidak lagi kehilangan jejak siapa saja yang mendaftar.
+
+    Sengaja dibaca langsung dari model User bawaan Django (date_joined,
+    last_login sudah otomatis ada), bukan dari ProfilPelatih saja -- supaya
+    akun yang gagal/lupa dibuatkan ProfilPelatih pun tetap kelihatan di sini,
+    bukan menghilang seperti yang sempat terjadi kemarin.
+    """
+    template_name = 'combat/user_monitor.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_superuser or request.user.is_staff):
+            messages.error(request, 'Akses ditolak.')
+            return redirect('combat:dashboard')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request):
+        semua_user = User.objects.all().order_by('-date_joined')
+        data = []
+        for u in semua_user:
+            profil = getattr(u, 'profil_pelatih', None)
+            if u.is_superuser:
+                role, sub = 'Admin (Superuser)', '-'
+            elif u.is_staff:
+                role, sub = 'Staff', '-'
+            elif profil:
+                role, sub = 'Pelatih', f'{profil.get_cabang_display()} — {profil.get_status_display()}'
+            else:
+                # Akun ada tapi tidak terhubung ke ProfilPelatih (mis. role
+                # lain seperti Guru PJOK, atau ProfilPelatih-nya gagal dibuat)
+                role, sub = 'Lainnya / Belum Terhubung', '-'
+
+            data.append({
+                'username': u.username,
+                'nama': u.get_full_name() or '-',
+                'role': role,
+                'sub': sub,
+                'tanggal_daftar': u.date_joined,
+                'login_terakhir': u.last_login,
+                'aktif': u.is_active,
+            })
+
+        context = {
+            'data': data,
+            'total_user': len(data),
+            'total_belum_pernah_login': sum(1 for d in data if d['login_terakhir'] is None),
+        }
+        return render(request, self.template_name, context)
+
+
+class DashboardView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     template_name = 'combat/dashboard_combat.html'
     
 
@@ -104,6 +175,20 @@ class DashboardView(LoginRequiredMixin, View):
                 'status': 'Cukup',
                 'pct_audit': 0,
             },
+            {
+                'cabor': {'nama': 'Sepak Bola'},
+                'total': get_atlet_queryset(request.user).filter(cabang__iexact='sepakbola').count(),
+                'rata_level': '-',
+                'status': 'Cukup',
+                'pct_audit': 0,
+            },
+            {
+                'cabor': {'nama': 'Basket'},
+                'total': get_atlet_queryset(request.user).filter(cabang__iexact='basketball').count(),
+                'rata_level': '-',
+                'status': 'Cukup',
+                'pct_audit': 0,
+            },
         ]
 
         context = {
@@ -123,6 +208,8 @@ class DashboardView(LoginRequiredMixin, View):
             'total_atlet_muaythai': squad_atlet.filter(cabang__iexact='muaythai').count(),
             'total_atlet_taekwondo': squad_atlet.filter(cabang__iexact='tkd').count(),
             'total_atlet_karate': squad_atlet.filter(cabang__iexact='krt').count(),
+            'total_atlet_sepakbola': squad_atlet.filter(cabang__iexact='sepakbola').count(),
+            'total_atlet_basketball': squad_atlet.filter(cabang__iexact='basketball').count(),
             'is_guru_pjok': is_guru_pjok,
             'pjok_url': pjok_url,
         }
@@ -133,7 +220,7 @@ class DashboardView(LoginRequiredMixin, View):
 # ATHLETE INTELLIGENCE REPORT (NEW REPORT CARD)
 # ----------------------------------------------------------------------
 
-class AthleteIntelligenceReportView(LoginRequiredMixin, View):
+class AthleteIntelligenceReportView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     template_name = 'combat/athlete_report.html'
 
     def get(self, request, atlet_id):
@@ -200,7 +287,7 @@ class AthleteIntelligenceReportView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class ReportCardView(LoginRequiredMixin, View):
+class ReportCardView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     template_name = 'combat/report_card.html'
 
     def get(self, request, atlet_id):
@@ -236,7 +323,7 @@ class ReportCardView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-class ReportCenterView(LoginRequiredMixin, View):
+class ReportCenterView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     template_name = 'combat/report_center.html'
 
     def get(self, request):
@@ -342,7 +429,12 @@ class DaftarCoachView(View):
             last_name=nama_parts[1] if len(nama_parts) > 1 else '',
             email=email,
         )
-        profil = ProfilPelatih(user=user, cabang=cabang, no_hp=no_hp, email=email, status='approved')
+        # status='pending' (bukan hardcode 'approved') -- supaya pelatih baru
+        # TERCATAT dan muncul di section "Menunggu Persetujuan" pada halaman
+        # admin-coach. Ini TIDAK memblokir akses (lihat CoachApprovedRequiredMixin
+        # -- hanya status 'rejected' yang diblokir), jadi pelatih tetap bisa
+        # langsung pakai dashboard cabornya sesuai desain HPCS.
+        profil = ProfilPelatih(user=user, cabang=cabang, no_hp=no_hp, email=email, status='pending')
         if foto:
             profil.foto = foto
         profil.save()
@@ -351,14 +443,20 @@ class DaftarCoachView(View):
 
 
 class TungguApprovalView(LoginRequiredMixin, View):
+    """
+    Sekarang berfungsi sebagai halaman 'Akses Ditolak/Dicabut', bukan lagi
+    'Menunggu Persetujuan' -- karena status 'pending' sudah tidak diblokir
+    (lihat CoachApprovedRequiredMixin). Hanya status 'rejected' yang
+    berhenti di halaman ini.
+    """
     template_name = 'combat/tunggu_approval.html'
 
     def get(self, request):
         profil = getattr(request.user, 'profil_pelatih', None)
         if request.user.is_superuser or request.user.is_staff:
             return redirect('combat:dashboard')
-        if profil and profil.is_approved:
-            return redirect('combat:dashboard')
+        if not (profil and profil.status == 'rejected'):
+            return redirect(CABOR_DASHBOARD_URL.get(getattr(profil, 'cabang', None), 'combat:dashboard'))
         return render(request, self.template_name, {'profil': profil})
 
 
@@ -428,7 +526,11 @@ Tim HPCS Combat Sports""",
                 profil.save()
                 messages.error(request, f'{nama} ditolak.')
             elif action == 'revoke':
-                profil.status = 'pending'
+                # PERBAIKAN: sebelumnya di-set ke 'pending', padahal 'pending'
+                # sekarang TETAP dapat akses (lihat CoachApprovedRequiredMixin).
+                # Supaya tombol "Cabut Akses" ini sungguhan memblokir, statusnya
+                # harus 'rejected' -- satu-satunya status yang diblokir mixin.
+                profil.status = 'rejected'
                 profil.save()
                 messages.error(request, f'Akses {nama} dicabut.')
         except ProfilPelatih.DoesNotExist:
@@ -458,6 +560,24 @@ class AssignAtletCoachView(LoginRequiredMixin, View):
             atlet = Atlet.objects.get(pk=atlet_id)
             if action == 'assign':
                 coach = User.objects.get(pk=coach_id)
+
+                # Validasi: cabang atlet WAJIB cocok dengan cabang coach
+                # tujuan. Tanpa ini, atlet bisa nyasar ke pelatih cabor
+                # lain (pernah kejadian, lihat catatan Periodization app).
+                coach_profil = getattr(coach, 'profil_pelatih', None)
+                coach_cabang = coach_profil.cabang if coach_profil else None
+                if not coach_cabang:
+                    messages.error(request, f'{coach.get_full_name() or coach.username} belum punya cabang olahraga terdaftar. Assign dibatalkan.')
+                    return redirect('combat:admin_coach')
+                if atlet.cabang != coach_cabang:
+                    messages.error(
+                        request,
+                        f'Gagal assign: {atlet.nama_atlet} cabangnya "{atlet.get_cabang_display()}", '
+                        f'sedangkan {coach.get_full_name() or coach.username} cabangnya "{coach_profil.get_cabang_display()}". '
+                        f'Cabang harus cocok -- ubah cabang atlet dulu kalau memang mau pindah cabor.'
+                    )
+                    return redirect('combat:admin_coach')
+
                 atlet.pelatih = coach
                 atlet.save()
                 messages.success(request, f'{atlet.nama_atlet} berhasil di-assign ke {coach.get_full_name() or coach.username}.')
@@ -480,7 +600,7 @@ class AssignAtletCoachView(LoginRequiredMixin, View):
 # Python (definisi sebelumnya jadi dead code tertimpa). Di sini disisakan
 # satu saja.
 
-class TambahAtletView(LoginRequiredMixin, View):
+class TambahAtletView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     """Coach menambahkan atlet baru yang langsung jadi binaannya."""
     template_name = 'combat/tambah_atlet.html'
 
@@ -496,7 +616,13 @@ class TambahAtletView(LoginRequiredMixin, View):
         return '/combat/'
 
     def get(self, request):
-        return render(request, self.template_name, {'back_url': self.get_back_url(request)})
+        is_admin_user = request.user.is_superuser or request.user.is_staff
+        profil = getattr(request.user, 'profil_pelatih', None)
+        return render(request, self.template_name, {
+            'back_url': self.get_back_url(request),
+            'is_admin_cabang': is_admin_user,
+            'cabang_pelatih_display': None if is_admin_user else (profil.get_cabang_display() if profil and profil.cabang else '(belum diatur)'),
+        })
 
     def post(self, request):
         try:
@@ -506,12 +632,24 @@ class TambahAtletView(LoginRequiredMixin, View):
             kelas_berat = request.POST.get('kelas_berat', '')
             tinggi      = request.POST.get('tinggi_badan', '') or None
             tgl_lahir   = request.POST.get('tanggal_lahir', '') or None
-            cabang      = request.POST.get('cabang', '')
             tahap_ltad  = request.POST.get('tahap_ltad', '')
+
+            # Cabang WAJIB dikunci ke cabor pelatih sendiri, jangan pernah
+            # dipercaya dari form -- kalau tidak, coach bisa (sengaja atau
+            # tidak sengaja) bikin atlet nyasar ke cabor lain lewat form ini.
+            # Admin/staff masih boleh override manual.
+            if request.user.is_superuser or request.user.is_staff:
+                cabang = request.POST.get('cabang', '')
+            else:
+                profil = getattr(request.user, 'profil_pelatih', None)
+                cabang = profil.cabang if profil else ''
+                if not cabang:
+                    messages.error(request, 'Akun Anda belum punya cabang olahraga terdaftar. Hubungi admin.')
+                    return render(request, self.template_name, {'back_url': self.get_back_url(request)})
 
             if not nama or not kategori or not gender or not kelas_berat:
                 messages.error(request, 'Nama, kategori usia, gender, dan berat badan wajib diisi.')
-                return render(request, self.template_name)
+                return render(request, self.template_name, {'back_url': self.get_back_url(request)})
 
             atlet = Atlet(
                 nama_atlet    = nama,

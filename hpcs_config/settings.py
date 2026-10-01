@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'combat.apps.CombatConfig',
     'muaythai',
+    'basketball',
     'boxing',
     'taekwondo',
     'karate',
@@ -55,6 +56,8 @@ INSTALLED_APPS = [
     'coaching_community',
     'periodization',
     'workout_prescription',
+    'fitness',
+    'sepakbola',
 
     # Tambah cabang lain di sini: 'boxing', 'taekwondo', dst
 ]
@@ -63,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'hpcs_config.active_cabor_middleware.ActiveCaborMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -171,3 +175,4 @@ DEFAULT_FROM_EMAIL = 'HPCS Combat Sports <sakalahpcs@gmail.com>'
 # Allow GET logout
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/combat/'
+

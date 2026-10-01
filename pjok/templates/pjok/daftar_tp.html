@@ -10,6 +10,8 @@
     --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
     font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:1000px;
   }
+  .pjok-back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-size:12.5px;font-family:'IBM Plex Mono',monospace;margin-bottom:22px;}
+  .pjok-back:hover{text-decoration:underline;}
   .pjok-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px;}
   .pjok-title{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.02em;font-size:28px;margin:0 0 14px;line-height:1.15;}
   .pjok-rule{height:3px;width:64px;background:linear-gradient(90deg,var(--red) 0%,var(--red) 60%,var(--gold) 100%);margin-bottom:22px;border-radius:2px;}
@@ -46,6 +48,8 @@
 </style>
 
 <div class="pjok-scope">
+  <a class="pjok-back" href="{% url 'pjok:dashboard_fase' fase %}" onclick="kembaliSebelumnya(); return false;">&larr; KEMBALI</a>
+
   <p class="pjok-eyebrow">Fase {{ fase }} &middot; {{ jenjang }}</p>
   <h2 class="pjok-title">Tujuan Pembelajaran (TP &amp; KKTP)</h2>
   <div class="pjok-rule"></div>
@@ -117,10 +121,15 @@
     </form>
   </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
+function kembaliSebelumnya(){
+  if (document.referrer && document.referrer.indexOf(window.location.host) !== -1) {
+    history.back();
+  } else {
+    window.location.href = "{% url 'pjok:dashboard_fase' fase %}";
+  }
+}
 function bukaModal(){
   document.getElementById('modalTitle').textContent = 'Tambah TP';
   document.getElementById('inputTpId').value = '';

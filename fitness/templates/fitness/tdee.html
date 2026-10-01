@@ -1,0 +1,52 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Kebutuhan Kalori Harian (TDEE)</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Berat Badan: <span id="bV">60</span> kg</label>
+  <input type="range" name="berat" min="30" max="150" value="60" oninput="bV.innerText=this.value">
+
+  <label>Tinggi Badan: <span id="tV">165</span> cm</label>
+  <input type="range" name="tinggi" min="120" max="220" value="165" oninput="tV.innerText=this.value">
+
+  <label>Usia: <span id="uV">20</span> tahun</label>
+  <input type="range" name="usia" min="10" max="80" value="20" oninput="uV.innerText=this.value">
+
+  <label>Jenis Kelamin</label>
+  <select name="gender">
+    <option value="L">Laki-laki</option>
+    <option value="P">Perempuan</option>
+  </select>
+
+  <label>Level Aktivitas: <span id="aV">Sedang</span></label>
+  <input type="range" name="aktivitas" min="1.2" max="1.9" step="0.1" value="1.55" oninput="updAkt(this.value)">
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <strong>TDEE: {{ hasil }} kkal/hari</strong>
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li>Isi data dasar atlet, lalu sesuaikan level aktivitas dengan frekuensi latihan mingguan.</li>
+    <li>BMR dihitung dengan rumus Mifflin-St Jeor, lalu dikalikan faktor aktivitas untuk mendapat TDEE.</li>
+    <li>Gunakan hasil ini sebagai acuan kebutuhan energi harian, sesuaikan lagi jika tujuannya menambah/menurunkan berat badan.</li>
+  </ol>
+</div>
+
+<script>
+function updAkt(v){
+  var l = "Sedang";
+  if (v <= 1.3) { l = "Ringan"; }
+  else if (v <= 1.55) { l = "Sedang"; }
+  else if (v <= 1.7) { l = "Berat"; }
+  else { l = "Sangat Berat (atlet)"; }
+  document.getElementById("aV").innerText = l;
+}
+</script>
+{% endblock %}

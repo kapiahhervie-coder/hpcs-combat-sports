@@ -1,0 +1,72 @@
+{% extends "base_pjok.html" %}
+{% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  .pjok-scope{
+    --bg:#101514; --surface:#171d1c; --surface-2:#1c2422; --border:#293330;
+    --gold:#38bdf8; --gold-dim:#2b6f8f; --warn:#f59e0b; --danger:#f87171;
+    --text:#efe9df; --text-dim:#a89f8f; --text-faint:#6f6759;
+    font-family:'Inter',-apple-system,sans-serif; color:var(--text); max-width:600px;
+  }
+  .pjok-back{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-size:12.5px;font-family:'IBM Plex Mono',monospace;margin-bottom:22px;}
+  .pjok-title{font-family:'Oswald',sans-serif;font-weight:700;font-size:1.5rem;color:var(--text);}
+  .pjok-subtitle{color:var(--text-faint);font-size:13px;margin:4px 0 20px;}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px;}
+  .warn-box{background:rgba(245,158,11,.08);border:1px solid var(--warn);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:#fde68a;line-height:1.6;}
+  .warn-box strong{color:var(--warn);display:block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
+
+  .fase-info{display:flex;align-items:center;gap:16px;margin-bottom:20px;font-family:'IBM Plex Mono',monospace;}
+  .fase-badge{padding:8px 16px;border-radius:8px;border:1px solid var(--border);font-weight:700;font-size:13px;}
+  .fase-arrow{color:var(--gold);font-size:18px;}
+
+  .field-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;display:block;}
+  select.field-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 12px;color:var(--text);font-size:14px;box-sizing:border-box;margin-bottom:18px;}
+
+  .confirm-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;font-size:13px;color:var(--text-dim);}
+  .confirm-row input{width:16px;height:16px;margin-top:2px;accent-color:var(--danger);}
+
+  .btn-move{border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;padding:13px 22px;border-radius:8px;cursor:pointer;background:linear-gradient(90deg,#b45309,#f59e0b);color:#1a0800;}
+  .btn-move:hover{opacity:.9;}
+  .btn-cancel{display:inline-flex;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-dim);text-decoration:none;padding:13px 18px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pjok-scope">
+  <a class="pjok-back" href="{% url 'pjok:detail_siswa' siswa.id %}">&larr; KEMBALI KE DETAIL SISWA</a>
+
+  <div class="pjok-title">Pindah Fase Siswa</div>
+  <div class="pjok-subtitle">{{ siswa.nama }} &middot; {{ siswa.kelas }}</div>
+
+  <div class="warn-box">
+    <strong>&#9888; Tindakan ini sengaja dipisah dari form Edit biasa</strong>
+    Semua riwayat penilaian, absensi, dan data kesehatan siswa akan tetap melekat ke siswa ini,
+    tapi siswa akan hilang dari dashboard Fase {{ fase_lama }} dan mulai muncul di fase tujuan.
+    Gunakan ini HANYA untuk kenaikan kelas yang sah, bukan untuk koreksi data biasa.
+  </div>
+
+  <div class="card">
+    <div class="fase-info">
+      <span class="fase-badge">Fase {{ fase_lama }} (sekarang)</span>
+      <span class="fase-arrow">&#8594;</span>
+      <span class="fase-badge" style="border-color:var(--gold);color:var(--gold);">Fase tujuan</span>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <label class="field-label">Pindahkan ke Fase</label>
+      {{ form.fase }}
+
+      <label class="confirm-row">
+        <input type="checkbox" name="konfirmasi" value="ya" required>
+        <span>Saya yakin ingin memindahkan <strong>{{ siswa.nama }}</strong> ke fase baru. Ini bukan kesalahan klik.</span>
+      </label>
+
+      <button type="submit" class="btn-move">Pindahkan Siswa</button>
+      <a href="{% url 'pjok:detail_siswa' siswa.id %}" class="btn-cancel">Batal</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

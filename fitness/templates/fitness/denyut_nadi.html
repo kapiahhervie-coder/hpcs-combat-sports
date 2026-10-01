@@ -1,0 +1,44 @@
+﻿{% extends "fitness/base_calculator.html" %}
+{% block calc_content %}
+<h2>Denyut Nadi (Normal, Istirahat & Latihan)</h2>
+<p>Referensi umum: denyut nadi istirahat normal orang dewasa berkisar 60-100 kali/menit. Atlet terlatih sering memiliki denyut istirahat lebih rendah (bisa di bawah 60).</p>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Usia: <span id="uV">20</span> tahun</label>
+  <input type="range" name="usia" min="10" max="80" value="20" oninput="uV.innerText=this.value">
+
+  <label>Denyut Nadi Istirahat (diukur pagi hari sebelum bangun/beraktivitas): <span id="iV">70</span> bpm</label>
+  <input type="range" name="denyut_istirahat" min="40" max="120" value="70" oninput="iV.innerText=this.value">
+
+  <label>Denyut Nadi Saat Latihan (opsional, diukur di tengah sesi latihan): <span id="lV">140</span> bpm</label>
+  <input type="range" name="denyut_latihan" min="60" max="220" value="140" oninput="lV.innerText=this.value">
+
+  <button type="submit">Hitung</button>
+</form>
+
+{% if hasil %}
+<div class="result-box">
+  <p>Denyut Nadi Istirahat: <strong>{{ hasil.istirahat.nilai }} bpm</strong> - {{ hasil.istirahat.kategori }}</p>
+  {% if hasil.latihan %}
+  <p>Denyut Jantung Maksimal (estimasi): <strong>{{ hasil.latihan.zona.hr_max }} bpm</strong></p>
+  <p>Zona Latihan Target: <strong>{{ hasil.latihan.zona.zona_bawah }} - {{ hasil.latihan.zona.zona_atas }} bpm</strong></p>
+  <p>Status Denyut Saat Latihan: <strong>{{ hasil.latihan.status }}</strong></p>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="instruksi-box">
+  <strong>Petunjuk:</strong>
+  <ol>
+    <li><strong>Denyut nadi istirahat:</strong> ukur denyut nadi atlet saat baru bangun tidur, sebelum beraktivitas, selama 1 menit penuh (atau 15 detik dikali 4).</li>
+    <li><strong>Denyut nadi latihan:</strong> ukur di tengah sesi latihan (misal segera setelah interval berat) untuk mengecek apakah intensitas latihan sudah sesuai target.</li>
+    <li>Rentang normal istirahat dewasa: 60-100 bpm. Di bawah 60 pada atlet terlatih umumnya normal; di atas 100 secara konsisten sebaiknya dikonsultasikan ke tenaga medis.</li>
+    <li>Zona latihan dihitung dengan metode Karvonen menggunakan denyut istirahat yang diisi di atas.</li>
+  </ol>
+</div>
+
+<script>
+document.getElementById("iV")?.addEventListener("input", function(){});
+</script>
+{% endblock %}
