@@ -1,5 +1,5 @@
-"""
-HPCS Basketball — Views
+﻿"""
+HPCS Basketball â€” Views
 High Performance Coaching System
 """
 import json
@@ -34,9 +34,9 @@ def to_int(val):
     except: return None
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # DASHBOARD
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class DashboardBasketballView(LoginRequiredMixin, View):
     template_name = 'basketball/dashboard_basketball.html'
@@ -76,9 +76,9 @@ class DashboardBasketballView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # DAFTAR ATLET
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class DaftarAtletBasketView(LoginRequiredMixin, View):
     template_name = 'basketball/daftar_atlet.html'
@@ -92,6 +92,10 @@ class DaftarAtletBasketView(LoginRequiredMixin, View):
 
     def post(self, request):
         try:
+            profil = getattr(request.user, 'profil_pelatih', None)
+            if profil and not profil.bisa_tambah_atlet():
+                messages.error(request, f'Batas {profil.FREE_ATLET_LIMIT} atlet untuk akun Free sudah tercapai. Upgrade ke Pro untuk menambah atlet tanpa batas.')
+                return redirect('basketball:daftar_atlet')
             atlet = AtletBasket(
                 nama_atlet    = request.POST.get('nama_atlet', '').strip(),
                 kategori_umur = request.POST.get('kategori_umur', 'ELITE'),
@@ -111,9 +115,9 @@ class DaftarAtletBasketView(LoginRequiredMixin, View):
         return redirect('basketball:daftar_atlet')
 
 
-# ══════════════════════════════════════════════════════════════════════
-# L1 — CORRECTION
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# L1 â€” CORRECTION
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class L1CorrectionBasketView(LoginRequiredMixin, View):
     template_name = 'basketball/l1_correction.html'
@@ -154,9 +158,9 @@ class L1CorrectionBasketView(LoginRequiredMixin, View):
             )
             audit.save()
             if audit.layak_naik:
-                messages.success(request, f'✅ {audit.atlet_name} — {audit.total_skor} ({audit.predikat}). LAYAK ke L2!')
+                messages.success(request, f'âœ… {audit.atlet_name} â€” {audit.total_skor} ({audit.predikat}). LAYAK ke L2!')
             else:
-                messages.warning(request, f'⚠️ {audit.atlet_name} — {audit.total_skor} ({audit.predikat}). Belum layak ke L2.')
+                messages.warning(request, f'âš ï¸ {audit.atlet_name} â€” {audit.total_skor} ({audit.predikat}). Belum layak ke L2.')
         except Exception as e:
             messages.error(request, f'Error: {e}')
         return redirect('basketball:l1_correction')
@@ -170,9 +174,9 @@ def hapus_l1_basket(request, pk):
     return redirect('basketball:l1_correction')
 
 
-# ══════════════════════════════════════════════════════════════════════
-# L2 — STRENGTH
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# L2 â€” STRENGTH
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class L2StrengthBasketView(LoginRequiredMixin, View):
     template_name = 'basketball/l2_strength.html'
@@ -214,9 +218,9 @@ class L2StrengthBasketView(LoginRequiredMixin, View):
             )
             audit.save()
             if audit.layak_naik:
-                messages.success(request, f'✅ {audit.atlet_name} — {audit.total_skor} ({audit.predikat}). LAYAK ke L3!')
+                messages.success(request, f'âœ… {audit.atlet_name} â€” {audit.total_skor} ({audit.predikat}). LAYAK ke L3!')
             else:
-                messages.warning(request, f'⚠️ {audit.atlet_name} — {audit.total_skor}. Belum layak ke L3.')
+                messages.warning(request, f'âš ï¸ {audit.atlet_name} â€” {audit.total_skor}. Belum layak ke L3.')
         except Exception as e:
             messages.error(request, f'Error: {e}')
         return redirect('basketball:l2_strength')
@@ -230,9 +234,9 @@ def hapus_l2_basket(request, pk):
     return redirect('basketball:l2_strength')
 
 
-# ══════════════════════════════════════════════════════════════════════
-# L3 — POWER
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# L3 â€” POWER
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class L3PowerBasketView(LoginRequiredMixin, View):
     template_name = 'basketball/l3_power.html'
@@ -275,11 +279,11 @@ class L3PowerBasketView(LoginRequiredMixin, View):
             )
             audit.save()
             if audit.layak_naik:
-                messages.success(request, f'🏆 {audit.atlet_name} — {audit.total_skor}. LAYAK KOMPETISI!')
+                messages.success(request, f'ðŸ† {audit.atlet_name} â€” {audit.total_skor}. LAYAK KOMPETISI!')
             elif audit.layak_bertahan:
-                messages.info(request, f'ℹ️ {audit.atlet_name} — Layak bertahan di L3.')
+                messages.info(request, f'â„¹ï¸ {audit.atlet_name} â€” Layak bertahan di L3.')
             else:
-                messages.warning(request, f'⚠️ {audit.atlet_name} — {audit.total_skor}. Perlu peningkatan.')
+                messages.warning(request, f'âš ï¸ {audit.atlet_name} â€” {audit.total_skor}. Perlu peningkatan.')
         except Exception as e:
             messages.error(request, f'Error: {e}')
         return redirect('basketball:l3_power')
@@ -293,9 +297,9 @@ def hapus_l3_basket(request, pk):
     return redirect('basketball:l3_power')
 
 
-# ══════════════════════════════════════════════════════════════════════
-# L4 — SPESIFIK BASKET
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# L4 â€” SPESIFIK BASKET
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class L4SpecificBasketView(LoginRequiredMixin, View):
     template_name = 'basketball/l4_specific.html'
@@ -339,9 +343,9 @@ class L4SpecificBasketView(LoginRequiredMixin, View):
             )
             audit.save()
             if audit.layak_kompetisi:
-                messages.success(request, f'✅ {audit.atlet_name} — LAYAK KOMPETISI!')
+                messages.success(request, f'âœ… {audit.atlet_name} â€” LAYAK KOMPETISI!')
             else:
-                messages.warning(request, f'⚠️ {audit.atlet_name} — {audit.total_skor}. Perlu peningkatan.')
+                messages.warning(request, f'âš ï¸ {audit.atlet_name} â€” {audit.total_skor}. Perlu peningkatan.')
         except Exception as e:
             messages.error(request, f'Error: {e}')
         return redirect('basketball:l4_specific')

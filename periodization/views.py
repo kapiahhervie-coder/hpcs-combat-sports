@@ -1,4 +1,4 @@
-"""
+﻿"""
 periodization/views.py
 Tahap 3 HPCS -- Views & Routing untuk Pilar 3 (Periodisasi).
 
@@ -18,6 +18,7 @@ import io
 from datetime import timedelta as _timedelta
 
 from combat.models import Atlet
+from combat.views import ProRequiredMixin
 from .models import MacroProgram, MesoCycle, MicroCycle, KompetisiTarget, TargetPerforma, SesiLatihan, LatihanItem, PILAR_FOKUS_HARIAN_CHOICES, KATEGORI_LATIHAN_CHOICES, WAKTU_SESI_CHOICES
 from .services import generate_periodisasi_otomatis, bangun_pertimbangan
 
@@ -83,7 +84,7 @@ def get_latihan_item_queryset(user):
     return qs.filter(sesi_latihan__micro_cycle__meso_cycle__macro_program__atlet__pelatih=user)
 
 
-class DaftarMacroProgramView(LoginRequiredMixin, View):
+class DaftarMacroProgramView(ProRequiredMixin, LoginRequiredMixin, View):
     template_name = 'periodization/daftar_program.html'
 
     def get(self, request):
@@ -94,7 +95,7 @@ class DaftarMacroProgramView(LoginRequiredMixin, View):
         })
 
 
-class TambahMacroProgramView(LoginRequiredMixin, View):
+class TambahMacroProgramView(ProRequiredMixin, LoginRequiredMixin, View):
     template_name = 'periodization/tambah_program.html'
 
     def get(self, request):
@@ -136,7 +137,7 @@ class TambahMacroProgramView(LoginRequiredMixin, View):
         return redirect('periodization:detail_program', program_id=program.id)
 
 
-class DetailMacroProgramView(LoginRequiredMixin, View):
+class DetailMacroProgramView(ProRequiredMixin, LoginRequiredMixin, View):
     template_name = 'periodization/detail_program.html'
 
     def get(self, request, program_id):
@@ -148,7 +149,7 @@ class DetailMacroProgramView(LoginRequiredMixin, View):
         })
 
 
-class GenerateOtomatisView(LoginRequiredMixin, View):
+class GenerateOtomatisView(ProRequiredMixin, LoginRequiredMixin, View):
     """
     Action 1-klik: generate MesoCycle otomatis buat 1 MacroProgram.
     POST-only -- ini aksi yang mengubah data, jangan lewat GET/link biasa.
@@ -169,7 +170,7 @@ class GenerateOtomatisView(LoginRequiredMixin, View):
         return redirect('periodization:detail_program', program_id=program.id)
 
 
-class KurvaVolumeIntensitasView(LoginRequiredMixin, View):
+class KurvaVolumeIntensitasView(ProRequiredMixin, LoginRequiredMixin, View):
     """
     Endpoint JSON: data kurva Volume vs Intensitas 1 MacroProgram,
     siap dipakai Chart.js/Matplotlib di frontend (Tahap 4).
@@ -194,7 +195,7 @@ class KurvaVolumeIntensitasView(LoginRequiredMixin, View):
 # KALENDER KOMPETISI (nempel di MacroProgram)
 # ----------------------------------------------------------------------
 
-class TambahKompetisiView(LoginRequiredMixin, View):
+class TambahKompetisiView(ProRequiredMixin, LoginRequiredMixin, View):
     """POST-only -- ditambahkan dari halaman detail_program."""
     def post(self, request, program_id):
         program = get_object_or_404(get_macro_program_queryset(request.user), pk=program_id)
@@ -231,7 +232,7 @@ class TambahKompetisiView(LoginRequiredMixin, View):
         return redirect('periodization:detail_program', program_id=program.id)
 
 
-class HapusKompetisiView(LoginRequiredMixin, View):
+class HapusKompetisiView(ProRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, kompetisi_id):
         kompetisi = get_object_or_404(KompetisiTarget.objects.filter(
             macro_program__in=get_macro_program_queryset(request.user)
@@ -247,7 +248,7 @@ class HapusKompetisiView(LoginRequiredMixin, View):
 # DETAIL MESOCYCLE (objektif fisik, target performa, daftar microcycle)
 # ----------------------------------------------------------------------
 
-class DetailMesoCycleView(LoginRequiredMixin, View):
+class DetailMesoCycleView(ProRequiredMixin, LoginRequiredMixin, View):
     template_name = 'periodization/detail_meso.html'
 
     def get(self, request, meso_id):
@@ -282,7 +283,7 @@ class DetailMesoCycleView(LoginRequiredMixin, View):
         return redirect('periodization:detail_meso', meso_id=meso.id)
 
 
-class TambahTargetPerformaView(LoginRequiredMixin, View):
+class TambahTargetPerformaView(ProRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, meso_id):
         meso = get_object_or_404(get_meso_cycle_queryset(request.user), pk=meso_id)
         nama_test = request.POST.get('nama_test', '').strip()
@@ -310,7 +311,7 @@ class TambahTargetPerformaView(LoginRequiredMixin, View):
         return redirect('periodization:detail_meso', meso_id=meso.id)
 
 
-class HapusTargetPerformaView(LoginRequiredMixin, View):
+class HapusTargetPerformaView(ProRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, target_id):
         target = get_object_or_404(TargetPerforma.objects.filter(
             meso_cycle__in=get_meso_cycle_queryset(request.user)
@@ -321,7 +322,7 @@ class HapusTargetPerformaView(LoginRequiredMixin, View):
         return redirect('periodization:detail_meso', meso_id=meso_id)
 
 
-class TambahMicroCycleView(LoginRequiredMixin, View):
+class TambahMicroCycleView(ProRequiredMixin, LoginRequiredMixin, View):
     """Tambah 1 minggu (MicroCycle) manual di dalam 1 MesoCycle."""
     def post(self, request, meso_id):
         meso = get_object_or_404(get_meso_cycle_queryset(request.user), pk=meso_id)
@@ -350,7 +351,7 @@ class TambahMicroCycleView(LoginRequiredMixin, View):
 # DETAIL MICROCYCLE (7 hari, sesi latihan per hari)
 # ----------------------------------------------------------------------
 
-class DetailMicroCycleView(LoginRequiredMixin, View):
+class DetailMicroCycleView(ProRequiredMixin, LoginRequiredMixin, View):
     template_name = 'periodization/detail_micro.html'
 
     def get(self, request, micro_id):
@@ -371,7 +372,7 @@ class DetailMicroCycleView(LoginRequiredMixin, View):
         })
 
 
-class TambahSesiLatihanView(LoginRequiredMixin, View):
+class TambahSesiLatihanView(ProRequiredMixin, LoginRequiredMixin, View):
     """
     Buat/update sesi latihan 1 hari tertentu (hari_ke 1-7) dalam 1
     MicroCycle. Kalau hari itu sudah ada sesinya, di-update -- bukan
@@ -414,7 +415,7 @@ class TambahSesiLatihanView(LoginRequiredMixin, View):
         return redirect('periodization:detail_micro', micro_id=micro.id)
 
 
-class HapusSesiLatihanView(LoginRequiredMixin, View):
+class HapusSesiLatihanView(ProRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, sesi_id):
         sesi = get_object_or_404(get_sesi_latihan_queryset(request.user), pk=sesi_id)
         micro_id = sesi.micro_cycle_id
@@ -427,7 +428,7 @@ class HapusSesiLatihanView(LoginRequiredMixin, View):
 # DETAIL SESI LATIHAN (exercise / set / rep / istirahat)
 # ----------------------------------------------------------------------
 
-class DetailSesiLatihanView(LoginRequiredMixin, View):
+class DetailSesiLatihanView(ProRequiredMixin, LoginRequiredMixin, View):
     template_name = 'periodization/detail_sesi.html'
 
     def get(self, request, sesi_id):
@@ -457,7 +458,7 @@ class DetailSesiLatihanView(LoginRequiredMixin, View):
         })
 
 
-class TambahLatihanItemView(LoginRequiredMixin, View):
+class TambahLatihanItemView(ProRequiredMixin, LoginRequiredMixin, View):
     """
     Bulk-add -- terima banyak baris exercise sekaligus dari 1 form
     (ala isi tabel Excel), bukan 1 exercise per submit. Setiap field
@@ -521,7 +522,7 @@ class TambahLatihanItemView(LoginRequiredMixin, View):
         return redirect('periodization:detail_sesi', sesi_id=sesi.id)
 
 
-class HapusLatihanItemView(LoginRequiredMixin, View):
+class HapusLatihanItemView(ProRequiredMixin, LoginRequiredMixin, View):
     def post(self, request, item_id):
         item = get_object_or_404(get_latihan_item_queryset(request.user), pk=item_id)
         sesi_id = item.sesi_latihan_id
@@ -730,7 +731,7 @@ def _bangun_pdf_blangko_tahunan(program):
     return buf
 
 
-class CetakBlangkoTahunanView(LoginRequiredMixin, View):
+class CetakBlangkoTahunanView(ProRequiredMixin, LoginRequiredMixin, View):
     """
     Generate & download PDF blangko periodisasi tahunan ala KONI,
     ditarik otomatis dari MacroProgram + MesoCycle + KompetisiTarget.
