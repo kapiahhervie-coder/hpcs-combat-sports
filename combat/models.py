@@ -147,6 +147,29 @@ class ProfilPelatih(models.Model):
         verbose_name        = 'Profil Pelatih'
         verbose_name_plural = 'Profil Pelatih'
 
+    TIER_CHOICES = [
+        ('free', 'Free'),
+        ('pro', 'Pro'),
+    ]
+    tier = models.CharField(max_length=10, choices=TIER_CHOICES, default='free')
+    FREE_ATLET_LIMIT = 3
+
+    @property
+    def is_pro(self):
+        return self.tier == 'pro'
+
+    def jumlah_atlet(self):
+        """Hitung atlet binaan, beda sumber tergantung cabang (basketball
+        punya model Atlet sendiri, cabang lain pakai combat.Atlet)."""
+        if self.cabang == 'basketball':
+            return self.user.atlet_basket.count()
+        return self.user.atlet_binaan.count()
+
+    def bisa_tambah_atlet(self):
+        if self.is_pro:
+            return True
+        return self.jumlah_atlet() < self.FREE_ATLET_LIMIT
+
     def __str__(self):
         return f'{self.user.get_full_name() or self.user.username} — {self.get_status_display()}'
 

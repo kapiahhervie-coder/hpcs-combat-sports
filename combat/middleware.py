@@ -24,7 +24,7 @@ class ApprovalRequiredMiddleware:
 
             if url_name not in EXEMPT_URL_NAMES:
                 profil = getattr(user, 'profil_pelatih', None)
-                if profil and not profil.is_approved:
+                if profil and profil.status == 'rejected':
                     return redirect('combat:tunggu_approval')
 
         return self.get_response(request)
