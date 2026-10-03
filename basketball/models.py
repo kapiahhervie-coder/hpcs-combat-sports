@@ -1,7 +1,8 @@
 ﻿"""
-HPCS Basketball â€” Models
+HPCS Basketball — Models
 High Performance Coaching System
 """
+import math
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -20,9 +21,20 @@ LTAD_CHOICES = [
     ('train_win','Train to Win (19+ thn)'),
 ]
 
+def _r1(x):
+    """Pembulatan 1 desimal half-up — identik dengan Math.round() di preview JS
+    (round() bawaan Python membulatkan ke genap: 7.25 -> 7.2, beda dengan tampilan 7.3)."""
+    return math.floor(x * 10 + 0.5) / 10
+
+
 def _avg(*scores):
     valid = [s for s in scores if s is not None and s > 0]
-    return round(sum(valid)/len(valid),1) if valid else 0.0
+    if not valid:
+        return 0.0
+    total = 0.0
+    for s in valid:          # penjumlahan berurutan, sama dengan reduce() di JS.
+        total += s           # (sum() bawaan Python 3.12+ memakai koreksi presisi -> bisa beda 1 digit di batas x.x5)
+    return _r1(total / len(valid))
 
 def _predikat(skor):
     if skor >= 9.0: return 'ELITE'
@@ -52,6 +64,15 @@ class AtletBasket(models.Model):
 
     def __str__(self):
         return f'{self.nama_atlet} ({self.get_posisi_display() or "-"})'
+
+    @property
+    def umur(self):
+        """Umur (tahun) dari tanggal_lahir; None bila belum diisi. Dipakai bucket SOP L1."""
+        if not self.tanggal_lahir:
+            return None
+        t = timezone.localdate()
+        d = self.tanggal_lahir
+        return t.year - d.year - ((t.month, t.day) < (d.month, d.day))
 
     @property
     def tinggi_badan_display(self):
@@ -146,7 +167,7 @@ class BasketL2Strength(models.Model):
     single_leg_squat_kanan = models.IntegerField(null=True, blank=True)
     score_single_leg       = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # Pilar 5: Grip Strength
+    # Pilar 5: Explosive Lower Strength (Standing Broad Jump)
     broad_jump_m  = models.FloatField(null=True, blank=True)
     score_broad   = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
@@ -227,8 +248,8 @@ class BasketL3Power(models.Model):
             self.atlet_name = self.atlet.nama_atlet
         self.total_skor = _avg(self.score_jump, self.score_sprint, self.score_agility, self.score_rsi, self.score_cod)
         self.predikat = _predikat(self.total_skor)
-        self.layak_naik = self.total_skor >= 9.0
-        self.layak_bertahan = self.total_skor >= 7.0
+        self.layak_naik = self.total_skor >= 7.0       # gerbang ke L4
+        self.layak_bertahan = self.total_skor >= 5.0   # tahan di L3, perkuat pilar terlemah
         super().save(*args, **kwargs)
 
     def __str__(self):
