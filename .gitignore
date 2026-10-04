@@ -29,3 +29,6 @@ _muaythai_reference/
 *.zip
 data_backup.json
 muaythai_py_gabungan.txt
+
+__pycache__/
+*.pyc
