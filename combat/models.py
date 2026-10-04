@@ -1,4 +1,4 @@
-﻿"""
+"""
 HPCS Combat Sports — Models
 High Performance Coaching System
 """
@@ -39,8 +39,6 @@ CABANG_CHOICES = [
     ('krt', 'Karate'),
     ('sepakbola', 'Sepak Bola'),
     ('basketball', 'Bola Basket'),
-    ('volleyball', 'Bola Voli'),
-    ('badminton', 'Bulutangkis'),
 ]
 
 LTAD_CHOICES = [
