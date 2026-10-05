@@ -135,7 +135,7 @@ class ProfilPelatih(models.Model):
     no_hp       = models.CharField(max_length=20, blank=True)
     email       = models.EmailField(blank=True, verbose_name='Email')
     foto        = models.ImageField(upload_to='foto_pelatih/', blank=True, null=True, verbose_name='Foto Profil')
-    status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='approved')
     dibuat_pada = models.DateTimeField(auto_now_add=True)
     bio         = models.TextField(blank=True, verbose_name='Bio Singkat')
     sertifikasi = models.TextField(blank=True, verbose_name='Sertifikasi & Lisensi',
