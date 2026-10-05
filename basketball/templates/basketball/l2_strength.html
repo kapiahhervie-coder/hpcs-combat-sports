@@ -18,21 +18,21 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 .card-hpcs{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;height:100%}
 .card-hpcs.result-panel{border-color:rgba(96,165,250,.35)}
 .sticky-panel{position:sticky;top:16px}
-.pilar-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
-.pilar-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:8px}
-.pilar-tag{font-family:'Inter';font-weight:400;font-size:.7rem;color:var(--text-dim)}
+.pilar-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;transition:border-color .2s}.pilar-card:hover{border-color:var(--border2)}.pilar-card .mt-2:has(> span:empty:only-child){display:none}.pilar-card .col-12>.lb{display:none}
+.pilar-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px;display:flex;align-items:flex-start;gap:6px}.pilar-label .score-pill{margin-left:auto;flex-shrink:0}
+.pilar-tag{font-family:'Inter',sans-serif;font-weight:400;font-size:.68rem;color:var(--text-faint);font-style:italic;text-transform:none;letter-spacing:0}
 .form-control,.form-select{background:#0f1520;border:1px solid var(--border2);color:var(--text);font-size:.85rem}
 .form-control:focus,.form-select:focus{background:#0f1520;color:var(--text);border-color:var(--accent);box-shadow:none}
 .form-select option{background:#0f1520}
 .input-group-text{background:#0f1520;border:1px solid var(--border2);color:var(--text-dim);font-size:.75rem}
 label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
-.score-pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72rem;font-weight:700;background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.35);color:var(--accent)}
+.score-pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.75rem;font-weight:700;background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.35);color:var(--accent)}
 .total-score{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:5rem;line-height:1;color:var(--accent)}
 .predikat-pill{display:inline-block;padding:5px 22px;border-radius:30px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.25rem;letter-spacing:2px;border:2px solid}
 .pred-ELITE{border-color:var(--green);color:var(--green);background:rgba(46,204,113,.1)}
 .pred-READY{border-color:var(--accent);color:var(--accent);background:rgba(96,165,250,.1)}
 .pred-DEVELOPING{border-color:var(--gold);color:var(--gold);background:rgba(250,204,21,.1)}
-.pred-NOVICE{border-color:var(--red);color:var(--red);background:rgba(231,76,60,.1)}
+.pred-NOVICE{border-color:var(--red);color:var(--red);background:rgba(231,76,60,.1)}.pred-NONE{border-color:var(--border2);color:var(--text-dim);background:transparent}
 .btn-hpcs-primary{background:linear-gradient(135deg,var(--accent),#3b82f6);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:1px;border:none;padding:10px}
 .btn-nav{background:transparent;border:1px solid rgba(96,165,250,.5);color:var(--accent)}
 .btn-nav:hover{background:rgba(96,165,250,.15);color:#fff}
@@ -147,7 +147,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
         <div class="card-hpcs sticky-panel text-center result-panel">
           <span class="section-label"><i class="bi bi-trophy-fill"></i>Audit Result</span>
           <div class="total-score" id="total_display">0.0</div>
-          <div class="mt-2 mb-2"><span id="predikat_display" class="predikat-pill pred-NOVICE">NOVICE</span></div>
+          <div class="mt-2 mb-2"><span id="predikat_display" class="predikat-pill pred-NONE">NOVICE</span></div>
           <div class="mono mb-3" style="font-size:.72rem;color:var(--text-dim)" id="layak_display">Isi data untuk melihat hasil audit</div>
           <button type="submit" class="btn btn-hpcs-primary w-100 mb-2"><i class="bi bi-save2-fill me-1"></i>SIMPAN DATA L2</button>
           <div class="note-box text-start">Lolos ke L3 (Power) bila skor total ≥ 7.0. Skor final dihitung ulang server dari data mentah.</div>
@@ -180,7 +180,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
             <td><span class="score-pill">{{ item.kategori_usia }}</span></td>
             <td class="mono" style="color:var(--text-dim)">{{ item.gender }}</td>
             <td class="mono" style="color:var(--text-dim)">{% if item.kelas_berat %}{{ item.kelas_berat|floatformat:1 }} kg{% else %}—{% endif %}</td>
-            <td class="mono">{{ item.score_lower|floatformat:1 }}</td><td class="mono">{{ item.score_upper|floatformat:1 }}</td><td class="mono">{{ item.score_core|floatformat:1 }}</td><td class="mono">{{ item.score_single_leg|floatformat:1 }}</td><td class="mono">{{ item.score_broad|floatformat:1 }}</td>
+            <td><span class="score-pill">{{ item.score_lower|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_upper|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_core|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_single_leg|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_broad|floatformat:1 }}</span></td>
             <td style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent)">{{ item.total_skor }}</td>
             <td><span class="predikat-pill pred-{{ item.predikat }}" style="font-size:.7rem;padding:1px 10px;border-width:1px">{{ item.predikat }}</span></td>
             <td class="text-center">
@@ -251,9 +251,9 @@ const LBL = {lower:'Lower', upper:'Upper', core:'Core', single_leg:'1-Leg', broa
 (function () {
   let h = '';
   PIL.forEach((p, i) => {
-    h += `<div class="pilar-card"><div class="pilar-label"><i class="bi ${p.ic} me-1" style="color:var(--accent)"></i>${i + 1}. ${p.t}<span class="pilar-tag d-block">${p.s}</span></div><div class="row g-2">`;
+    h += `<div class="pilar-card"><div class="pilar-label"><i class="bi ${p.ic} me-1" style="color:var(--accent)"></i><div class="flex-grow-1">${i + 1}. ${p.t}<span class="pilar-tag d-block">${p.s}</span></div><span class="score-pill" id="pv_${p.k}">—</span></div><div class="row g-2">`;
     p.f.forEach(f => { h += `<div class="${p.f.length > 1 ? 'col-6' : 'col-12'}"><label class="lb">${f[1]}</label><div class="input-group input-group-sm"><input type="number" name="${f[0]}" class="form-control" step="${f[4]}" min="0" placeholder="${f[2]}" oninput="recalc()"><span class="input-group-text">${f[3]}</span></div></div>`; });
-    h += `</div><input type="hidden" name="score_${p.k}" id="score_${p.k}"><div class="mt-2" style="font-size:.72rem;color:var(--text-dim)">${p.ratio ? 'Rasio: <b id="ra_' + p.k + '" style="color:var(--accent)">—</b> · ' : ''}Skor: <span class="score-pill" id="pv_${p.k}">—</span> <span id="as_${p.k}"></span></div></div>`;
+    h += `</div><input type="hidden" name="score_${p.k}" id="score_${p.k}"><div class="mt-2" style="font-size:.72rem;color:var(--text-dim)">${p.ratio ? 'Rasio: <b id="ra_' + p.k + '" style="color:var(--accent)">—</b> ' : ''}<span id="as_${p.k}"></span></div></div>`;
   });
   document.getElementById('pilarWrap').innerHTML = h;
   document.getElementById('pillRow').innerHTML = PIL.map(p => `<span class="score-pill" id="pill_${p.k}">${LBL[p.k]}: —</span>`).join('');
@@ -294,8 +294,8 @@ function recalc() {
   const vals = Object.values(sc).filter(v => v > 0), total = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0, tr = Math.round(total * 10) / 10;
   const pred = tr >= 9 ? 'ELITE' : tr >= 7 ? 'READY' : tr >= 5 ? 'DEVELOPING' : 'NOVICE';
   const col = {ELITE: '#2ecc71', READY: '#60a5fa', DEVELOPING: '#facc15', NOVICE: '#e74c3c'};
-  const d = document.getElementById('total_display'); d.textContent = tr.toFixed(1); d.style.color = col[pred];
-  const pe = document.getElementById('predikat_display'); pe.textContent = pred; pe.className = 'predikat-pill pred-' + pred;
+  const d = document.getElementById('total_display'); d.textContent = tr.toFixed(1); d.style.color = vals.length ? col[pred] : 'var(--accent)';
+  const pe = document.getElementById('predikat_display'); pe.textContent = pred; pe.className = 'predikat-pill pred-' + (vals.length ? pred : 'NONE');
   const ly = document.getElementById('layak_display');
   if (!vals.length) { ly.textContent = 'Isi data untuk melihat hasil audit'; ly.style.color = 'var(--text-dim)'; }
   else { const ok = tr >= 7; ly.textContent = ok ? '✅ LAYAK naik ke L3 — Power' : '⚠️ Skor ' + tr + ' < 7.0 — belum layak ke L3, perkuat pilar terlemah'; ly.style.color = ok ? '#2ecc71' : '#facc15'; }
