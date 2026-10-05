@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cabang Belum Tersedia &mdash; HPCS</title>
+<style>
+  :root{--bg:#0b0f14;--card:#13181f;--border:#252d3a;--text:#e2e8f0;--dim:#94a3b8;--accent:#f59e0b}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--text);font-family:Inter,'Segoe UI',sans-serif;padding:20px}
+  .card{max-width:460px;width:100%;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:32px;text-align:center}
+  h2{margin:0 0 8px;font-size:1.4rem}
+  p{color:var(--dim);line-height:1.6;font-size:.92rem}
+  .tag{display:inline-block;margin:8px 0 14px;padding:3px 14px;border-radius:20px;border:1px solid var(--accent);color:var(--accent);font-size:.8rem;font-weight:700}
+  button{margin-top:10px;background:transparent;border:1px solid var(--border);color:var(--dim);padding:8px 22px;border-radius:8px;cursor:pointer;font-size:.85rem}
+  button:hover{color:var(--text);border-color:var(--dim)}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div style="font-size:2.2rem">&#127967;</div>
+    <h2>Cabang Belum Tersedia</h2>
+    <div class="tag">{{ profil.get_cabang_display|default:"Belum dipilih" }}</div>
+    <p>Dashboard untuk cabang olahraga ini belum dibuka di HPCS. Akun Anda tetap aktif dan akan langsung bisa dipakai begitu modul cabang ini tersedia.</p>
+    <p>Jika Anda memilih cabang yang keliru, hubungi admin untuk mengubahnya.</p>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Keluar</button></form>
+  </div>
+</body>
+</html>

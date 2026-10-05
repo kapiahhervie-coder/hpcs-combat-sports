@@ -142,6 +142,8 @@ class DashboardView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
             profil = getattr(request.user, 'profil_pelatih', None)
             if profil and profil.cabang in CABOR_DASHBOARD_URL:
                 return redirect(CABOR_DASHBOARD_URL[profil.cabang])
+            if profil:   # cabang belum punya dashboard / kosong
+                return render(request, 'combat/cabor_belum_tersedia.html', {'profil': profil})
         squad_atlet = get_atlet_queryset(request.user)
         audit_l1    = CorrectionAuditL1.objects.filter(atlet__in=squad_atlet)
         audit_l2    = StrengthAuditL2.objects.filter(atlet__in=squad_atlet)
