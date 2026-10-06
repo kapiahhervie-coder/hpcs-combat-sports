@@ -165,20 +165,8 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
         <div class="badges">
           <span class="badge badge-cabang">{{ p.get_cabang_display }}</span>
           <span class="badge badge-aktif">&#10003; Aktif</span>
-          {% if p.is_pro %}<span class="badge" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">&#11088; PRO</span>{% else %}<span class="badge" style="background:rgba(100,116,139,0.12);color:#94a3b8;border:1px solid rgba(100,116,139,0.25);">FREE</span>{% endif %}
-        </div>
       </div>
       <div class="coach-actions">
-        <form method="post" action="{% url 'combat:admin_coach' %}" style="display:inline">
-          {% csrf_token %}
-          {% if p.is_pro %}
-          <input type="hidden" name="action" value="downgrade_free">
-          <button type="submit" class="btn" style="background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.3);color:#94a3b8;">Turunkan ke Free</button>
-          {% else %}
-          <input type="hidden" name="action" value="upgrade_pro">
-          <button type="submit" class="btn" style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;">Upgrade ke Pro</button>
-          {% endif %}
-        </form>
         <button type="button" class="btn btn-kelola" onclick="toggleAssign('assign-{{ p.pk }}')">
           &#128101; Kelola Atlet
         </button>

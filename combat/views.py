@@ -1,4 +1,4 @@
-"""
+﻿"""
 HPCS Combat Sports - Views
 TODO: Role-based access control akan diimplementasikan setelah Custom User Model dibuat
 """
@@ -57,20 +57,6 @@ class CoachApprovedRequiredMixin:
 
 
 
-class ProRequiredMixin:
-    """
-    Mengunci fitur khusus akun Pro (Report Card / Export PDF). Pelatih
-    ber-tier 'free' akan ditolak dan diarahkan balik ke dashboard dengan
-    pesan ajakan upgrade. Superuser/staff selalu lolos.
-    """
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and not (request.user.is_superuser or request.user.is_staff):
-            profil = getattr(request.user, 'profil_pelatih', None)
-            if not (profil and profil.is_pro):
-                messages.error(request, 'Fitur ini khusus akun Pro. Upgrade akun Anda untuk mengakses Report Card / Export PDF.')
-                return redirect('combat:dashboard')
-        return super().dispatch(request, *args, **kwargs)
-
 class UserMonitorView(LoginRequiredMixin, View):
     """
     Halaman pantau semua akun user di HPCS (Admin, Pelatih, dan role lain
@@ -100,7 +86,7 @@ class UserMonitorView(LoginRequiredMixin, View):
             elif u.is_staff:
                 role, sub = 'Staff', '-'
             elif profil:
-                role, sub = 'Pelatih', f'{profil.get_cabang_display()} — {profil.get_status_display()}'
+                role, sub = 'Pelatih', f'{profil.get_cabang_display()} â€” {profil.get_status_display()}'
             else:
                 # Akun ada tapi tidak terhubung ke ProfilPelatih (mis. role
                 # lain seperti Guru PJOK, atau ProfilPelatih-nya gagal dibuat)
@@ -239,7 +225,7 @@ class DashboardView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
 # ATHLETE INTELLIGENCE REPORT (NEW REPORT CARD)
 # ----------------------------------------------------------------------
 
-class AthleteIntelligenceReportView(ProRequiredMixin, CoachApprovedRequiredMixin, LoginRequiredMixin, View):
+class AthleteIntelligenceReportView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     template_name = 'combat/athlete_report.html'
 
     def get(self, request, atlet_id):
@@ -306,7 +292,7 @@ class AthleteIntelligenceReportView(ProRequiredMixin, CoachApprovedRequiredMixin
         return render(request, self.template_name, context)
 
 
-class ReportCardView(ProRequiredMixin, CoachApprovedRequiredMixin, LoginRequiredMixin, View):
+class ReportCardView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
     template_name = 'combat/report_card.html'
 
     def get(self, request, atlet_id):
@@ -453,7 +439,7 @@ class DaftarCoachView(View):
         # admin-coach. Ini TIDAK memblokir akses (lihat CoachApprovedRequiredMixin
         # -- hanya status 'rejected' yang diblokir), jadi pelatih tetap bisa
         # langsung pakai dashboard cabornya sesuai desain HPCS.
-        profil = ProfilPelatih(user=user, cabang=cabang, no_hp=no_hp, email=email, status='approved')
+        profil = ProfilPelatih(user=user, cabang=cabang, no_hp=no_hp, email=email, status='pending')
         if foto:
             profil.foto = foto
         profil.save()
@@ -544,14 +530,6 @@ Tim HPCS Combat Sports""",
                 profil.status = 'rejected'
                 profil.save()
                 messages.error(request, f'{nama} ditolak.')
-            elif action == 'upgrade_pro':
-                profil.tier = 'pro'
-                profil.save()
-                messages.success(request, f'{nama} berhasil di-upgrade ke Pro.')
-            elif action == 'downgrade_free':
-                profil.tier = 'free'
-                profil.save()
-                messages.warning(request, f'{nama} diturunkan ke Free.')
             elif action == 'revoke':
                 # PERBAIKAN: sebelumnya di-set ke 'pending', padahal 'pending'
                 # sekarang TETAP dapat akses (lihat CoachApprovedRequiredMixin).
@@ -672,10 +650,6 @@ class TambahAtletView(CoachApprovedRequiredMixin, LoginRequiredMixin, View):
                 cabang = profil.cabang if profil else ''
                 if not cabang:
                     messages.error(request, 'Akun Anda belum punya cabang olahraga terdaftar. Hubungi admin.')
-                    return render(request, self.template_name, {'back_url': self.get_back_url(request)})
-
-                if profil and not profil.bisa_tambah_atlet():
-                    messages.error(request, f'Batas {profil.FREE_ATLET_LIMIT} atlet untuk akun Free sudah tercapai. Upgrade ke Pro untuk menambah atlet tanpa batas.')
                     return render(request, self.template_name, {'back_url': self.get_back_url(request)})
             if not nama or not kategori or not gender or not kelas_berat:
                 messages.error(request, 'Nama, kategori usia, gender, dan berat badan wajib diisi.')

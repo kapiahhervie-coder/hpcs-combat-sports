@@ -7,10 +7,6 @@ from . import calculators as calc
 
 def _check_access(user):
     if not user_has_access(user):
-        raise PermissionDenied("Kamu tidak punya akses ke kalkulator ini.")
-    if not (user.is_superuser or user.is_staff):
-        profil = getattr(user, 'profil_pelatih', None)
-        if not (profil and profil.is_pro):
             raise PermissionDenied("Fitur Kalkulator Fitness khusus akun Pro. Upgrade akun Anda untuk mengakses fitur ini.")
 
 

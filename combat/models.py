@@ -1,5 +1,5 @@
-"""
-HPCS Combat Sports — Models
+﻿"""
+HPCS Combat Sports â€” Models
 High Performance Coaching System
 """
 
@@ -9,9 +9,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # CHOICES
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 GENDER_CHOICES = [
     ('Putra', 'Putra'),
@@ -51,15 +51,15 @@ LTAD_CHOICES = [
 ]
 
 
-# ══════════════════════════════════════════════════════════════════════
-# CABOR — tabel referensi metadata cabang olahraga (Pilar Periodisasi dkk)
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# CABOR â€” tabel referensi metadata cabang olahraga (Pilar Periodisasi dkk)
 #
 # SENGAJA tidak dijadikan ForeignKey di Atlet.cabang (yang masih CharField
-# string biasa) — biar kode lama di semua app (karate/muaythai/boxing/
+# string biasa) â€” biar kode lama di semua app (karate/muaythai/boxing/
 # taekwondo) yang udah filter pakai cabang='boxing' dkk TIDAK perlu
 # migrasi ulang. Cabor cuma "nempel" lewat field `kode` yang nilainya
 # sama persis dengan CABANG_CHOICES di atas. Lihat Atlet.cabor_obj.
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class Cabor(models.Model):
     kode          = models.CharField(
@@ -96,9 +96,9 @@ class Cabor(models.Model):
         return self.nama
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # HELPER
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 def _hitung_predikat(total_skor: float) -> str:
     if total_skor >= 9.0:
@@ -117,9 +117,9 @@ def _avg(*scores) -> float:
     return round(sum(valid) / len(valid), 1)
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # PROFIL PELATIH
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class ProfilPelatih(models.Model):
     STATUS_CHOICES = [
@@ -145,43 +145,21 @@ class ProfilPelatih(models.Model):
         verbose_name        = 'Profil Pelatih'
         verbose_name_plural = 'Profil Pelatih'
 
-    TIER_CHOICES = [
-        ('free', 'Free'),
-        ('pro', 'Pro'),
-    ]
-    tier = models.CharField(max_length=10, choices=TIER_CHOICES, default='free')
-    FREE_ATLET_LIMIT = 3
-
-    @property
-    def is_pro(self):
-        return self.tier == 'pro'
-
-    def jumlah_atlet(self):
-        """Hitung atlet binaan, beda sumber tergantung cabang (basketball
-        punya model Atlet sendiri, cabang lain pakai combat.Atlet)."""
-        if self.cabang == 'basketball':
-            return self.user.atlet_basket.count()
-        return self.user.atlet_binaan.count()
-
-    def bisa_tambah_atlet(self):
-        if self.is_pro:
-            return True
-        return self.jumlah_atlet() < self.FREE_ATLET_LIMIT
 
     def __str__(self):
-        return f'{self.user.get_full_name() or self.user.username} — {self.get_status_display()}'
+        return f'{self.user.get_full_name() or self.user.username} â€” {self.get_status_display()}'
 
     @property
     def is_approved(self):
         return self.status == 'approved'
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # MODEL ATLET
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class Atlet(models.Model):
-    # ── Identitas ────────────────────────────────────────────────────
+    # â”€â”€ Identitas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     nama_atlet    = models.CharField(max_length=100, verbose_name='Nama Atlet')
     kategori_umur = models.CharField(
         max_length=10, choices=KATEGORI_USIA_CHOICES,
@@ -197,10 +175,10 @@ class Atlet(models.Model):
     )
     tanggal_lahir = models.DateField(null=True, blank=True, verbose_name='Tanggal Lahir')
 
-    # ── Data Fisik ───────────────────────────────────────────────────
+    # â”€â”€ Data Fisik â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     tinggi_badan  = models.FloatField(null=True, blank=True, verbose_name='Tinggi Badan (cm)')
 
-    # ── Data Olahraga ────────────────────────────────────────────────
+    # â”€â”€ Data Olahraga â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     cabang        = models.CharField(
         max_length=20, choices=CABANG_CHOICES,
         blank=True, verbose_name='Cabang Olahraga'
@@ -216,7 +194,7 @@ class Atlet(models.Model):
         verbose_name='Pelatih'
     )
 
-    # ── Timestamp ────────────────────────────────────────────────────
+    # â”€â”€ Timestamp â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     dibuat_pada   = models.DateTimeField(auto_now_add=True)
     diupdate_pada = models.DateTimeField(auto_now=True)
 
@@ -246,11 +224,11 @@ class Atlet(models.Model):
     @property
     def level_saat_ini(self):
         if self.audit_l3.filter(layak_naik=True).exists():
-            return 'L3 — Siap Kompetisi'
+            return 'L3 â€” Siap Kompetisi'
         if self.audit_l2.filter(layak_naik=True).exists():
-            return 'L2 — Menuju Power'
+            return 'L2 â€” Menuju Power'
         if self.audit_l1.filter(layak_naik=True).exists():
-            return 'L1 — Menuju Strength'
+            return 'L1 â€” Menuju Strength'
         return 'Belum Audit'
 
     @property
@@ -275,12 +253,12 @@ class Atlet(models.Model):
         return Cabor.objects.filter(kode=self.cabang).first()
 
 
-# ══════════════════════════════════════════════════════════════════════
-# AUDIT L1 — CORRECTION
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# AUDIT L1 â€” CORRECTION
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class CorrectionAuditL1(models.Model):
-    # ── Identitas ────────────────────────────────────────────────────
+    # â”€â”€ Identitas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     atlet         = models.ForeignKey(
         Atlet, on_delete=models.CASCADE,
         related_name='audit_l1', verbose_name='Atlet'
@@ -290,11 +268,11 @@ class CorrectionAuditL1(models.Model):
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True, verbose_name='Berat Badan (kg)')
 
-    # ── Skor 6 Pilar ─────────────────────────────────────────────────
+    # â”€â”€ Skor 6 Pilar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     # (score_ankle ditambahkan belakangan, khusus dipakai cabang yang
-    # menguji Ankle Mobility / Weight-Bearing Lunge Test — mis. Boxing.
+    # menguji Ankle Mobility / Weight-Bearing Lunge Test â€” mis. Boxing.
     # Cabang lain yang tidak mengisi field ini tetap None, dan _avg()
-    # otomatis mengecualikannya dari total_skor — lihat save() di bawah.)
+    # otomatis mengecualikannya dari total_skor â€” lihat save() di bawah.)
     score_rotation  = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Rotasi')
     score_extension = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Ekstensi')
     score_stability = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Stabilitas')
@@ -302,16 +280,16 @@ class CorrectionAuditL1(models.Model):
     score_breathing = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Pernafasan')
     score_ankle     = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Ankle Mobility')
 
-    # ── AI ────────────────────────────────────────────────────────────
+    # â”€â”€ AI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     ai_confidence_score = models.FloatField(null=True, blank=True, verbose_name='AI Confidence (%)')
 
-    # ── Hasil ────────────────────────────────────────────────────────
+    # â”€â”€ Hasil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     total_skor         = models.FloatField(default=0, verbose_name='Total Skor')
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naikke L2?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
 
-    # ── Metadata ─────────────────────────────────────────────────────
+    # â”€â”€ Metadata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     catatan    = models.TextField(blank=True, null=True, verbose_name='Catatan Coach')
     timestamp  = models.DateTimeField(default=timezone.now)
     created_by = models.CharField(max_length=100, blank=True, default='Coach Fanny')
@@ -369,12 +347,12 @@ class CorrectionAuditL1(models.Model):
         return f"STOP loading. Skor kritis pada '{nama_pilar}'. Wajib program korektif 8 minggu."
 
 
-# ══════════════════════════════════════════════════════════════════════
-# AUDIT L2 — STRENGTH
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# AUDIT L2 â€” STRENGTH
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class StrengthAuditL2(models.Model):
-    # ── Identitas ────────────────────────────────────────────────────
+    # â”€â”€ Identitas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     atlet         = models.ForeignKey(
         Atlet, on_delete=models.CASCADE,
         related_name='audit_l2', null=True, blank=True, verbose_name='Atlet'
@@ -384,42 +362,42 @@ class StrengthAuditL2(models.Model):
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True, verbose_name='Berat Badan (kg)')
 
-    # ── Pilar 1: Lower Strength ───────────────────────────────────────
+    # â”€â”€ Pilar 1: Lower Strength â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     lower_5rm_beban    = models.FloatField(null=True, blank=True, verbose_name='Lower 5RM Beban (kg)')
     lower_5rm_bw_ratio = models.FloatField(null=True, blank=True, verbose_name='5RM / BW Ratio')
     score_lower        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 2: Upper Push ───────────────────────────────────────────
+    # â”€â”€ Pilar 2: Upper Push â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     push_5rm_beban = models.FloatField(null=True, blank=True, verbose_name='Push 5RMBeban (kg)')
     score_push     = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 3: Upper Pull ───────────────────────────────────────────
+    # â”€â”€ Pilar 3: Upper Pull â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     pull_reps  = models.IntegerField(null=True, blank=True, verbose_name='Pull-Up Repetisi')
     score_pull = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 4: Core Bracing ─────────────────────────────────────────
+    # â”€â”€ Pilar 4: Core Bracing â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     core_durasi_detik = models.IntegerField(null=True, blank=True, verbose_name='Weighted Plank Durasi (detik)')
     score_core        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 5: Isometric + CNS ──────────────────────────────────────
+    # â”€â”€ Pilar 5: Isometric + CNS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     iso_durasi_detik       = models.IntegerField(null=True, blank=True, verbose_name='Split Squat Hold (detik)')
     iso_tremor_onset_detik = models.IntegerField(null=True, blank=True, verbose_name='Onset Tremor (detik)')
     iso_tremor_rasio       = models.FloatField(null=True, blank=True, verbose_name='Tremor Onset Ratio (%)')
     score_isometric        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── AI ────────────────────────────────────────────────────────────
+    # â”€â”€ AI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     ai_rep_count_lower  = models.IntegerField(null=True, blank=True)
     ai_rep_count_push   = models.IntegerField(null=True, blank=True)
     ai_rep_count_pull   = models.IntegerField(null=True, blank=True)
     ai_confidence_score = models.FloatField(null=True, blank=True)
 
-    # ── Hasil ────────────────────────────────────────────────────────
+    # â”€â”€ Hasil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     total_skor         = models.FloatField(default=0)
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik         = models.BooleanField(default=False, verbose_name='Layak Naikke L3?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
 
-    # ── Metadata ─────────────────────────────────────────────────────
+    # â”€â”€ Metadata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     catatan    = models.TextField(blank=True, null=True)
     timestamp  = models.DateTimeField(default=timezone.now)
     created_by = models.CharField(max_length=100, blank=True, default='Coach Fanny')
@@ -465,7 +443,7 @@ class StrengthAuditL2(models.Model):
             return 'CNS Segar'
         elif self.iso_tremor_rasio >= 65:
             return 'CNS Cukup'
-        return 'CNS Lelah — Risiko Cedera'
+        return 'CNS Lelah â€” Risiko Cedera'
 
     @property
     def pilar_terendah(self):
@@ -489,12 +467,12 @@ class StrengthAuditL2(models.Model):
         return f"STOP loading berat. Kekuatan dasar '{self.pilar_terendah}' kritis."
 
 
-# ══════════════════════════════════════════════════════════════════════
-# AUDIT L3 — POWER
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# AUDIT L3 â€” POWER
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class PowerAuditL3(models.Model):
-    # ── Identitas ────────────────────────────────────────────────────
+    # â”€â”€ Identitas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='audit_l3', verbose_name='Atlet')
     atlet_name    = models.CharField(max_length=150, blank=True, verbose_name='Nama Atlet (form)')
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_USIA_CHOICES, default='ELITE')
@@ -506,30 +484,30 @@ class PowerAuditL3(models.Model):
     agility_ttest_detik = models.FloatField(null=True, blank=True, verbose_name='Agility T-Test (detik)')
 
 
-    # ── Skor 5 Pilar ─────────────────────────────────────────────────
+    # â”€â”€ Skor 5 Pilar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     score_jump    = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
     score_sprint  = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
     score_throw   = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
     score_rsi     = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
     score_agility = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Data Mentah RSI ───────────────────────────────────────────────
+    # â”€â”€ Data Mentah RSI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     rsi_jump_height  = models.FloatField(null=True, blank=True)
     rsi_contact_time = models.FloatField(null=True, blank=True)
     rsi_value        = models.FloatField(null=True, blank=True)
 
-    # ── AI ────────────────────────────────────────────────────────────
+    # â”€â”€ AI â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     ai_rep_count        = models.IntegerField(null=True, blank=True)
     ai_confidence_score = models.FloatField(null=True, blank=True)
 
-    # ── Hasil ────────────────────────────────────────────────────────
+    # â”€â”€ Hasil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     total_skor         = models.FloatField(default=0)
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik         = models.BooleanField(default=False, verbose_name='Layak Kompetisi?')
     layak_bertahan     = models.BooleanField(default=False, verbose_name='Layak Bertahan di L3?')
     alasan_tidak_layak = models.CharField(max_length=255, blank=True)
 
-    # ── Metadata ─────────────────────────────────────────────────────
+    # â”€â”€ Metadata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     catatan    = models.TextField(blank=True, null=True)
     timestamp  = models.DateTimeField(default=timezone.now)
     created_by = models.CharField(max_length=100, blank=True, default='Coach Fanny')
@@ -577,15 +555,15 @@ class PowerAuditL3(models.Model):
         return f"Turun ke L1 evaluasi ulang mobilitas. Pilar kritis: '{self.pilar_terendah}'."
 
 
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 # REKOMENDASI PROGRAM
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class RekomendasiProgram(models.Model):
     LEVEL_CHOICES = [
-        ('L1', 'L1 — Correction'),
-        ('L2', 'L2 — Strength'),
-        ('L3', 'L3 — Power'),
+        ('L1', 'L1 â€” Correction'),
+        ('L2', 'L2 â€” Strength'),
+        ('L3', 'L3 â€” Power'),
     ]
     atlet           = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='rekomendasi')
     audit_level     = models.CharField(max_length=2, choices=LEVEL_CHOICES)
@@ -608,32 +586,32 @@ class RekomendasiProgram(models.Model):
         return f"Reko {self.audit_level} | {self.atlet.nama_atlet} | {self.tanggal}"
 
 
-# ══════════════════════════════════════════════════════════════════════
-# AUDIT L4 — SPEED, AGILITY & METABOLIC ENDURANCE
-# ══════════════════════════════════════════════════════════════════════
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+# AUDIT L4 â€” SPEED, AGILITY & METABOLIC ENDURANCE
+# â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class SpeedAgilityAuditL4(models.Model):
-    # ── Identitas ────────────────────────────────────────────────────
+    # â”€â”€ Identitas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     atlet         = models.ForeignKey('Atlet', on_delete=models.CASCADE, related_name='audit_l4')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_USIA_CHOICES, default='ELITE')
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
     kelas_berat   = models.FloatField(null=True, blank=True)
 
-    # ── Pilar 1: Hexagon Jump ─────────────────────────────────────────
+    # â”€â”€ Pilar 1: Hexagon Jump â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     hex_waktu_putaran1 = models.FloatField(null=True, blank=True)
     hex_waktu_putaran2 = models.FloatField(null=True, blank=True)
     hex_waktu_putaran3 = models.FloatField(null=True, blank=True)
     hex_waktu_rata     = models.FloatField(null=True, blank=True)
     score_hex          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 2: Punch Frequency (Boxing / Muay Thai / Karate) ────────
+    # â”€â”€ Pilar 2: Punch Frequency (Boxing / Muay Thai / Karate) â”€â”€â”€â”€â”€â”€â”€â”€
     punch_freq_10s         = models.IntegerField(null=True, blank=True)
     punch_postur_ok        = models.BooleanField(default=True)
     punch_reaction_time_ms = models.FloatField(null=True, blank=True)
     score_punch            = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 2 (alternatif): Kick Frequency (Taekwondo) ───────────────
+    # â”€â”€ Pilar 2 (alternatif): Kick Frequency (Taekwondo) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     # Field terpisah dari punch_* karena instrumen berbeda (tendangan,
     # bukan pukulan). Cabang 'tkd' mengisi kick_*, cabang lain (boxing/
     # muaythai/karate) tetap mengisi punch_* seperti semula.
@@ -642,27 +620,27 @@ class SpeedAgilityAuditL4(models.Model):
     kick_reaction_time_ms = models.FloatField(null=True, blank=True)
     score_kick            = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Pilar 3: Yo-Yo IR ─────────────────────────────────────────────
+    # â”€â”€ Pilar 3: Yo-Yo IR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     yoyo_level_tercapai  = models.IntegerField(null=True, blank=True)
     yoyo_shuttle_tercapai = models.IntegerField(null=True, blank=True)
     yoyo_total_jarak_m   = models.FloatField(null=True, blank=True)
     yoyo_vo2max_estimasi = models.FloatField(null=True, blank=True)
     score_yoyo           = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # ── Kondisi & Metadata ────────────────────────────────────────────
+    # â”€â”€ Kondisi & Metadata â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     kondisi_uji = models.CharField(
         max_length=50,
         choices=[
-            ('FRESH',        'Fresh — Tanpa Pre-fatigue'),
-            ('POST_SPARRING','Post-Sparring — Setelah Sparring 3 Ronde'),
-            ('POST_CIRCUIT', 'Post-Circuit — Setelah Circuit Training'),
+            ('FRESH',        'Fresh â€” Tanpa Pre-fatigue'),
+            ('POST_SPARRING','Post-Sparring â€” Setelah Sparring 3 Ronde'),
+            ('POST_CIRCUIT', 'Post-Circuit â€” Setelah Circuit Training'),
         ],
         default='FRESH'
     )
     catatan    = models.TextField(blank=True)
     timestamp  = models.DateTimeField(auto_now_add=True)
 
-    # ── Hasil ────────────────────────────────────────────────────────
+    # â”€â”€ Hasil â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     total_skor         = models.FloatField(default=0)
     predikat           = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_kompetisi    = models.BooleanField(default=False)
@@ -676,7 +654,7 @@ class SpeedAgilityAuditL4(models.Model):
         ordering            = ['-timestamp']
 
     def __str__(self):
-        return f"L4 {self.atlet_name} — {self.total_skor} ({self.predikat})"
+        return f"L4 {self.atlet_name} â€” {self.total_skor} ({self.predikat})"
 
     def hitung_hex_rata(self):
         times = [t for t in [self.hex_waktu_putaran1, self.hex_waktu_putaran2, self.hex_waktu_putaran3] if t]
@@ -693,7 +671,7 @@ class SpeedAgilityAuditL4(models.Model):
 
     @property
     def score_pilar2(self):
-        """Skor Pilar 2 (frekuensi serangan) — otomatis pilih score_kick untuk
+        """Skor Pilar 2 (frekuensi serangan) â€” otomatis pilih score_kick untuk
         cabang Taekwondo ('tkd'), score_punch untuk cabang lain (Boxing/Muay
         Thai/Karate). Dipakai di kalkulasi_skor() agar total_skor selalu benar
         tanpa peduli field mana yang diisi form."""
