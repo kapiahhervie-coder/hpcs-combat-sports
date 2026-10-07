@@ -86,7 +86,7 @@ class UserMonitorView(LoginRequiredMixin, View):
             elif u.is_staff:
                 role, sub = 'Staff', '-'
             elif profil:
-                role, sub = 'Pelatih', f'{profil.get_cabang_display()} â€” {profil.get_status_display()}'
+                role, sub = 'Pelatih', f'{profil.get_cabang_display()} — {profil.get_status_display()}'
             else:
                 # Akun ada tapi tidak terhubung ke ProfilPelatih (mis. role
                 # lain seperti Guru PJOK, atau ProfilPelatih-nya gagal dibuat)

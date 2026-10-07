@@ -100,15 +100,21 @@ body{background:#070a10;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:
           </div>
           <div class="form-group">
             <label>Cabang Olahraga</label>
+            {% if is_admin_cabang %}
             <select name="cabang">
               <option value="">-- Pilih --</option>
               <option value="boxing">Boxing</option>
               <option value="muaythai">Muay Thai</option>
               <option value="krt">Karate</option>
               <option value="tkd">Taekwondo</option>
+              <option value="sepakbola">Sepak Bola</option>
+              <option value="basketball">Bola Basket</option>
               <option value="judo">Judo</option>
               <option value="mma">MMA</option>
             </select>
+            {% else %}
+            <input type="text" value="{{ cabang_pelatih_display }}" disabled style="opacity:.55;cursor:not-allowed">
+            {% endif %}
           </div>
         </div>
 

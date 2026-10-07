@@ -1,5 +1,5 @@
 ﻿"""
-HPCS Combat Sports â€” Models
+HPCS Combat Sports — Models
 High Performance Coaching System
 """
 
@@ -52,10 +52,10 @@ LTAD_CHOICES = [
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# CABOR â€” tabel referensi metadata cabang olahraga (Pilar Periodisasi dkk)
+# CABOR — tabel referensi metadata cabang olahraga (Pilar Periodisasi dkk)
 #
 # SENGAJA tidak dijadikan ForeignKey di Atlet.cabang (yang masih CharField
-# string biasa) â€” biar kode lama di semua app (karate/muaythai/boxing/
+# string biasa) — biar kode lama di semua app (karate/muaythai/boxing/
 # taekwondo) yang udah filter pakai cabang='boxing' dkk TIDAK perlu
 # migrasi ulang. Cabor cuma "nempel" lewat field `kode` yang nilainya
 # sama persis dengan CABANG_CHOICES di atas. Lihat Atlet.cabor_obj.
@@ -147,7 +147,7 @@ class ProfilPelatih(models.Model):
 
 
     def __str__(self):
-        return f'{self.user.get_full_name() or self.user.username} â€” {self.get_status_display()}'
+        return f'{self.user.get_full_name() or self.user.username} — {self.get_status_display()}'
 
     @property
     def is_approved(self):
@@ -224,11 +224,11 @@ class Atlet(models.Model):
     @property
     def level_saat_ini(self):
         if self.audit_l3.filter(layak_naik=True).exists():
-            return 'L3 â€” Siap Kompetisi'
+            return 'L3 — Siap Kompetisi'
         if self.audit_l2.filter(layak_naik=True).exists():
-            return 'L2 â€” Menuju Power'
+            return 'L2 — Menuju Power'
         if self.audit_l1.filter(layak_naik=True).exists():
-            return 'L1 â€” Menuju Strength'
+            return 'L1 — Menuju Strength'
         return 'Belum Audit'
 
     @property
@@ -254,7 +254,7 @@ class Atlet(models.Model):
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# AUDIT L1 â€” CORRECTION
+# AUDIT L1 — CORRECTION
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class CorrectionAuditL1(models.Model):
@@ -270,9 +270,9 @@ class CorrectionAuditL1(models.Model):
 
     # â”€â”€ Skor 6 Pilar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     # (score_ankle ditambahkan belakangan, khusus dipakai cabang yang
-    # menguji Ankle Mobility / Weight-Bearing Lunge Test â€” mis. Boxing.
+    # menguji Ankle Mobility / Weight-Bearing Lunge Test — mis. Boxing.
     # Cabang lain yang tidak mengisi field ini tetap None, dan _avg()
-    # otomatis mengecualikannya dari total_skor â€” lihat save() di bawah.)
+    # otomatis mengecualikannya dari total_skor — lihat save() di bawah.)
     score_rotation  = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Rotasi')
     score_extension = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Ekstensi')
     score_stability = models.FloatField(default=0, validators=[MinValueValidator(0),MaxValueValidator(10)], verbose_name='Skor Stabilitas')
@@ -348,7 +348,7 @@ class CorrectionAuditL1(models.Model):
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# AUDIT L2 â€” STRENGTH
+# AUDIT L2 — STRENGTH
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class StrengthAuditL2(models.Model):
@@ -443,7 +443,7 @@ class StrengthAuditL2(models.Model):
             return 'CNS Segar'
         elif self.iso_tremor_rasio >= 65:
             return 'CNS Cukup'
-        return 'CNS Lelah â€” Risiko Cedera'
+        return 'CNS Lelah — Risiko Cedera'
 
     @property
     def pilar_terendah(self):
@@ -468,7 +468,7 @@ class StrengthAuditL2(models.Model):
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# AUDIT L3 â€” POWER
+# AUDIT L3 — POWER
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class PowerAuditL3(models.Model):
@@ -561,9 +561,9 @@ class PowerAuditL3(models.Model):
 
 class RekomendasiProgram(models.Model):
     LEVEL_CHOICES = [
-        ('L1', 'L1 â€” Correction'),
-        ('L2', 'L2 â€” Strength'),
-        ('L3', 'L3 â€” Power'),
+        ('L1', 'L1 — Correction'),
+        ('L2', 'L2 — Strength'),
+        ('L3', 'L3 — Power'),
     ]
     atlet           = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='rekomendasi')
     audit_level     = models.CharField(max_length=2, choices=LEVEL_CHOICES)
@@ -587,7 +587,7 @@ class RekomendasiProgram(models.Model):
 
 
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-# AUDIT L4 â€” SPEED, AGILITY & METABOLIC ENDURANCE
+# AUDIT L4 — SPEED, AGILITY & METABOLIC ENDURANCE
 # â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 class SpeedAgilityAuditL4(models.Model):
@@ -631,9 +631,9 @@ class SpeedAgilityAuditL4(models.Model):
     kondisi_uji = models.CharField(
         max_length=50,
         choices=[
-            ('FRESH',        'Fresh â€” Tanpa Pre-fatigue'),
-            ('POST_SPARRING','Post-Sparring â€” Setelah Sparring 3 Ronde'),
-            ('POST_CIRCUIT', 'Post-Circuit â€” Setelah Circuit Training'),
+            ('FRESH',        'Fresh — Tanpa Pre-fatigue'),
+            ('POST_SPARRING','Post-Sparring — Setelah Sparring 3 Ronde'),
+            ('POST_CIRCUIT', 'Post-Circuit — Setelah Circuit Training'),
         ],
         default='FRESH'
     )
@@ -654,7 +654,7 @@ class SpeedAgilityAuditL4(models.Model):
         ordering            = ['-timestamp']
 
     def __str__(self):
-        return f"L4 {self.atlet_name} â€” {self.total_skor} ({self.predikat})"
+        return f"L4 {self.atlet_name} — {self.total_skor} ({self.predikat})"
 
     def hitung_hex_rata(self):
         times = [t for t in [self.hex_waktu_putaran1, self.hex_waktu_putaran2, self.hex_waktu_putaran3] if t]
@@ -671,7 +671,7 @@ class SpeedAgilityAuditL4(models.Model):
 
     @property
     def score_pilar2(self):
-        """Skor Pilar 2 (frekuensi serangan) â€” otomatis pilih score_kick untuk
+        """Skor Pilar 2 (frekuensi serangan) — otomatis pilih score_kick untuk
         cabang Taekwondo ('tkd'), score_punch untuk cabang lain (Boxing/Muay
         Thai/Karate). Dipakai di kalkulasi_skor() agar total_skor selalu benar
         tanpa peduli field mana yang diisi form."""
