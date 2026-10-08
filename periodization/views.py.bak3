@@ -277,16 +277,6 @@ class DetailMesoCycleView(LoginRequiredMixin, View):
         except ValueError:
             messages.error(request, "Nilai fokus/volume/intensitas harus berupa angka.")
             return redirect('periodization:detail_meso', meso_id=meso.id)
-        _fokus = [meso.fokus_l1_persen, meso.fokus_l2_persen, meso.fokus_l3_persen, meso.fokus_l4_persen]
-        if any(not (0 <= x <= 100) for x in _fokus):
-            messages.error(request, "Porsi fokus harus antara 0 sampai 100 persen.")
-            return redirect('periodization:detail_meso', meso_id=meso.id)
-        if sum(_fokus) != 100:
-            messages.error(request, f"Total fokus L1-L4 harus 100% (sekarang {sum(_fokus)}%). Perubahan belum disimpan.")
-            return redirect('periodization:detail_meso', meso_id=meso.id)
-        if not (1 <= meso.volume_target <= 10 and 1 <= meso.intensitas_target <= 10):
-            messages.error(request, "Volume dan intensitas target harus antara 1 sampai 10.")
-            return redirect('periodization:detail_meso', meso_id=meso.id)
         meso.save()
         messages.success(request, "Fase berhasil diupdate.")
         return redirect('periodization:detail_meso', meso_id=meso.id)
@@ -378,7 +368,6 @@ class DetailMicroCycleView(LoginRequiredMixin, View):
             'pilar_fokus_choices': PILAR_FOKUS_HARIAN_CHOICES,
             'waktu_sesi_choices': WAKTU_SESI_CHOICES,
             'sibling_micro_list': micro.meso_cycle.micro_cycles.order_by('minggu_ke'),
-            **_beban_mingguan(micro),
         })
 
 
@@ -462,7 +451,6 @@ class DetailSesiLatihanView(LoginRequiredMixin, View):
         return render(request, self.template_name, {
             'sesi': sesi,
             'kategori_groups': kategori_groups,
-            'nama_latihan_saran': _saran_nama_latihan(request.user),
             'kategori_choices': KATEGORI_LATIHAN_CHOICES,
             'nama_hari': NAMA_HARI[sesi.hari_ke],
             'hari_list': hari_list,
@@ -772,14 +760,12 @@ from django.contrib import messages as _messages
 from django.db import transaction as _transaction
 from django.shortcuts import get_object_or_404 as _get_object_or_404, redirect as _redirect
 from django.views.decorators.http import require_POST as _require_POST
-from django.contrib.auth.decorators import login_required as _login_required
 
 
-@_login_required
 @_require_POST
 @_transaction.atomic
 def duplikat_micro(request, micro_id):
-    sumber = _get_object_or_404(get_micro_cycle_queryset(request.user), pk=micro_id)
+    sumber = _get_object_or_404(MicroCycle, id=micro_id)
     target = (MicroCycle.objects
               .filter(meso_cycle=sumber.meso_cycle, minggu_ke=sumber.minggu_ke + 1)
               .first())
@@ -802,7 +788,7 @@ def duplikat_micro(request, micro_id):
         s.pk = None
         s.id = None
         s.micro_cycle = target
-        if 'tanggal' in [_f.name for _f in s._meta.concrete_fields] and s.tanggal: s.tanggal = s.tanggal + selisih
+        if s.tanggal: s.tanggal = s.tanggal + selisih
         s.intensitas = max(1, min(10, round(s.intensitas * (1 + progres))))
         s.save()
         for it in item_lama:
@@ -813,48 +799,3 @@ def duplikat_micro(request, micro_id):
 
     _messages.success(request, f"Sesi disalin ke Minggu {target.minggu_ke}.")
     return _redirect('periodization:detail_micro', target.id)
-
-def _beban_mingguan(micro):
-    """Total durasi & planned load (durasi x intensitas) 1 MicroCycle, sesi REST tidak dihitung."""
-    from django.db.models import F, Sum, ExpressionWrapper, IntegerField
-    beban = ExpressionWrapper(F('durasi_menit') * F('intensitas'), output_field=IntegerField())
-    agg = micro.sesi_latihan.exclude(pilar_fokus='REST').aggregate(
-        durasi=Sum('durasi_menit'), load=Sum(beban))
-    return {
-        'total_durasi_minggu': agg['durasi'] or 0,
-        'total_srpe_load': agg['load'] or 0,
-    }
-
-class BebanMingguanView(LoginRequiredMixin, View):
-    """Endpoint JSON: planned load & ACWR per minggu untuk 1 MacroProgram."""
-    def get(self, request, program_id):
-        from .services import hitung_beban_dan_acwr
-        program = get_object_or_404(get_macro_program_queryset(request.user), pk=program_id)
-        rows = [{
-            'label': r['label'],
-            'tanggal': r['tanggal'].isoformat() if r['tanggal'] else None,
-            'durasi': r['durasi'],
-            'load': r['load'],
-            'acwr': r['acwr'],
-            'zona': r['zona'],
-        } for r in hitung_beban_dan_acwr(program)]
-        return JsonResponse({'rows': rows})
-
-def _saran_nama_latihan(user, batas=300):
-    """Nama latihan yang pernah dipakai user ini, paling sering dulu, unik tanpa beda huruf besar/kecil."""
-    from django.db.models import Count
-    qs = (LatihanItem.objects
-          .filter(sesi_latihan__in=get_sesi_latihan_queryset(user))
-          .values('nama_latihan')
-          .annotate(n=Count('id'))
-          .order_by('-n', 'nama_latihan'))
-    terlihat, hasil = set(), []
-    for row in qs:
-        nama = (row['nama_latihan'] or '').strip()
-        kunci = nama.lower()
-        if nama and kunci not in terlihat:
-            terlihat.add(kunci)
-            hasil.append(nama)
-        if len(hasil) >= batas:
-            break
-    return hasil

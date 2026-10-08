@@ -58,7 +58,7 @@
 <!-- Objektif Fisik & Porsi Fokus -->
 <div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:20px; margin-bottom:20px;">
     <h3 style="margin-top:0; margin-bottom:14px;">Objektif Fisik &amp; Porsi Fokus</h3>
-    <form id="form-meso" method="post" action="{% url 'periodization:detail_meso' meso.id %}" style="display:grid; gap:14px; max-width:720px;">
+    <form method="post" action="{% url 'periodization:detail_meso' meso.id %}" style="display:grid; gap:14px; max-width:720px;">
         {% csrf_token %}
         <div>
             <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Objektif Fisik Fase Ini</label>
@@ -104,15 +104,9 @@
                        style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
             </div>
         </div>
-        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-            <p id="info-total-fokus" style="color:{% if meso.total_fokus_persen != 100 %}#991b1b{% else %}#166534{% endif %}; font-size:12px; margin:0;">
-                Total fokus saat ini: {{ meso.total_fokus_persen }}% (harus 100%)
-            </p>
-            <button type="button" id="btn-seimbangkan"
-                    style="display:{% if meso.total_fokus_persen != 100 %}inline-block{% else %}none{% endif %}; background:#f3f4f6; border:1px solid #d1d5db; border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer;">
-                Seimbangkan ke 100%
-            </button>
-        </div>
+        <p style="color:{% if meso.total_fokus_persen != 100 %}#991b1b{% else %}#6b7280{% endif %}; font-size:12px; margin:0;">
+            Total fokus saat ini: {{ meso.total_fokus_persen }}% (idealnya 100%)
+        </p>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div>
                 <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Volume Target (1-10)</label>
@@ -274,55 +268,4 @@
     </details>
 </div>
 
-{% endblock %}
-
-{% block extra_js %}
-<script>
-(function() {
-    const form = document.getElementById('form-meso');
-    if (!form) return;
-    const names = ['fokus_l1_persen', 'fokus_l2_persen', 'fokus_l3_persen', 'fokus_l4_persen'];
-    const inputs = names.map(function(n) { return form.querySelector('input[name="' + n + '"]'); });
-    const info = document.getElementById('info-total-fokus');
-    const btn = document.getElementById('btn-seimbangkan');
-
-    function total() {
-        return inputs.reduce(function(a, el) { return a + (parseInt(el.value, 10) || 0); }, 0);
-    }
-    function render() {
-        const t = total();
-        info.textContent = 'Total fokus saat ini: ' + t + '% (harus 100%)';
-        info.style.color = (t === 100) ? '#166534' : '#991b1b';
-        btn.style.display = (t === 100) ? 'none' : 'inline-block';
-    }
-    function seimbangkan() {
-        const v = inputs.map(function(el) { return Math.max(0, parseInt(el.value, 10) || 0); });
-        const sum = v.reduce(function(a, b) { return a + b; }, 0);
-        if (sum === 0) {
-            inputs.forEach(function(el) { el.value = 25; });
-            render();
-            return;
-        }
-        const raw = v.map(function(x) { return x * 100 / sum; });
-        const fl = raw.map(Math.floor);
-        const sisa = 100 - fl.reduce(function(a, b) { return a + b; }, 0);
-        raw.map(function(r, i) { return { i: i, f: r - fl[i] }; })
-           .sort(function(a, b) { return b.f - a.f; })
-           .slice(0, sisa)
-           .forEach(function(o) { fl[o.i] += 1; });
-        inputs.forEach(function(el, i) { el.value = fl[i]; });
-        render();
-    }
-
-    inputs.forEach(function(el) { el.addEventListener('input', render); });
-    btn.addEventListener('click', seimbangkan);
-    form.addEventListener('submit', function(e) {
-        if (total() !== 100) {
-            e.preventDefault();
-            alert('Total fokus L1-L4 harus 100%. Sekarang ' + total() + '%. Klik "Seimbangkan ke 100%" atau perbaiki angkanya.');
-        }
-    });
-    render();
-})();
-</script>
 {% endblock %}

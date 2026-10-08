@@ -116,7 +116,7 @@
                         <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Pilar Fokus</label>
                         <select name="pilar_fokus" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
                             {% for val, label in pilar_fokus_choices %}
-                                <option value="{{ val }}" {% if val == 'TEKNIK' %}selected{% endif %}>{{ label }}</option>
+                                <option value="{{ val }}" {% if val == 'REST' %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
                         </select>
                     </div>

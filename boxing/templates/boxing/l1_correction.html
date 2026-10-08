@@ -42,10 +42,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:10px 0}
 .ftab{padding:4px 14px;border-radius:20px;font-size:10px;font-weight:600;text-transform:uppercase;text-decoration:none;letter-spacing:1px;border:1px solid var(--border2);color:var(--text3);transition:.2s;}
 .ftab-all{border-color:#fff;color:#fff;background:rgba(255,255,255,0.07)}
-.ftab-elite{border-color:var(--green);color:var(--green);background:rgba(46,204,113,0.08)}
-.ftab-youth{border-color:var(--blue);color:var(--blue);background:rgba(52,152,219,0.08)}
-.ftab-junior{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,0.08)}
-.ftab-senior{border-color:var(--red);color:var(--red);background:rgba(231,76,60,0.08)}
+.ftab-elite{--fc:46,204,113}
+.ftab-youth{--fc:52,152,219}
+.ftab-junior{--fc:245,166,35}
+.ftab-senior{--fc:167,139,250}
+.ftab-elite,.ftab-youth,.ftab-junior,.ftab-senior{color:rgb(var(--fc));border-color:rgba(var(--fc),.45);background:rgba(var(--fc),.08)}
+.ftab-elite:hover,.ftab-youth:hover,.ftab-junior:hover,.ftab-senior:hover{background:rgba(var(--fc),.2)}
+.ftab.on{background:rgb(var(--fc));border-color:rgb(var(--fc));color:#07080d;font-weight:700}
 .card-x{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;height:100%;}
 .card-title{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:6px;border-left:3px solid var(--cyan);padding-left:10px;}
 .form-control,.form-select{background:#1a1c28!important;border:1px solid #2a2d3e;color:var(--text)!important;border-radius:8px;font-size:13px;transition:border-color .2s;}
@@ -124,6 +127,45 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 .auto-score-badge.as-ready{color:var(--cyan);background:rgba(80,238,241,0.1);border-color:rgba(80,238,241,0.3);}
 .auto-score-badge.as-dev{color:var(--gold);background:rgba(255,179,0,0.1);border-color:rgba(255,179,0,0.3);}
 .auto-score-badge.as-novice{color:var(--red);background:rgba(255,107,107,0.1);border-color:rgba(255,107,107,0.3);}
+
+
+/* === usia otomatis, riwayat program & profil === */
+.usia-info{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:7px 10px;border-radius:8px;color:var(--cyan);background:rgba(80,238,241,.06);border:1px solid rgba(80,238,241,.2)}
+.usia-info.warn{color:var(--gold);background:rgba(245,166,35,.09);border-color:rgba(245,166,35,.35)}
+.sk-cell{text-align:center;white-space:nowrap}
+.sk-lbl{display:none;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px}
+.sk-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--text2)}
+/* Judul kolom History menempel di atas saat scroll (layar lebar); label mini hanya dipakai di layar sempit */
+@media (min-width:992px){
+  .tbl-wrap{overflow:visible}
+  .tbl-history thead th{position:sticky;top:0;z-index:5;background:var(--card);box-shadow:0 1px 0 var(--border2)}
+}
+@media (max-width:991px){.sk-lbl{display:block}}
+.td-atlet{min-width:200px;white-space:nowrap}
+.atlet-nama{display:block;font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.retest-chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.3px;padding:3px 9px;border-radius:6px;border:1px solid}
+.rc-ok{color:var(--cyan);border-color:rgba(80,238,241,.35);background:rgba(80,238,241,.07)}
+.rc-warn{color:var(--gold);border-color:rgba(245,166,35,.45);background:rgba(245,166,35,.1)}
+.rc-bad{color:var(--red);border-color:rgba(231,76,60,.5);background:rgba(231,76,60,.12);font-weight:700}
+.btn-detail{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-top:6px;background:rgba(80,238,241,.06);border:1px solid rgba(80,238,241,.25);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.5px;color:var(--cyan);cursor:pointer;transition:.2s}
+.btn-detail:hover{background:rgba(80,238,241,.15);border-color:var(--cyan)}
+.detail-box{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:14px 6px;font-size:11.5px;line-height:1.65;color:var(--text2)}
+@media(max-width:820px){.detail-box{grid-template-columns:1fr}}
+.detail-box h6{font-size:10px;letter-spacing:1.5px;color:var(--text3);margin:0 0 8px}
+.dt-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:4px}
+.dt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.dt-prog{margin-bottom:10px}
+.dt-prog .reko-item{margin-bottom:3px}
+/* === HPCS: asimetri, prioritas, jadwal tes ulang === */
+.asim-row{font-family:'JetBrains Mono',monospace;font-size:10px;padding:5px 9px;border-radius:6px;margin:-2px 0 8px;border:1px solid}
+.asim-ok{color:var(--green);background:rgba(46,204,113,.07);border-color:rgba(46,204,113,.25)}
+.asim-warn{color:var(--gold);background:rgba(245,166,35,.09);border-color:rgba(245,166,35,.35)}
+.asim-bad{color:var(--red);background:rgba(231,76,60,.10);border-color:rgba(231,76,60,.4);font-weight:700}
+input.asim-in-warn{border-color:var(--gold)!important}
+input.asim-in-bad{border-color:var(--red)!important;box-shadow:0 0 0 1px rgba(231,76,60,.4)}
+.radar-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:10px;color:var(--text2);margin-top:6px}
+.radar-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.reko-prio{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;padding:1px 7px;border-radius:99px;margin-left:6px;color:#000}
 </style>
 {% endblock %}
 
@@ -187,10 +229,10 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
     <div class="filter-bar">
       <span class="mono x-small" style="color:var(--text3)"><i class="bi bi-funnel-fill me-1"></i>FILTER:</span>
       <a href="?category=" class="ftab {% if not selected_category %}ftab-all{% endif %}">Semua</a>
-      <a href="?category=elite"  class="ftab {% if selected_category == 'elite'  %}ftab-elite{% endif %}">Elite</a>
-      <a href="?category=youth"  class="ftab {% if selected_category == 'youth'  %}ftab-youth{% endif %}">Youth</a>
-      <a href="?category=junior" class="ftab {% if selected_category == 'junior' %}ftab-junior{% endif %}">Junior</a>
-      <a href="?category=senior" class="ftab {% if selected_category == 'senior' %}ftab-senior{% endif %}">Senior</a>
+      <a href="?category=elite"  class="ftab ftab-elite {% if selected_category == 'elite' %}on{% endif %}">Elite</a>
+      <a href="?category=youth"  class="ftab ftab-youth {% if selected_category == 'youth' %}on{% endif %}">Youth</a>
+      <a href="?category=junior" class="ftab ftab-junior {% if selected_category == 'junior' %}on{% endif %}">Junior</a>
+      <a href="?category=senior" class="ftab ftab-senior {% if selected_category == 'senior' %}on{% endif %}">Senior</a>
       {% if selected_category %}<a href="?category=" class="x-small" style="color:var(--text3);text-decoration:none"><i class="bi bi-x-circle"></i> Reset</a>{% endif %}
     </div>
     <!-- Baris Rubrik + Tombol Aksi sejajar -->
@@ -369,7 +411,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             <div class="mb-3">
               <label>Pilih Atlet</label>
               <select id="select-atlet" class="form-select" onchange="onAtletChange(this)">
-                <option value=""> Pilih Atlet </option>
+                <option value="">— pilih nama atlet —</option>
                 {% for atlet in atlet_list %}
                 <option value="{{ atlet.id }}"
                         {% if atlet.id == atlet_id_terpilih %}selected{% endif %}
@@ -388,7 +430,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
                   Kategori: <strong style="color:var(--cyan)">{{ selected_category|title }}</strong>
                   <a href="?category=" style="color:var(--text3)"> Reset</a>
                 {% else %}
-                  {{ atlet_list|length }}|{{ atlet_list|length }} atlet ditemukan.
+                  {{ atlet_list|length }} atlet ditemukan.
                 {% endif %}
               </div>
             </div>
@@ -401,6 +443,9 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 <input type="hidden" name="atlet_name" id="atlet_name_hidden">
 <input type="hidden" name="kelas_berat" id="kelas_berat_hidden">
 <input type="hidden" name="kategori_usia" id="kategori_usia_hidden" value="ELITE">
+<input type="hidden" name="program_latihan" id="program_latihan">
+<input type="hidden" name="profil_kondisi" id="profil_kondisi">
+<input type="hidden" name="tgl_retest" id="tgl_retest">
 <input type="hidden" name="gender" id="gender_hidden" value="Putra">
           </div>
           <div class="card-title mt-2"><i class="bi bi-bar-chart-fill"></i> Pilar Analysis</div>
@@ -408,13 +453,9 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 
             <!-- KATEGORI USIA (SOP) — dipakai JS utk preview skor, server tetap hitung dari tanggal_lahir atlet -->
             <div class="col-12">
-              <label class="cyan">Kategori Usia (SOP)</label>
-              <select id="usia_kat_sop" class="form-control" onchange="liveUpdate();">
-                <option value="7">Anak-anak (6-8 thn)</option>
-                <option value="10">Anak-anak (9-11 thn)</option>
-                <option value="15">Remaja (12-17 thn)</option>
-                <option value="25" selected>Dewasa (18-35 thn)</option>
-              </select>
+              <!-- Kategori usia SOP otomatis dari umur atlet (data master) — pelatih tidak perlu memilih lagi -->
+              <input type="hidden" id="usia_kat_sop" value="25">
+              <div id="usia_info" class="usia-info">Pilih atlet &mdash; kategori usia terisi otomatis dari data atlet.</div>
             </div>
 
             <!-- PILAR 1: ANKLE MOBILITY -->
@@ -431,6 +472,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <span class="auto-score-badge" id="badge_ankle">—</span>
               <input type="hidden" name="score_ankle" id="score_ankle">
             </div>
+            <div class="col-12 asim-row" id="asim_ankle" style="display:none"></div>
 
             <!-- PILAR 2: STABILITY -->
             <div class="col-6">
@@ -446,6 +488,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <span class="auto-score-badge" id="badge_stability">—</span>
               <input type="hidden" name="score_stability" id="score_stability">
             </div>
+            <div class="col-12 asim-row" id="asim_stability" style="display:none"></div>
 
             <!-- PILAR 3: ROTATION -->
             <div class="col-6">
@@ -461,6 +504,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <span class="auto-score-badge" id="badge_rotation">—</span>
               <input type="hidden" name="score_rotation" id="score_rotation">
             </div>
+            <div class="col-12 asim-row" id="asim_rotation" style="display:none"></div>
             <div class="col-12 penalti-flag" id="flag_penalti_rotasi" style="display:none;margin:-4px 0 10px;font-size:9.5px;font-family:'JetBrains Mono',monospace;color:var(--red);background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.25);border-radius:6px;padding:5px 8px">
               ⚠️ Asimetri &gt; 10° — skor Rotation otomatis dikurangi 2 poin sesuai SOP
             </div>
@@ -525,9 +569,14 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             <canvas id="radarChart"></canvas>
             <img id="chart-image" alt="Radar" style="display:none;max-width:100%">
           </div>
+          <div class="radar-legend">
+            <span><i style="background:#2ecc71"></i>&ge; 7,0 baik</span>
+            <span><i style="background:#f5a623"></i>5,0&ndash;6,9 perlu perhatian</span>
+            <span><i style="background:#e74c3c"></i>&lt; 5,0 prioritas</span>
+          </div>
           <div id="narasi_panel" class="mt-3 text-start" style="display:none">
             <div class="card-title"><i class="bi bi-person-lines-fill" style="color:var(--cyan)"></i> Profil Kondisi Atlet</div>
-            <div id="narasi_box" style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.2);border-radius:10px;padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text2);text-align:left;max-height:320px;overflow-y:auto;"></div>
+            <div id="narasi_box" style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.2);border-radius:10px;padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text2);text-align:left;"></div>
           </div>
         </div>
       </div>
@@ -560,14 +609,14 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
         <div class="card-title mb-0"><i class="bi bi-database-fill"></i> Database & History Audit</div>
         <div class="filter-bar mb-0">
           <a href="?category="       class="ftab {% if not selected_category %}ftab-all{% endif %}">Semua</a>
-          <a href="?category=elite"  class="ftab {% if selected_category == 'elite'  %}ftab-elite{% endif %}">Elite</a>
-          <a href="?category=youth"  class="ftab {% if selected_category == 'youth'  %}ftab-youth{% endif %}">Youth</a>
-          <a href="?category=junior" class="ftab {% if selected_category == 'junior' %}ftab-junior{% endif %}">Junior</a>
-          <a href="?category=senior" class="ftab {% if selected_category == 'senior' %}ftab-senior{% endif %}">Senior</a>
+          <a href="?category=elite"  class="ftab ftab-elite {% if selected_category == 'elite' %}on{% endif %}">Elite</a>
+          <a href="?category=youth"  class="ftab ftab-youth {% if selected_category == 'youth' %}on{% endif %}">Youth</a>
+          <a href="?category=junior" class="ftab ftab-junior {% if selected_category == 'junior' %}on{% endif %}">Junior</a>
+          <a href="?category=senior" class="ftab ftab-senior {% if selected_category == 'senior' %}on{% endif %}">Senior</a>
         </div>
       </div>
-      <div class="table-responsive">
-        <table class="table table-dark table-hover align-middle">
+      <div class="table-responsive tbl-wrap">
+        <table class="table table-dark table-hover align-middle tbl-history">
           <thead>
             <tr>
               <th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Total Skor</th><th>Predikat</th>
@@ -579,27 +628,40 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
           {% for audit in history %}
           <tr id="row-{{ audit.id }}">
             <td class="mono x-small" style="color:var(--text3)">{{ audit.timestamp|date:"d/m/Y H:i" }}</td>
-            <td class="fw-bold">{{ audit.atlet.nama_atlet }}</td>
+            <td class="td-atlet"><span class="atlet-nama">{{ audit.atlet.nama_atlet }}</span>
+              <div><span class="retest-chip" title="Jadwal tes ulang L1" data-id="{{ audit.id }}" data-atlet="{{ audit.atlet.id }}" data-iso="{{ audit.tgl_retest|date:'Y-m-d' }}" data-base="{{ audit.timestamp|date:'Y-m-d' }}" data-total="{{ audit.total_skor|default:0 }}" style="display:none"></span></div>
+              <button type="button" class="btn-detail" onclick="toggleDetail({{ audit.id }},this)"
+                      data-program="{{ audit.program_latihan|default:'' }}" data-profil="{{ audit.profil_kondisi|default:'' }}"
+                      data-skor="{{ audit.score_rotation|default:0 }};{{ audit.score_extension|default:0 }};{{ audit.score_stability|default:0 }};{{ audit.score_ankle|default:0 }};{{ audit.score_posture|default:0 }};{{ audit.score_breathing|default:0 }};{{ audit.total_skor|default:0 }}"
+                      data-predikat="{{ audit.predikat }}" data-base="{{ audit.timestamp|date:'Y-m-d' }}"><i class="bi bi-clipboard2-pulse"></i> Profil &amp; program</button>
+            </td>
             <td><span class="mono x-small" style="color:var(--cyan)">{{ audit.kategori_usia }}</span></td>
-            <td><span class="bebas" style="font-size:1.2rem;color:var(--cyan)">{{ audit.total_skor }}</span></td>
+            <td class="sk-cell"><span class="sk-lbl">Total</span><span class="bebas" style="font-size:1.3rem;color:var(--cyan)">{{ audit.total_skor }}</span></td>
             <td>
               <span class="badge rounded-pill {% if audit.predikat == 'ELITE' %}bg-success{% elif audit.predikat == 'READY' %}bg-info text-dark{% elif audit.predikat == 'DEVELOPING' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
                 {{ audit.predikat }}
               </span>
             </td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_rotation|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_extension|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_stability|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_ankle|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_posture|floatformat:1 }}</td>
-            <td class="mono x-small" style="color:var(--text2)">{{ audit.score_breathing|floatformat:1 }}</td>
+            <td class="sk-cell" data-v="{{ audit.score_rotation|default:0 }}"><span class="sk-lbl">Rotation</span><span class="sk-val">{{ audit.score_rotation|floatformat:1 }}</span></td>
+            <td class="sk-cell" data-v="{{ audit.score_extension|default:0 }}"><span class="sk-lbl">Extension</span><span class="sk-val">{{ audit.score_extension|floatformat:1 }}</span></td>
+            <td class="sk-cell" data-v="{{ audit.score_stability|default:0 }}"><span class="sk-lbl">Stability</span><span class="sk-val">{{ audit.score_stability|floatformat:1 }}</span></td>
+            <td class="sk-cell" data-v="{{ audit.score_ankle|default:0 }}"><span class="sk-lbl">Ankle</span><span class="sk-val">{{ audit.score_ankle|floatformat:1 }}</span></td>
+            <td class="sk-cell" data-v="{{ audit.score_posture|default:0 }}"><span class="sk-lbl">Posture</span><span class="sk-val">{{ audit.score_posture|floatformat:1 }}</span></td>
+            <td class="sk-cell" data-v="{{ audit.score_breathing|default:0 }}"><span class="sk-lbl">Breathing</span><span class="sk-val">{{ audit.score_breathing|floatformat:1 }}</span></td>
             <td class="text-center">
               <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 me-1" title="Cetak PDF"
-                      onclick="cetakAudit({{ audit.id }},'{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}','{{ audit.atlet.gender }}','{{ audit.atlet.kelas_berat }}',{{ audit.score_rotation|default:0 }},{{ audit.score_extension|default:0 }},{{ audit.score_stability|default:0 }},{{ audit.score_ankle|default:0 }},{{ audit.score_posture|default:0 }},{{ audit.score_breathing|default:0 }},{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.rekomendasi|default:''|escapejs }}','{{ audit.timestamp|date:"d/m/Y H:i" }}','{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}','{{ audit.atlet.pelatih.get_full_name|default:audit.atlet.pelatih.username|default:'' }}')">
+                      onclick="cetakAuditDariTombol(this)"
+                      data-id="{{ audit.id }}" data-nama="{{ audit.atlet.nama_atlet }}" data-kategori="{{ audit.kategori_usia }}" data-gender="{{ audit.atlet.gender }}" data-berat="{{ audit.atlet.kelas_berat }}"
+                      data-skor="{{ audit.score_rotation|default:0 }};{{ audit.score_extension|default:0 }};{{ audit.score_stability|default:0 }};{{ audit.score_ankle|default:0 }};{{ audit.score_posture|default:0 }};{{ audit.score_breathing|default:0 }};{{ audit.total_skor|default:0 }}"
+                      data-predikat="{{ audit.predikat }}" data-rekomendasi="{{ audit.rekomendasi|default:'' }}" data-tgl="{{ audit.timestamp|date:"d/m/Y H:i" }}"
+                      data-nohp="{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}" data-coach="{{ audit.atlet.pelatih.get_full_name|default:audit.atlet.pelatih.username|default:'' }}"
+                      data-program="{{ audit.program_latihan|default:'' }}" data-profil="{{ audit.profil_kondisi|default:'' }}" data-base="{{ audit.timestamp|date:'Y-m-d' }}">
                 <i class="bi bi-printer-fill"></i>
               </button>
               <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 ms-1" title="Kirim WhatsApp"
-                      onclick="kirimWARowL1('{{ audit.atlet.nama_atlet|escapejs }}','{{ audit.kategori_usia }}',{{ audit.total_skor|default:0 }},'{{ audit.predikat }}','{{ audit.timestamp|date:"d/m/Y H:i" }}','{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}')">
+                      onclick="kirimWARowL1Dari(this)"
+                      data-nama="{{ audit.atlet.nama_atlet }}" data-kategori="{{ audit.kategori_usia }}" data-total="{{ audit.total_skor|default:0 }}"
+                      data-predikat="{{ audit.predikat }}" data-tgl="{{ audit.timestamp|date:"d/m/Y H:i" }}" data-nohp="{{ audit.atlet.pelatih.profil_pelatih.no_hp|default:'' }}">
                 <i class="bi bi-whatsapp"></i>
               </button>
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
@@ -608,8 +670,11 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               </button>
             </td>
           </tr>
+          <tr id="detail-{{ audit.id }}" style="display:none">
+            <td colspan="12" style="background:rgba(80,238,241,0.03);border-left:3px solid var(--cyan)"><div class="detail-box" id="detail-box-{{ audit.id }}"></div></td>
+          </tr>
           {% empty %}
-          <tr><td colspan="11" class="text-center py-5" style="color:var(--text3)"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data. Simpan audit pertama Anda.</td></tr>
+          <tr><td colspan="12" class="text-center py-5" style="color:var(--text3)"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data. Simpan audit pertama Anda.</td></tr>
           {% endfor %}
           </tbody>
         </table>
@@ -669,17 +734,8 @@ function onAtletChange(sel) {
     setVal('kategori_usia_hidden', kategori.toUpperCase());
     setVal('gender_hidden',        gender === 'Putri' ? 'Putri' : 'Putra');
 
-    // Auto-pilih kategori usia SOP dari umur atlet (kalau tanggal_lahir terisi di data master).
-    // Ini CUMA untuk preview JS — server tetap hitung ulang dari Atlet.umur sendiri saat submit.
-    const selUsia = document.getElementById('usia_kat_sop');
-    if (selUsia && umur) {
-        const u = parseInt(umur, 10);
-        let bucket = '25';
-        if (u <= 8) bucket = '7';
-        else if (u <= 11) bucket = '10';
-        else if (u <= 17) bucket = '15';
-        selUsia.value = bucket;
-    }
+    // Kategori usia SOP otomatis dari umur atlet (data master). Server tetap hitung ulang saat submit.
+    setUsiaOtomatis(umur);
 
     const pNama   = document.getElementById('p_nama');
     const pDetail = document.getElementById('p_detail');
@@ -746,7 +802,7 @@ function setBadgeSkor(badgeId, hiddenId, skor){
   skor = Math.round(skor * 10) / 10;
   if (badge) {
     badge.textContent = skor.toFixed(1);
-    badge.className = 'auto-score-badge ' + (skor>=8?'as-elite':skor>=5?'as-ready':'as-novice');
+    badge.className = 'auto-score-badge ' + (skor>=BATAS_KUNING?(skor>=8?'as-elite':'as-ready'):skor>=BATAS_MERAH?'as-dev':'as-novice');
   }
   if (hidden) hidden.value = skor;
 }
@@ -811,6 +867,209 @@ function calcBreathing(){
 }
 
 function g(id){ return parseFloat(document.getElementById(id)?.value) || 0 }
+
+// ===== Data program latihan & profil kondisi (disimpan ke History) =====
+function tglLokalISO(d){var p=function(n){return String(n).padStart(2,'0');};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function fmtTgl(d){return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function parseISO(s){var a=String(s).split('-').map(Number);return new Date(a[0],a[1]-1,a[2]);}
+function sisaHari(d){var t=new Date();return Math.round((d-new Date(t.getFullYear(),t.getMonth(),t.getDate()))/864e5);}
+function hitungRetest(layak,base){
+  var m=layak?RETEST_MINGGU.layak:RETEST_MINGGU.belum;
+  var d=new Date(base.getFullYear(),base.getMonth(),base.getDate()+m*7);
+  return {minggu:m,date:d,iso:tglLokalISO(d)};
+}
+var LABEL_USIA={'7':'Anak-anak (6–8 thn)','10':'Anak-anak (9–11 thn)','15':'Remaja (12–17 thn)','25':'Dewasa (18–35 thn)'};
+function setUsiaOtomatis(umur){
+  var hid=document.getElementById('usia_kat_sop'), info=document.getElementById('usia_info');
+  var u=parseInt(umur,10), bucket='25', adaUmur=!isNaN(u);
+  if(adaUmur){ bucket = u<=8?'7':u<=11?'10':u<=17?'15':'25'; }
+  if(hid) hid.value=bucket;
+  if(info){
+    info.className='usia-info'+(adaUmur?'':' warn');
+    info.innerHTML = adaUmur
+      ? 'Kategori usia SOP: <strong>'+LABEL_USIA[bucket]+'</strong> &middot; umur '+u+' th (otomatis dari data atlet)'
+      : '&#9888; Umur atlet belum terisi di data master &mdash; skor memakai norma <strong>Dewasa</strong>. Lengkapi tanggal lahir atlet.';
+  }
+}
+function bangunProgram(pilars){
+  var urut=urutPrioritas(pilars);
+  var pick=urut.filter(function(p){return p.val<BATAS_KUNING;}).slice(0,4);
+  if(pick.length<2) pick=urut.slice(0,2);
+  return pick.map(function(p,i){
+    var db=REKO_DB[p.nama]; if(!db) return null;
+    var st=statusSkor(p.val);
+    return {nama:p.nama,skor:+p.val.toFixed(1),status:st,label:st==='ok'?'PEMELIHARAAN':'PRIORITAS '+(i+1),
+            latihan:(st==='bad'?db.low:st==='warn'?db.mid:db.high).slice()};
+  }).filter(Boolean);
+}
+function bangunAsimetri(){
+  return ambilAsimetri().filter(function(a){return a.info&&a.info.status!=='ok';}).map(function(a){
+    return {nama:a.nama,persen:+a.info.persen.toFixed(0),status:a.info.status,lemah:a.info.lemah,
+      latihan:['Latihan unilateral: mulai dari sisi '+a.info.lemah+' (lemah), volume sisi kuat disamakan',
+               'Re-tes '+a.nama+' tiap 2 minggu sampai selisih < '+ASIM_WASPADA+'%']};
+  });
+}
+function bangunProfil(pil,total,pred,asim,base){
+  var filled=pil.filter(function(p){return p.val>0;});
+  var sorted=[].concat(filled).sort(function(a,b){return b.val-a.val;});
+  var lemah=urutPrioritas(filled).slice(0,2);
+  var mn=Math.min.apply(null,filled.map(function(p){return p.val;})), mx=Math.max.apply(null,filled.map(function(p){return p.val;}));
+  var prima=(mx-mn)<=0.5 && mn>=8.5, layak=total>=7.5;
+  var fokus=prima?'Pertahankan performa di semua pilar. Atlet siap masuk program L2 Strength dengan beban penuh.'
+    : layak?'Fondasi biomekanik cukup kuat. Fokus perkuat '+(lemah[0]?lemah[0].nama:'-')+' selama L2.'
+    : 'Jalankan korektif, fokus '+(lemah[0]?lemah[0].nama:'-')+' dan '+(lemah[1]?lemah[1].nama:'-')+'.';
+  var rt=hitungRetest(layak,base||new Date());
+  var f=function(p){return {nama:p.nama,skor:+p.val.toFixed(1)};};
+  return {total:+total.toFixed(1),predikat:pred,layak:layak,kuat:sorted.slice(0,2).map(f),lemah:prima?[]:lemah.map(f),
+          asimetri:asim||[],fokus:fokus,retest_minggu:rt.minggu,retest_tgl:rt.iso};
+}
+// Snapshot dikirim bersama form -> disimpan server di History
+function simpanSnapshot(pil,total,pred){
+  var ip=document.getElementById('program_latihan'), ik=document.getElementById('profil_kondisi'), ir=document.getElementById('tgl_retest');
+  if(!ip||!ik||!ir) return;
+  var filled=pil.filter(function(p){return p.val>0;});
+  if(!filled.length){ip.value='';ik.value='';ir.value='';return;}
+  var asim=bangunAsimetri(), profil=bangunProfil(pil,total,pred,asim,new Date());
+  ip.value=JSON.stringify({pilar:bangunProgram(filled),asimetri:asim});
+  ik.value=JSON.stringify(profil);
+  ir.value=profil.retest_tgl;
+}
+
+// Pembungkus tombol History: angka dibaca dari data-atribut (aman untuk desimal koma "7,5" dari lokal Indonesia)
+function angkaAman(x){return parseFloat(String(x).replace(',','.'))||0;}
+function cetakAuditDariTombol(btn){
+  var d=btn.dataset, sk=(d.skor||'').split(';').map(angkaAman);
+  cetakAudit(d.id,d.nama,d.kategori,d.gender,d.berat,sk[0],sk[1],sk[2],sk[3],sk[4],sk[5],sk[6],d.predikat,d.rekomendasi||'',d.tgl,d.nohp||'',d.coach||'',jsonAman(d.program),jsonAman(d.profil),d.base);
+}
+function kirimWARowL1Dari(btn){
+  var d=btn.dataset;
+  kirimWARowL1(d.nama,d.kategori,angkaAman(d.total),d.predikat,d.tgl,d.nohp||'');
+}
+// ===== Riwayat: lihat profil & program tiap audit =====
+function jsonAman(t){try{return t?JSON.parse(t):null;}catch(e){return null;}}
+var WARNA_ST={bad:'var(--red)',warn:'var(--gold)',ok:'var(--green)'};
+function renderDetailAudit(btn){
+  var prog=jsonAman(btn.dataset.program), profil=jsonAman(btn.dataset.profil), regen=false;
+  if(!prog||!profil){      // audit lama: bangun ulang dari skor tersimpan
+    var s=(btn.dataset.skor||'').split(';').map(function(x){return parseFloat(String(x).replace(',','.'))||0;});
+    var nm=['Rotation','Extension','Stability','Ankle Mobility','Posture','Breathing'];
+    var pil=nm.map(function(n,i){return {nama:n,val:s[i]||0};});
+    prog={pilar:bangunProgram(pil.filter(function(p){return p.val>0;})),asimetri:[]};
+    profil=bangunProfil(pil,s[6]||0,btn.dataset.predikat||'',[],btn.dataset.base?parseISO(btn.dataset.base):new Date());
+    regen=true;
+  }
+  var rt=parseISO(profil.retest_tgl), sisa=sisaHari(rt);
+  var rtTxt=sisa<0?'terlambat '+(-sisa)+' hari':sisa===0?'hari ini':sisa+' hari lagi';
+  var dot=function(c){return '<span class="dt-dot" style="background:'+c+'"></span>';};
+  var nilai=function(p){return '<span style="color:'+warnaSkor(p.skor)+';font-weight:700">'+p.skor.toFixed(1)+'/10</span>';};
+  var kiri='<h6>&#128100; PROFIL KONDISI ATLET</h6>'
+    +'<div style="margin-bottom:8px">'+(profil.layak?'<strong style="color:var(--green)">&#9989; LAYAK ke L2 Strength</strong>':'<strong style="color:var(--red)">&#9940; BELUM LAYAK ke L2</strong>')
+    +' &middot; skor '+profil.total.toFixed(1)+' ('+profil.predikat+')</div>'
+    +'<div style="color:var(--text3);font-size:10px;letter-spacing:1px;margin:6px 0 3px">&#9650; KEUNGGULAN</div>'
+    +profil.kuat.map(function(p){return '<div class="dt-item">'+dot('var(--green)')+'<span><strong>'+p.nama+'</strong> '+nilai(p)+'</span></div>';}).join('')
+    +'<div style="color:var(--text3);font-size:10px;letter-spacing:1px;margin:8px 0 3px">&#9660; PERLU DIPERBAIKI (urut prioritas)</div>'
+    +(profil.lemah.length?profil.lemah.map(function(p){return '<div class="dt-item">'+dot(warnaSkor(p.skor))+'<span><strong>'+p.nama+'</strong> '+nilai(p)+'</span></div>';}).join(''):'<div>Tidak ada kelemahan signifikan.</div>')
+    +(profil.asimetri&&profil.asimetri.length?'<div style="color:var(--text3);font-size:10px;letter-spacing:1px;margin:8px 0 3px">&#9878; ASIMETRI KIRI&ndash;KANAN</div>'
+      +profil.asimetri.map(function(a){return '<div class="dt-item">'+dot(WARNA_ST[a.status])+'<span><strong>'+a.nama+'</strong> selisih '+a.persen+'%, sisi '+a.lemah+' lebih lemah</span></div>';}).join(''):'')
+    +'<div style="margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.2);border:1px solid var(--border)">'+profil.fokus+'</div>'
+    +'<div style="margin-top:8px"><span class="retest-chip rc-'+(sisa<0?'bad':sisa<=7?'warn':'ok')+'"><i class="bi bi-calendar-check"></i> Tes ulang L1: '+fmtTgl(rt)+' &middot; '+rtTxt+'</span></div>';
+  var kanan='<h6>&#128203; PROGRAM LATIHAN (urut prioritas)</h6>'
+    +prog.pilar.map(function(p){return '<div class="dt-prog"><div class="x-small mono mb-1" style="color:var(--cyan)">'+{bad:'🔴',warn:'🟡',ok:'🟢'}[p.status]+' '+p.nama.toUpperCase()+' &mdash; '+p.skor.toFixed(1)+'/10<span class="reko-prio" style="background:'+WARNA_ST[p.status].replace('var(--red)','#e74c3c').replace('var(--gold)','#f5a623').replace('var(--green)','#2ecc71')+'">'+p.label+'</span></div>'
+      +p.latihan.map(function(t){return '<div class="reko-item"><span class="reko-icon">→</span><span>'+t+'</span></div>';}).join('')+'</div>';}).join('')
+    +((prog.asimetri||[]).map(function(a){return '<div class="dt-prog"><div class="x-small mono mb-1" style="color:var(--cyan)">&#9878; ASIMETRI '+a.nama.toUpperCase()+' &mdash; '+a.persen+'%</div>'
+      +a.latihan.map(function(t){return '<div class="reko-item"><span class="reko-icon">→</span><span>'+t+'</span></div>';}).join('')+'</div>';}).join(''))
+    +(regen?'<div class="x-small" style="color:var(--text3)">Audit lama: program dihitung ulang dari skor tersimpan.</div>':'');
+  return '<div>'+kiri+'</div><div>'+kanan+'</div>';
+}
+function toggleDetail(id,btn){
+  var row=document.getElementById('detail-'+id), box=document.getElementById('detail-box-'+id);
+  if(!row||!box) return;
+  if(row.style.display!=='none'){row.style.display='none';btn.innerHTML='<i class="bi bi-clipboard2-pulse"></i> Profil &amp; program';return;}
+  if(!box.dataset.done){box.innerHTML=renderDetailAudit(btn);box.dataset.done='1';}
+  row.style.display='table-row'; btn.innerHTML='<i class="bi bi-chevron-up"></i> Tutup';
+}
+// Chip hitung mundur tes ulang — hanya audit TERBARU tiap atlet
+function isiChipRetest(){
+  var chips=[].slice.call(document.querySelectorAll('.retest-chip[data-id]')), terbaru={};
+  chips.forEach(function(c){var a=c.dataset.atlet,i=+c.dataset.id; if(!(a in terbaru)||i>terbaru[a]) terbaru[a]=i;});
+  chips.forEach(function(c){
+    if(+c.dataset.id!==terbaru[c.dataset.atlet]){c.style.display='none';return;}
+    var rt;
+    if(c.dataset.iso){rt=parseISO(c.dataset.iso);}
+    else if(c.dataset.base){var tot=parseFloat(String(c.dataset.total).replace(',','.'))||0; rt=hitungRetest(tot>=7.5,parseISO(c.dataset.base)).date;}
+    else{c.style.display='none';return;}
+    var s=sisaHari(rt), cls=s<0?'bad':s<=7?'warn':'ok';
+    c.className='retest-chip rc-'+cls; c.style.display='inline-flex';
+    c.innerHTML='<i class="bi bi-calendar-check"></i><span>'+fmtTgl(rt)+' &middot; '+(s<0?'terlambat '+(-s)+' hari':s===0?'hari ini':s+' hari lagi')+'</span>';
+  });
+}
+// Warna angka pilar di History sama dengan radar (merah <5, kuning <7, hijau >=7)
+function isiWarnaSkor(){
+  [].slice.call(document.querySelectorAll('.sk-cell[data-v]')).forEach(function(c){
+    var v=parseFloat(String(c.dataset.v).replace(',','.'))||0, el=c.querySelector('.sk-val');
+    if(el&&v>0) el.style.color=warnaSkor(v);
+  });
+}
+// Jaga-jaga: atlet yang sama (id sama) tidak boleh muncul dua kali di dropdown
+function dedupeDropdownAtlet(){
+  var sel=document.getElementById('select-atlet'); if(!sel) return;
+  var seen={};
+  [].slice.call(sel.options).forEach(function(o){
+    if(!o.value) return;
+    if(seen[o.value]){ o.remove(); } else { seen[o.value]=1; }
+  });
+}
+document.addEventListener('DOMContentLoaded', function(){ dedupeDropdownAtlet(); isiChipRetest(); isiWarnaSkor(); });
+
+
+// ===== HPCS: ambang & helper bersama (ubah di sini bila SOP berubah) =====
+var BATAS_MERAH = 5.0;      // skor < 5,0  -> merah (prioritas)
+var BATAS_KUNING = 7.0;     // skor < 7,0  -> kuning (perlu perhatian)
+var ASIM_WASPADA = 10;      // selisih kiri-kanan >= 10% -> kuning
+var ASIM_RISIKO = 15;       // selisih kiri-kanan > 15%  -> merah
+var RETEST_MINGGU = {layak: 8, belum: 4};   // jadwal tes ulang L1
+// Urutan tie-breaker bila skor sama: fondasi dulu (napas -> postur -> ...)
+var URUT_PRIORITAS = ['Breathing','Posture','Stability','Ankle Mobility','Rotation','Extension'];
+
+function statusSkor(v){ return v<BATAS_MERAH?'bad':v<BATAS_KUNING?'warn':'ok'; }
+function warnaSkor(v){
+  if(!(v>0)) return 'rgba(255,255,255,0.25)';
+  return {bad:'#e74c3c',warn:'#f5a623',ok:'#2ecc71'}[statusSkor(v)];
+}
+// Skor terendah di atas; skor sama -> ikuti URUT_PRIORITAS
+function urutPrioritas(pilars){
+  return pilars.filter(function(p){return p.val>0;}).sort(function(a,b){
+    var d=Math.round(a.val*10)-Math.round(b.val*10);
+    return d!==0?d:URUT_PRIORITAS.indexOf(a.nama)-URUT_PRIORITAS.indexOf(b.nama);
+  });
+}
+// Asimetri = selisih / sisi terkuat (%)
+function hitungAsimetri(a,b){
+  if(isNaN(a)||isNaN(b)||a<=0||b<=0) return null;
+  var p=Math.abs(a-b)/Math.max(a,b)*100;
+  return {persen:p, lemah:a<b?'kiri':'kanan', status:p>ASIM_RISIKO?'bad':p>=ASIM_WASPADA?'warn':'ok'};
+}
+function ambilAsimetri(){
+  var v=function(id){return parseFloat(document.getElementById(id)?.value);};
+  return [
+    {nama:'Ankle Mobility',row:'asim_ankle',ki:'ankle_kiri',ka:'ankle_kanan'},
+    {nama:'Balance',row:'asim_stability',ki:'balance_kiri',ka:'balance_kanan'},
+    {nama:'Rotation',row:'asim_rotation',ki:'rotasi_kiri',ka:'rotasi_kanan'}
+  ].map(function(o){ o.info=hitungAsimetri(v(o.ki),v(o.ka)); return o; });
+}
+function tampilAsimetri(){
+  ambilAsimetri().forEach(function(o){
+    var el=document.getElementById(o.row), iK=document.getElementById(o.ki), iR=document.getElementById(o.ka);
+    [iK,iR].forEach(function(i){ if(i) i.classList.remove('asim-in-warn','asim-in-bad'); });
+    if(!el) return;
+    if(!o.info){ el.style.display='none'; return; }
+    var i=o.info, p=i.persen.toFixed(0);
+    el.className='col-12 asim-row asim-'+i.status; el.style.display='block';
+    el.innerHTML = i.status==='ok' ? '&#10003; Simetris &mdash; selisih '+p+'%'
+      : (i.status==='warn'?'&#9888; ':'&#9940; ')+'Asimetri '+p+'% &mdash; sisi '+i.lemah+' lebih lemah &middot; '+(i.status==='warn'?'waspada':'risiko cedera');
+    if(i.status!=='ok'){ (i.lemah==='kiri'?iK:iR).classList.add('asim-in-'+i.status); }
+  });
+}
 function liveUpdate() {
     const ank=g('score_ankle'), sta=g('score_stability'), rot=g('score_rotation');
     const ext=g('skor_extension'), pos=g('skor_posture'), brth=g('skor_breathing');
@@ -827,8 +1086,11 @@ function liveUpdate() {
     predEl.textContent=pred; predEl.className='predikat-pill pred-'+pred;
     document.getElementById('res_total').style.color=col;
     updateRadar([rot,ext,sta,ank,pos,brth]);
-    generateReko([{nama:'Rotation',val:rot},{nama:'Extension',val:ext},{nama:'Stability',val:sta},{nama:'Ankle Mobility',val:ank},{nama:'Posture',val:pos},{nama:'Breathing',val:brth}]);
-  generateNarasi([{nama:'Rotation',val:rot},{nama:'Extension',val:ext},{nama:'Stability',val:sta},{nama:'Ankle Mobility',val:ank},{nama:'Posture',val:pos},{nama:'Breathing',val:brth}],total,pred);
+    tampilAsimetri();
+    const pil=[{nama:'Rotation',val:rot},{nama:'Extension',val:ext},{nama:'Stability',val:sta},{nama:'Ankle Mobility',val:ank},{nama:'Posture',val:pos},{nama:'Breathing',val:brth}];
+    generateReko(pil);
+    generateNarasi(pil,total,pred);
+    simpanSnapshot(pil,total,pred);
 }
 
 
@@ -839,11 +1101,11 @@ function generateNarasi(pilars,total,pred){
   if(!filled.length){panel.style.display='none';return;}
   var namaEl=document.querySelector('select option:checked');
   var namaAtlet=namaEl?namaEl.textContent.trim():'Atlet';
-  function lbl(v){return v>=9?'sangat baik':v>=7.5?'baik':v>=5.5?'cukup':'perlu perhatian khusus';}
-  function wrn(v){return v>=9?'var(--green)':v>=7.5?'var(--cyan)':v>=5.5?'var(--gold)':'var(--red)';}
+  function lbl(v){return v>=9?'sangat baik':v>=7?'baik':v>=5?'cukup':'perlu perhatian khusus';}
+  function wrn(v){return v>=9?'var(--green)':v>=7?'var(--cyan)':v>=5?'var(--gold)':'var(--red)';}
   var sorted=[].concat(filled).sort(function(a,b){return b.val-a.val;});
   var kuat=sorted.slice(0,2);
-  var lemah=sorted.slice(-2).reverse();
+  var lemah=urutPrioritas(filled).slice(0,2);   // sama dengan urutan Rekomendasi HPCS
   var layak=total>=7.5;
   var kPred={
     ELITE:'menunjukkan kapasitas biomekanik <strong style="color:var(--green)">ELIT</strong> &mdash; seluruh pilar berada di level puncak.',
@@ -859,7 +1121,7 @@ function generateNarasi(pilars,total,pred){
       +'<div style="width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;"></div>'
       +'<span><strong style="color:var(--green)">'+p.nama+'</strong> &mdash; '+lbl(p.val)
       +' <span style="color:'+wrn(p.val)+';font-weight:700;">('+p.val.toFixed(1)+'/10)</span>'
-      +(p.val>=9?' : pilar unggulan, pertahankan.':p.val>=7.5?' : aset performa bertarung.':' : menunjukkan perkembangan positif.')
+      +(p.val>=9?' : pilar unggulan, pertahankan.':p.val>=7?' : aset performa bertarung.':' : menunjukkan perkembangan positif.')
       +'</span></div>';
   }).join('');
   var minVal=Math.min.apply(null,filled.map(function(p){return p.val;}));
@@ -871,7 +1133,7 @@ function generateNarasi(pilars,total,pred){
       +'<span style="color:var(--green);font-weight:600;">Semua pilar dalam kondisi prima &mdash; tidak ada kelemahan signifikan yang perlu dikoreksi.</span>'
       +'</div>'
     :lemah.map(function(p){
-      var catatan=p.val<5.5?' : prioritas utama program korektif.':p.val<7.5?' : perlu perhatian dalam program latihan.':' : jaga konsistensi, masih bisa ditingkatkan.';
+      var catatan=p.val<BATAS_MERAH?' : prioritas utama program korektif.':p.val<BATAS_KUNING?' : perlu perhatian dalam program latihan.':' : jaga konsistensi, masih bisa ditingkatkan.';
       return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
         +'<div style="width:6px;height:6px;border-radius:50%;background:'+wrn(p.val)+';flex-shrink:0;"></div>'
         +'<span><strong style="color:'+wrn(p.val)+'">'+p.nama+'</strong> &mdash; '+lbl(p.val)
@@ -883,15 +1145,27 @@ function generateNarasi(pilars,total,pred){
     :layak
     ?'Fondasi biomekanik cukup kuat. Fokus perkuat <strong>'+(lemah[0]?lemah[0].nama:'-')+'</strong> selama L2.'
     :'Jalankan korektif 4&#8211;6 minggu, fokus <strong>'+(lemah[0]?lemah[0].nama:'-')+'</strong> dan <strong>'+(lemah[1]?lemah[1].nama:'-')+'</strong>.';
+  var asimList=ambilAsimetri().filter(function(a){return a.info&&a.info.status!=='ok';});
+  var asimHTML=asimList.length?('<div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9878; ASIMETRI KIRI&ndash;KANAN</div>'
+    +asimList.map(function(a){var c=a.info.status==='bad'?'var(--red)':'var(--gold)';
+      return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:6px;height:6px;border-radius:50%;background:'+c+';flex-shrink:0;"></div>'
+        +'<span><strong style="color:'+c+'">'+a.nama+'</strong> &mdash; selisih <span style="color:'+c+';font-weight:700;">'+a.info.persen.toFixed(0)+'%</span>, sisi '+a.info.lemah+' lebih lemah'
+        +(a.info.status==='bad'?' : faktor risiko cedera.':' : pantau dan koreksi unilateral.')+'</span></div>';}).join('')+'</div>'):'';
+  var mingguRetest=layak?RETEST_MINGGU.layak:RETEST_MINGGU.belum;
+  var tglRetest=new Date(); tglRetest.setDate(tglRetest.getDate()+mingguRetest*7);
+  var tglRetestStr=tglRetest.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});
+  var retestHTML='<div style="margin-top:8px;padding:8px 10px;border:1px dashed var(--cyan);border-radius:8px;font-size:11px;color:var(--text);"><i class="bi bi-calendar-check"></i> <strong style="color:var(--cyan)">Jadwal Tes Ulang L1:</strong> '+mingguRetest+' minggu lagi (<span class="mono">'+tglRetestStr+'</span>)</div>';
   box.innerHTML=''
+
     +'<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(0,210,255,0.1);">'
     +'<span style="color:var(--cyan);font-weight:700;font-size:12px;">&#128100; '+namaAtlet+'</span> '+(kPred[pred]||'')
     +' Total skor: <strong style="font-size:13px;color:'+wrn(total)+'">'+total.toFixed(1)+'/10</strong></div>'
     +'<div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>'+kuatHTML+'</div>'
     +'<div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>'+lemahHTML+'</div>'
+    +asimHTML
     +'<div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">'
     +'<div style="color:var(--text3);font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>'
-    +layakStr+'<br><span style="color:var(--text2);font-size:10.5px;">'+fokus+'</span></div>';
+    +layakStr+'<br><span style="color:var(--text2);font-size:10.5px;">'+fokus+'</span>'+retestHTML+'</div>';
   panel.style.display='block';
 }
 
@@ -900,7 +1174,15 @@ let radarInst=null;
 function updateRadar(vals){
     const ctx=document.getElementById('radarChart').getContext('2d');
     if(radarInst)radarInst.destroy();
-    radarInst=new Chart(ctx,{type:'radar',data:{labels:['Rotation','Extension','Stability','Ankle','Posture','Breathing'],datasets:[{label:'Atlet',data:vals,fill:true,backgroundColor:'rgba(80,238,241,0.12)',borderColor:'#50eef1',borderWidth:2,pointBackgroundColor:'#50eef1',pointRadius:4},{label:'Elite',data:[9,9,9,9,9,9],fill:false,borderColor:'rgba(255,255,255,0.1)',borderWidth:1,borderDash:[4,4],pointRadius:2,pointBackgroundColor:'rgba(255,255,255,0.1)'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'rgba(255,255,255,0.2)',font:{size:9},backdropColor:'transparent'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:'rgba(255,255,255,0.5)',font:{size:10}}}}}});
+    const cols=vals.map(warnaSkor);
+    const rad=vals.map(v=>(v>0&&v<BATAS_KUNING)?7:4);
+    const flat=n=>[n,n,n,n,n,n];
+    radarInst=new Chart(ctx,{type:'radar',data:{labels:['Rotation','Extension','Stability','Ankle','Posture','Breathing'],datasets:[
+      {label:'Atlet',data:vals,fill:true,backgroundColor:'rgba(80,238,241,0.12)',borderColor:'#50eef1',borderWidth:2,pointBackgroundColor:cols,pointBorderColor:cols,pointRadius:rad,pointHoverRadius:9,order:1},
+      {label:'Batas 7,0',data:flat(BATAS_KUNING),fill:false,borderColor:'rgba(245,166,35,0.55)',borderWidth:1,borderDash:[4,4],pointRadius:0,order:2},
+      {label:'Batas 5,0',data:flat(BATAS_MERAH),fill:false,borderColor:'rgba(231,76,60,0.55)',borderWidth:1,borderDash:[4,4],pointRadius:0,order:3},
+      {label:'Elite',data:flat(9),fill:false,borderColor:'rgba(255,255,255,0.1)',borderWidth:1,borderDash:[4,4],pointRadius:0,order:4}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'rgba(255,255,255,0.2)',font:{size:9},backdropColor:'transparent'},grid:{color:'rgba(255,255,255,0.06)'},pointLabels:{color:function(c){return vals[c.index]>0&&vals[c.index]<BATAS_KUNING?warnaSkor(vals[c.index]):'rgba(255,255,255,0.5)';},font:{size:10}}}}}});
 }
 updateRadar([0,0,0,0,0,0]);
 
@@ -919,16 +1201,18 @@ function generateReko(pilars){
   const panel=document.getElementById('reko_panel'),list=document.getElementById('reko_list');
   const filled=pilars.filter(p=>p.val>0);
   if(!filled.length){panel.style.display='none';return;}
-  const weakest=[...filled].sort((a,b)=>a.val-b.val).slice(0,3);
-  let html='';
-  weakest.forEach(p=>{
-    const db=REKO_DB[p.nama];
-    if(!db)return;
-    const tips=p.val<5.5?db.low:p.val<7.5?db.mid:db.high;
-    const icon=p.val<5.5?'🔴':p.val<7.5?'🟡':'🟢';
+  const ikon={bad:'🔴',warn:'🟡',ok:'🟢'}, bg={bad:'#e74c3c',warn:'#f5a623',ok:'#2ecc71'};
+  let html='<div class="x-small mb-2" style="color:var(--text3)">Urut prioritas: skor terendah lebih dulu</div>';
+  bangunProgram(filled).forEach(p=>{
     html+=`<div style="margin-bottom:8px">
-      <div class="x-small mono mb-1" style="color:var(--cyan)">${icon} ${p.nama.toUpperCase()} — ${p.val.toFixed(1)}/10</div>
-      ${tips.map(t=>`<div class="reko-item"><span class="reko-icon">→</span><span>${t}</span></div>`).join('')}
+      <div class="x-small mono mb-1" style="color:var(--cyan)">${ikon[p.status]} ${p.nama.toUpperCase()} — ${p.skor.toFixed(1)}/10<span class="reko-prio" style="background:${bg[p.status]}">${p.label}</span></div>
+      ${p.latihan.map(t=>`<div class="reko-item"><span class="reko-icon">→</span><span>${t}</span></div>`).join('')}
+    </div>`;
+  });
+  bangunAsimetri().forEach(a=>{
+    html+=`<div style="margin-bottom:8px">
+      <div class="x-small mono mb-1" style="color:var(--cyan)">⚖ ASIMETRI ${a.nama.toUpperCase()} — ${a.persen}%<span class="reko-prio" style="background:${bg[a.status]}">${a.status==='bad'?'RISIKO CEDERA':'WASPADA'}</span></div>
+      ${a.latihan.map(t=>`<div class="reko-item"><span class="reko-icon">→</span><span>${t}</span></div>`).join('')}
     </div>`;
   });
   list.innerHTML=html;
@@ -1105,154 +1389,129 @@ function kirimWARowL1(nama,kat,total,predikat,tgl,noHpCoach){
   }
 }
 
-function cetakAudit(id,nama,kategori,gender,berat,rotation,extension,stability,ankle,posture,breathing,totalScore,predikat,rekomendasi,tanggal,noHpCoach,namaCoach){
-  const warna={ELITE:'#10b981',READY:'#38bdf8',DEVELOPING:'#f59e0b',NOVICE:'#ef4444'}[predikat]||'#6b7280';
-  const warnaLight={ELITE:'#d1fae5',READY:'#e0f2fe',DEVELOPING:'#fef3c7',NOVICE:'#fee2e2'}[predikat]||'#f3f4f6';
-  const icon={ELITE:'★ ELITE',READY:'◆ READY',DEVELOPING:'▲ DEVELOPING',NOVICE:'● NOVICE'}[predikat]||predikat;
-
+function cetakAudit(id,nama,kategori,gender,berat,rotation,extension,stability,ankle,posture,breathing,totalScore,predikat,rekomendasi,tanggal,noHpCoach,namaCoach,program,profil,baseISO){
+  const esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  const fmt=function(v){return (+v).toFixed(1).replace('.',',');};          // gaya angka Indonesia
+  const total=parseFloat(totalScore)||0;
   const pilar=[
-    {n:'Rotation',   v:parseFloat(rotation)||0,   icon:'↺'},
-    {n:'Extension',  v:parseFloat(extension)||0,  icon:'↕'},
-    {n:'Stability',  v:parseFloat(stability)||0,  icon:'⬡'},
-    {n:'Ankle Mob.', v:parseFloat(ankle)||0,       icon:'⚡'},
-    {n:'Posture',    v:parseFloat(posture)||0,     icon:'▲'},
-    {n:'Breathing',  v:parseFloat(breathing)||0,  icon:'◎'},
+    {n:'Rotation',       v:parseFloat(rotation)||0},
+    {n:'Extension',      v:parseFloat(extension)||0},
+    {n:'Stability',      v:parseFloat(stability)||0},
+    {n:'Ankle Mobility', v:parseFloat(ankle)||0},
+    {n:'Posture',        v:parseFloat(posture)||0},
+    {n:'Breathing',      v:parseFloat(breathing)||0}
   ];
+  // Program & profil: pakai data yang tersimpan; audit lama dihitung ulang dari skor
+  let prog=program, prof=profil;
+  if(!prog||!prof){
+    const pil=pilar.map(function(p){return {nama:p.n,val:p.v};});
+    prog={pilar:bangunProgram(pil.filter(function(p){return p.val>0;})),asimetri:[]};
+    prof=bangunProfil(pil,total,predikat,[],baseISO?parseISO(baseISO):new Date());
+  }
+  const stTeks={ok:'Baik',warn:'Perlu perhatian',bad:'Prioritas perbaikan'};
+  const stWarna={ok:'#1f5f3f',warn:'#7a5200',bad:'#8f1d1d'};
+  const tglSaja=String(tanggal||'').split(' ')[0];
+  const noDok='HPCS/L1/'+String(id).padStart(4,'0')+'/'+(tglSaja.slice(6,10)||'');
+  const rt=parseISO(prof.retest_tgl);
 
-  // Hitung pilar terendah & tertinggi
-  const sorted = [...pilar].sort((a,b)=>a.v-b.v);
-  const terlemah = sorted[0];
-  const terkuat  = sorted[sorted.length-1];
-
-  const pilarHTML = pilar.map(p=>{
-    const pct = Math.min(100,(p.v/10)*100).toFixed(0);
-    const c = p.v>=8?'#10b981':p.v>=6?'#38bdf8':p.v>=4?'#f59e0b':'#ef4444';
-    const bg = p.v>=8?'#d1fae5':p.v>=6?'#e0f2fe':p.v>=4?'#fef3c7':'#fee2e2';
-    return `
-    <div style="background:${bg};border:1.5px solid ${c};border-radius:10px;padding:12px 8px;text-align:center;min-width:80px">
-      <div style="font-size:16px;margin-bottom:2px">${p.icon}</div>
-      <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${p.n}</div>
-      <div style="font-size:26px;font-weight:900;color:${c};line-height:1">${p.v.toFixed(1)}</div>
-      <div style="font-size:9px;color:#888;margin-top:2px">/10</div>
-      <div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:6px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:${c};border-radius:2px;transition:width .3s"></div>
-      </div>
-    </div>`;
+  const barisPilar=pilar.map(function(p,i){
+    const st=p.v>0?statusSkor(p.v):'';
+    return '<tr><td class="c">'+(i+1)+'</td><td>'+p.n+'</td><td class="c"><strong>'+(p.v>0?fmt(p.v):'-')+'</strong></td>'
+      +'<td style="color:'+(st?stWarna[st]:'#555')+'">'+(st?stTeks[st]:'Belum dinilai')+'</td></tr>';
   }).join('');
 
-  let rekoHTML='';
-  pilar.forEach(p=>{
-    const db=REKO_DB[p.n];
-    if(!db||p.v===0)return;
-    const tips=p.v<5.5?db.low:p.v<7.5?db.mid:db.high;
-    const c=p.v<5.5?'#ef4444':p.v<7.5?'#f59e0b':'#10b981';
-    const label=p.v<5.5?'PRIORITAS':p.v<7.5?'PERLU PERHATIAN':'PERTAHANKAN';
-    rekoHTML+=`
-    <div style="margin-bottom:12px;border-radius:8px;overflow:hidden">
-      <div style="background:${c};color:#fff;padding:6px 12px;font-size:10px;font-weight:700;letter-spacing:1px">
-        ${p.n.toUpperCase()} — ${p.v.toFixed(1)}/10 &nbsp;|&nbsp; ${label}
-      </div>
-      <div style="background:#f9fafb;padding:8px 12px">
-        ${tips.map(t=>`<div style="padding:4px 0;border-bottom:1px solid #f3f4f6;font-size:11px;color:#374151">▸ ${t}</div>`).join('')}
-      </div>
-    </div>`;
-  });
+  const daftar=function(arr){return arr.map(function(x){return esc(x.nama)+' ('+fmt(x.skor)+')';}).join(', ');};
+  const asimTeks=(prof.asimetri&&prof.asimetri.length)
+    ?'<p>Ditemukan asimetri kiri&ndash;kanan pada: '+prof.asimetri.map(function(a){return esc(a.nama)+' (selisih '+a.persen+'%, sisi '+a.lemah+' lebih lemah)';}).join('; ')+'. Asimetri merupakan faktor risiko cedera dan perlu dikoreksi melalui latihan unilateral.</p>':'';
 
-  const overallPct = Math.min(100,(parseFloat(totalScore)/10)*100).toFixed(0);
+  const itemProg=prog.pilar.map(function(p,i){
+    return '<tr><td class="c">'+(i+1)+'</td><td><strong>'+esc(p.nama)+'</strong><br><span class="sm">Skor '+fmt(p.skor)+' / 10</span></td>'
+      +'<td style="color:'+stWarna[p.status]+'"><strong>'+esc(p.label.charAt(0)+p.label.slice(1).toLowerCase())+'</strong></td>'
+      +'<td>'+p.latihan.map(function(t){return '&bull; '+esc(t);}).join('<br>')+'</td></tr>';
+  }).join('');
+  const itemAsim=(prog.asimetri||[]).map(function(a,i){
+    return '<tr><td class="c">'+(prog.pilar.length+i+1)+'</td><td><strong>Koreksi asimetri</strong><br><span class="sm">'+esc(a.nama)+' &mdash; selisih '+a.persen+'%</span></td>'
+      +'<td style="color:'+stWarna[a.status]+'"><strong>'+(a.status==='bad'?'Risiko cedera':'Waspada')+'</strong></td>'
+      +'<td>'+a.latihan.map(function(t){return '&bull; '+esc(t);}).join('<br>')+'</td></tr>';
+  }).join('');
 
   const html=`<!DOCTYPE html>
-<html><head>
+<html lang="id"><head>
 <meta charset="UTF-8">
-<title>Audit L1 — ${nama}</title>
+<title>Laporan Asesmen L1 — ${esc(nama)}</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;color:#111;font-size:13px}
-  @media print{body{padding:0}@page{margin:15mm 12mm;size:A4}}
+  body{font-family:Cambria,Georgia,'Times New Roman',serif;background:#fff;color:#1a1a1a;font-size:11pt;line-height:1.5}
+  .page{max-width:190mm;margin:0 auto;padding:12mm 6mm}
+  .kop{text-align:center;padding-bottom:8px;border-bottom:3px double #1f2937;margin-bottom:14px}
+  .kop .org{font-size:9pt;letter-spacing:2px;color:#444;text-transform:uppercase}
+  .kop h1{font-size:15pt;margin:4px 0 2px;letter-spacing:.5px}
+  .kop .sub{font-size:10pt;color:#444}
+  .meta{display:flex;justify-content:space-between;font-size:9.5pt;color:#444;margin-bottom:12px}
+  h2{font-size:11pt;margin:16px 0 6px;padding-bottom:3px;border-bottom:1px solid #1f2937;text-transform:uppercase;letter-spacing:.6px}
+  table{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:10.5pt}
+  th,td{border:1px solid #9ca3af;padding:5px 8px;vertical-align:top;text-align:left}
+  th{background:#f1f3f5;font-weight:700}
+  td.c,th.c{text-align:center}
+  table.id td{border:none;border-bottom:1px dotted #bbb;padding:3px 6px}
+  table.id td:first-child{width:34%;color:#444}
+  .sm{font-size:9pt;color:#555}
+  p{margin:4px 0;text-align:justify}
+  .kesimpulan{border:1px solid #1f2937;border-left:5px solid #1f2937;padding:8px 12px;margin-top:8px;background:#fafafa}
+  .ttd{margin-top:26px;display:flex;justify-content:flex-end}
+  .ttd div{text-align:center;min-width:200px;font-size:10.5pt}
+  .ttd .garis{border-top:1px solid #1a1a1a;margin-top:56px;padding-top:4px}
+  .foot{margin-top:18px;padding-top:6px;border-top:1px solid #9ca3af;font-size:8.5pt;color:#555;text-align:center}
+  tr{page-break-inside:avoid} h2{page-break-after:avoid}
+  @media print{ @page{size:A4;margin:14mm 14mm} .page{padding:0;max-width:none} #action-bar{display:none!important} }
 </style>
-</head><body>
+</head><body><div class="page">
 
-<!-- HEADER -->
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center">
-  <div>
-    <div style="font-size:9px;letter-spacing:3px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">HIGH PERFORMANCE COACHING SYSTEM</div>
-    <div style="font-size:22px;font-weight:900;letter-spacing:2px">HPCS <span style="color:#38bdf8">BOXING</span></div>
-    <div style="font-size:11px;color:#cbd5e1;margin-top:2px">Audit Level 1 — Core Stability & Correction</div>
-  </div>
-  <div style="text-align:right">
-    <div style="background:${warna};color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:800;letter-spacing:2px">${icon}</div>
-    <div style="font-size:10px;color:#94a3b8;margin-top:6px">${tanggal}</div>
-  </div>
+<div class="kop">
+  <div class="org">High Performance Coaching System (HPCS)</div>
+  <h1>LAPORAN HASIL ASESMEN BIOMEKANIK</h1>
+  <div class="sub">Level 1 &mdash; Core Stability &amp; Correction &middot; Cabang Boxing</div>
 </div>
+<div class="meta"><span>No. Dokumen: ${noDok}</span><span>Tanggal asesmen: ${esc(tglSaja)}</span></div>
 
-<!-- IDENTITAS ATLET -->
-<div style="padding:16px 28px;background:#f8fafc;border-bottom:1px solid #e2e8f0">
-  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:10px">▌ Identitas Atlet</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-    ${[['Nama Atlet',nama,'👤'],['Kategori',kategori,'🏷'],['Gender',gender,'⚧'],['Berat Badan',berat+' kg','⚖'],['Cabang','Boxing 🥊','🏅'],['Level','L1 — Correction','📊']].map(([l,v,ic])=>`
-    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px">
-      <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:1px">${ic} ${l}</div>
-      <div style="font-size:15px;font-weight:700;color:#0f172a;margin-top:3px">${v}</div>
-    </div>`).join('')}
-  </div>
-</div>
+<h2>A. Identitas Atlet</h2>
+<table class="id">
+  <tr><td>Nama atlet</td><td>: <strong>${esc(nama)}</strong></td></tr>
+  <tr><td>Kategori</td><td>: ${esc(kategori)}</td></tr>
+  <tr><td>Jenis kelamin</td><td>: ${esc(gender)}</td></tr>
+  <tr><td>Kelas berat</td><td>: ${esc(berat)} kg</td></tr>
+  <tr><td>Cabang olahraga</td><td>: Boxing</td></tr>
+  <tr><td>Pelatih</td><td>: ${esc(namaCoach||'-')}</td></tr>
+</table>
 
-<!-- SKOR TOTAL -->
-<div style="padding:16px 28px;display:flex;align-items:center;gap:24px;background:${warnaLight};border-bottom:2px solid ${warna}">
-  <div style="text-align:center;min-width:100px">
-    <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total Skor</div>
-    <div style="font-size:56px;font-weight:900;color:${warna};line-height:1">${parseFloat(totalScore).toFixed(1)}</div>
-    <div style="font-size:10px;color:#888">/10.0</div>
-  </div>
-  <div style="flex:1">
-    <div style="height:12px;background:#e5e7eb;border-radius:6px;overflow:hidden;margin-bottom:8px">
-      <div style="height:100%;width:${overallPct}%;background:${warna};border-radius:6px"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:#888">
-      <span>0</span><span style="color:${warna};font-weight:700">${overallPct}%</span><span>10</span>
-    </div>
-    <div style="margin-top:10px;display:flex;gap:8px">
-      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px">
-        <span style="color:#888">Pilar Terkuat:</span> <strong style="color:#10b981">${terkuat.n} (${terkuat.v.toFixed(1)})</strong>
-      </div>
-      <div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 12px;font-size:10px">
-        <span style="color:#888">Prioritas Perbaikan:</span> <strong style="color:#ef4444">${terlemah.n} (${terlemah.v.toFixed(1)})</strong>
-      </div>
-    </div>
-  </div>
-</div>
+<h2>B. Hasil Asesmen</h2>
+<table>
+  <tr><th class="c" style="width:8%">No</th><th>Pilar</th><th class="c" style="width:16%">Skor (0&ndash;10)</th><th style="width:34%">Keterangan</th></tr>
+  ${barisPilar}
+  <tr><td colspan="2"><strong>Total skor</strong></td><td class="c"><strong>${fmt(total)}</strong></td><td><strong>Predikat: ${esc(predikat)}</strong></td></tr>
+</table>
+<p class="sm">Keterangan: skor 7,0 ke atas = baik; 5,0&ndash;6,9 = perlu perhatian; di bawah 5,0 = prioritas perbaikan.</p>
 
-<!-- SKOR PILAR -->
-<div style="padding:16px 28px">
-  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Skor Pilar Analysis</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">${pilarHTML}</div>
-</div>
+<h2>C. Profil Kondisi Atlet</h2>
+<p>Atlet atas nama <strong>${esc(nama)}</strong> memperoleh total skor <strong>${fmt(total)} dari 10</strong> dengan predikat <strong>${esc(predikat)}</strong> pada asesmen Level 1.</p>
+<p><strong>Keunggulan:</strong> ${prof.kuat.length?daftar(prof.kuat):'-'}.</p>
+<p><strong>Area yang perlu diperbaiki (urut prioritas):</strong> ${prof.lemah.length?daftar(prof.lemah):'tidak ditemukan kelemahan yang signifikan'}.</p>
+${asimTeks}
+<div class="kesimpulan"><strong>Kesimpulan:</strong> Atlet dinyatakan <strong>${prof.layak?'LAYAK':'BELUM LAYAK'}</strong> mengikuti program Latihan Kekuatan (Level 2). ${esc(prof.fokus)}</div>
 
-<!-- REKOMENDASI -->
-<div style="padding:0 28px 20px">
-  <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:12px">▌ Rekomendasi Program HPCS</div>
-  ${rekoHTML||'<p style="font-size:12px;color:#888">Tidak ada rekomendasi khusus.</p>'}
-</div>
+<h2>D. Program Latihan Korektif</h2>
+<table>
+  <tr><th class="c" style="width:7%">No</th><th style="width:22%">Pilar</th><th style="width:19%">Prioritas</th><th>Latihan yang dianjurkan</th></tr>
+  ${itemProg}${itemAsim}
+</table>
 
-<!-- FOOTER -->
-<div style="background:#0f172a;color:#94a3b8;padding:12px 28px;display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-top:8px">
-  <div>HPCS Boxing — High Performance Coaching System</div>
-  <div style="display:flex;gap:24px">
-    <div>Tanggal: <strong style="color:#fff">${tanggal}</strong></div>
-    <div>Dokumen ini dicetak otomatis oleh sistem HPCS</div>
-  </div>
-</div>
+<h2>E. Jadwal Evaluasi Ulang</h2>
+<p>Tes ulang Level 1 dijadwalkan pada tanggal <strong>${fmtTgl(rt)}</strong> (${prof.retest_minggu} minggu setelah asesmen) untuk menilai efektivitas program latihan di atas.</p>
 
-<!-- TANDA TANGAN -->
-<div style="padding:16px 28px;display:flex;justify-content:flex-end">
-  <div style="text-align:center;min-width:180px">
-    <div style="border-top:1px solid #374151;padding-top:6px;margin-top:40px;font-size:10px;color:#555">
-      Coach / Pelatih<br>
-      <span style="font-size:9px;color:#94a3b8">(__________________________)</span>
-    </div>
-  </div>
-</div>
+<div class="ttd"><div>Pelatih,<div class="garis">${esc(namaCoach||'(............................................)')}</div></div></div>
 
-</body></html>`;
+<div class="foot">Dokumen ini dihasilkan oleh sistem HPCS sebagai panduan pelatihan dan bukan merupakan diagnosis medis.</div>
+</div></body></html>`;
 
 
   // Bersihkan nomor HP untuk WhatsApp (hanya angka, ganti 0 depan dengan 62)

@@ -4,8 +4,6 @@ from . import views
 app_name = 'periodization'
 
 urlpatterns = [
-    path('<int:program_id>/beban-data.json', views.BebanMingguanView.as_view(), name='beban_data'),
-    path('micro/<int:micro_id>/duplikat/', views.duplikat_micro, name='duplikat_micro'),
     path('', views.DaftarMacroProgramView.as_view(), name='daftar_program'),
     path('tambah/', views.TambahMacroProgramView.as_view(), name='tambah_program'),
     path('<int:program_id>/', views.DetailMacroProgramView.as_view(), name='detail_program'),

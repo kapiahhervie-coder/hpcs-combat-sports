@@ -209,39 +209,12 @@ def bangun_pertimbangan(meso):
     return catatan
 
 # ---- Beban mingguan & ACWR (planned load) ----
-def _hitung_acwr(rows):
-    """
-    rows: list dict {'tanggal': date, 'load': int|None}. Isi 'acwr' & 'zona' in place.
-    Chronic = rata-rata load minggu yang terisi dalam 4 minggu kalender berakhir di minggu ini
-    (tanggal-21 hari s/d tanggal). Butuh minimal 4 minggu terisi, kalau kurang acwr = None.
-    """
-    from datetime import timedelta
-    for row in rows:
-        row['acwr'] = None
-        row['zona'] = None
-        if row['load'] is None or row['tanggal'] is None:
-            continue
-        batas = row['tanggal'] - timedelta(days=21)
-        jendela = [r['load'] for r in rows
-                   if r['load'] is not None and r['tanggal'] is not None
-                   and batas <= r['tanggal'] <= row['tanggal']]
-        if len(jendela) < 4:
-            continue
-        kronis = sum(jendela) / len(jendela)
-        if kronis <= 0:
-            continue
-        a = round(row['load'] / kronis, 2)
-        row['acwr'] = a
-        row['zona'] = ('rendah' if a < 0.8 else 'aman' if a <= 1.3
-                       else 'waspada' if a <= 1.5 else 'tinggi')
-    return rows
-
-
 def hitung_beban_dan_acwr(macro_program):
     """
-    List dict per MicroCycle, urut tanggal: micro_id, label, tanggal, durasi,
-    load (None kalau belum ada sesi non-REST), acwr, zona.
-    load = sum(durasi_menit x intensitas); sesi REST tidak dihitung.
+    Return list dict per MicroCycle (urut fase lalu minggu):
+    label, durasi, load (None kalau belum ada sesi non-REST), acwr, zona.
+    load = sum(durasi_menit x intensitas), sesi REST tidak dihitung.
+    acwr = load minggu ini / rata-rata load 4 minggu terakhir (butuh >= 4 minggu terisi).
     """
     from django.db.models import F, Sum, ExpressionWrapper, IntegerField
     beban_expr = ExpressionWrapper(F('durasi_menit') * F('intensitas'), output_field=IntegerField())
@@ -251,12 +224,27 @@ def hitung_beban_dan_acwr(macro_program):
         for micro in meso.micro_cycles.order_by('minggu_ke'):
             sesi = micro.sesi_latihan.exclude(pilar_fokus='REST')
             agg = sesi.aggregate(durasi=Sum('durasi_menit'), load=Sum(beban_expr))
+            ada = sesi.exists()
             hasil.append({
                 'micro_id': micro.id,
                 'label': f"{meso.get_nama_fase_display()} - M{micro.minggu_ke}",
-                'tanggal': micro.tanggal_mulai,
                 'durasi': agg['durasi'] or 0,
-                'load': (agg['load'] or 0) if sesi.exists() else None,
+                'load': (agg['load'] or 0) if ada else None,
+                'acwr': None,
+                'zona': None,
             })
-    hasil.sort(key=lambda r: (r['tanggal'] is None, r['tanggal']))
-    return _hitung_acwr(hasil)
+
+    for i, row in enumerate(hasil):
+        if row['load'] is None:
+            continue
+        jendela = [r['load'] for r in hasil[max(0, i - 3):i + 1] if r['load'] is not None]
+        if len(jendela) < 4:
+            continue
+        kronis = sum(jendela) / len(jendela)
+        if kronis <= 0:
+            continue
+        row['acwr'] = round(row['load'] / kronis, 2)
+        a = row['acwr']
+        row['zona'] = ('rendah' if a < 0.8 else 'aman' if a <= 1.3
+                       else 'waspada' if a <= 1.5 else 'tinggi')
+    return hasil

@@ -113,7 +113,6 @@
 
     <form method="post" action="{% url 'periodization:tambah_item' sesi.id %}">
         {% csrf_token %}
-        <datalist id="saran-latihan">{% for n in nama_latihan_saran %}<option value="{{ n }}">{% endfor %}</datalist>
         <table style="width:100%; border-collapse: collapse; min-width:1100px;">
             <thead>
                 <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
@@ -138,7 +137,7 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td style="padding: 4px;"><input type="text" name="nama_latihan[]" list="saran-latihan" autocomplete="off" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
+                    <td style="padding: 4px;"><input type="text" name="nama_latihan[]" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
                     <td style="padding: 4px;"><input type="text" name="jumlah_rep[]" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
                     <td style="padding: 4px;"><input type="number" min="1" name="jumlah_set[]" value="3" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
                     <td style="padding: 4px;"><input type="text" name="waktu[]" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
@@ -168,47 +167,20 @@
 
 {% block extra_js %}
 <script>
-// Default istirahat (detik) berdasarkan pilar sesi. Ubah angka di sini sesuai protokol pelatih.
-const PILAR_SESI = '{{ sesi.pilar_fokus }}';
-const ISTIRAHAT_PILAR = {
-    L1: 30, L2: 90, L3: 180, L4: 120,
-    TEKNIK: 60, RECOVERY: 30, KOMPETISI: 60, REST: 60
-};
-const ISTIRAHAT_KATEGORI = { PEMANASAN: 30, PENDINGINAN: 30 };
-
-function istirahatDefault(kategori) {
-    if (ISTIRAHAT_KATEGORI[kategori] !== undefined) return ISTIRAHAT_KATEGORI[kategori];
-    return ISTIRAHAT_PILAR[PILAR_SESI] !== undefined ? ISTIRAHAT_PILAR[PILAR_SESI] : 60;
-}
-
-function pasangIstirahatOtomatis(row) {
-    const sel = row.querySelector('select[name="kategori[]"]');
-    const inp = row.querySelector('input[name="durasi_istirahat_detik[]"]');
-    if (!sel || !inp) return;
-    delete inp.dataset.manual;
-    inp.value = istirahatDefault(sel.value);
-    sel.addEventListener('change', function() {
-        if (!inp.dataset.manual) inp.value = istirahatDefault(sel.value);
-    });
-    inp.addEventListener('input', function() { inp.dataset.manual = '1'; });
-}
-
 function tambahBarisExercise() {
     const tbody = document.getElementById('exercise-rows-body');
     const rows = tbody.querySelectorAll('tr');
     const lastRow = rows[rows.length - 1];
     const newRow = lastRow.cloneNode(true);
     newRow.querySelectorAll('input').forEach(function(el) {
-        if (el.name.indexOf('jumlah_set') !== -1) { el.value = '3'; }
-        else if (el.name.indexOf('istirahat') === -1) { el.value = ''; }
+        if (el.type === 'number') {
+            el.value = el.name.indexOf('jumlah_set') !== -1 ? '3' : (el.name.indexOf('istirahat') !== -1 ? '60' : '');
+        } else {
+            el.value = '';
+        }
     });
-    newRow.querySelectorAll('select').forEach(function(el) { el.value = 'INTI'; });
+    newRow.querySelectorAll('select').forEach(function(el) { el.selectedIndex = 1; });
     tbody.appendChild(newRow);
-    pasangIstirahatOtomatis(newRow);
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('#exercise-rows-body tr').forEach(pasangIstirahatOtomatis);
-});
 </script>
 {% endblock %}

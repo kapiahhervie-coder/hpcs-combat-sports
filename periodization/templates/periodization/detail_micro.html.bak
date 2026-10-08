@@ -34,26 +34,6 @@
 </div>
 {% endif %}
 
-<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-    <div>
-        <small style="color:#64748b; font-size:11px; font-weight:700; text-transform:uppercase;">Total Durasi</small>
-        <div style="font-size:18px; font-weight:700;">{{ total_durasi_minggu }} menit</div>
-    </div>
-    <div>
-        <small style="color:#64748b; font-size:11px; font-weight:700; text-transform:uppercase;">Planned Load (durasi x intensitas)</small>
-        <div style="font-size:18px; font-weight:700; color:#e63946;">{{ total_srpe_load }} AU</div>
-    </div>
-    <form method="post" action="{% url 'periodization:duplikat_micro' micro.id %}" style="margin:0; display:flex; gap:8px; align-items:center;">
-        {% csrf_token %}
-        <input type="number" name="progres_persen" value="0" min="0" max="20"
-               style="width:60px; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;" title="Naik intensitas (%)">
-        <span style="font-size:12px; color:#6b7280;">% naik</span>
-        <button type="submit" onclick="return confirm('Salin semua sesi minggu ini ke minggu berikutnya?');"
-                style="background:#1e293b; color:#fff; border:none; padding:8px 12px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer;">
-            Salin ke Minggu Depan
-        </button>
-    </form>
-</div>
 <div style="display:grid; gap:14px;">
 {% for h in hari_list %}
     <div style="background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:18px;">
@@ -116,7 +96,7 @@
                         <label style="display:block; font-size:12px; color:#6b7280; margin-bottom:4px;">Pilar Fokus</label>
                         <select name="pilar_fokus" style="width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px; font-size:13px;">
                             {% for val, label in pilar_fokus_choices %}
-                                <option value="{{ val }}" {% if val == 'TEKNIK' %}selected{% endif %}>{{ label }}</option>
+                                <option value="{{ val }}" {% if val == 'REST' %}selected{% endif %}>{{ label }}</option>
                             {% endfor %}
                         </select>
                     </div>

@@ -113,7 +113,6 @@
 
     <form method="post" action="{% url 'periodization:tambah_item' sesi.id %}">
         {% csrf_token %}
-        <datalist id="saran-latihan">{% for n in nama_latihan_saran %}<option value="{{ n }}">{% endfor %}</datalist>
         <table style="width:100%; border-collapse: collapse; min-width:1100px;">
             <thead>
                 <tr style="text-align:left; border-bottom: 2px solid #e5e7eb;">
@@ -138,7 +137,7 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td style="padding: 4px;"><input type="text" name="nama_latihan[]" list="saran-latihan" autocomplete="off" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
+                    <td style="padding: 4px;"><input type="text" name="nama_latihan[]" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
                     <td style="padding: 4px;"><input type="text" name="jumlah_rep[]" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
                     <td style="padding: 4px;"><input type="number" min="1" name="jumlah_set[]" value="3" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>
                     <td style="padding: 4px;"><input type="text" name="waktu[]" style="width:100%; padding:6px; border:1px solid #d1d5db; border-radius:6px; font-size:12px;"></td>

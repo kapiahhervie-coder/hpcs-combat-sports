@@ -462,7 +462,6 @@ class DetailSesiLatihanView(LoginRequiredMixin, View):
         return render(request, self.template_name, {
             'sesi': sesi,
             'kategori_groups': kategori_groups,
-            'nama_latihan_saran': _saran_nama_latihan(request.user),
             'kategori_choices': KATEGORI_LATIHAN_CHOICES,
             'nama_hari': NAMA_HARI[sesi.hari_ke],
             'hari_list': hari_list,
@@ -839,22 +838,3 @@ class BebanMingguanView(LoginRequiredMixin, View):
             'zona': r['zona'],
         } for r in hitung_beban_dan_acwr(program)]
         return JsonResponse({'rows': rows})
-
-def _saran_nama_latihan(user, batas=300):
-    """Nama latihan yang pernah dipakai user ini, paling sering dulu, unik tanpa beda huruf besar/kecil."""
-    from django.db.models import Count
-    qs = (LatihanItem.objects
-          .filter(sesi_latihan__in=get_sesi_latihan_queryset(user))
-          .values('nama_latihan')
-          .annotate(n=Count('id'))
-          .order_by('-n', 'nama_latihan'))
-    terlihat, hasil = set(), []
-    for row in qs:
-        nama = (row['nama_latihan'] or '').strip()
-        kunci = nama.lower()
-        if nama and kunci not in terlihat:
-            terlihat.add(kunci)
-            hasil.append(nama)
-        if len(hasil) >= batas:
-            break
-    return hasil
