@@ -100,7 +100,7 @@ body { font-family: "Inter", sans-serif; background: #05080f; color: #e2e8f0; ma
     </div>
     <div class="card" style="padding:24px;">
       <div class="bio-name">{{ atlet.nama_atlet }}</div>
-      <div style="font-size:10px;font-weight:700;letter-spacing:3px;color:#f59e0b;text-transform:uppercase;margin-top:4px;">{{ divisi_label|default:"Boxing Division" }} &middot; HPCS Athlete</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:3px;color:#f59e0b;text-transform:uppercase;margin-top:4px;">Boxing Division &middot; HPCS Athlete</div>
       <div style="height:1px;background:rgba(255,255,255,0.06);margin:16px 0;"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
         <div class="bio-row"><span class="bio-label">Tanggal Lahir</span><span class="bio-value">{{ atlet.tanggal_lahir|date:"d M Y"|default:"&mdash;" }}</span></div>

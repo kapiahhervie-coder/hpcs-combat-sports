@@ -292,8 +292,9 @@ class L3PowerBasketView(LoginRequiredMixin, View):
             kategori, gender = atlet.kategori_umur, atlet.gender      # sumber: data master atlet
             f = lambda k: to_float(P.get(k))
             skor = scoring.skor_l3(
-                kategori, gender, vj=f('vertical_jump_cm'), rsi=f('rsi_value'),
-                broad=f('broad_jump_m'), throw=f('throw_jarak_m'),
+                kategori, gender, vj=f('vertical_jump_cm'), sp30=f('sprint_30m_detik'),
+                spct=f('sprint_court_detik'), lane=f('lane_agility_detik'),
+                rsi=f('rsi_value'), cod=f('cod_detik'),
             )
             vj, reach = f('vertical_jump_cm'), f('standing_reach_cm')
             audit = BasketL3Power(
@@ -301,8 +302,10 @@ class L3PowerBasketView(LoginRequiredMixin, View):
                 kategori_usia=kategori, gender=gender, posisi=atlet.posisi or P.get('posisi', ''),
                 vertical_jump_cm=vj, standing_reach_cm=reach,
                 max_reach_cm=(vj + reach) if vj and reach else None,
+                sprint_30m_detik=f('sprint_30m_detik'), sprint_court_detik=f('sprint_court_detik'),
+                lane_agility_detik=f('lane_agility_detik'),
                 drop_jump_cm=f('drop_jump_cm'), rsi_value=f('rsi_value'),
-                broad_jump_m=f('broad_jump_m'), throw_jarak_m=f('throw_jarak_m'),
+                cod_detik=f('cod_detik'),
                 catatan=P.get('catatan', ''),
                 created_by=request.user.get_full_name() or request.user.username,
                 **skor,
@@ -351,19 +354,20 @@ class L4SpecificBasketView(LoginRequiredMixin, View):
             P = request.POST
             kategori, gender = atlet.kategori_umur, atlet.gender
             f = lambda k: to_float(P.get(k))
+            vision, decision = _nilai_coach(P.get('court_vision_score')), _nilai_coach(P.get('decision_speed'))
             skor = scoring.skor_l4(
-                kategori, gender, sp30=f('sprint_30m_detik'), spct=f('sprint_court_detik'),
-                lane=f('lane_agility_detik'), cod=f('cod_detik'),
+                kategori, gender, ft=f('free_throw_pct'), mid=f('midrange_pct'), three=f('three_point_pct'),
                 dom=f('dribble_speed_dominant'), weak=f('dribble_speed_weak'),
-                lat=f('lateral_speed_detik'), yoyo_m=f('yoyo_jarak_m'),
+                lat=f('lateral_speed_detik'), cont=f('contest_rate_pct'), yoyo_m=f('yoyo_jarak_m'),
+                vision=vision, decision=decision,
             )
             audit = BasketL4Specific(
                 atlet=atlet, atlet_name=atlet.nama_atlet,
                 kategori_usia=kategori, gender=gender, posisi=atlet.posisi or P.get('posisi', ''),
-                sprint_30m_detik=f('sprint_30m_detik'), sprint_court_detik=f('sprint_court_detik'),
-                lane_agility_detik=f('lane_agility_detik'), cod_detik=f('cod_detik'),
+                free_throw_pct=f('free_throw_pct'), midrange_pct=f('midrange_pct'), three_point_pct=f('three_point_pct'),
                 dribble_speed_dominant=f('dribble_speed_dominant'), dribble_speed_weak=f('dribble_speed_weak'),
-                lateral_speed_detik=f('lateral_speed_detik'),
+                lateral_speed_detik=f('lateral_speed_detik'), contest_rate_pct=f('contest_rate_pct'),
+                court_vision_score=vision, decision_speed=decision,
                 yoyo_level=to_int(P.get('yoyo_level')), yoyo_jarak_m=f('yoyo_jarak_m'),
                 catatan=P.get('catatan', ''),
                 created_by=request.user.get_full_name() or request.user.username,

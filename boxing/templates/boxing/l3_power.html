@@ -597,6 +597,7 @@ function kirimWARow(nama,kat,total,predikat,tgl,noHpCoach){
         <button class="cam-btn cam-btn-start" id="btnCamStart" onclick="startCamera()">▶ Mulai</button>
         <button class="cam-btn cam-btn-use"   onclick="applyCamera()">✓ Pakai</button>
         <button class="cam-btn cam-btn-stop"  onclick="stopCamera()">■ Stop</button>
+        <button class="cam-btn" id="btnCamFlip" onclick="flipCamera()" title="Ganti kamera depan / belakang" style="background:var(--bg3,#1e2333);color:#e5e7eb;border:1px solid rgba(148,163,184,.3)">🔄 <span id="camFacingLbl">Depan</span></button>
       </div>
       <div class="cam-note">MediaPipe Pose (Google) — semua analisis di perangkat lokal</div>
     </div>
@@ -991,6 +992,7 @@ var HPCS = (function(){
   }
 
   // ── Atlet dropdown ────────────────────────────────────────────────
+  function beratAman(v) { var n = parseFloat(String(v || '').replace(',', '.')); return n > 0 ? String(n) : ''; }
   function onAtletChange(sel) {
     const opt = sel.options[sel.selectedIndex];
     if (!opt || !opt.value) return;
@@ -1000,11 +1002,11 @@ var HPCS = (function(){
     document.getElementById('info_nama').textContent   = nama.toUpperCase();
     document.getElementById('info_kat').textContent    = opt.dataset.kategori || '';
     document.getElementById('info_gender').textContent = opt.dataset.gender   || '';
-    document.getElementById('info_berat').textContent  = opt.dataset.berat    || '—';
+    document.getElementById('info_berat').textContent  = beratAman(opt.dataset.berat) || '—';
     document.getElementById('atlet_info').style.display = 'block';
     document.getElementById('h_kategori_usia_l3').value = opt.dataset.kategori || 'ELITE';
     document.getElementById('h_gender_l3').value        = opt.dataset.gender   || 'Putra';
-    document.getElementById('h_kelas_berat_l3').value   = opt.dataset.berat    || '';
+    document.getElementById('h_kelas_berat_l3').value   = beratAman(opt.dataset.berat);
     calcJump(); calcSprint(); calcThrow(); calcRSI(); calcAgility();
   }
 
@@ -1298,6 +1300,7 @@ var HPCS = (function(){
   let mpPose      = null;
   let mpCamera    = null;
   let camRunning  = false;
+  let camFacing   = 'user';   // 'user' = depan, 'environment' = belakang
 
   // State per exercise
   let jumpStage = null, jumpCount = 0;
@@ -1348,7 +1351,12 @@ var HPCS = (function(){
     const video  = document.getElementById('camVideo');
     const canvas = document.getElementById('camCanvas');
     try {
-      camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: camFacing } } });
+      } catch (e0) {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      }
+      document.getElementById('camVideo').style.transform = document.getElementById('camCanvas').style.transform = (camFacing === 'user') ? 'scaleX(-1)' : 'none';
       video.srcObject = camStream;
 
       if (!mpPose) {
@@ -1377,6 +1385,13 @@ var HPCS = (function(){
     } catch (err) {
       alert('Tidak bisa akses kamera: ' + err.message);
     }
+  }
+
+  async function flipCamera() {
+    camFacing = (camFacing === 'user') ? 'environment' : 'user';
+    document.getElementById('camFacingLbl').textContent = (camFacing === 'user') ? 'Depan' : 'Belakang';
+    document.getElementById('camVideo').style.transform = document.getElementById('camCanvas').style.transform = (camFacing === 'user') ? 'scaleX(-1)' : 'none';
+    if (camRunning) { stopCamera(); setTimeout(startCamera, 300); }
   }
 
   function stopCamera() {

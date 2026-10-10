@@ -1,4 +1,4 @@
-"""
+﻿"""
 HPCS Basketball — Models
 High Performance Coaching System
 """
@@ -7,8 +7,6 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
-from combat.models import Atlet
 
 GENDER_CHOICES = [('Putra','Putra'),('Putri','Putri')]
 KATEGORI_CHOICES = [('ELITE','Elite'),('YOUTH','Youth'),('JUNIOR','Junior'),('SENIOR','Senior')]
@@ -45,73 +43,27 @@ def _predikat(skor):
     return 'NOVICE'
 
 
-class ProfilBasket(models.Model):
-    """Data khusus basket yang tidak ada di combat.Atlet (posisi, wingspan)."""
-    atlet    = models.OneToOneField(Atlet, on_delete=models.CASCADE, related_name='profil_basket')
-    posisi   = models.CharField(max_length=5, choices=POSISI_CHOICES, blank=True)
-    wingspan = models.FloatField(null=True, blank=True, verbose_name='Wingspan (cm)')
+class AtletBasket(models.Model):
+    nama_atlet    = models.CharField(max_length=100)
+    kategori_umur = models.CharField(max_length=10, choices=KATEGORI_CHOICES)
+    gender        = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    posisi        = models.CharField(max_length=5, choices=POSISI_CHOICES, blank=True)
+    kelas_berat   = models.FloatField(verbose_name='Berat Badan (kg)')
+    tinggi_badan  = models.FloatField(null=True, blank=True, verbose_name='Tinggi Badan (cm)')
+    wingspan      = models.FloatField(null=True, blank=True, verbose_name='Wingspan (cm)')
+    tanggal_lahir = models.DateField(null=True, blank=True)
+    tahap_ltad    = models.CharField(max_length=20, choices=LTAD_CHOICES, blank=True)
+    pelatih       = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='atlet_basket')
+    dibuat_pada   = models.DateTimeField(auto_now_add=True)
+    diupdate_pada = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = 'Profil Basket'
-        verbose_name_plural = 'Profil Basket'
-
-    def __str__(self):
-        return f'Profil basket atlet #{self.atlet_id}'
-
-
-class AtletBasketManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(cabang='basketball').select_related('profil_basket')
-
-
-class AtletBasket(Atlet):
-    """
-    Proxy atas combat.Atlet (cabang 'basketball'): satu data atlet bersama seperti
-    Boxing dan Sepak Bola. posisi dan wingspan disimpan di ProfilBasket.
-    """
-    objects = AtletBasketManager()
-
-    class Meta:
-        proxy = True
         verbose_name = 'Atlet Basket'
         verbose_name_plural = 'Atlet Basket'
         ordering = ['nama_atlet']
 
     def __str__(self):
         return f'{self.nama_atlet} ({self.get_posisi_display() or "-"})'
-
-    def _profil(self):
-        try:
-            return self.profil_basket
-        except ObjectDoesNotExist:
-            return None
-
-    @property
-    def posisi(self):
-        baru = self.__dict__.get('_profil_baru', {})
-        if 'posisi' in baru:
-            return baru['posisi']
-        p = self._profil()
-        return p.posisi if p else ''
-
-    @posisi.setter
-    def posisi(self, nilai):
-        self.__dict__.setdefault('_profil_baru', {})['posisi'] = nilai or ''
-
-    @property
-    def wingspan(self):
-        baru = self.__dict__.get('_profil_baru', {})
-        if 'wingspan' in baru:
-            return baru['wingspan']
-        p = self._profil()
-        return p.wingspan if p else None
-
-    @wingspan.setter
-    def wingspan(self, nilai):
-        self.__dict__.setdefault('_profil_baru', {})['wingspan'] = nilai
-
-    def get_posisi_display(self):
-        return dict(POSISI_CHOICES).get(self.posisi, '')
 
     @property
     def umur(self):
@@ -128,23 +80,14 @@ class AtletBasket(Atlet):
 
     @property
     def wingspan_ratio(self):
-        w, t = self.wingspan, self.tinggi_badan
-        if w and t and t > 0:
-            return round(w / t, 2)
+        if self.wingspan and self.tinggi_badan and self.tinggi_badan > 0:
+            return round(self.wingspan / self.tinggi_badan, 2)
         return None
-
-    def save(self, *args, **kwargs):
-        self.cabang = 'basketball'
-        super().save(*args, **kwargs)
-        baru = self.__dict__.pop('_profil_baru', None)
-        if baru:
-            ProfilBasket.objects.update_or_create(atlet_id=self.pk, defaults=baru)
-            self._state.fields_cache.pop('profil_basket', None)
 
 
 class BasketL1Correction(models.Model):
     """L1 - Fondasi Gerak: Mobilitas, Stabilitas, Postur"""
-    atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='l1_basketball')
+    atlet         = models.ForeignKey(AtletBasket, on_delete=models.CASCADE, related_name='audit_l1')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_CHOICES, default='ELITE')
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
@@ -199,7 +142,7 @@ class BasketL1Correction(models.Model):
 
 class BasketL2Strength(models.Model):
     """L2 - Kekuatan Otot: Lower, Upper, Core"""
-    atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='l2_basketball')
+    atlet         = models.ForeignKey(AtletBasket, on_delete=models.CASCADE, related_name='audit_l2')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_CHOICES, default='ELITE')
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
@@ -256,8 +199,8 @@ class BasketL2Strength(models.Model):
 
 
 class BasketL3Power(models.Model):
-    """L3 - Daya Ledak (Power): Vertical Jump, Reactive Strength, Broad Jump, Medicine Ball Throw"""
-    atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='l3_basketball')
+    """L3 - Daya Ledak: Vertical Jump, Sprint, Agility"""
+    atlet         = models.ForeignKey(AtletBasket, on_delete=models.CASCADE, related_name='audit_l3')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_CHOICES, default='ELITE')
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
@@ -287,14 +230,6 @@ class BasketL3Power(models.Model):
     cod_detik          = models.FloatField(null=True, blank=True, verbose_name='COD T-Test (detik)')
     score_cod          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # Pilar 3 (baru): Horizontal Power - Standing Broad Jump
-    broad_jump_m       = models.FloatField(null=True, blank=True)
-    score_broad        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-
-    # Pilar 4 (baru): Upper-Body Power - Medicine Ball Chest Throw
-    throw_jarak_m      = models.FloatField(null=True, blank=True)
-    score_throw        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-
     total_skor     = models.FloatField(default=0)
     predikat       = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik     = models.BooleanField(default=False)
@@ -311,7 +246,7 @@ class BasketL3Power(models.Model):
     def save(self, *args, **kwargs):
         if self.atlet_id and not self.atlet_name:
             self.atlet_name = self.atlet.nama_atlet
-        self.total_skor = _avg(self.score_jump, self.score_rsi, self.score_broad, self.score_throw)
+        self.total_skor = _avg(self.score_jump, self.score_sprint, self.score_agility, self.score_rsi, self.score_cod)
         self.predikat = _predikat(self.total_skor)
         self.layak_naik = self.total_skor >= 7.0       # gerbang ke L4
         self.layak_bertahan = self.total_skor >= 5.0   # tahan di L3, perkuat pilar terlemah
@@ -322,16 +257,8 @@ class BasketL3Power(models.Model):
 
 
 class BasketL4Specific(models.Model):
-    """L4 - Speed & Agility: Sprint, Lane Agility, COD, Lateral Speed, Dribble Agility, Yo-Yo"""
-    # Pilar baru (pindah dari L3): Linear Speed, Lane Agility, Change of Direction
-    sprint_30m_detik   = models.FloatField(null=True, blank=True)
-    sprint_court_detik = models.FloatField(null=True, blank=True, verbose_name='Sprint 3/4 Court (detik)')
-    score_sprint       = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    lane_agility_detik = models.FloatField(null=True, blank=True)
-    score_agility      = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    cod_detik          = models.FloatField(null=True, blank=True, verbose_name='COD T-Test (detik)')
-    score_cod          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='l4_basketball')
+    """L4 - Spesifik Basket: Shooting, Dribbling, Defense"""
+    atlet         = models.ForeignKey(AtletBasket, on_delete=models.CASCADE, related_name='audit_l4')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_CHOICES, default='ELITE')
     gender        = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Putra')
@@ -385,7 +312,7 @@ class BasketL4Specific(models.Model):
         if self.yoyo_jarak_m:
             self.vo2max_estimasi = round((self.yoyo_jarak_m * 0.0084) + 36.4, 1)
         self.score_iq = _avg(self.court_vision_score, self.decision_speed)
-        self.total_skor = _avg(self.score_sprint, self.score_agility, self.score_cod, self.score_defense, self.score_dribbling, self.score_conditioning)
+        self.total_skor = _avg(self.score_shooting, self.score_dribbling, self.score_defense, self.score_iq, self.score_conditioning)
         self.predikat = _predikat(self.total_skor)
         self.layak_kompetisi = self.total_skor >= 8.0
         super().save(*args, **kwargs)

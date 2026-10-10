@@ -1,0 +1,20 @@
+[
+{
+  "model": "basketball.atletbasket",
+  "pk": 1,
+  "fields": {
+    "nama_atlet": "Test Atlet Basket",
+    "kategori_umur": "ELITE",
+    "gender": "Putra",
+    "posisi": "PG",
+    "kelas_berat": 78.0,
+    "tinggi_badan": 185.0,
+    "wingspan": 192.0,
+    "tanggal_lahir": null,
+    "tahap_ltad": "",
+    "pelatih": 1,
+    "dibuat_pada": "2026-09-15T09:32:16.768Z",
+    "diupdate_pada": "2026-09-15T09:32:16.768Z"
+  }
+}
+]

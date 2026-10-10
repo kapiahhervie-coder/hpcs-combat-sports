@@ -81,15 +81,15 @@ body { background:var(--bg-dark); color:#fff; font-family:'Segoe UI',sans-serif;
           <div class="row g-2 mb-3">
             <div class="col-4">
               <label class="form-label">BB (kg) *</label>
-              <input type="number" name="kelas_berat" class="form-control" step="any" required placeholder="75">
+              <input type="number" name="kelas_berat" class="form-control" step="0.1" required placeholder="75">
             </div>
             <div class="col-4">
               <label class="form-label">TB (cm)</label>
-              <input type="number" name="tinggi_badan" class="form-control" step="any" placeholder="185">
+              <input type="number" name="tinggi_badan" class="form-control" step="0.1" placeholder="185">
             </div>
             <div class="col-4">
               <label class="form-label">Wingspan</label>
-              <input type="number" name="wingspan" class="form-control" step="any" placeholder="190">
+              <input type="number" name="wingspan" class="form-control" step="0.1" placeholder="190">
             </div>
           </div>
           <div class="mb-3">
@@ -145,13 +145,6 @@ body { background:var(--bg-dark); color:#fff; font-family:'Segoe UI',sans-serif;
                      class="btn btn-sm" style="background:rgba(249,115,22,0.15);color:var(--neon-orange);border:1px solid var(--border-panel);font-size:0.75rem">
                     Lihat
                   </a>
-                  <button type="button" class="btn btn-sm ms-1" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid var(--border-panel);font-size:0.75rem"
-                          data-bs-toggle="modal" data-bs-target="#modalEditAtlet"
-                          data-id="{{ a.id }}" data-nama="{{ a.nama_atlet }}" data-kategori="{{ a.kategori_umur }}" data-gender="{{ a.gender }}"
-                          data-posisi="{{ a.posisi }}" data-bb="{{ a.kelas_berat|stringformat:'g' }}" data-tb="{{ a.tinggi_badan|default_if_none:''|stringformat:'g' }}"
-                          data-ws="{{ a.wingspan|default_if_none:''|stringformat:'g' }}" data-lahir="{{ a.tanggal_lahir|date:'Y-m-d' }}" data-ltad="{{ a.tahap_ltad }}">
-                    Edit
-                  </button>
                 </td>
               </tr>
               {% endfor %}
@@ -168,84 +161,7 @@ body { background:var(--bg-dark); color:#fff; font-family:'Segoe UI',sans-serif;
     </div>
   </div>
 </div>
-<!-- HPCS-EDIT: modal edit atlet -->
-<div class="modal fade" id="modalEditAtlet" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content card-dark" style="border:1px solid var(--border-panel)">
-      <form method="post" id="formEditAtlet" data-url0="{% url 'basketball:edit_atlet' 0 %}">
-        {% csrf_token %}
-        <div class="modal-header" style="border-color:var(--border-panel)">
-          <h6 class="modal-title" style="color:var(--neon-orange);font-weight:700;letter-spacing:1px">EDIT ATLET</h6>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3"><label class="form-label">Nama Atlet *</label>
-            <input type="text" name="nama_atlet" class="form-control" required maxlength="100"></div>
-          <div class="row g-2 mb-3">
-            <div class="col-6"><label class="form-label">Kategori</label>
-              <select name="kategori_umur" class="form-select">
-                <option value="ELITE">Elite</option><option value="YOUTH">Youth</option>
-                <option value="JUNIOR">Junior</option><option value="SENIOR">Senior</option>
-              </select></div>
-            <div class="col-6"><label class="form-label">Gender</label>
-              <select name="gender" class="form-select"><option value="Putra">Putra</option><option value="Putri">Putri</option></select></div>
-          </div>
-          <div class="mb-3"><label class="form-label">Posisi</label>
-            <select name="posisi" class="form-select">
-              <option value="">- Pilih Posisi -</option>
-              <option value="PG">Point Guard (PG)</option><option value="SG">Shooting Guard (SG)</option>
-              <option value="SF">Small Forward (SF)</option><option value="PF">Power Forward (PF)</option>
-              <option value="C">Center (C)</option>
-            </select></div>
-          <div class="row g-2 mb-3">
-            <div class="col-4"><label class="form-label">BB (kg) *</label><input type="number" name="kelas_berat" class="form-control" step="any" min="0" required></div>
-            <div class="col-4"><label class="form-label">TB (cm)</label><input type="number" name="tinggi_badan" class="form-control" step="any" min="0"></div>
-            <div class="col-4"><label class="form-label">Wingspan</label><input type="number" name="wingspan" class="form-control" step="any" min="0"></div>
-          </div>
-          <div class="mb-3"><label class="form-label">Tanggal Lahir</label><input type="date" name="tanggal_lahir" class="form-control"></div>
-          <div class="mb-1"><label class="form-label">Tahap LTAD</label>
-            <select name="tahap_ltad" class="form-select">
-              <option value="">- Pilih -</option>
-              <option value="fundamental">FUNdamental (6-9 thn)</option><option value="learn_train">Learn to Train (9-12 thn)</option>
-              <option value="train_train">Train to Train (12-16 thn)</option><option value="train_compete">Train to Compete (16-19 thn)</option>
-              <option value="train_win">Train to Win (19+ thn)</option>
-            </select></div>
-        </div>
-        <div class="modal-footer" style="border-color:var(--border-panel)">
-          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn-save">Simpan Perubahan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-/* HPCS-EDIT: isi form edit dari tombol baris + pengaman klik ganda (HPCS-GUARD) */
-document.getElementById('modalEditAtlet').addEventListener('show.bs.modal', function (ev) {
-  var b = ev.relatedTarget, f = document.getElementById('formEditAtlet');
-  if (!b || !f) return;
-  var d = b.dataset;
-  f.action = f.dataset.url0.replace(/\/0\/edit\/$/, '/' + d.id + '/edit/');
-  f.dataset.sent = '';
-  f.querySelectorAll('button[type="submit"]').forEach(function (x) { x.disabled = false; });
-  f.elements['nama_atlet'].value = d.nama || '';
-  f.elements['kategori_umur'].value = d.kategori || '';
-  f.elements['gender'].value = d.gender || '';
-  f.elements['posisi'].value = d.posisi || '';
-  f.elements['kelas_berat'].value = d.bb || '';
-  f.elements['tinggi_badan'].value = d.tb || '';
-  f.elements['wingspan'].value = d.ws || '';
-  f.elements['tanggal_lahir'].value = d.lahir || '';
-  f.elements['tahap_ltad'].value = d.ltad || '';
-});
-document.querySelectorAll('form[method="post"]').forEach(function (f) {
-  f.addEventListener('submit', function (e) {
-    if (f.dataset.sent) { e.preventDefault(); return; }
-    f.dataset.sent = '1';
-    f.querySelectorAll('button[type="submit"]').forEach(function (b) { b.disabled = true; });
-  });
-});
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

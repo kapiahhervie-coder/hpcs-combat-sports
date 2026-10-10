@@ -256,7 +256,7 @@ class BasketL2Strength(models.Model):
 
 
 class BasketL3Power(models.Model):
-    """L3 - Daya Ledak (Power): Vertical Jump, Reactive Strength, Broad Jump, Medicine Ball Throw"""
+    """L3 - Daya Ledak: Vertical Jump, Sprint, Agility"""
     atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='l3_basketball')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_CHOICES, default='ELITE')
@@ -287,14 +287,6 @@ class BasketL3Power(models.Model):
     cod_detik          = models.FloatField(null=True, blank=True, verbose_name='COD T-Test (detik)')
     score_cod          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
 
-    # Pilar 3 (baru): Horizontal Power - Standing Broad Jump
-    broad_jump_m       = models.FloatField(null=True, blank=True)
-    score_broad        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-
-    # Pilar 4 (baru): Upper-Body Power - Medicine Ball Chest Throw
-    throw_jarak_m      = models.FloatField(null=True, blank=True)
-    score_throw        = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-
     total_skor     = models.FloatField(default=0)
     predikat       = models.CharField(max_length=20, choices=PREDIKAT_CHOICES, default='NOVICE')
     layak_naik     = models.BooleanField(default=False)
@@ -311,7 +303,7 @@ class BasketL3Power(models.Model):
     def save(self, *args, **kwargs):
         if self.atlet_id and not self.atlet_name:
             self.atlet_name = self.atlet.nama_atlet
-        self.total_skor = _avg(self.score_jump, self.score_rsi, self.score_broad, self.score_throw)
+        self.total_skor = _avg(self.score_jump, self.score_sprint, self.score_agility, self.score_rsi, self.score_cod)
         self.predikat = _predikat(self.total_skor)
         self.layak_naik = self.total_skor >= 7.0       # gerbang ke L4
         self.layak_bertahan = self.total_skor >= 5.0   # tahan di L3, perkuat pilar terlemah
@@ -322,15 +314,7 @@ class BasketL3Power(models.Model):
 
 
 class BasketL4Specific(models.Model):
-    """L4 - Speed & Agility: Sprint, Lane Agility, COD, Lateral Speed, Dribble Agility, Yo-Yo"""
-    # Pilar baru (pindah dari L3): Linear Speed, Lane Agility, Change of Direction
-    sprint_30m_detik   = models.FloatField(null=True, blank=True)
-    sprint_court_detik = models.FloatField(null=True, blank=True, verbose_name='Sprint 3/4 Court (detik)')
-    score_sprint       = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    lane_agility_detik = models.FloatField(null=True, blank=True)
-    score_agility      = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
-    cod_detik          = models.FloatField(null=True, blank=True, verbose_name='COD T-Test (detik)')
-    score_cod          = models.FloatField(default=0, validators=[MinValueValidator(0), MaxValueValidator(10)])
+    """L4 - Spesifik Basket: Shooting, Dribbling, Defense"""
     atlet         = models.ForeignKey(Atlet, on_delete=models.CASCADE, related_name='l4_basketball')
     atlet_name    = models.CharField(max_length=150, blank=True)
     kategori_usia = models.CharField(max_length=20, choices=KATEGORI_CHOICES, default='ELITE')
@@ -385,7 +369,7 @@ class BasketL4Specific(models.Model):
         if self.yoyo_jarak_m:
             self.vo2max_estimasi = round((self.yoyo_jarak_m * 0.0084) + 36.4, 1)
         self.score_iq = _avg(self.court_vision_score, self.decision_speed)
-        self.total_skor = _avg(self.score_sprint, self.score_agility, self.score_cod, self.score_defense, self.score_dribbling, self.score_conditioning)
+        self.total_skor = _avg(self.score_shooting, self.score_dribbling, self.score_defense, self.score_iq, self.score_conditioning)
         self.predikat = _predikat(self.total_skor)
         self.layak_kompetisi = self.total_skor >= 8.0
         super().save(*args, **kwargs)

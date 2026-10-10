@@ -5,7 +5,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* HPCS Basketball L4 - layout mengikuti Boxing L4, warna level: KUNING */
+/* HPCS Basketball L2 — layout mengikuti Boxing L2, warna level: LEVEL */
 :root{--bg:#0b0f14;--bg2:#13181f;--bg3:#1a2030;--border:#252d3a;--border2:#38465a;
 --accent:#facc15;--cyan:#facc15;--gold:#facc15;--green:#2ecc71;--red:#e74c3c;--blue:#facc15;
 --text:#e2e8f0;--text-dim:#94a3b8;--text-faint:#4b5b70;--text2:#94a3b8;--text3:#4b5b70}
@@ -65,8 +65,8 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
 
   <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
     <div>
-      <h1 class="header-title mb-0">HPCS Level 4: Speed &amp; Agility</h1>
-      <p class="header-subtitle mb-1 no-print">Audit Speed &amp; Agility Basketball - Sprint, Lane Agility, Change of Direction, Lateral Speed, Dribble Agility &amp; Yo-Yo (Coach {{ request.user.get_full_name|default:request.user.username }})</p>
+      <h1 class="header-title mb-0">HPCS Level 4: Sport-Specific Skill & Conditioning</h1>
+      <p class="header-subtitle mb-1 no-print">Audit Skill Basketball — Shooting, Ball Handling, Defense, Basketball IQ & Yo-Yo Conditioning (Coach {{ request.user.get_full_name|default:request.user.username }})</p>
       <div class="filter-bar no-print">
         <span class="mono" style="font-size:.68rem;color:var(--text-faint)"><i class="bi bi-funnel-fill me-1"></i>FILTER:</span>
         <a href="?category=" class="ftab {% if not selected_category %}ftab-on{% endif %}">Semua</a>
@@ -86,7 +86,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
             <div class="row g-0 rubrik-head"><div class="col-2">Aspek &amp; Instrumen</div><div class="col text-center">Novice</div><div class="col text-center">Fair</div><div class="col text-center">Good</div><div class="col text-center">Excellent</div><div class="col text-center">Superior</div></div>
             <div id="rubrikBody"></div>
           </div>
-          <div class="note-box">Skor per pita: Novice 1.5 · Fair 3.5 · Good 5.5 · Excellent 7.5 · Superior 9.5. Sprint = rata-rata tes 30 m dan 3/4 court yang terisi; Dribble Agility = 60% waktu tangan dominan + 40% efisiensi tangan lemah; Lateral Speed = Defensive Slide 5-10-5; Yo-Yo dinilai dari jarak total. Tes berbasis waktu: makin kecil makin baik. Skor final dihitung ulang server dari data mentah. Ambang angka adalah norma kerja HPCS Basketball — validasi dengan data klub/federasi Anda.</div>
+          <div class="note-box">Skor per pita: Novice 1.5 · Fair 3.5 · Good 5.5 · Excellent 7.5 · Superior 9.5. Shooting = rata-rata tiga zona; Ball Handling = 60% waktu tangan dominan + 40% efisiensi tangan lemah; Defense = rata-rata slide dan contest rate; Basketball IQ = rata-rata penilaian coach 0–10 (dipakai apa adanya, termasuk Youth). Yo-Yo dinilai dari jarak total. Tes berbasis waktu: makin kecil makin baik. Skor final dihitung ulang server dari data mentah. Ambang angka adalah norma kerja HPCS Basketball — validasi dengan data klub/federasi Anda.</div>
           <div class="mt-3 pt-3" style="border-top:1px solid var(--border)">
             <div class="section-label mb-2"><i class="bi bi-clipboard2-pulse"></i>SOP &amp; Protokol Pelaksanaan</div>
             <div id="sopBody"></div>
@@ -157,7 +157,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
 
   <div class="history-wrap no-print mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-      <h6 class="mb-0" style="color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px"><i class="bi bi-clock-history me-1"></i>Database &amp; History Audit L4 — Speed &amp; Agility</h6>
+      <h6 class="mb-0" style="color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px"><i class="bi bi-clock-history me-1"></i>Database &amp; History Audit L4 — Sport-Specific Skill & Conditioning</h6>
       <div class="d-flex gap-1 align-items-center flex-wrap">
         <a href="?category=" class="ftab {% if not selected_category %}ftab-on{% endif %}">SEMUA</a>
         <a href="?category=elite" class="ftab {% if selected_category == 'elite' %}ftab-on{% endif %}">ELITE</a>
@@ -169,7 +169,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
     </div>
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead><tr><th>#</th><th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Gender</th><th>Sprint</th><th>Agility</th><th>COD</th><th>Lateral</th><th>Dribble</th><th>Yo-Yo</th><th>Total</th><th>Predikat</th><th class="text-center">Aksi</th></tr></thead>
+        <thead><tr><th>#</th><th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Gender</th><th>Shoot</th><th>Dribble</th><th>Defense</th><th>IQ</th><th>Cond</th><th>Total</th><th>Predikat</th><th class="text-center">Aksi</th></tr></thead>
         <tbody>
           {% for item in history %}
           <tr id="row-{{ item.pk }}">
@@ -178,18 +178,18 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
             <td class="fw-bold">{{ item.atlet.nama_atlet }}</td>
             <td><span class="score-pill">{{ item.kategori_usia }}</span></td>
             <td class="mono" style="color:var(--text-dim)">{{ item.gender }}</td>
-            <td><span class="score-pill">{{ item.score_sprint|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_agility|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_cod|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_defense|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_dribbling|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_conditioning|floatformat:1 }}</span></td>
+            <td><span class="score-pill">{{ item.score_shooting|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_dribbling|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_defense|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_iq|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_conditioning|floatformat:1 }}</span></td>
             <td style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent)">{{ item.total_skor }}</td>
             <td><span class="predikat-pill pred-{{ item.predikat }}" style="font-size:.7rem;padding:1px 10px;border-width:1px">{{ item.predikat }}</span></td>
             <td class="text-center">
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus" onclick="konfirmasiHapus({{ item.pk }}, '{{ item.atlet.nama_atlet|escapejs }}')"><i class="bi bi-trash3-fill"></i></button>
-              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="cetakAuditBasketLevel('L4','Speed &amp; Agility','{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}','{{ item.gender }}','{{ item.timestamp|date:"d/m/Y H:i" }}',{{ item.total_skor|stringformat:'f' }},'{{ item.predikat }}',[['Sprint',{{ item.score_sprint|stringformat:'f' }}],['Lane Agility',{{ item.score_agility|stringformat:'f' }}],['COD',{{ item.score_cod|stringformat:'f' }}],['Lateral Speed',{{ item.score_defense|stringformat:'f' }}],['Dribble Agility',{{ item.score_dribbling|stringformat:'f' }}],['Yo-Yo',{{ item.score_conditioning|stringformat:'f' }}]])" title="Cetak laporan audit"><i class="bi bi-printer-fill"></i></button>
+              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="window.print()" title="Cetak"><i class="bi bi-printer-fill"></i></button>
               <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 ms-1" title="Kirim WhatsApp"
                 onclick="kirimWARow('{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}',{{ item.total_skor|stringformat:'f' }},'{{ item.predikat }}','{{ item.timestamp|date:"d/m/Y H:i" }}','{{ item.atlet.pelatih.profil_pelatih.no_hp|default:""|escapejs }}')"><i class="bi bi-whatsapp"></i></button>
             </td>
           </tr>
           {% empty %}
-          <tr><td colspan="14" class="text-center mono" style="color:var(--text-faint);padding:30px;font-size:.75rem">🏀 Belum ada data audit L4 Basketball. Simpan audit pertama.</td></tr>
+          <tr><td colspan="13" class="text-center mono" style="color:var(--text-faint);padding:30px;font-size:.75rem">🏀 Belum ada data audit L4 Basketball. Simpan audit pertama.</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -214,7 +214,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
 const HAPUS_URL = "{% url 'basketball:hapus_l4' 0 %}";
 const RUB = JSON.parse(document.getElementById('rubrik-data').textContent);
 const TH = RUB.tables, BAND = RUB.band, YOUTH_SKOR = RUB.youth, SP = RUB.pillars;
-const CFG = {"PIL": [{"k": "sprint", "t": "Sprint", "s": "30 m dan ¾ court (22,9 m)", "ic": "bi-lightning-fill", "inputs": [{"f": "sprint_30m_detik", "lb": "Sprint 30 m", "ph": "4.2", "u": "dtk", "st": 0.01}, {"f": "sprint_court_detik", "lb": "¾ Court", "ph": "3.3", "u": "dtk", "st": 0.01}], "rows": [{"id": "sp30", "u": "dtk"}, {"id": "spct", "u": "dtk", "rs": "¾ Court Sprint (22,9 m)"}], "why": "Fast break, transisi bertahan, dan memenangi bola lepas ditentukan percepatan 0–20 m. ¾ court adalah tes standar combine basket; 30 m mengukur kecepatan maksimal. Keduanya dirata-rata bila terisi.", "sop": ["Alat: stopwatch/timing gate, kerucut, lintasan datar.", "Start dari posisi berdiri, kaki depan di belakang garis, tanpa aba-aba mundur.", "30 m: catat waktu garis 30 m. ¾ court: 22,9 m dari baseline ke garis free-throw seberang.", "2–3 percobaan, istirahat 2–3 menit, ambil terbaik."], "reko": {"low": ["Akselerasi 10–20 m 6×, istirahat penuh", "Wall drill & A-skip 3×20 m", "Sled/resisted sprint ringan"], "mid": ["Sprint 30 m 6×, istirahat 2 menit", "Resisted sprint 3×20 m", "Transisi: sprint–stop–sprint"], "high": ["Pertahankan sprint maksimal 1×/minggu", "Sprint dengan bola (dribble sprint) untuk transfer"]}}, {"k": "agility", "t": "Lane Agility", "s": "NBA Lane Agility Drill (dtk)", "ic": "bi-shuffle", "inputs": [{"f": "lane_agility_detik", "lb": "Lane Agility", "ph": "11.2", "u": "dtk", "st": 0.01}], "rows": [{"id": "lane", "u": "dtk"}], "why": "Mengukur gerak lateral–mundur–maju dalam area cat (lane), mirip kebutuhan bertahan satu lawan satu dan close-out.", "sop": ["Alat: lane 4,9 × 5,8 m (garis cat), 4 kerucut/penanda, stopwatch.", "Start di sudut baseline kiri; sprint ke garis free-throw, slide ke kanan, mundur, slide balik (mengelilingi lane) sesuai pola resmi drill.", "Tidak boleh menyilang kaki saat slide; sentuh garis di tiap titik.", "2 percobaan, ambil terbaik. Catat detik hingga 0,01."], "reko": {"low": ["Defensive slide 3×20 dtk", "Drill 4-cone berpola", "Deceleration: stop cepat 3×5"], "mid": ["Lane agility 4× dengan istirahat 90 dtk", "Reaksi: mirror drill 3×20 dtk", "Close-out & recover 3×6"], "high": ["Pertahankan dengan drill defensif 2×/minggu", "Reaktif: agility dengan isyarat visual/bola"]}}, {"k": "cod", "t": "Change of Direction", "s": "T-Test (dtk)", "ic": "bi-signpost-split-fill", "inputs": [{"f": "cod_detik", "lb": "T-Test", "ph": "9.8", "u": "dtk", "st": 0.01}], "rows": [{"id": "cod", "u": "dtk"}], "why": "Mengukur perubahan arah maju–lateral–mundur, kebutuhan cut, closeout, dan pivot. Waktu bergantung pada teknik decelerasi.", "sop": ["Alat: 4 kerucut (A start, B 9,14 m di depan; C dan D 4,57 m kiri/kanan B), stopwatch.", "Sprint A→B sentuh kerucut, slide kiri ke C, slide kanan ke D, slide kembali ke B, mundur ke A.", "Tidak menyilang kaki saat slide; sentuh tiap kerucut.", "2 percobaan, ambil terbaik."], "reko": {"low": ["Deceleration drill 3×5", "Lateral shuffle & cut 3×6", "Plant-and-cut latihan teknik"], "mid": ["T-test 4× istirahat 2 menit", "Reactive cut drill 3×6", "Pivot & jab step"], "high": ["Pertahankan 1–2×/minggu", "COD dengan bola & bek pasif"]}}, {"k": "defense", "t": "Defensive Lateral Speed", "s": "Defensive Slide 5-10-5 (dtk)", "ic": "bi-shield-fill", "inputs": [{"f": "lateral_speed_detik", "lb": "Lateral", "ph": "5.8", "u": "dtk", "st": 0.1}], "rows": [{"id": "lat", "u": "dtk", "rs": "Defensive Slide 5-10-5 (dtk)"}], "why": "Kecepatan geser lateral saat bertahan satu lawan satu: menjaga posisi di depan penyerang dan menutup jalur drive.", "sop": ["Alat: 3 garis/kerucut berjarak 4,57 m (5 yard), stopwatch.", "Defensive slide 5-10-5: start di garis tengah, slide ke satu sisi 5 yd, lalu 10 yd ke sisi lain, kembali 5 yd ke tengah; tanpa menyilang kaki.", "2 percobaan slide, ambil terbaik."], "reko": {"low": ["Defensive stance 3×30 dtk + slide 3×15 m", "Closeout drill 3×6", "Wall-sit di stance bertahan"], "mid": ["Shell drill 4v4 pelatih memberi isyarat", "Contest tanpa lompat (tangan tinggi)", "Slide + recover 4×"], "high": ["Pertahankan slide/closeout 2×/minggu", "Analisis video contest & rotasi"]}}, {"k": "dribbling", "t": "Dribble Agility", "s": "Dribble Course (dtk) + efisiensi tangan lemah", "ic": "bi-dribbble", "inputs": [{"f": "dribble_speed_dominant", "lb": "Dominan", "ph": "8.2", "u": "dtk", "st": 0.1}, {"f": "dribble_speed_weak", "lb": "Lemah", "ph": "9.8", "u": "dtk", "st": 0.1}], "rows": [{"id": "dom", "u": "dtk", "rs": "Dribble Course — tangan dominan"}, {"id": "weak", "u": "%", "rs": "Efisiensi tangan lemah (dominan ÷ lemah)"}], "why": "Kontrol bola di kecepatan dan dengan kedua tangan. Skor = 60% waktu tangan dominan + 40% efisiensi tangan lemah (waktu dominan ÷ waktu lemah × 100). Atlet dengan tangan lemah timpang mudah diblok.", "sop": ["Alat: 5 kerucut berjarak 4 m dalam garis lurus (course 20 m), stopwatch, bola.", "Dribble slalom: hanya tangan dominan, selesai di kerucut terakhir; ulangi memakai tangan lemah saja.", "Kehilangan bola/travelling = ulangi percobaan.", "Ambil waktu terbaik dari 2 percobaan tiap tangan."], "reko": {"low": ["Dribble stationary 2 bola 3×30 dtk", "Tangan lemah saja 10 menit/hari", "Crossover & between-the-legs 3×20"], "mid": ["Slalom cone dengan tangan lemah 4×", "Dribble-move combo (hesitation, in-out) 3×6", "Dribble sambil head-up (baca lapangan)"], "high": ["Pertahankan handle drill 10 menit sebelum latihan", "Handling di bawah tekanan defender"]}}, {"k": "conditioning", "t": "Conditioning", "s": "Yo-Yo Intermittent Recovery Level 1 (jarak, m)", "ic": "bi-heart-pulse-fill", "inputs": [{"f": "yoyo_jarak_m", "lb": "Jarak Total", "ph": "1240", "u": "m", "st": 20}, {"f": "yoyo_level", "lb": "Level Terakhir", "ph": "16", "u": "lvl", "st": 0.5}], "rows": [{"id": "yoyo", "u": "m", "rs": "Yo-Yo IR1 — jarak total (m)"}], "why": "Basket adalah olahraga intermiten: sprint pendek berulang dengan jeda singkat. Yo-Yo IR1 memantulkan kapasitas mengulang aksi intensitas tinggi; jarak diubah ke estimasi VO₂max (jarak × 0,0084 + 36,4).", "sop": ["Alat: lintasan 20 m + zona pemulihan 5 m, audio Yo-Yo IR1, kerucut.", "Atlet lari bolak-balik 2×20 m mengikuti bip; setelah tiap set, jog 2×5 m (10 detik).", "Peringatan pertama: lanjut; peringatan kedua (gagal ke garis) → tes berakhir.", "Catat level terakhir dan jarak total (mis. level 16.5 ≈ 1240 m). Jarak dipakai untuk skor."], "reko": {"low": ["Interval 15:15 lari 10 menit", "Aerobic base: lari ringan 20–30 menit 2×/minggu", "Pemanasan bertahap sebelum interval"], "mid": ["Interval 30:30 8–10 repetisi", "Repeated sprint 6×20 m", "Small-sided game 4v4 sebagai kondisioning"], "high": ["Pertahankan 1 sesi interval/minggu in-season", "Repeated-sprint ability dengan bola"]}}], "LBL": {"sprint": "Sprint", "agility": "Agility", "cod": "COD", "defense": "Lateral", "dribbling": "Dribble", "conditioning": "Yo-Yo"}, "GATE": 8.0, "GATE2": 7.0, "NEXT": {"ok": "LAYAK KOMPETISI — speed & agility memenuhi standar", "mid": "Kompeten (7.0–7.9) — belum siap kompetisi penuh, tajamkan pilar terlemah", "no": "belum siap kompetisi, perbaiki pilar terlemah"}, "ACC": "#facc15"};
+const CFG = {"PIL": [{"k": "shooting", "t": "Shooting", "s": "Free Throw · Mid-Range · 3-Point (%)", "ic": "bi-bullseye", "inputs": [{"f": "free_throw_pct", "lb": "Free Throw", "ph": "78", "u": "%", "st": 1}, {"f": "midrange_pct", "lb": "Mid-Range", "ph": "45", "u": "%", "st": 1}, {"f": "three_point_pct", "lb": "3-Point", "ph": "35", "u": "%", "st": 1}], "rows": [{"id": "ft", "u": "%", "rs": "Free Throw % (10 tembakan)"}, {"id": "mid", "u": "%", "rs": "Mid-Range % (10 tembakan)"}, {"id": "three", "u": "%", "rs": "3-Point % (10 tembakan)"}], "why": "Efisiensi tembakan adalah penentu utama poin. Tiga zona dirata-rata; isi minimal satu. Gunakan jumlah tembakan sama per zona agar persentase sebanding.", "sop": ["Alat: bola resmi, ring standar, pencatat.", "Free throw: 10 tembakan berurutan. Mid-range: 10 tembakan dari 5 titik (2 per titik), catch-and-shoot. 3-point: 10 tembakan dari 5 titik (2 per titik).", "Atlet boleh pemanasan 5 menit, tanpa defender.", "Catat persentase masuk per zona (masuk ÷ 10 × 100)."], "reko": {"low": ["Form shooting jarak dekat 5×10 (fokus mekanik)", "Free throw rutin 50 lemparan/hari", "Video feedback release point"], "mid": ["Catch-and-shoot dari 5 titik 5×10", "Off-dribble pull-up 3×10", "Shooting setelah kelelahan (post-conditioning)"], "high": ["Pertahankan volume 200–300 tembakan/minggu", "Shooting dengan defender dan situasi game"]}}, {"k": "dribbling", "t": "Ball Handling", "s": "Dribble Course (dtk) + efisiensi tangan lemah", "ic": "bi-dribbble", "inputs": [{"f": "dribble_speed_dominant", "lb": "Dominan", "ph": "8.2", "u": "dtk", "st": 0.1}, {"f": "dribble_speed_weak", "lb": "Lemah", "ph": "9.8", "u": "dtk", "st": 0.1}], "rows": [{"id": "dom", "u": "dtk", "rs": "Dribble Course — tangan dominan"}, {"id": "weak", "u": "%", "rs": "Efisiensi tangan lemah (dominan ÷ lemah)"}], "why": "Kontrol bola di kecepatan dan dengan kedua tangan. Skor = 60% waktu tangan dominan + 40% efisiensi tangan lemah (waktu dominan ÷ waktu lemah × 100). Atlet dengan tangan lemah timpang mudah diblok.", "sop": ["Alat: 5 kerucut berjarak 4 m dalam garis lurus (course 20 m), stopwatch, bola.", "Dribble slalom: hanya tangan dominan, selesai di kerucut terakhir; ulangi memakai tangan lemah saja.", "Kehilangan bola/travelling = ulangi percobaan.", "Ambil waktu terbaik dari 2 percobaan tiap tangan."], "reko": {"low": ["Dribble stationary 2 bola 3×30 dtk", "Tangan lemah saja 10 menit/hari", "Crossover & between-the-legs 3×20"], "mid": ["Slalom cone dengan tangan lemah 4×", "Dribble-move combo (hesitation, in-out) 3×6", "Dribble sambil head-up (baca lapangan)"], "high": ["Pertahankan handle drill 10 menit sebelum latihan", "Handling di bawah tekanan defender"]}}, {"k": "defense", "t": "Defense", "s": "Defensive Slide 5-10-5 + Contest Rate", "ic": "bi-shield-fill", "inputs": [{"f": "lateral_speed_detik", "lb": "Lateral", "ph": "5.8", "u": "dtk", "st": 0.1}, {"f": "contest_rate_pct", "lb": "Contest Rate", "ph": "65", "u": "%", "st": 1}], "rows": [{"id": "lat", "u": "dtk", "rs": "Defensive Slide 5-10-5 (dtk)"}, {"id": "cont", "u": "%", "rs": "Contest Rate % (scrimmage)"}], "why": "Kecepatan geser lateral dan disiplin menutup tembakan lawan. Contest rate = % tembakan lawan yang di-contest sah dalam 3v3/5v5 scrimmage.", "sop": ["Alat: 3 garis/kerucut berjarak 4,57 m (5 yard), stopwatch.", "Defensive slide 5-10-5: start di garis tengah, slide ke satu sisi 5 yd, lalu 10 yd ke sisi lain, kembali 5 yd ke tengah; tanpa menyilang kaki.", "Contest rate: rekam scrimmage, hitung tembakan lawan di-contest ÷ total tembakan lawan × 100 (min. 15 tembakan).", "2 percobaan slide, ambil terbaik."], "reko": {"low": ["Defensive stance 3×30 dtk + slide 3×15 m", "Closeout drill 3×6", "Wall-sit di stance bertahan"], "mid": ["Shell drill 4v4 pelatih memberi isyarat", "Contest tanpa lompat (tangan tinggi)", "Slide + recover 4×"], "high": ["Pertahankan slide/closeout 2×/minggu", "Analisis video contest & rotasi"]}}, {"k": "iq", "t": "Basketball IQ", "s": "Court Vision + Decision Speed (penilaian coach 0–10)", "ic": "bi-lightbulb-fill", "inputs": [{"f": "court_vision_score", "lb": "Court Vision", "ph": "7.5", "u": "/10", "st": 0.5}, {"f": "decision_speed", "lb": "Decision Speed", "ph": "7.0", "u": "/10", "st": 0.5}], "rows": [{"id": "court_vision_score", "u": "/10", "rs": "Court Vision (coach 0–10)"}, {"id": "decision_speed", "u": "/10", "rs": "Decision Speed (coach 0–10)"}], "why": "Membaca situasi dan memutuskan cepat: kapan passing, menembak, atau menyerang. Dinilai dari 3v2/4v3 dan scrimmage dengan rubrik terpusat.", "sop": ["Alat: lapangan, video, lembar penilaian.", "Nilai dari 10–15 possession scrimmage atau 3v2/4v3.", "Court Vision: kualitas umpan dan penemuan rekan terbuka. Decision Speed: waktu dan ketepatan memutuskan setelah menerima bola.", "Skala 1–3 (kurang), 4–5 (cukup), 6–7 (baik), 8–9 (sangat baik), 10 (elite). Idealnya dua penilai, ambil rata-rata."], "reko": {"low": ["Small-sided 3v2 dengan aturan 2 detik", "Latihan membaca help-side (video)", "Drill “baca pertahanan” 1v1 + pass"], "mid": ["4v3 transisi dengan batasan sentuhan", "Situational scrimmage (skor ketat, sisa waktu)", "Review video 10 menit/minggu"], "high": ["Pertahankan situational drill 1×/minggu", "Beri peran pengambil keputusan (playmaker) saat latihan"]}}, {"k": "conditioning", "t": "Conditioning", "s": "Yo-Yo Intermittent Recovery Level 1 (jarak, m)", "ic": "bi-heart-pulse-fill", "inputs": [{"f": "yoyo_jarak_m", "lb": "Jarak Total", "ph": "1240", "u": "m", "st": 20}, {"f": "yoyo_level", "lb": "Level Terakhir", "ph": "16", "u": "lvl", "st": 0.5}], "rows": [{"id": "yoyo", "u": "m", "rs": "Yo-Yo IR1 — jarak total (m)"}], "why": "Basket adalah olahraga intermiten: sprint pendek berulang dengan jeda singkat. Yo-Yo IR1 memantulkan kapasitas mengulang aksi intensitas tinggi; jarak diubah ke estimasi VO₂max (jarak × 0,0084 + 36,4).", "sop": ["Alat: lintasan 20 m + zona pemulihan 5 m, audio Yo-Yo IR1, kerucut.", "Atlet lari bolak-balik 2×20 m mengikuti bip; setelah tiap set, jog 2×5 m (10 detik).", "Peringatan pertama: lanjut; peringatan kedua (gagal ke garis) → tes berakhir.", "Catat level terakhir dan jarak total (mis. level 16.5 ≈ 1240 m). Jarak dipakai untuk skor."], "reko": {"low": ["Interval 15:15 lari 10 menit", "Aerobic base: lari ringan 20–30 menit 2×/minggu", "Pemanasan bertahap sebelum interval"], "mid": ["Interval 30:30 8–10 repetisi", "Repeated sprint 6×20 m", "Small-sided game 4v4 sebagai kondisioning"], "high": ["Pertahankan 1 sesi interval/minggu in-season", "Repeated-sprint ability dengan bola"]}}], "LBL": {"shooting": "Shooting", "dribbling": "Dribbling", "defense": "Defense", "iq": "IQ", "conditioning": "Conditioning"}, "GATE": 8.0, "GATE2": 7.0, "NEXT": {"ok": "LAYAK KOMPETISI — skill basket memenuhi standar", "mid": "Kompeten (7.0–7.9) — belum siap kompetisi penuh, tajamkan pilar terlemah", "no": "belum siap kompetisi, perbaiki pilar terlemah"}, "ACC": "#facc15"};
 const PIL = CFG.PIL, LBL = CFG.LBL, ACC = CFG.ACC;
 
 (function () {
@@ -222,7 +222,7 @@ const PIL = CFG.PIL, LBL = CFG.LBL, ACC = CFG.ACC;
   PIL.forEach((p, i) => {
     const n = p.inputs.length, c = n > 2 ? 'col-4' : n > 1 ? 'col-6' : 'col-12';
     h += `<div class="pilar-card"><div class="pilar-label"><i class="bi ${p.ic} me-1" style="color:var(--accent)"></i><div class="flex-grow-1">${i + 1}. ${p.t}<span class="pilar-tag d-block">${p.s}</span></div><span class="score-pill" id="pv_${p.k}">—</span></div><div class="row g-2">`;
-    p.inputs.forEach(f => { h += `<div class="${c}"><label class="lb">${f.lb}</label><div class="input-group input-group-sm"><input type="number" name="${f.f}" class="form-control" step="any" min="0"${f.u==='%'?' max="100"':f.u==='/10'?' max="10"':''} placeholder="${f.ph}" oninput="recalc()"><span class="input-group-text">${f.u}</span></div></div>`; });
+    p.inputs.forEach(f => { h += `<div class="${c}"><label class="lb">${f.lb}</label><div class="input-group input-group-sm"><input type="number" name="${f.f}" class="form-control" step="${f.st}" min="0" placeholder="${f.ph}" oninput="recalc()"><span class="input-group-text">${f.u}</span></div></div>`; });
     h += `</div><div class="mt-2" style="font-size:.72rem;color:var(--text-dim)"><span id="ex_${p.k}"></span></div></div>`;
   });
   document.getElementById('pilarWrap').innerHTML = h;
@@ -353,70 +353,5 @@ function kirimWARow(nama, kat, total, predikat, tgl, noHpCoach) {
 }
 recalc();
 document.addEventListener('DOMContentLoaded', function () { const sel = document.getElementById('select_atlet'); if (sel && sel.value) onAtletChange(sel); });
-</script>
-
-<script>
-/* HPCS-GUARD: cegah simpan ganda (klik berulang) */
-document.querySelectorAll('form[method="post"]').forEach(function (f) {
-  f.addEventListener('submit', function (e) {
-    if (f.dataset.sent) { e.preventDefault(); return; }
-    f.dataset.sent = '1';
-    f.querySelectorAll('button[type="submit"]').forEach(function (b) { b.disabled = true; });
-  });
-});
-</script>
-
-<script>
-/* HPCS-CETAK: laporan audit per baris riwayat (L2-L4) */
-function cetakAuditBasketLevel(lv, judul, nama, kat, gender, tgl, total, predikat, pilar) {
-  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-  var warnaPred = {ELITE: '#10b981', READY: '#f97316', DEVELOPING: '#facc15', NOVICE: '#ef4444'};
-  var warna = warnaPred[predikat] || '#6b7280';
-  var p = pilar.map(function (x) { return {n: x[0], v: parseFloat(x[1]) || 0}; });
-  var urut = p.filter(function (x) { return x.v > 0; }).sort(function (a, b) { return b.v - a.v; });
-  var kuat = urut[0], lemah = urut[urut.length - 1];
-  var tot = parseFloat(total) || 0;
-  var pctTot = Math.min(100, tot / 10 * 100).toFixed(0);
-
-  var kotak = p.map(function (x) {
-    var c = x.v >= 8 ? '#10b981' : x.v >= 6 ? '#f97316' : x.v >= 4 ? '#facc15' : '#ef4444';
-    var pct = Math.min(100, x.v / 10 * 100).toFixed(0);
-    return '<div style="flex:1;min-width:110px;text-align:center;background:#f8fafc;border:1.5px solid ' + c + ';border-radius:10px;padding:10px 6px">'
-      + '<div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px">' + esc(x.n) + '</div>'
-      + '<div style="font-size:24px;font-weight:900;color:' + c + '">' + (x.v > 0 ? x.v.toFixed(1) : '-') + '</div>'
-      + '<div style="height:4px;background:#e5e7eb;border-radius:2px;margin-top:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + c + '"></div></div></div>';
-  }).join('');
-
-  var info = [['Nama Atlet', nama], ['Kategori', kat], ['Gender', gender], ['Tanggal', tgl], ['Cabang', 'Basketball'], ['Level', lv + ' - ' + judul]].map(function (r) {
-    return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px"><div style="font-size:9px;color:#94a3b8;text-transform:uppercase">' + esc(r[0]) + '</div><div style="font-size:15px;font-weight:700;color:#0f172a;margin-top:2px">' + esc(r[1]) + '</div></div>';
-  }).join('');
-
-  var catatan = '';
-  if (kuat) { catatan += '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:10px"><span style="color:#888">Terkuat:</span> <strong style="color:#10b981">' + esc(kuat.n) + ' (' + kuat.v.toFixed(1) + ')</strong></div>'; }
-  if (lemah && lemah !== kuat) { catatan += '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:5px 10px;font-size:10px"><span style="color:#888">Prioritas:</span> <strong style="color:#ef4444">' + esc(lemah.n) + ' (' + lemah.v.toFixed(1) + ')</strong></div>'; }
-
-  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + esc(lv) + ' Basketball - ' + esc(nama) + '</title>'
-    + '<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Segoe UI,sans-serif;background:#fff;color:#111;font-size:13px}@media print{@page{margin:15mm 12mm;size:A4}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>'
-    + '<div style="background:#0f172a;color:#fff;padding:20px 28px;display:flex;justify-content:space-between;align-items:center">'
-    + '<div><div style="font-size:9px;letter-spacing:3px;color:#94a3b8;text-transform:uppercase">HIGH PERFORMANCE BASKETBALL SYSTEM</div>'
-    + '<div style="font-size:22px;font-weight:900;letter-spacing:2px">HPCS <span style="color:#f97316">BASKETBALL</span></div>'
-    + '<div style="font-size:11px;color:#cbd5e1">Audit Level ' + esc(lv.replace('L', '')) + ' - ' + esc(judul) + '</div></div>'
-    + '<div style="background:' + warna + ';color:#fff;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:800">' + esc(predikat) + '</div></div>'
-    + '<div style="padding:14px 28px;background:#f8fafc;border-bottom:1px solid #e2e8f0"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">' + info + '</div></div>'
-    + '<div style="padding:14px 28px;display:flex;align-items:center;gap:20px;background:#fff7ed;border-bottom:2px solid ' + warna + '">'
-    + '<div style="text-align:center;min-width:90px"><div style="font-size:9px;color:#555;text-transform:uppercase">Total Skor</div><div style="font-size:52px;font-weight:900;color:' + warna + '">' + tot.toFixed(1) + '</div></div>'
-    + '<div style="flex:1"><div style="height:10px;background:#e5e7eb;border-radius:5px;overflow:hidden"><div style="height:100%;width:' + pctTot + '%;background:' + warna + ';border-radius:5px"></div></div>'
-    + '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">' + catatan + '</div></div></div>'
-    + '<div style="padding:14px 28px"><div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-bottom:10px">Skor per Pilar</div>'
-    + '<div style="display:flex;gap:8px;flex-wrap:wrap">' + kotak + '</div></div>'
-    + '<div style="background:#0f172a;color:#94a3b8;padding:10px 28px;display:flex;justify-content:space-between;font-size:10px;margin-top:8px"><div>HPCS Basketball - High Performance Basketball System</div><div>' + esc(tgl) + '</div></div>'
-    + '<div style="padding:14px 28px;display:flex;justify-content:flex-end"><div style="text-align:center;min-width:180px"><div style="border-top:1px solid #374151;padding-top:6px;margin-top:40px;font-size:10px;color:#555">Coach / Pelatih<br><span style="font-size:9px;color:#94a3b8">(__________________________)</span></div></div></div>'
-    + '</body></html>';
-
-  var win = window.open('', '_blank', 'width=960,height=800');
-  if (!win) { alert('Izinkan pop-up untuk mencetak laporan.'); return; }
-  win.document.write(html); win.document.close(); win.focus();
-  win.onload = function () { setTimeout(function () { win.print(); win.onafterprint = function () { win.close(); }; }, 600); };
-}
 </script>
 {% endblock %}

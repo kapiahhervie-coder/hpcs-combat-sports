@@ -206,6 +206,7 @@ input.asim-in-bad{border-color:var(--red)!important;box-shadow:0 0 0 1px rgba(23
     <button type="button" class="btn-cam btn-cam-capture" id="btnCapture" onclick="captureScores()" disabled>
       <i class="bi bi-check-circle-fill"></i> Gunakan
     </button>
+    <button type="button" class="btn-cam" id="btnFlip" onclick="flipCam()" title="Ganti kamera depan / belakang"><i class="bi bi-arrow-repeat"></i> <span id="flipLbl">Depan</span></button>
     <button type="button" class="btn-cam btn-cam-stop" id="btnStop" onclick="stopCam()" style="display:none">
       <i class="bi bi-stop-circle"></i> Stop
     </button>
@@ -1312,7 +1313,7 @@ function toggleCamPanel(){const p=document.getElementById('camPanel'),open=p.sty
 const videoEl=document.getElementById('input_video');
 const canvasEl=document.getElementById('output_canvas');
 const ctx2d=canvasEl.getContext('2d');
-let poseInst=null,camInst=null,isRunning=false,lastT=0;
+let poseInst=null,camInst=null,isRunning=false,lastT=0,camFacing='user';
 const BUF=30,buf={rotL:[],rotR:[],ext:[],pos:[]};
 let stableScores={rotL:null,rotR:null,ext:null,pos:null};
 function rotToScore(d){return Math.min(10,Math.max(0,(d/90)*10))}
@@ -1352,9 +1353,16 @@ function onPoseResults(res){
 }
 function initPose(){poseInst=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});poseInst.setOptions({modelComplexity:0,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.55,minTrackingConfidence:0.5});poseInst.onResults(onPoseResults);}
 function startCam(){
+  canvasEl.style.transform=(camFacing==='user')?'scaleX(-1)':'none';
     if(isRunning)return;if(!poseInst)initPose();
-    camInst=new Camera(videoEl,{onFrame:async()=>{if(canvasEl.width!==videoEl.videoWidth&&videoEl.videoWidth>0)canvasEl.width=videoEl.videoWidth;if(canvasEl.height!==videoEl.videoHeight&&videoEl.videoHeight>0)canvasEl.height=videoEl.videoHeight;await poseInst.send({image:videoEl});},width:640,height:480});
+    camInst=new Camera(videoEl,{facingMode:camFacing,onFrame:async()=>{if(canvasEl.width!==videoEl.videoWidth&&videoEl.videoWidth>0)canvasEl.width=videoEl.videoWidth;if(canvasEl.height!==videoEl.videoHeight&&videoEl.videoHeight>0)canvasEl.height=videoEl.videoHeight;await poseInst.send({image:videoEl});},width:640,height:480});
     camInst.start().then(()=>{isRunning=true;document.getElementById('camOverlay').classList.add('hidden');document.getElementById('camBadges').style.display='flex';document.getElementById('camStatusBar').style.display='flex';document.getElementById('scorePreview').style.display='grid';document.getElementById('btnStart').style.display='none';document.getElementById('btnStop').style.display='inline-block';}).catch(e=>{alert('Kamera tidak bisa diakses: '+e.message);});
+}
+function flipCam(){
+  camFacing=(camFacing==='user')?'environment':'user';
+  document.getElementById('flipLbl').textContent=(camFacing==='user')?'Depan':'Belakang';
+  canvasEl.style.transform=(camFacing==='user')?'scaleX(-1)':'none';
+  if(isRunning){stopCam();setTimeout(startCam,300);}
 }
 function stopCam(){if(camInst)camInst.stop();isRunning=false;document.getElementById('camOverlay').classList.remove('hidden');document.getElementById('camBadges').style.display='none';document.getElementById('camStatusBar').style.display='none';document.getElementById('btnStart').style.display='inline-block';document.getElementById('btnStop').style.display='none';document.getElementById('btnCapture').disabled=true;ctx2d.clearRect(0,0,canvasEl.width,canvasEl.height);}
 function captureScores(){const map={'score_rot_l':stableScores.rotL,'score_rot_r':stableScores.rotR,'score_ext':stableScores.ext,'score_pos':stableScores.pos};Object.entries(map).forEach(([id,val])=>{const inp=document.getElementById(id);if(inp&&val!==null){inp.value=(Math.round(val*10)/10).toFixed(1);inp.dispatchEvent(new Event('input',{bubbles:true}));}});liveUpdate();showToast('Skor dari kamera diterapkan!','success');}

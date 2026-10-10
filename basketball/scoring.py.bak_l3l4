@@ -221,77 +221,89 @@ def skor_l2(kategori_usia, gender, bb=None, squat_1rm=None, bench_1rm=None,
 YOUTH_SKOR = 7.0   # Youth: kualitatif, otomatis 7.0 bila data terisi (kecuali penilaian coach 0–10)
 
 RUBRIK_L3 = {'SENIOR': {'Putra': {'vj': [35, 45, 55, 65],
-                      'rsi': [1.2, 1.6, 2.0, 2.4],
-                      'broad': [2.00, 2.30, 2.55, 2.80],     # sama dengan norma Broad Jump L2
-                      'throw': [4.5, 5.5, 6.5, 7.5]},        # SEMENTARA: belum bersumber, validasi pelatih
-            'Putri': {'vj': [25, 33, 41, 49],
-                      'rsi': [1.0, 1.35, 1.7, 2.05],
-                      'broad': [1.60, 1.85, 2.10, 2.30],
-                      'throw': [3.0, 3.8, 4.6, 5.4]}},       # SEMENTARA
- 'JUNIOR': {'Putra': {'vj': [30, 40, 50, 60],
-                      'rsi': [1.0, 1.4, 1.8, 2.2],
-                      'broad': [1.80, 2.10, 2.35, 2.60],
-                      'throw': [3.8, 4.7, 5.6, 6.5]},        # SEMENTARA
-            'Putri': {'vj': [22, 29, 36, 43],
-                      'rsi': [0.9, 1.2, 1.5, 1.85],
-                      'broad': [1.50, 1.75, 1.95, 2.15],
-                      'throw': [2.6, 3.3, 4.0, 4.7]}}}       # SEMENTARA
-RUBRIK_L3['ELITE'] = RUBRIK_L3['SENIOR']
-
-# L3 = POWER murni. Definisi bagian skor per pilar: field POST, kunci tabel, lo (waktu), w (bobot).
-PILAR_L3 = {
-    'jump':  [{'id': 'vj',    'field': 'vertical_jump_cm', 'key': 'vj',    'lo': False, 'w': 1}],
-    'rsi':   [{'id': 'rsi',   'field': 'rsi_value',        'key': 'rsi',   'lo': False, 'w': 1}],
-    'broad': [{'id': 'broad', 'field': 'broad_jump_m',     'key': 'broad', 'lo': False, 'w': 1}],
-    'throw': [{'id': 'throw', 'field': 'throw_jarak_m',    'key': 'throw', 'lo': False, 'w': 1}],
-}
-
-# L4 = SPEED & AGILITY. Sprint, Lane, COD dipindah dari L3 (angka norma sama).
-RUBRIK_L4 = {'SENIOR': {'Putra': {'sp30': [4.8, 4.5, 4.3, 4.1],
+                      'sp30': [4.8, 4.5, 4.3, 4.1],
                       'spct': [3.7, 3.45, 3.3, 3.15],
                       'lane': [12.0, 11.5, 11.0, 10.5],
-                      'cod': [11.0, 10.5, 10.0, 9.5],
+                      'rsi': [1.2, 1.6, 2.0, 2.4],
+                      'cod': [11.0, 10.5, 10.0, 9.5]},
+            'Putri': {'vj': [25, 33, 41, 49],
+                      'sp30': [5.3, 5.0, 4.75, 4.5],
+                      'spct': [4.1, 3.85, 3.65, 3.5],
+                      'lane': [13.0, 12.4, 11.8, 11.3],
+                      'rsi': [1.0, 1.35, 1.7, 2.05],
+                      'cod': [12.0, 11.5, 11.0, 10.5]}},
+ 'JUNIOR': {'Putra': {'vj': [30, 40, 50, 60],
+                      'sp30': [5.0, 4.7, 4.45, 4.25],
+                      'spct': [3.85, 3.6, 3.4, 3.25],
+                      'lane': [12.4, 11.9, 11.4, 10.9],
+                      'rsi': [1.0, 1.4, 1.8, 2.2],
+                      'cod': [11.5, 11.0, 10.5, 10.0]},
+            'Putri': {'vj': [22, 29, 36, 43],
+                      'sp30': [5.5, 5.2, 4.95, 4.7],
+                      'spct': [4.2, 3.95, 3.75, 3.6],
+                      'lane': [13.4, 12.8, 12.2, 11.7],
+                      'rsi': [0.9, 1.2, 1.5, 1.85],
+                      'cod': [12.4, 11.9, 11.4, 10.9]}}}
+RUBRIK_L3['ELITE'] = RUBRIK_L3['SENIOR']
+
+# Definisi bagian skor per pilar: field POST, kunci tabel, lo (waktu), w (bobot), direct (nilai coach 0-10),
+# calc (nilai turunan). Bagian tanpa 'id' tabel & bobot 0 hanya informasi (tidak dinilai).
+PILAR_L3 = {
+    'jump':    [{'id': 'vj',   'field': 'vertical_jump_cm',   'key': 'vj',   'lo': False, 'w': 1}],
+    'sprint':  [{'id': 'sp30', 'field': 'sprint_30m_detik',   'key': 'sp30', 'lo': True,  'w': 1},
+                {'id': 'spct', 'field': 'sprint_court_detik', 'key': 'spct', 'lo': True,  'w': 1}],
+    'agility': [{'id': 'lane', 'field': 'lane_agility_detik', 'key': 'lane', 'lo': True,  'w': 1}],
+    'rsi':     [{'id': 'rsi',  'field': 'rsi_value',          'key': 'rsi',  'lo': False, 'w': 1}],
+    'cod':     [{'id': 'cod',  'field': 'cod_detik',          'key': 'cod',  'lo': True,  'w': 1}],
+}
+
+RUBRIK_L4 = {'SENIOR': {'Putra': {'ft': [55, 68, 78, 86],
+                      'mid': [28, 36, 43, 50],
+                      'three': [20, 28, 34, 40],
                       'dom': [10.5, 9.5, 8.7, 8.0],
                       'weak': [75, 85, 90, 95],
                       'lat': [6.2, 5.8, 5.4, 5.0],
+                      'cont': [40, 55, 70, 85],
                       'yoyo': [800, 1200, 1600, 2000]},
-            'Putri': {'sp30': [5.3, 5.0, 4.75, 4.5],
-                      'spct': [4.1, 3.85, 3.65, 3.5],
-                      'lane': [13.0, 12.4, 11.8, 11.3],
-                      'cod': [12.0, 11.5, 11.0, 10.5],
+            'Putri': {'ft': [50, 62, 72, 80],
+                      'mid': [25, 32, 39, 45],
+                      'three': [18, 25, 31, 37],
                       'dom': [11.5, 10.5, 9.6, 8.8],
                       'weak': [75, 85, 90, 95],
                       'lat': [6.8, 6.4, 6.0, 5.6],
+                      'cont': [40, 55, 70, 85],
                       'yoyo': [520, 800, 1120, 1440]}},
- 'JUNIOR': {'Putra': {'sp30': [5.0, 4.7, 4.45, 4.25],
-                      'spct': [3.85, 3.6, 3.4, 3.25],
-                      'lane': [12.4, 11.9, 11.4, 10.9],
-                      'cod': [11.5, 11.0, 10.5, 10.0],
+ 'JUNIOR': {'Putra': {'ft': [50, 62, 72, 80],
+                      'mid': [25, 32, 39, 45],
+                      'three': [18, 25, 31, 37],
                       'dom': [11.0, 10.0, 9.2, 8.5],
                       'weak': [72, 82, 88, 93],
                       'lat': [6.5, 6.1, 5.7, 5.3],
+                      'cont': [35, 50, 65, 80],
                       'yoyo': [680, 1040, 1400, 1800]},
-            'Putri': {'sp30': [5.5, 5.2, 4.95, 4.7],
-                      'spct': [4.2, 3.95, 3.75, 3.6],
-                      'lane': [13.4, 12.8, 12.2, 11.7],
-                      'cod': [12.4, 11.9, 11.4, 10.9],
+            'Putri': {'ft': [45, 57, 67, 75],
+                      'mid': [22, 28, 35, 41],
+                      'three': [15, 21, 27, 33],
                       'dom': [12.0, 11.0, 10.1, 9.3],
                       'weak': [72, 82, 88, 93],
                       'lat': [7.0, 6.6, 6.2, 5.8],
+                      'cont': [35, 50, 65, 80],
                       'yoyo': [440, 680, 960, 1240]}}}
 RUBRIK_L4['ELITE'] = RUBRIK_L4['SENIOR']
 
-# Kunci 'defense' sekarang = Defensive Lateral Speed saja; skornya tetap di kolom score_defense.
 PILAR_L4 = {
-    'sprint':       [{'id': 'sp30',  'field': 'sprint_30m_detik',   'key': 'sp30',  'lo': True,  'w': 1},
-                     {'id': 'spct',  'field': 'sprint_court_detik', 'key': 'spct',  'lo': True,  'w': 1}],
-    'agility':      [{'id': 'lane',  'field': 'lane_agility_detik', 'key': 'lane',  'lo': True,  'w': 1}],
-    'cod':          [{'id': 'cod',   'field': 'cod_detik',          'key': 'cod',   'lo': True,  'w': 1}],
-    'defense':      [{'id': 'lat',   'field': 'lateral_speed_detik', 'key': 'lat',  'lo': True,  'w': 1}],
+    'shooting':     [{'id': 'ft',    'field': 'free_throw_pct',  'key': 'ft',    'lo': False, 'w': 1},
+                     {'id': 'mid',   'field': 'midrange_pct',    'key': 'mid',   'lo': False, 'w': 1},
+                     {'id': 'three', 'field': 'three_point_pct', 'key': 'three', 'lo': False, 'w': 1}],
     'dribbling':    [{'id': 'dom',   'field': 'dribble_speed_dominant', 'key': 'dom',  'lo': True,  'w': 0.6},
                      {'id': 'weak',  'calc': 'weakratio',               'key': 'weak', 'lo': False, 'w': 0.4}],
+    'defense':      [{'id': 'lat',   'field': 'lateral_speed_detik', 'key': 'lat',  'lo': True,  'w': 1},
+                     {'id': 'cont',  'field': 'contest_rate_pct',    'key': 'cont', 'lo': False, 'w': 1}],
+    'iq':           [{'id': 'court_vision_score', 'field': 'court_vision_score', 'direct': True, 'w': 1},
+                     {'id': 'decision_speed',     'field': 'decision_speed',     'direct': True, 'w': 1}],
     'conditioning': [{'id': 'yoyo',  'field': 'yoyo_jarak_m', 'key': 'yoyo', 'lo': False, 'w': 1}],
 }
+
 
 def band_skor_lo(nilai, ambang):
     """Tes waktu: ambang = batas maksimal [Fair, Good, Excellent, Superior]."""
@@ -335,21 +347,25 @@ def skor_pilar(parts, vals, tabel, kategori, gender):
     return _r1(total / bobot) if bobot else 0.0
 
 
-def skor_l3(kategori_usia, gender, vj=None, rsi=None, broad=None, throw=None):
-    vals = {'vertical_jump_cm': vj, 'rsi_value': rsi, 'broad_jump_m': broad, 'throw_jarak_m': throw}
+def skor_l3(kategori_usia, gender, vj=None, sp30=None, spct=None, lane=None, rsi=None, cod=None):
+    vals = {'vertical_jump_cm': vj, 'sprint_30m_detik': sp30, 'sprint_court_detik': spct,
+            'lane_agility_detik': lane, 'rsi_value': rsi, 'cod_detik': cod}
     f = lambda k: skor_pilar(PILAR_L3[k], vals, RUBRIK_L3, kategori_usia, gender)
-    return {'score_jump': f('jump'), 'score_rsi': f('rsi'), 'score_broad': f('broad'), 'score_throw': f('throw')}
+    return {'score_jump': f('jump'), 'score_sprint': f('sprint'), 'score_agility': f('agility'),
+            'score_rsi': f('rsi'), 'score_cod': f('cod')}
 
 
-def skor_l4(kategori_usia, gender, sp30=None, spct=None, lane=None, cod=None,
-            dom=None, weak=None, lat=None, yoyo_m=None):
-    vals = {'sprint_30m_detik': sp30, 'sprint_court_detik': spct, 'lane_agility_detik': lane, 'cod_detik': cod,
+def skor_l4(kategori_usia, gender, ft=None, mid=None, three=None, dom=None, weak=None,
+            lat=None, cont=None, yoyo_m=None, vision=None, decision=None):
+    """score_iq ikut dihitung di sini untuk konsistensi preview; model juga menghitungnya sendiri."""
+    vals = {'free_throw_pct': ft, 'midrange_pct': mid, 'three_point_pct': three,
             'dribble_speed_dominant': dom, 'dribble_speed_weak': weak,
-            'lateral_speed_detik': lat, 'yoyo_jarak_m': yoyo_m}
+            'lateral_speed_detik': lat, 'contest_rate_pct': cont, 'yoyo_jarak_m': yoyo_m,
+            'court_vision_score': vision, 'decision_speed': decision}
     f = lambda k: skor_pilar(PILAR_L4[k], vals, RUBRIK_L4, kategori_usia, gender)
-    return {'score_sprint': f('sprint'), 'score_agility': f('agility'), 'score_cod': f('cod'),
-            'score_defense': f('defense'), 'score_dribbling': f('dribbling'),
-            'score_conditioning': f('conditioning')}
+    return {'score_shooting': f('shooting'), 'score_dribbling': f('dribbling'),
+            'score_defense': f('defense'), 'score_iq': f('iq'), 'score_conditioning': f('conditioning')}
+
 
 def payload_l3():
     return {'tables': RUBRIK_L3, 'band': BAND_L2, 'youth': YOUTH_SKOR, 'pillars': PILAR_L3}

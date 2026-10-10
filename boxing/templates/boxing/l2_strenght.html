@@ -698,7 +698,7 @@
                             </div>
                             <div class="col-4">
                                 <label class="small text-white-50 mb-1">BB (kg)</label>
-                                <input type="number" id="input_berat"
+                                <input type="number" id="input_berat" min="1"
                                        class="form-control" step="0.1" placeholder="70"
                                        oninput="syncHidden(); calcBWRatio(); liveUpdate();">
                             </div>
@@ -1607,17 +1607,29 @@ function renderRubrikL2() {
 
 function g(id) { return parseFloat(document.getElementById(id).value) || 0; }
 
+// Berat badan untuk rasio 5RM: pakai nilai POSITIF pertama (input BB, lalu data atlet), jika tidak ada -> 70 kg.
+// Mencegah BB negatif/kosong (mis. -0,1) membuat skor Lower & Push menjadi 0.
+function bbAman() {
+    var ids = ['input_berat', 'h_berat'];
+    for (var i = 0; i < ids.length; i++) {
+        var el = document.getElementById(ids[i]);
+        var v = parseFloat(String(el && el.value || '').replace(',', '.'));
+        if (v > 0) return v;
+    }
+    return 70;
+}
+
 function syncHidden() {
     var kat = document.getElementById('usia_atlet');
     var gen = document.getElementById('gender_atlet');
     var brt = document.getElementById('input_berat');
     if (kat) document.getElementById('h_kategori').value = kat.value;
     if (gen) document.getElementById('h_gender').value = gen.value;
-    if (brt) document.getElementById('h_berat').value = brt.value;
+    if (brt && parseFloat(brt.value) > 0) document.getElementById('h_berat').value = brt.value;
 }
 
 function autoCalcScores() {
-    var bb = g('h_berat') || g('input_berat') || 70;
+    var bb = bbAman();
     var kat = (document.getElementById('h_kategori') || {}).value || 'ELITE';
     var gen = (document.getElementById('h_gender') || {}).value || 'Putra';
 
@@ -1662,7 +1674,7 @@ function calcTremorRatio() {
 }
 
 function calcBWRatio() {
-    var bb = g('h_berat') || g('input_berat') || 70;
+    var bb = bbAman();
     var beban = g('lower_5rm_beban');
     var ratio = bb > 0 && beban > 0 ? (beban/bb).toFixed(2) : '—';
     var el = document.getElementById('bw_ratio_display');
@@ -1782,7 +1794,8 @@ function onAtletChange(sel) {
     document.getElementById('input_nama').value = opt.getAttribute('data-nama') || opt.text.trim();
     var kat = opt.getAttribute('data-kategori') || 'Elite';
     var gen = opt.getAttribute('data-gender') || 'Putra';
-    var brt = opt.getAttribute('data-berat') || '';
+    var brt = String(opt.getAttribute('data-berat') || '').replace(',', '.');   // "25,0" (lokal ID) -> "25.0"
+    brt = parseFloat(brt) > 0 ? String(parseFloat(brt)) : '';
     var hKat = document.getElementById('h_kategori');
     var hGen = document.getElementById('h_gender');
     var hBrt = document.getElementById('h_berat');

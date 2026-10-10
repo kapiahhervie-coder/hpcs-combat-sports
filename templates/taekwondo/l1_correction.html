@@ -221,6 +221,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
       <button type="button" class="btn-cam btn-cam-capture" id="btnCapture" onclick="captureScores()" disabled>
         <i class="bi bi-check-circle-fill"></i> Gunakan
       </button>
+      <button type="button" class="btn-cam" id="btnFlip" onclick="flipCam()" title="Ganti kamera depan / belakang"><i class="bi bi-arrow-repeat"></i> <span id="flipLbl">Depan</span></button>
       <button type="button" class="btn-cam btn-cam-stop" id="btnStop" onclick="stopCam()" style="display:none">
         <i class="bi bi-stop-circle"></i> Stop
       </button>
@@ -545,6 +546,9 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
     <input type="hidden" name="kategori_usia" id="input_kategori" value="ELITE">
     <input type="hidden" name="gender" id="input_gender" value="Putra">
     <input type="hidden" name="kelas_berat" id="input_berat">
+    <input type="hidden" name="program_latihan" id="program_latihan">
+    <input type="hidden" name="profil_kondisi" id="profil_kondisi">
+    <input type="hidden" name="tgl_retest" id="tgl_retest">
 
     <div class="row g-3">
       <!-- Kolom 1: Form Input -->
@@ -579,6 +583,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri (cm)</label><input type="number" name="wblt_kiri_cm" id="f_wblt_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="score-input-1to10"><label class="cyan">Skor (Auto)</label><input type="number" id="n_ankle" class="form-control" value="0" readonly tabindex="-1"></div>
+            <div id="asim_ankle" style="display:none"></div>
           </div>
 
           <div class="card-title mt-2"><i class="bi bi-person-standing"></i> B. Static Balance (SLST Mata Tertutup)</div>
@@ -589,6 +594,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Tumpu Kiri (dtk)</label><input type="number" name="slst_kiri_detik" id="f_slst_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="score-input-1to10"><label class="cyan">Skor (Auto)</label><input type="number" id="n_balance" class="form-control" value="0" readonly tabindex="-1"></div>
+            <div id="asim_balance" style="display:none"></div>
           </div>
 
           <div class="card-title mt-2"><i class="bi bi-signpost-split"></i> C. Dynamic Balance (Y-Balance Test)</div>
@@ -612,6 +618,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             </div>
             <div class="x-small mt-2" style="color:var(--text3)">Composite: Kanan <span id="composite_kanan" class="mono">-</span>% &middot; Kiri <span id="composite_kiri" class="mono">-</span>% (referensi, belum masuk rumus skor)</div>
             <div class="score-input-1to10"><label class="cyan">Skor (Auto — asimetri ANT)</label><input type="number" id="n_ybalance" class="form-control" value="0" readonly tabindex="-1"></div>
+            <div id="asim_ybalance" style="display:none"></div>
           </div>
 
           <div class="card-title mt-2"><i class="bi bi-arrow-left-right"></i> D. Seated Trunk Rotation</div>
@@ -622,6 +629,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri</label><input type="number" name="trunk_rotasi_kiri_derajat" id="f_trunk_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="score-input-1to10"><label class="cyan">Skor (Auto)</label><input type="number" id="n_trunk" class="form-control" value="0" readonly tabindex="-1"></div>
+            <div id="asim_trunk" style="display:none"></div>
           </div>
 
           <div class="card-title mt-2"><i class="bi bi-arrow-repeat"></i> E. Seated Hip Internal Rotation</div>
@@ -632,6 +640,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri</label><input type="number" name="hip_ir_kiri_derajat" id="f_ir_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="score-input-1to10"><label class="cyan">Skor (Auto)</label><input type="number" id="n_hip_ir" class="form-control" value="0" readonly tabindex="-1"></div>
+            <div id="asim_hip_ir" style="display:none"></div>
           </div>
 
           <div class="card-title mt-2"><i class="bi bi-arrow-counterclockwise"></i> F. Seated Hip External Rotation</div>
@@ -642,6 +651,7 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
               <div class="col-6"><label class="gold">Kiri</label><input type="number" name="hip_er_kiri_derajat" id="f_er_kiri" class="form-control" step="0.1" oninput="liveUpdate()"></div>
             </div>
             <div class="score-input-1to10"><label class="cyan">Skor (Auto)</label><input type="number" id="n_hip_er" class="form-control" value="0" readonly tabindex="-1"></div>
+            <div id="asim_hip_er" style="display:none"></div>
           </div>
 
           <div class="card-title mt-2" style="border-left-color:var(--red)"><i class="bi bi-exclamation-triangle" style="color:var(--red)"></i> G. Lumbar Extension Clearing (Safety Gate)</div>
@@ -693,9 +703,10 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
           <div style="height:300px;display:flex;align-items:center;justify-content:center">
             <canvas id="radarChart"></canvas>
           </div>
+          <div class="hpcs-leg"><span><i style="background:#2ecc71"></i>&ge; 7,0 baik</span><span><i style="background:#f5a623"></i>5,0&ndash;6,9 perlu perhatian</span><span><i style="background:#e74c3c"></i>&lt; 5,0 prioritas</span></div>
           <div id="narasi_panel" class="mt-3 text-start" style="display:none">
             <div class="card-title"><i class="bi bi-person-lines-fill" style="color:var(--cyan)"></i> Profil Kondisi Atlet</div>
-            <div id="narasi_box" style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.2);border-radius:10px;padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text2);text-align:left;max-height:320px;overflow-y:auto;"></div>
+            <div id="narasi_box" style="background:rgba(0,210,255,0.05);border:1px solid rgba(0,210,255,0.2);border-radius:10px;padding:12px 14px;font-size:11px;line-height:1.7;color:var(--text2);text-align:left;"></div>
           </div>
         </div>
       </div>
@@ -741,7 +752,14 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
           {% for audit in history %}
           <tr id="row-{{ audit.id }}">
             <td class="mono x-small" style="color:var(--text3)">{{ audit.timestamp|date:"d/m/Y H:i" }}</td>
-            <td class="fw-bold">{{ audit.atlet_name }}</td>
+            <td class="hpcs-td"><span class="hpcs-nm">{{ audit.atlet_name }}</span>
+              <div><span class="hpcs-chip" title="Jadwal tes ulang" data-id="{{ audit.pk }}" data-atlet="{{ audit.atlet_name }}" data-status="{{ audit.status_keputusan }}" data-iso="{{ audit.tgl_retest|date:'Y-m-d' }}" data-base="{{ audit.timestamp|date:'Y-m-d' }}" data-total="{{ audit.total_skor|default:0 }}" style="display:none"></span></div>
+              <button type="button" class="hpcs-btn" onclick="HPCS.toggleDetail({{ audit.pk }},this)"><i class="bi bi-clipboard2-pulse"></i> Profil &amp; program</button>
+              <span id="hd-{{ audit.pk }}" style="display:none" data-id="{{ audit.pk }}" data-nama="{{ audit.atlet_name }}" data-kategori="{{ audit.kategori_usia }}" data-gender="{{ audit.gender|default:audit.atlet.gender }}" data-berat="{{ audit.kelas_berat|default:audit.atlet.kelas_berat|default:'' }}"
+                    data-skor="" data-total="{{ audit.total_skor|default:0 }}" data-predikat="{{ audit.predikat }}" data-status="{{ audit.status_keputusan }}" data-lemah="{{ audit.item_terlemah }}" data-tgl="{{ audit.timestamp|date:"d/m/Y H:i" }}"
+                    data-coach="{{ audit.atlet.pelatih.get_full_name|default:audit.atlet.pelatih.username|default:'' }}"
+                    data-program="{{ audit.program_latihan|default:'' }}" data-profil="{{ audit.profil_kondisi|default:'' }}" data-base="{{ audit.timestamp|date:'Y-m-d' }}"></span>
+            </td>
             <td><span class="mono x-small" style="color:var(--cyan)">{{ audit.kategori_usia }}</span></td>
             <td><span class="bebas" style="font-size:1.2rem;color:var(--cyan)">{{ audit.total_skor }}</span></td>
             <td>
@@ -756,11 +774,15 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
             </td>
             <td class="mono x-small" style="color:var(--gold)">{{ audit.item_terlemah }}</td>
             <td class="text-center">
+              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 me-1" title="Cetak PDF" onclick="HPCS.cetak({{ audit.pk }})"><i class="bi bi-printer-fill"></i></button>
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus"
                       onclick="if(confirm('Hapus data {{ audit.atlet_name|escapejs }}?')) window.location='{% url 'taekwondo:hapus_l1_audit' audit.pk %}'">
                 <i class="bi bi-trash3-fill"></i>
               </button>
             </td>
+          </tr>
+          <tr id="hdet-{{ audit.pk }}" style="display:none">
+            <td colspan="8" style="background:rgba(148,163,184,0.05);border-left:3px solid #64748b"><div class="hpcs-detail-box" id="hdet-box-{{ audit.pk }}"></div></td>
           </tr>
           {% empty %}
           <tr><td colspan="8" class="text-center py-5" style="color:var(--text3)"><i class="bi bi-inbox fs-3 d-block mb-2"></i>Belum ada data. Simpan audit pertama Anda.</td></tr>
@@ -781,7 +803,412 @@ label.cyan{color:var(--cyan)} label.gold{color:var(--gold)}
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
 <script>
-function handlePrint(){ cetakLaporanL1(); }
+window.HPCS_CFG={level:'L1',levelNama:'Level 1 (Correction)',judulLaporan:'LAPORAN HASIL ASESMEN BIOMEKANIK',subLaporan:'Level 1 — Core Stability & Correction · Cabang Taekwondo',cabang:'Taekwondo',
+ pakaiNama:true,tanpaRegen:true,
+ pilar:[{key:'ankle',short:'Ankle Mobility',label:'Ankle Mobility (WBLT)'},{key:'balance',short:'Static Balance',label:'Static Balance (SLST)'},{key:'ybalance',short:'Y-Balance',label:'Dynamic Balance (Y-Balance)'},
+        {key:'trunk',short:'Trunk Rotation',label:'Seated Trunk Rotation'},{key:'hip_ir',short:'Hip IR',label:'Hip Internal Rotation'},{key:'hip_er',short:'Hip ER',label:'Hip External Rotation'},
+        {key:'postur',short:'Posture',label:'Fixed Plumb Line Posture'},{key:'napas',short:'Breathing',label:'Hi-Lo Breathing'}],
+ reko:function(){var o={};Object.keys(REKO_L1).forEach(function(k){o[k]={low:REKO_L1[k][1],mid:REKO_L1[k][2],high:REKO_L1[k][3]};});return o;},
+ retestMinggu:function(t){return t>=5.8?8:4;},
+ asim:[{nama:'Ankle (WBLT)',row:'asim_ankle',ki:'f_wblt_kiri',ka:'f_wblt_kanan'},{nama:'Balance (SLST)',row:'asim_balance',ki:'f_slst_kiri',ka:'f_slst_kanan'},
+       {nama:'Y-Balance (ANT)',row:'asim_ybalance',ki:'f_ybt_ant_kiri',ka:'f_ybt_ant_kanan'},{nama:'Trunk Rotation',row:'asim_trunk',ki:'f_trunk_kiri',ka:'f_trunk_kanan'},
+       {nama:'Hip IR',row:'asim_hip_ir',ki:'f_ir_kiri',ka:'f_ir_kanan'},{nama:'Hip ER',row:'asim_hip_er',ki:'f_er_kiri',ka:'f_er_kanan'}],
+ liveData:function(){
+   var gv=function(i){var e=document.getElementById(i);return e?e.value:'';};
+   var namaEl=document.querySelector('#select-atlet option:checked'), nama=(namaEl&&namaEl.value)?namaEl.textContent.trim():'';
+   if(!gv('id_atlet_hidden')||!nama){alert('Pilih atlet terlebih dahulu sebelum mencetak laporan.');return null;}
+   var pairs=[['Ankle WBLT (cm)','f_wblt'],['Single Leg Stance (detik)','f_slst'],['Y-Balance ANT (cm)','f_ybt_ant'],['Y-Balance PM (cm)','f_ybt_pm'],['Y-Balance PL (cm)','f_ybt_pl'],
+              ['Panjang tungkai (cm)','f_panjang'],['Seated Trunk Rotation (°)','f_trunk'],['Hip Internal Rotation (°)','f_ir'],['Hip External Rotation (°)','f_er']];
+   var raw=pairs.map(function(p){return {label:p[0],kanan:gv(p[1]+'_kanan'),kiri:gv(p[1]+'_kiri')};});
+   var sel=function(i){var e=document.getElementById(i);return e&&e.value?e.options[e.selectedIndex].textContent.trim():'';};
+   var obs=[{label:'Lumbar Extension',val:sel('f_lumbar')},{label:'Fixed Plumb Line Posture',val:sel('f_postur')},{label:'Hi-Lo Breathing',val:sel('f_napas')}];
+   var has=raw.some(function(r){return r.kanan!==''||r.kiri!=='';})||obs.some(function(o){return o.val;});
+   if(!has){alert('Belum ada data yang diisi. Isi minimal satu bagian rubrik sebelum mencetak laporan.');return null;}
+   var n=function(i){return parseFloat(gv(i))||0;};
+   var items={ankle:n('n_ankle'),balance:n('n_balance'),ybalance:n('n_ybalance'),trunk:n('n_trunk'),hip_ir:n('n_hip_ir'),hip_er:n('n_hip_er'),postur:n('n_postur'),napas:n('n_napas')};
+   var total=parseFloat(document.getElementById('res_total').textContent)||0, pred=document.getElementById('res_predikat').textContent||'NOVICE', status=document.getElementById('res_status').textContent||'KUNING';
+   return {nama:nama,kategori:gv('input_kategori')||'ELITE',gender:gv('input_gender')||'Putra',berat:gv('input_berat'),pil:pilL1(items),total:total,predikat:pred,info:infoSnapshotL1(items,total,pred,status),raw:raw,obs:obs,coach:''};
+ }};
+</script>
+<script>
+/* ===== HPCS KIT (dipakai L2, L3, L4) — konfigurasi per level ada di window.HPCS_CFG ===== */
+var HPCS = (function(){
+  var CFG = window.HPCS_CFG || {pilar:[]};
+  var BM = 5.0, BK = 7.0;                                   // <5 merah, <7 kuning
+  var ST = {bad:'#e74c3c', warn:'#f5a623', ok:'#2ecc71'};
+  var TXT = {ok:'Baik', warn:'Perlu perhatian', bad:'Prioritas perbaikan'};
+
+  /* ---------- util ---------- */
+  function esc(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function num(x){var v=parseFloat(String(x).replace(',','.'));return isNaN(v)?0:v;}
+  function fmt(v){return (+v).toFixed(1).replace('.',',');}
+  function plain(h){return String(h||'').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&#?\w+;/g,' ').replace(/\s+/g,' ').trim();}
+  function jsonAman(t){try{return t?JSON.parse(t):null;}catch(e){return null;}}
+  function isoLokal(d){var p=function(n){return String(n).padStart(2,'0');};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+  function parseISO(s){var a=String(s).split('-').map(Number);return new Date(a[0],a[1]-1,a[2]);}
+  function fmtTgl(d){return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});}
+  function sisaHari(d){var t=new Date();return Math.round((d-new Date(t.getFullYear(),t.getMonth(),t.getDate()))/864e5);}
+  function statusSkor(v){return v<BM?'bad':v<BK?'warn':'ok';}
+  function warnaSkor(v){return v>0?ST[statusSkor(v)]:'rgba(255,255,255,0.25)';}
+  function labelPilar(k){for(var i=0;i<CFG.pilar.length;i++){if(CFG.pilar[i].key===k)return CFG.pilar[i].label||k;}return k;}
+  function nama(k){for(var i=0;i<CFG.pilar.length;i++){if(CFG.pilar[i].key===k)return CFG.pilar[i].short||k;}return k;}
+  function idxPilar(k){for(var i=0;i<CFG.pilar.length;i++){if(CFG.pilar[i].key===k)return i;}return 99;}
+
+  /* ---------- prioritas, program, profil ---------- */
+  function urutPrioritas(pil){
+    return pil.filter(function(p){return p.val>0;}).sort(function(a,b){
+      var d=Math.round(a.val*10)-Math.round(b.val*10);
+      return d!==0?d:idxPilar(a.nama)-idxPilar(b.nama);
+    });
+  }
+  function prima(pil){
+    var f=pil.filter(function(p){return p.val>0;}); if(f.length<2) return false;
+    var vs=f.map(function(p){return p.val;}), mn=Math.min.apply(null,vs), mx=Math.max.apply(null,vs);
+    return (mx-mn)<=0.5&&mn>=8.5;
+  }
+  function bangunProgram(pil){
+    var db=(typeof CFG.reko==='function'?CFG.reko():{})||{};
+    var urut=urutPrioritas(pil);
+    var pick=urut.filter(function(p){return p.val<BK;}).slice(0,4);
+    if(pick.length<2) pick=urut.slice(0,2);
+    return pick.map(function(p,i){
+      var d=db[p.nama]; if(!d) return null;
+      var st=statusSkor(p.val);
+      return {nama:p.nama,skor:+p.val.toFixed(1),status:st,label:st==='ok'?'PEMELIHARAAN':'PRIORITAS '+(i+1),
+              latihan:(st==='bad'?d.low:st==='warn'?d.mid:d.high).slice()};
+    }).filter(Boolean);
+  }
+  function hitungRetest(total,base,minggu){
+    var m=minggu||(CFG.retestMinggu?CFG.retestMinggu(total):6), b=base||new Date();
+    var d=new Date(b.getFullYear(),b.getMonth(),b.getDate()+m*7);
+    return {minggu:m,date:d,iso:isoLokal(d)};
+  }
+  function bangunProfil(pil,total,pred,info,base){
+    var filled=pil.filter(function(p){return p.val>0;});
+    var kuat=[].concat(filled).sort(function(a,b){return b.val-a.val;}).slice(0,2);
+    var lemah=prima(filled)?[]:urutPrioritas(filled).slice(0,2);
+    info=info||{};
+    var rt=info.noRetest?{minggu:0,iso:''}:hitungRetest(total,base,info.minggu);
+    var f=function(p){return {nama:p.nama,skor:+p.val.toFixed(1)};};
+    return {total:+(+total).toFixed(1),predikat:pred,layak:!!info.layak,verdict:info.verdict||'',fokus:info.fokus||'',
+            kuat:kuat.map(f),lemah:lemah.map(f),asimetri:[],skor:pil.map(function(p){return {nama:p.nama,val:+(+p.val).toFixed(1)};}),retest_minggu:rt.minggu,retest_tgl:rt.iso};
+  }
+  /* ---------- asimetri kiri-kanan (CFG.asim) ---------- */
+  var AW=10, AR=15;
+  function hitungAsimetri(a,b){
+    if(isNaN(a)||isNaN(b)||a<=0||b<=0) return null;
+    var p=Math.abs(a-b)/Math.max(a,b)*100;
+    return {persen:p,lemah:a<b?'kiri':'kanan',status:p>AR?'bad':p>=AW?'warn':'ok'};
+  }
+  function ambilAsimetri(){
+    var v=function(id){var e=document.getElementById(id);return e?parseFloat(String(e.value).replace(',','.')):NaN;};
+    return (CFG.asim||[]).map(function(o){o.info=hitungAsimetri(v(o.ki),v(o.ka));return o;});
+  }
+  function tampilAsimetri(){
+    ambilAsimetri().forEach(function(o){
+      var el=document.getElementById(o.row), iK=document.getElementById(o.ki), iR=document.getElementById(o.ka);
+      [iK,iR].forEach(function(i){if(i)i.classList.remove('hpcs-in-warn','hpcs-in-bad');});
+      if(!el) return;
+      if(!o.info){el.style.display='none';return;}
+      var i=o.info,p=i.persen.toFixed(0);
+      el.className='hpcs-asim hpcs-asim-'+i.status; el.style.display='block';
+      el.innerHTML=i.status==='ok'?'&#10003; Simetris &mdash; selisih '+p+'%'
+        :(i.status==='warn'?'&#9888; ':'&#9940; ')+'Asimetri '+p+'% &mdash; sisi '+i.lemah+' lebih lemah &middot; '+(i.status==='warn'?'waspada':'risiko cedera');
+      if(i.status!=='ok'){(i.lemah==='kiri'?iK:iR).classList.add('hpcs-in-'+i.status);}
+    });
+  }
+  function bangunAsimetri(){
+    return ambilAsimetri().filter(function(a){return a.info&&a.info.status!=='ok';}).map(function(a){
+      return {nama:a.nama,persen:+a.info.persen.toFixed(0),status:a.info.status,lemah:a.info.lemah,
+        latihan:['Latihan unilateral: mulai dari sisi '+a.info.lemah+' (lemah), volume sisi kuat disamakan',
+                 'Re-tes '+a.nama+' tiap 2 minggu sampai selisih < '+AW+'%']};
+    });
+  }
+  /* simpan ke field tersembunyi -> ikut ter-submit & tersimpan di History */
+  function simpanSnapshot(pil,total,pred,info){
+    var ip=document.getElementById('program_latihan'), ik=document.getElementById('profil_kondisi'), ir=document.getElementById('tgl_retest');
+    if(!ip||!ik||!ir) return;
+    info=info||{};
+    var filled=pil.filter(function(p){return p.val>0;});
+    if(!filled.length){ip.value='';ik.value='';ir.value='';return;}
+    var prof=bangunProfil(pil,total,pred,info,new Date()), asim=CFG.asim?bangunAsimetri():[];
+    prof.asimetri=asim;
+    ip.value=JSON.stringify({pilar:info.noProgram?[]:bangunProgram(filled),asimetri:info.noProgram?[]:asim});
+    ik.value=JSON.stringify(prof);
+    ir.value=prof.retest_tgl;
+  }
+  function retestHTML(total,info){
+    info=info||{};
+    if(info.noRetest) return '<div class="hpcs-retest"><i class="bi bi-calendar-check"></i> <strong>Tes ulang:</strong> setelah ada izin dari tenaga kesehatan</div>';
+    var rt=hitungRetest(total,new Date(),info.minggu);
+    return '<div class="hpcs-retest"><i class="bi bi-calendar-check"></i> <strong>Jadwal Tes Ulang '+esc(CFG.level)+':</strong> '+rt.minggu+' minggu lagi (<span style="font-family:monospace">'+fmtTgl(rt.date)+'</span>)</div>';
+  }
+  function asimNarasiHTML(){
+    var l=bangunAsimetri(); if(!l.length) return '';
+    return '<div style="margin-bottom:10px;"><div style="color:#6b7280;font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9878; ASIMETRI KIRI&ndash;KANAN</div>'
+      +l.map(function(a){var c=ST[a.status];return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><div style="width:6px;height:6px;border-radius:50%;background:'+c+';flex-shrink:0;"></div><span><strong style="color:'+c+'">'+esc(a.nama)+'</strong> &mdash; selisih <span style="color:'+c+';font-weight:700">'+a.persen+'%</span>, sisi '+a.lemah+' lebih lemah'+(a.status==='bad'?' : faktor risiko cedera.':' : pantau dan koreksi unilateral.')+'</span></div>';}).join('')+'</div>';
+  }
+  /* rekomendasi urut prioritas (HTML) */
+  function rekoHTML(pil){
+    var dn=function(k){return CFG.pakaiNama?nama(k):k;};
+    var prog=bangunProgram(pil.filter(function(p){return p.val>0;}));
+    var h='<div class="hpcs-urut">Urut prioritas: skor terendah lebih dulu</div>';
+    prog.forEach(function(p){
+      var c=ST[p.status], ic={bad:'&#128308;',warn:'&#128993;',ok:'&#128994;'}[p.status];
+      h+='<div class="hpcs-reko" style="border-left-color:'+c+'"><div class="hpcs-reko-h" style="color:'+c+'">'+ic+' '+esc(dn(p.nama).toUpperCase())+' &mdash; '+p.skor.toFixed(1)+'/10<span class="hpcs-prio" style="background:'+c+'">'+p.label+'</span></div>'
+        +p.latihan.map(function(t){return '<div class="hpcs-reko-i"><span style="color:'+c+'">&#8594;</span><span>'+t+'</span></div>';}).join('')+'</div>';
+    });
+    bangunAsimetri().forEach(function(a){
+      var c=ST[a.status];
+      h+='<div class="hpcs-reko" style="border-left-color:'+c+'"><div class="hpcs-reko-h" style="color:'+c+'">&#9878; ASIMETRI '+esc(a.nama.toUpperCase())+' &mdash; '+a.persen+'%<span class="hpcs-prio" style="background:'+c+'">'+(a.status==='bad'?'RISIKO CEDERA':'WASPADA')+'</span></div>'
+        +a.latihan.map(function(t){return '<div class="hpcs-reko-i"><span style="color:'+c+'">&#8594;</span><span>'+esc(t)+'</span></div>';}).join('')+'</div>';
+    });
+    return h;
+  }
+
+  /* ---------- radar: titik berwarna + garis batas 7,0 & 5,0 ---------- */
+  function styleRadar(chart,vals){
+    if(!chart||!chart.data) return;
+    var n=vals.length, flat=function(v){var a=[];for(var i=0;i<n;i++)a.push(v);return a;};
+    var ds=chart.data.datasets;
+    ds[0].data=vals;
+    ds[0].pointBackgroundColor=vals.map(warnaSkor);
+    ds[0].pointBorderColor=vals.map(warnaSkor);
+    ds[0].pointRadius=vals.map(function(v){return v>0&&v<BK?7:4;});
+    ds[0].pointHoverRadius=9;
+    // sisipkan garis batas tepat setelah dataset atlet; dataset lain (mis. Elite) bergeser
+    var hasLine=ds.some(function(d){return d.__hpcs;});
+    if(!hasLine){
+      ds.splice(1,0,{__hpcs:1,label:'Batas 7,0',data:flat(BK),fill:false,borderColor:'rgba(245,166,35,0.55)',borderWidth:1,borderDash:[4,4],pointRadius:0},
+                    {__hpcs:1,label:'Batas 5,0',data:flat(BM),fill:false,borderColor:'rgba(231,76,60,0.55)',borderWidth:1,borderDash:[4,4],pointRadius:0});
+    }
+    var r=chart.options&&chart.options.scales&&chart.options.scales.r;
+    if(r){
+      if(!chart.__hpcsLbl){
+        var pl=r.pointLabels||{}; chart.__hpcsLbl={base:(typeof pl.color==='string'?pl.color:'rgba(255,255,255,0.5)')};
+        r.pointLabels=Object.assign({},pl,{color:function(c){var v=chart.__hpcsVals[c.index];return v>0&&v<BK?warnaSkor(v):chart.__hpcsLbl.base;}});
+      }
+      chart.__hpcsVals=vals;
+    }
+    chart.update();
+  }
+  function legendaRadarHTML(){
+    return '<div class="hpcs-leg"><span><i style="background:#2ecc71"></i>&ge; 7,0 baik</span><span><i style="background:#f5a623"></i>5,0&ndash;6,9 perlu perhatian</span><span><i style="background:#e74c3c"></i>&lt; 5,0 prioritas</span></div>';
+  }
+
+  /* ---------- Kategori usia otomatis ---------- */
+  function infoAtletHTML(kat,gender,berat,namaUsia){
+    return 'Kategori <strong>'+esc(kat||'-')+'</strong> &middot; '+esc(gender||'-')+' &middot; '+(berat?esc(berat)+' kg':'berat belum terisi')+' <span style="opacity:.7">(otomatis dari data atlet)</span>';
+  }
+
+  /* ---------- History: warna angka, chip tes ulang, panel detail ---------- */
+  function warnaiPill(sel){
+    [].slice.call(document.querySelectorAll(sel)).forEach(function(el){
+      var v=num(el.textContent); if(v>0) el.style.color=warnaSkor(v);
+    });
+  }
+  function dataRow(pk){return document.getElementById('hd-'+pk);}
+  function isiChipRetest(){
+    var chips=[].slice.call(document.querySelectorAll('.hpcs-chip[data-id]')), terbaru={};
+    chips.forEach(function(c){var a=c.dataset.atlet,i=+c.dataset.id; if(!(a in terbaru)||i>terbaru[a]) terbaru[a]=i;});
+    chips.forEach(function(c){
+      if(+c.dataset.id!==terbaru[c.dataset.atlet]||c.dataset.status==='MERAH'){c.style.display='none';return;}
+      var rt;
+      if(c.dataset.iso){rt=parseISO(c.dataset.iso);}
+      else if(c.dataset.base){rt=hitungRetest(num(c.dataset.total),parseISO(c.dataset.base)).date;}
+      else{c.style.display='none';return;}
+      var s=sisaHari(rt), cls=s<0?'bad':s<=7?'warn':'ok';
+      c.className='hpcs-chip hpcs-rc-'+cls; c.style.display='inline-flex';
+      c.innerHTML='<i class="bi bi-calendar-check"></i><span>Tes ulang '+fmtTgl(rt)+' &middot; '+(s<0?'terlambat '+(-s)+' hari':s===0?'hari ini':s+' hari lagi')+'</span>';
+    });
+  }
+  function ambilData(pk){
+    var el=dataRow(pk); if(!el) return null;
+    var d=el.dataset, sk=(d.skor||'').split(';').map(num);
+    var n=CFG.pilar.length;
+    return {el:el,d:d,id:d.id,nama:d.nama,kategori:d.kategori,gender:d.gender,berat:d.berat,
+            pil:CFG.pilar.map(function(p,i){return {nama:p.key,val:sk[i]||0};}),total:sk[n]||num(d.total),predikat:d.predikat||'',
+            tgl:d.tgl,coach:d.coach||'',program:jsonAman(d.program),profil:jsonAman(d.profil),base:d.base};
+  }
+  function lengkapiData(D){
+    var regen=false;
+    if(!D.program||!D.profil){
+      if(CFG.tanpaRegen){D.kosong=true;return D;}
+      regen=true;
+      D.program={pilar:bangunProgram(D.pil.filter(function(p){return p.val>0;}))};
+      var base=D.base?parseISO(D.base):new Date();
+      var info=(typeof CFG.infoVerdict==='function')?CFG.infoVerdict(D.pil,D.total):{};
+      D.profil=bangunProfil(D.pil,D.total,D.predikat,info,base);
+    }
+    if(D.profil&&D.profil.skor&&D.profil.skor.length){D.pil=D.profil.skor.map(function(s){return {nama:s.nama,val:s.val};});}
+    if(!D.total&&D.profil){D.total=D.profil.total||0;}
+    D.regen=regen; return D;
+  }
+  function renderDetail(D){
+    if(D.kosong){
+      var s=D.d.status||'', l=D.d.lemah||'';
+      return '<div style="grid-column:1/-1"><h6>&#128203; PROFIL &amp; PROGRAM</h6><div>Audit ini dibuat sebelum profil &amp; program disimpan. '
+        +(s?'Status keputusan: <strong>'+esc(s)+'</strong>. ':'')+(l?'Item terlemah: <strong>'+esc(l)+'</strong>. ':'')
+        +'Profil lengkap akan tersimpan otomatis pada audit berikutnya.</div></div>';
+    }
+    var P=D.profil, rt=P.retest_tgl?parseISO(P.retest_tgl):null, sisa=rt?sisaHari(rt):0;
+    var rtTxt=sisa<0?'terlambat '+(-sisa)+' hari':sisa===0?'hari ini':sisa+' hari lagi';
+    var dot=function(c){return '<span class="hpcs-dot" style="background:'+c+'"></span>';};
+    var nil=function(p){return '<span style="color:'+warnaSkor(p.skor)+';font-weight:700">'+fmt(p.skor)+'/10</span>';};
+    var asim=P.asimetri||[], pasim=(D.program.asimetri)||[];
+    var kiri='<h6>&#128100; PROFIL KONDISI ATLET</h6>'
+      +'<div style="margin-bottom:8px">'+(P.verdict?('<strong style="color:'+(P.layak?ST.ok:ST.bad)+'">'+(P.layak?'&#9989; ':'&#9940; ')+esc(P.verdict)+'</strong> &middot; '):'')+'skor '+fmt(P.total)+' ('+esc(P.predikat)+')</div>'
+      +'<div class="hpcs-sub">&#9650; KEUNGGULAN</div>'
+      +P.kuat.map(function(p){return '<div class="hpcs-it">'+dot(ST.ok)+'<span><strong>'+esc(labelPilar(p.nama))+'</strong> '+nil(p)+'</span></div>';}).join('')
+      +'<div class="hpcs-sub">&#9660; PERLU DIPERBAIKI (urut prioritas)</div>'
+      +(P.lemah.length?P.lemah.map(function(p){return '<div class="hpcs-it">'+dot(warnaSkor(p.skor))+'<span><strong>'+esc(labelPilar(p.nama))+'</strong> '+nil(p)+'</span></div>';}).join(''):'<div>Tidak ada kelemahan signifikan.</div>')
+      +(asim.length?'<div class="hpcs-sub">&#9878; ASIMETRI KIRI&ndash;KANAN</div>'+asim.map(function(a){return '<div class="hpcs-it">'+dot(ST[a.status])+'<span><strong>'+esc(a.nama)+'</strong> selisih '+a.persen+'%, sisi '+a.lemah+' lebih lemah</span></div>';}).join(''):'')
+      +(P.fokus?'<div class="hpcs-fokus">'+esc(P.fokus)+'</div>':'')
+      +'<div style="margin-top:8px"><span class="hpcs-chip hpcs-rc-'+(rt?(sisa<0?'bad':sisa<=7?'warn':'ok'):'warn')+'" style="display:inline-flex"><i class="bi bi-calendar-check"></i><span>'+(rt?'Tes ulang '+esc(CFG.level)+': '+fmtTgl(rt)+' &middot; '+rtTxt:'Tes ulang: setelah izin tenaga kesehatan')+'</span></span></div>';
+    var progItems=D.program.pilar.map(function(p){var c=ST[p.status];
+        return '<div class="hpcs-reko" style="border-left-color:'+c+'"><div class="hpcs-reko-h" style="color:'+c+'">'+esc(labelPilar(p.nama).toUpperCase())+' &mdash; '+fmt(p.skor)+'/10<span class="hpcs-prio" style="background:'+c+'">'+esc(p.label)+'</span></div>'
+          +p.latihan.map(function(t){return '<div class="hpcs-reko-i"><span style="color:'+c+'">&#8594;</span><span>'+t+'</span></div>';}).join('')+'</div>';}).join('')
+      +pasim.map(function(a){var c=ST[a.status];
+        return '<div class="hpcs-reko" style="border-left-color:'+c+'"><div class="hpcs-reko-h" style="color:'+c+'">&#9878; ASIMETRI '+esc(a.nama.toUpperCase())+' &mdash; '+a.persen+'%</div>'
+          +a.latihan.map(function(t){return '<div class="hpcs-reko-i"><span style="color:'+c+'">&#8594;</span><span>'+esc(t)+'</span></div>';}).join('')+'</div>';}).join('');
+    var kanan='<h6>&#128203; PROGRAM LATIHAN (urut prioritas)</h6>'
+      +(progItems||'<div>Tidak ada program latihan pada audit ini (lihat kesimpulan).</div>')
+      +(D.regen?'<div class="hpcs-note">Audit lama: program dihitung ulang dari skor tersimpan.</div>':'');
+    return '<div>'+kiri+'</div><div>'+kanan+'</div>';
+  }
+  function toggleDetail(pk,btn){
+    var row=document.getElementById('hdet-'+pk), box=document.getElementById('hdet-box-'+pk);
+    if(!row||!box) return;
+    if(row.style.display!=='none'){row.style.display='none';btn.innerHTML='<i class="bi bi-clipboard2-pulse"></i> Profil &amp; program';return;}
+    if(!box.dataset.done){var D=ambilData(pk); if(D){box.innerHTML=renderDetail(lengkapiData(D)); box.dataset.done='1';}}
+    row.style.display='table-row'; btn.innerHTML='<i class="bi bi-chevron-up"></i> Tutup';
+  }
+  function kirimWA(pk){
+    var D=ambilData(pk); if(!D) return;
+    var fn=window[CFG.waFn]; if(typeof fn!=='function') return;
+    fn(D.nama,D.kategori,D.total,D.predikat,D.tgl,D.d.nohp||'');
+  }
+
+  /* ---------- Laporan PDF formal ---------- */
+  function cetak(pk){
+    var D=ambilData(pk); if(!D) return;
+    D=lengkapiData(D);
+    if(D.kosong){alert('Profil & program belum tersimpan untuk audit lama ini, jadi laporan tidak dapat dibuat. Audit baru akan tersimpan lengkap.');return;}
+    cetakLaporan(D);
+  }
+  function cetakLaporan(D){
+    var P=D.profil, prog=D.program, rt=P.retest_tgl?parseISO(P.retest_tgl):null;
+    var tglSaja=String(D.tgl||'').split(' ')[0];
+    var noDok='HPCS/'+CFG.level+'/'+String(D.id).padStart(4,'0')+'/'+(tglSaja.slice(6,10)||'');
+    var barisPilar=D.pil.map(function(p,i){
+      var st=p.val>0?statusSkor(p.val):'';
+      return '<tr><td class="c">'+(i+1)+'</td><td>'+esc(labelPilar(p.nama))+'</td><td class="c"><strong>'+(p.val>0?fmt(p.val):'-')+'</strong></td>'
+        +'<td style="color:'+(st?{ok:'#1f5f3f',warn:'#7a5200',bad:'#8f1d1d'}[st]:'#555')+'">'+(st?TXT[st]:'Belum dinilai')+'</td></tr>';
+    }).join('');
+    var daftar=function(a){return a.map(function(x){return esc(labelPilar(x.nama))+' ('+fmt(x.skor)+')';}).join(', ');};
+    var itemProg=prog.pilar.map(function(p,i){
+      var c={ok:'#1f5f3f',warn:'#7a5200',bad:'#8f1d1d'}[p.status];
+      return '<tr><td class="c">'+(i+1)+'</td><td><strong>'+esc(labelPilar(p.nama))+'</strong><br><span class="sm">Skor '+fmt(p.skor)+' / 10</span></td>'
+        +'<td style="color:'+c+'"><strong>'+esc(p.label.charAt(0)+p.label.slice(1).toLowerCase())+'</strong></td>'
+        +'<td>'+p.latihan.map(function(t){return '&bull; '+esc(t);}).join('<br>')+'</td></tr>';
+    }).join('');
+    var asimTeks=(P.asimetri&&P.asimetri.length)?'<p>Ditemukan asimetri kiri&ndash;kanan pada: '+P.asimetri.map(function(a){return esc(a.nama)+' (selisih '+a.persen+'%, sisi '+a.lemah+' lebih lemah)';}).join('; ')+'. Asimetri merupakan faktor risiko cedera dan perlu dikoreksi melalui latihan unilateral.</p>':'';
+    var itemAsim=(prog.asimetri||[]).map(function(a,i){var c={ok:'#1f5f3f',warn:'#7a5200',bad:'#8f1d1d'}[a.status];
+      return '<tr><td class="c">'+(prog.pilar.length+i+1)+'</td><td><strong>Koreksi asimetri</strong><br><span class="sm">'+esc(a.nama)+' &mdash; selisih '+a.persen+'%</span></td><td style="color:'+c+'"><strong>'+(a.status==='bad'?'Risiko cedera':'Waspada')+'</strong></td>'
+        +'<td>'+a.latihan.map(function(t){return '&bull; '+esc(t);}).join('<br>')+'</td></tr>';}).join('');
+    var blokProg=(itemProg||itemAsim)?'<table><tr><th class="c" style="width:7%">No</th><th style="width:24%">Pilar</th><th style="width:17%">Prioritas</th><th>Latihan yang dianjurkan</th></tr>'+itemProg+itemAsim+'</table>':'<p>Tidak ada program latihan pada asesmen ini. Lihat kesimpulan di atas.</p>';
+    var tglRetest=rt?'Tes ulang '+esc(CFG.levelNama)+' dijadwalkan pada tanggal <strong>'+fmtTgl(rt)+'</strong> ('+P.retest_minggu+' minggu setelah asesmen) untuk menilai efektivitas program latihan di atas.':'Tes ulang dijadwalkan setelah atlet memperoleh izin dari tenaga kesehatan berwenang.';
+    var rawTabel='';
+    if(D.raw&&D.raw.length){
+      rawTabel='<p class="sm" style="margin-top:8px"><strong>Data pengukuran (kanan / kiri)</strong></p><table><tr><th>Parameter</th><th class="c" style="width:16%">Kanan</th><th class="c" style="width:16%">Kiri</th><th class="c" style="width:18%">Selisih</th></tr>'
+        +D.raw.map(function(r){var a=num(r.kanan),b=num(r.kiri),s=(a>0&&b>0)?(Math.abs(a-b)/Math.max(a,b)*100).toFixed(0)+'%':'-';
+          return '<tr><td>'+esc(r.label)+'</td><td class="c">'+(r.kanan===''||r.kanan==null?'-':esc(r.kanan))+'</td><td class="c">'+(r.kiri===''||r.kiri==null?'-':esc(r.kiri))+'</td><td class="c">'+s+'</td></tr>';}).join('')+'</table>';
+    }
+    if(D.obs&&D.obs.length){
+      rawTabel+='<p class="sm" style="margin-top:8px"><strong>Observasi klinis</strong></p><table><tr><th>Parameter</th><th>Hasil</th></tr>'
+        +D.obs.map(function(r){return '<tr><td>'+esc(r.label)+'</td><td>'+esc(r.val||'-')+'</td></tr>';}).join('')+'</table>';
+    }
+    var html='<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>Laporan Asesmen '+esc(CFG.level)+' — '+esc(D.nama)+'</title><style>'
+      +'*{box-sizing:border-box;margin:0;padding:0}body{font-family:Cambria,Georgia,"Times New Roman",serif;background:#fff;color:#1a1a1a;font-size:11pt;line-height:1.5}'
+      +'.page{max-width:190mm;margin:0 auto;padding:12mm 6mm}.kop{text-align:center;padding-bottom:8px;border-bottom:3px double #1f2937;margin-bottom:14px}'
+      +'.kop .org{font-size:9pt;letter-spacing:2px;color:#444;text-transform:uppercase}.kop h1{font-size:15pt;margin:4px 0 2px;letter-spacing:.5px}.kop .sub{font-size:10pt;color:#444}'
+      +'.meta{display:flex;justify-content:space-between;font-size:9.5pt;color:#444;margin-bottom:12px}'
+      +'h2{font-size:11pt;margin:16px 0 6px;padding-bottom:3px;border-bottom:1px solid #1f2937;text-transform:uppercase;letter-spacing:.6px}'
+      +'table{width:100%;border-collapse:collapse;margin-bottom:6px;font-size:10.5pt}th,td{border:1px solid #9ca3af;padding:5px 8px;vertical-align:top;text-align:left}th{background:#f1f3f5}'
+      +'td.c,th.c{text-align:center}table.id td{border:none;border-bottom:1px dotted #bbb;padding:3px 6px}table.id td:first-child{width:34%;color:#444}.sm{font-size:9pt;color:#555}'
+      +'p{margin:4px 0;text-align:justify}.kes{border:1px solid #1f2937;border-left:5px solid #1f2937;padding:8px 12px;margin-top:8px;background:#fafafa}'
+      +'.ttd{margin-top:26px;display:flex;justify-content:flex-end}.ttd div{text-align:center;min-width:200px;font-size:10.5pt}.ttd .g{border-top:1px solid #1a1a1a;margin-top:56px;padding-top:4px}'
+      +'.foot{margin-top:18px;padding-top:6px;border-top:1px solid #9ca3af;font-size:8.5pt;color:#555;text-align:center}tr{page-break-inside:avoid}h2{page-break-after:avoid}'
+      +'@media print{@page{size:A4;margin:14mm}.page{padding:0;max-width:none}#action-bar{display:none!important}}</style></head><body><div class="page">'
+      +'<div class="kop"><div class="org">High Performance Coaching System (HPCS)</div><h1>'+esc(CFG.judulLaporan)+'</h1><div class="sub">'+esc(CFG.subLaporan)+'</div></div>'
+      +'<div class="meta"><span>No. Dokumen: '+esc(noDok)+'</span><span>Tanggal asesmen: '+esc(tglSaja)+'</span></div>'
+      +'<h2>A. Identitas Atlet</h2><table class="id">'
+      +'<tr><td>Nama atlet</td><td>: <strong>'+esc(D.nama)+'</strong></td></tr><tr><td>Kategori</td><td>: '+esc(D.kategori)+'</td></tr>'
+      +'<tr><td>Jenis kelamin</td><td>: '+esc(D.gender)+'</td></tr><tr><td>Kelas berat</td><td>: '+(D.berat?esc(D.berat)+' kg':'-')+'</td></tr>'
+      +'<tr><td>Cabang olahraga</td><td>: '+esc(CFG.cabang||'Boxing')+'</td></tr><tr><td>Pelatih</td><td>: '+esc(D.coach||'-')+'</td></tr></table>'
+      +'<h2>B. Hasil Asesmen</h2><table><tr><th class="c" style="width:8%">No</th><th>Pilar</th><th class="c" style="width:16%">Skor (0&ndash;10)</th><th style="width:30%">Keterangan</th></tr>'+barisPilar
+      +'<tr><td colspan="2"><strong>Total skor</strong></td><td class="c"><strong>'+fmt(D.total)+'</strong></td><td><strong>Predikat: '+esc(D.predikat)+'</strong></td></tr></table>'
+      +'<p class="sm">Keterangan: skor 7,0 ke atas = baik; 5,0&ndash;6,9 = perlu perhatian; di bawah 5,0 = prioritas perbaikan.</p>'+rawTabel
+      +'<h2>C. Profil Kondisi Atlet</h2>'
+      +'<p>Atlet atas nama <strong>'+esc(D.nama)+'</strong> memperoleh total skor <strong>'+fmt(D.total)+' dari 10</strong> dengan predikat <strong>'+esc(D.predikat)+'</strong> pada asesmen '+esc(CFG.levelNama)+'.</p>'
+      +'<p><strong>Keunggulan:</strong> '+(P.kuat.length?daftar(P.kuat):'-')+'.</p>'
+      +'<p><strong>Area yang perlu diperbaiki (urut prioritas):</strong> '+(P.lemah.length?daftar(P.lemah):'tidak ditemukan kelemahan yang signifikan')+'.</p>'
+      +asimTeks+'<div class="kes"><strong>Kesimpulan:</strong> '+(P.verdict?'Atlet dinyatakan <strong>'+esc(P.verdict)+'</strong>. ':'')+esc(P.fokus)+'</div>'
+      +'<h2>D. Program Latihan</h2>'+blokProg
+      +'<h2>E. Jadwal Evaluasi Ulang</h2><p>'+tglRetest+'</p>'
+      +'<div class="ttd"><div>Pelatih,<div class="g">'+esc(D.coach||'(............................................)')+'</div></div></div>'
+      +'<div class="foot">Dokumen ini dihasilkan oleh sistem HPCS sebagai panduan pelatihan dan bukan merupakan diagnosis medis.</div></div></body></html>';
+    var win=window.open('','_blank','width=960,height=800');
+    if(!win){alert('Izinkan pop-up di browser Anda.');return;}
+    win.document.write(html); win.document.close(); win.focus();
+    win.onload=function(){setTimeout(function(){win.print();},400);};
+  }
+
+  function cetakSaatIni(){
+    var L=(CFG.liveData?CFG.liveData():null); if(!L) return;
+    var info=L.info||{}, base=new Date();
+    var prof=bangunProfil(L.pil,L.total,L.predikat,info,base); prof.asimetri=bangunAsimetri();
+    var filled=L.pil.filter(function(p){return p.val>0;});
+    var prog={pilar:info.noProgram?[]:bangunProgram(filled),asimetri:info.noProgram?[]:bangunAsimetri()};
+    var p2=function(x){return String(x).padStart(2,'0');};
+    cetakLaporan({id:'DRAFT',nama:L.nama,kategori:L.kategori,gender:L.gender,berat:L.berat,pil:L.pil,total:L.total,predikat:L.predikat,
+      tgl:p2(base.getDate())+'/'+p2(base.getMonth()+1)+'/'+base.getFullYear()+' '+p2(base.getHours())+':'+p2(base.getMinutes()),
+      coach:L.coach||'',program:prog,profil:prof,raw:L.raw,obs:L.obs});
+  }
+
+  /* ---------- CSS ---------- */
+  var css='.hpcs-asim{font-family:monospace;font-size:10px;padding:5px 9px;border-radius:6px;margin:4px 0 8px;border:1px solid}.hpcs-asim-ok{color:#2ecc71;background:rgba(46,204,113,.07);border-color:rgba(46,204,113,.25)}.hpcs-asim-warn{color:#f5a623;background:rgba(245,166,35,.09);border-color:rgba(245,166,35,.35)}.hpcs-asim-bad{color:#f87171;background:rgba(231,76,60,.1);border-color:rgba(231,76,60,.4);font-weight:700}'
+   +'input.hpcs-in-warn{border-color:#f5a623!important}input.hpcs-in-bad{border-color:#e74c3c!important;box-shadow:0 0 0 1px rgba(231,76,60,.4)}'
+   +'.hpcs-leg{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:10px;color:#94a3b8;margin-top:8px}.hpcs-leg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}'
+   +'.hpcs-retest{margin-top:8px;padding:8px 10px;border:1px dashed rgba(148,163,184,.55);border-radius:8px;font-size:11px;color:#cbd5e1}'
+   +'.hpcs-urut{font-size:10px;color:#6b7280;margin-bottom:6px;letter-spacing:.5px}'
+   +'.hpcs-reko{margin-bottom:8px;padding:8px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:3px solid #64748b}'
+   +'.hpcs-reko-h{font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:5px}.hpcs-reko-i{display:flex;gap:6px;margin-bottom:3px;font-size:10.5px;color:#9ca3af}'
+   +'.hpcs-prio{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;padding:1px 7px;border-radius:99px;margin-left:6px;color:#000}'
+   +'.hpcs-chip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-family:monospace;font-size:9.5px;padding:3px 9px;border-radius:6px;border:1px solid}'
+   +'.hpcs-rc-ok{color:#67e8f9;border-color:rgba(103,232,249,.35);background:rgba(103,232,249,.07)}.hpcs-rc-warn{color:#f5a623;border-color:rgba(245,166,35,.45);background:rgba(245,166,35,.1)}'
+   +'.hpcs-rc-bad{color:#f87171;border-color:rgba(231,76,60,.5);background:rgba(231,76,60,.12);font-weight:700}'
+   +'.hpcs-btn{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-top:6px;background:rgba(148,163,184,.08);border:1px solid rgba(148,163,184,.3);border-radius:6px;padding:3px 10px;font-family:monospace;font-size:9.5px;letter-spacing:.5px;color:#67e8f9;cursor:pointer}'
+   +'.hpcs-btn:hover{background:rgba(148,163,184,.18)}.hpcs-td{min-width:190px;white-space:nowrap}.hpcs-td .hpcs-nm{display:block;font-weight:700;margin-bottom:6px}'
+   +'.hpcs-detail-box{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:14px 6px;font-size:11.5px;line-height:1.65;color:#9ca3af;white-space:normal}'
+   +'@media(max-width:820px){.hpcs-detail-box{grid-template-columns:1fr}}.hpcs-detail-box h6{font-size:10px;letter-spacing:1.5px;color:#6b7280;margin:0 0 8px}'
+   +'.hpcs-it{display:flex;gap:8px;align-items:flex-start;margin-bottom:4px}.hpcs-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:7px}'
+   +'.hpcs-sub{color:#6b7280;font-size:10px;letter-spacing:1px;margin:8px 0 3px}.hpcs-fokus{margin-top:10px;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.07)}'
+   +'.hpcs-note{font-size:10px;color:#6b7280}.hpcs-info{font-size:11px;padding:7px 10px;border-radius:8px;color:#67e8f9;background:rgba(103,232,249,.06);border:1px solid rgba(103,232,249,.2)}'
+   +'.hpcs-info.warn{color:#f5a623;background:rgba(245,166,35,.09);border-color:rgba(245,166,35,.35)}';
+  var st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
+
+  document.addEventListener('DOMContentLoaded',function(){ isiChipRetest(); if(CFG.pillSel) warnaiPill(CFG.pillSel); });
+
+  return {CFG:CFG,tampilAsimetri:tampilAsimetri,asimNarasiHTML:asimNarasiHTML,cetakSaatIni:cetakSaatIni,nama:nama,prima:prima,esc:esc,num:num,fmt:fmt,plain:plain,statusSkor:statusSkor,warnaSkor:warnaSkor,urutPrioritas:urutPrioritas,
+          bangunProgram:bangunProgram,bangunProfil:bangunProfil,simpanSnapshot:simpanSnapshot,retestHTML:retestHTML,rekoHTML:rekoHTML,
+          styleRadar:styleRadar,legendaRadarHTML:legendaRadarHTML,infoAtletHTML:infoAtletHTML,toggleDetail:toggleDetail,kirimWA:kirimWA,cetak:cetak,cetakLaporan:cetakLaporan,
+          isiChipRetest:isiChipRetest,warnaiPill:warnaiPill};
+})();
+
+</script>
+<script>
+function handlePrint(){ HPCS.cetakSaatIni(); }
 
 // Laporan cetak L1 Taekwondo — dokumen terpisah yang sudah diformat ulang
 // (bukan window.print() form mentah), mirror pola cetakAudit() Boxing.
@@ -969,7 +1396,7 @@ function toggleCamPanel(){const p=document.getElementById('camPanel'),open=p.sty
 const videoEl=document.getElementById('input_video');
 const canvasEl=document.getElementById('output_canvas');
 const ctx2d=canvasEl.getContext('2d');
-let poseInst=null,camInst=null,isRunning=false,lastT=0;
+let poseInst=null,camInst=null,isRunning=false,lastT=0,camFacing='user';
 const BUF=30,buf={trunk:[],hipir:[],hiper:[]};
 let stableDeg={trunk:null,hipir:null,hiper:null};
 function angleBetween(A,B,C){const r=Math.atan2(C.y-B.y,C.x-B.x)-Math.atan2(A.y-B.y,A.x-B.x);let a=Math.abs(r*180/Math.PI);return a>180?360-a:a;}
@@ -1006,8 +1433,15 @@ function onPoseResults(res){
 function initPose(){poseInst=new Pose({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/pose/${f}`});poseInst.setOptions({modelComplexity:0,smoothLandmarks:true,enableSegmentation:false,minDetectionConfidence:0.55,minTrackingConfidence:0.5});poseInst.onResults(onPoseResults);}
 function startCam(){
   if(isRunning)return;if(!poseInst)initPose();
-  camInst=new Camera(videoEl,{onFrame:async()=>{if(canvasEl.width!==videoEl.videoWidth&&videoEl.videoWidth>0)canvasEl.width=videoEl.videoWidth;if(canvasEl.height!==videoEl.videoHeight&&videoEl.videoHeight>0)canvasEl.height=videoEl.videoHeight;await poseInst.send({image:videoEl});},width:640,height:480});
+  canvasEl.style.transform=(camFacing==='user')?'scaleX(-1)':'none';
+  camInst=new Camera(videoEl,{facingMode:camFacing,onFrame:async()=>{if(canvasEl.width!==videoEl.videoWidth&&videoEl.videoWidth>0)canvasEl.width=videoEl.videoWidth;if(canvasEl.height!==videoEl.videoHeight&&videoEl.videoHeight>0)canvasEl.height=videoEl.videoHeight;await poseInst.send({image:videoEl});},width:640,height:480});
   camInst.start().then(()=>{isRunning=true;document.getElementById('camOverlay').classList.add('hidden');document.getElementById('camBadges').style.display='flex';document.getElementById('camStatusBar').style.display='flex';document.getElementById('scorePreview').style.display='grid';document.getElementById('btnStart').style.display='none';document.getElementById('btnStop').style.display='inline-block';}).catch(e=>{alert('Kamera tidak bisa diakses: '+e.message);});
+}
+function flipCam(){
+  camFacing=(camFacing==='user')?'environment':'user';
+  document.getElementById('flipLbl').textContent=(camFacing==='user')?'Depan':'Belakang';
+  canvasEl.style.transform=(camFacing==='user')?'scaleX(-1)':'none';
+  if(isRunning){stopCam();setTimeout(startCam,300);}
 }
 function stopCam(){if(camInst)camInst.stop();isRunning=false;document.getElementById('camOverlay').classList.remove('hidden');document.getElementById('camBadges').style.display='none';document.getElementById('camStatusBar').style.display='none';document.getElementById('btnStart').style.display='inline-block';document.getElementById('btnStop').style.display='none';document.getElementById('btnCapture').disabled=true;ctx2d.clearRect(0,0,canvasEl.width,canvasEl.height);}
 function captureScores(){
@@ -1098,7 +1532,8 @@ function onAtletChange(sel) {
   document.getElementById('input_nama').value = opt.dataset.nama || '';
   document.getElementById('input_kategori').value = opt.dataset.kategori || 'ELITE';
   document.getElementById('input_gender').value = opt.dataset.gender || 'Putra';
-  document.getElementById('input_berat').value = opt.dataset.berat || '';
+  var _b = parseFloat(String(opt.dataset.berat || '').replace(',', '.'));
+  document.getElementById('input_berat').value = _b > 0 ? String(_b) : '';
   liveUpdate();
 }
 
@@ -1250,6 +1685,7 @@ const REKO_L1 = {
 };
 
 function liveUpdate() {
+  HPCS.tampilAsimetri();
   const kat = document.getElementById('input_kategori')?.value || 'ELITE';
 
   const wblt = skorAnkle(g('f_wblt_kanan'), g('f_wblt_kiri'), kat);
@@ -1309,8 +1745,7 @@ function liveUpdate() {
   document.getElementById('rubrikNyeriBadge').style.display = (status === 'MERAH') ? 'inline-flex' : 'none';
 
   if (radarChart) {
-    radarChart.data.datasets[0].data = vals;
-    radarChart.update();
+    HPCS.styleRadar(radarChart, vals);
   }
 
   // Panel "Profil Kondisi Atlet" & "Rekomendasi HPCS" cuma tampil kalau
@@ -1329,7 +1764,25 @@ function liveUpdate() {
   } else {
     document.getElementById('narasi_panel').style.display = 'none';
     document.getElementById('reko_panel').style.display = 'none';
+    HPCS.simpanSnapshot([], 0, '', {});
   }
+}
+
+function pilL1(items) { return Object.keys(items).map(function(k){ return {nama:k, val:items[k]}; }); }
+function infoSnapshotL1(items, total, pred, status) {
+  if (status === 'MERAH') return {layak:false, verdict:'MERAH — Lumbar nyeri: rujuk tenaga kesehatan',
+    fokus:'Penilaian dihentikan. Atlet wajib dirujuk ke tenaga kesehatan berwenang sebelum tes/latihan lanjutan. Ini bukan diagnosis medis.', noProgram:true, noRetest:true};
+  var pil = pilL1(items).filter(function(p){return p.val>0;});
+  var l = HPCS.urutPrioritas(pil).slice(0,2), L = function(p){ return p ? HPCS.nama(p.nama) : '-'; };
+  var layakDasar = (pred === 'ELITE' || pred === 'READY');
+  var semuaPrima = Object.keys(items).every(function(k){ return items[k] >= 8; });
+  var fokus = semuaPrima ? 'Pertahankan performa di semua pilar. Atlet siap masuk L2 Strength.'
+    : layakDasar ? 'Kontrol biomekanik cukup baik. Tetap latih ' + L(l[0]) + ' selama transisi ke L2.'
+    : 'Jalankan korektif 4–6 minggu, fokus ' + L(l[0]) + ' dan ' + L(l[1]) + ', lalu retest.';
+  var hijau = (status === 'HIJAU');
+  return {layak: hijau && layakDasar,
+    verdict: hijau ? (layakDasar ? 'HIJAU — LAYAK lanjut ke L2 Strength' : 'HIJAU — lanjut program sesuai fase') : 'KUNING — perlu korektif & retest',
+    fokus: fokus, minggu: hijau ? 8 : 4};
 }
 
 function generateNarasi(items, total, pred, status) {
@@ -1351,13 +1804,13 @@ function generateNarasi(items, total, pred, status) {
     <div><span style="color:var(--text3);text-transform:uppercase;font-size:9px;letter-spacing:.5px;display:block;">Berat</span><b style="color:var(--text);">${bbAtlet ? bbAtlet + ' kg' : '—'}</b></div>
   </div>`;
 
-  function lbl(v){ return v>=8?'Baik':v>=5?'Cukup':'Kurang'; }
-  function wrn(v){ return v>=8?'var(--green)':v>=5?'var(--gold)':'var(--red)'; }
+  function lbl(v){ return v>=7?'Baik':v>=5?'Cukup':'Kurang'; }
+  function wrn(v){ return v>=7?'var(--green)':v>=5?'var(--gold)':'var(--red)'; }
 
   const entries = Object.entries(items).map(([key,val]) => ({key, nama: ITEM_LABELS[key], val}));
   const sorted = [...entries].sort((a,b) => b.val - a.val);
   const kuat = sorted.slice(0,2);
-  const lemah = sorted.slice(-2).reverse();
+  const lemah = HPCS.urutPrioritas(entries.map(e => ({nama:e.key, val:e.val, label:e.nama}))).slice(0,2).map(e => ({key:e.nama, nama:e.label, val:e.val}));   // sama dengan urutan Rekomendasi
 
   const layak = status !== 'MERAH' && (pred === 'ELITE' || pred === 'READY');
   const semuaPrima = entries.every(e => e.val >= 8);
@@ -1367,6 +1820,8 @@ function generateNarasi(items, total, pred, status) {
       <span style="color:var(--red);font-weight:700;font-size:12px;">&#128721; ${namaAtlet}</span> — Lumbar Extension NYERI (safety override).
       <div style="margin-top:6px;color:var(--text2);font-size:10.5px;">Sesuai SOP, penilaian dihentikan pada parameter ini. Atlet WAJIB dirujuk ke tenaga kesehatan berwenang sebelum tes/latihan lanjutan. Ini bukan diagnosis medis.</div>
     </div>`;
+    HPCS.simpanSnapshot(pilL1(items), total, pred, infoSnapshotL1(items, total, pred, status));
+    box.innerHTML += HPCS.retestHTML(total, infoSnapshotL1(items, total, pred, status));
     panel.style.display = 'block';
     return;
   }
@@ -1409,39 +1864,21 @@ function generateNarasi(items, total, pred, status) {
     </div>
     <div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9650; KEUNGGULAN</div>${kuatHTML}</div>
     <div style="margin-bottom:10px;"><div style="color:var(--text3);font-size:10px;margin-bottom:5px;letter-spacing:1px;">&#9660; AREA KELEMAHAN</div>${lemahHTML}</div>
+    ${HPCS.asimNarasiHTML()}
     <div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07);">
       <div style="color:var(--text3);font-size:10px;margin-bottom:6px;letter-spacing:1px;">&#128203; KESIMPULAN</div>
       ${statusStr}<br><span style="color:var(--text2);font-size:10.5px;">${fokus}</span>
     </div>`;
+  const infoSnap = infoSnapshotL1(items, total, pred, status);
+  box.innerHTML += HPCS.retestHTML(total, infoSnap);
+  HPCS.simpanSnapshot(pilL1(items), total, pred, infoSnap);
   panel.style.display = 'block';
 }
 
 function generateReko(items) {
   const panel = document.getElementById('reko_panel');
   const list = document.getElementById('reko_list');
-
-  const entries = Object.entries(items).map(([key,val]) => ({key, nama: ITEM_LABELS[key], val}));
-  const sorted = [...entries].sort((a,b) => a.val - b.val);
-  const weakest = sorted.slice(0,3);
-
-  let html = '';
-  weakest.forEach(p => {
-    const db = REKO_L1[p.key];
-    if (!db) return;
-    const tier = p.val <= 4 ? 1 : (p.val <= 7 ? 2 : 3);
-    const tips = db[tier] || db[1];
-    const col = tier === 1 ? 'var(--red)' : tier === 2 ? 'var(--gold)' : 'var(--green)';
-    const icon = tier === 1 ? '&#128308;' : tier === 2 ? '&#128993;' : '&#128994;';
-    html += `<div style="margin-bottom:10px;padding:10px;background:rgba(80,238,241,0.04);border-radius:8px;border-left:3px solid ${col};">
-      <div style="font-size:10px;font-weight:700;color:${col};letter-spacing:1px;margin-bottom:6px;">${icon} ${p.nama.toUpperCase()} — ${p.val}/10</div>`;
-    tips.forEach(t => {
-      html += `<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;font-size:10.5px;color:var(--text2);">
-        <span style="color:${col};flex-shrink:0;margin-top:1px;">&#8594;</span><span>${t}</span></div>`;
-    });
-    html += `</div>`;
-  });
-
-  list.innerHTML = html;
+  list.innerHTML = HPCS.rekoHTML(pilL1(items));     // urut prioritas: skor terendah lebih dulu
   panel.style.display = 'block';
 }
 

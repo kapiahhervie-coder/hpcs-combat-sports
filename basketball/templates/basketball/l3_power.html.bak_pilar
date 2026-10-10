@@ -5,9 +5,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* HPCS Basketball L2 — layout mengikuti Boxing L2, warna level: BLUE */
+/* HPCS Basketball L3 - layout mengikuti Boxing L3, warna level: AMBER */
 :root{--bg:#0b0f14;--bg2:#13181f;--bg3:#1a2030;--border:#252d3a;--border2:#38465a;
---accent:#60a5fa;--cyan:#60a5fa;--gold:#facc15;--green:#2ecc71;--red:#e74c3c;--blue:#60a5fa;
+--accent:#f59e0b;--cyan:#f59e0b;--gold:#facc15;--green:#2ecc71;--red:#e74c3c;--blue:#f59e0b;
 --text:#e2e8f0;--text-dim:#94a3b8;--text-faint:#4b5b70;--text2:#94a3b8;--text3:#4b5b70}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
@@ -16,7 +16,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 .header-subtitle{color:var(--text-dim);font-size:.83rem}
 .section-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);border-left:2px solid var(--accent);padding-left:10px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .card-hpcs{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px;height:100%}
-.card-hpcs.result-panel{border-color:rgba(96,165,250,.35)}
+.card-hpcs.result-panel{border-color:rgba(245,158,11,.35)}
 .sticky-panel{position:sticky;top:16px}
 .pilar-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px;transition:border-color .2s}.pilar-card:hover{border-color:var(--border2)}.pilar-card .mt-2:has(> span:empty:only-child){display:none}.pilar-card .col-12>.lb{display:none}
 .pilar-label{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px;display:flex;align-items:flex-start;gap:6px}.pilar-label .score-pill{margin-left:auto;flex-shrink:0}
@@ -26,22 +26,22 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 .form-select option{background:#0f1520}
 .input-group-text{background:#0f1520;border:1px solid var(--border2);color:var(--text-dim);font-size:.75rem}
 label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
-.score-pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.75rem;font-weight:700;background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.35);color:var(--accent)}
+.score-pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:.75rem;font-weight:700;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);color:var(--accent)}
 .total-score{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:5rem;line-height:1;color:var(--accent)}
 .predikat-pill{display:inline-block;padding:5px 22px;border-radius:30px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.25rem;letter-spacing:2px;border:2px solid}
 .pred-ELITE{border-color:var(--green);color:var(--green);background:rgba(46,204,113,.1)}
-.pred-READY{border-color:var(--accent);color:var(--accent);background:rgba(96,165,250,.1)}
+.pred-READY{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.1)}
 .pred-DEVELOPING{border-color:var(--gold);color:var(--gold);background:rgba(250,204,21,.1)}
 .pred-NOVICE{border-color:var(--red);color:var(--red);background:rgba(231,76,60,.1)}.pred-NONE{border-color:var(--border2);color:var(--text-dim);background:transparent}
-.btn-hpcs-primary{background:linear-gradient(135deg,var(--accent),#3b82f6);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:1px;border:none;padding:10px}
-.btn-nav{background:transparent;border:1px solid rgba(96,165,250,.5);color:var(--accent)}
-.btn-nav:hover{background:rgba(96,165,250,.15);color:#fff}
+.btn-hpcs-primary{background:linear-gradient(135deg,var(--accent),#d98a06);color:#000;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:1px;border:none;padding:10px}
+.btn-nav{background:transparent;border:1px solid rgba(245,158,11,.5);color:var(--accent)}
+.btn-nav:hover{background:rgba(245,158,11,.15);color:#fff}
 .rubrik-wrap{border:1px solid var(--border2);border-radius:10px;overflow:hidden;font-size:.78rem}
-.rubrik-head{background:linear-gradient(90deg,#0f2a4d,var(--accent));color:#000;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
+.rubrik-head{background:linear-gradient(90deg,#3d2600,var(--accent));color:#000;font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
 .rubrik-head>div,.rubrik-row>div{padding:9px 10px}
 .rubrik-row{border-top:1px solid var(--border)}
 .c-k2{}.c-k{color:#f08a8a;background:rgba(231,76,60,.06)}.c-c{color:#e8c870;background:rgba(250,204,21,.06)}.c-b{color:#8fe0b0;background:rgba(46,204,113,.06)}
-.note-box{background:rgba(96,165,250,.07);border-left:3px solid var(--accent);border-radius:6px;padding:8px 10px;font-size:.76rem;color:var(--text-dim);margin-top:8px}
+.note-box{background:rgba(245,158,11,.07);border-left:3px solid var(--accent);border-radius:6px;padding:8px 10px;font-size:.76rem;color:var(--text-dim);margin-top:8px}
 .ftab{padding:3px 12px;border-radius:20px;font-size:.68rem;font-weight:600;border:1px solid var(--border2);color:var(--text-dim);cursor:pointer}
 .history-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px}
 .table{--bs-table-bg:transparent;--bs-table-color:var(--text);--bs-table-hover-bg:rgba(255,255,255,.03)}
@@ -52,21 +52,21 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
 
 .filter-bar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0 0}
 .ftab{padding:3px 12px;border-radius:20px;font-size:.68rem;font-weight:600;border:1px solid var(--border2);color:var(--text-dim);text-decoration:none;text-transform:uppercase;letter-spacing:1px}
-.ftab:hover{color:#fff}.ftab-on{border-color:var(--accent);color:var(--accent);background:rgba(96,165,250,.1)}
-.narasi-box{background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.2);border-radius:10px;padding:12px 14px;font-size:.75rem;line-height:1.7;color:var(--text-dim);max-height:320px;overflow-y:auto}
+.ftab:hover{color:#fff}.ftab-on{border-color:var(--accent);color:var(--accent);background:rgba(245,158,11,.1)}
+.narasi-box{background:rgba(245,158,11,0.05);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 14px;font-size:.75rem;line-height:1.7;color:var(--text-dim);max-height:320px;overflow-y:auto}
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4 px-lg-5">
   {% if messages %}{% for msg in messages %}
-  <div class="alert alert-dismissible fade show no-print" style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3);color:var(--text)">{{ msg }}<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button></div>
+  <div class="alert alert-dismissible fade show no-print" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);color:var(--text)">{{ msg }}<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button></div>
   {% endfor %}{% endif %}
 
   <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
     <div>
-      <h1 class="header-title mb-0">HPCS Level 2: Strength</h1>
-      <p class="header-subtitle mb-1 no-print">Audit Kekuatan Basketball — Lower, Upper, Core, Single-Leg &amp; Broad Jump (Coach {{ request.user.get_full_name|default:request.user.username }})</p>
+      <h1 class="header-title mb-0">HPCS Level 3: Power</h1>
+      <p class="header-subtitle mb-1 no-print">Audit Daya Ledak Basketball — Vertical Jump, Sprint, Lane Agility, Reactive Strength & Change of Direction (Coach {{ request.user.get_full_name|default:request.user.username }})</p>
       <div class="filter-bar no-print">
         <span class="mono" style="font-size:.68rem;color:var(--text-faint)"><i class="bi bi-funnel-fill me-1"></i>FILTER:</span>
         <a href="?category=" class="ftab {% if not selected_category %}ftab-on{% endif %}">Semua</a>
@@ -86,19 +86,18 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
             <div class="row g-0 rubrik-head"><div class="col-2">Aspek &amp; Instrumen</div><div class="col text-center">Novice</div><div class="col text-center">Fair</div><div class="col text-center">Good</div><div class="col text-center">Excellent</div><div class="col text-center">Superior</div></div>
             <div id="rubrikBody"></div>
           </div>
-          <div class="note-box">Skor per pita: Novice 1.5 · Fair 3.5 · Good 5.5 · Excellent 7.5 · Superior 9.5. Lower &amp; Upper dinilai sebagai rasio terhadap berat badan (×BW). Single-Leg memakai kaki terburuk (penalti −1 poin bila selisih kiri–kanan &gt; 2 reps). Kategori <b>Youth</b> dinilai kualitatif (7.0 otomatis bila data terisi). Skor dihitung server dari tabel yang sama dengan yang tampil di sini. Ambang angka adalah norma kerja HPCS Basketball — validasi dengan data klub/federasi.</div>
+          <div class="note-box">Skor per pita: Novice 1.5 · Fair 3.5 · Good 5.5 · Excellent 7.5 · Superior 9.5. Sprint dinilai dari rata-rata tes 30 m dan ¾ court yang terisi. RSI = tinggi lompat (m) ÷ waktu kontak (dtk). Kategori <b>Youth</b> dinilai kualitatif (7.0 otomatis bila data terisi). Tes berbasis waktu: makin kecil makin baik. Skor final dihitung ulang server dari data mentah. Ambang angka adalah norma kerja HPCS Basketball — validasi dengan data klub/federasi Anda.</div>
           <div class="mt-3 pt-3" style="border-top:1px solid var(--border)">
             <div class="section-label mb-2"><i class="bi bi-clipboard2-pulse"></i>SOP &amp; Protokol Pelaksanaan</div>
             <div id="sopBody"></div>
-            <div class="note-box">Catatan Pelatih: rekam video sisi 90° untuk validasi repetisi sah. Istirahat 2–3 menit antar percobaan 1RM, pemanasan progresif, selalu dengan spotter. Junior sebaiknya memakai estimasi dari 3–5RM, bukan 1RM maksimal.</div>
           </div>
         </div>
       </div>
     </div>
     <div class="no-print d-flex gap-2 flex-wrap">
-      <a href="{% url 'basketball:l1_correction' %}" class="btn btn-nav btn-sm"><i class="bi bi-arrow-left me-1"></i>L1</a>
+      <a href="{% url 'basketball:l2_strength' %}" class="btn btn-nav btn-sm"><i class="bi bi-arrow-left me-1"></i>L2</a>
       <a href="{% url 'basketball:dashboard' %}" class="btn btn-nav btn-sm"><i class="bi bi-house-fill me-1"></i>Dashboard</a>
-      <a href="{% url 'basketball:l3_power' %}" class="btn btn-nav btn-sm">L3 <i class="bi bi-arrow-right ms-1"></i></a>
+      <a href="{% url 'basketball:l4_specific' %}" class="btn btn-nav btn-sm">L4 <i class="bi bi-arrow-right ms-1"></i></a>
       <button type="button" class="btn btn-nav btn-sm" onclick="window.print()"><i class="bi bi-printer-fill me-1"></i>Print</button>
     </div>
   </div>
@@ -113,7 +112,7 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
             <option value="">— Pilih Atlet —</option>
             {% for atlet in atlet_list %}
             <option value="{{ atlet.id }}" {% if atlet.id == atlet_id_terpilih %}selected{% endif %}
-                    data-nama="{{ atlet.nama_atlet }}" data-kategori="{{ atlet.kategori_umur }}" data-gender="{{ atlet.gender }}" data-berat="{{ atlet.kelas_berat|stringformat:'g' }}">{{ atlet.nama_atlet }}</option>
+                    data-nama="{{ atlet.nama_atlet }}" data-kategori="{{ atlet.kategori_umur }}" data-gender="{{ atlet.gender }}" data-posisi="{{ atlet.get_posisi_display|default:'-' }}">{{ atlet.nama_atlet }}</option>
             {% endfor %}
           </select>
           <div class="mono mb-2" style="font-size:.66rem;color:var(--text-faint)">{% if selected_category %}Kategori: <b style="color:var(--accent)">{{ selected_category|title }}</b> · <a href="?category=" style="color:var(--text-faint)">Reset</a>{% else %}{{ atlet_list|length }} atlet ditemukan.{% endif %}</div>
@@ -122,18 +121,18 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
           <div class="row g-2 mb-3">
             <div class="col-4"><label class="lb">Kategori</label><input type="text" class="form-control" id="disp_kategori" value="—" readonly></div>
             <div class="col-4"><label class="lb">Gender</label><input type="text" class="form-control" id="disp_gender" value="—" readonly></div>
-            <div class="col-4"><label class="lb">BB (kg)</label><input type="number" name="kelas_berat" class="form-control" step="any" placeholder="75" id="inp_bb" oninput="recalc()"></div>
+            <div class="col-4"><label class="lb">Posisi</label><input type="text" class="form-control" id="disp_posisi" value="—" readonly></div>
           </div>
-          <span class="section-label mt-3"><i class="bi bi-bar-chart-steps"></i>Data Mentah Pilar L2</span>
+          <span class="section-label mt-3"><i class="bi bi-bar-chart-steps"></i>Data Mentah Pilar L3</span>
           <div id="pilarWrap"></div>
           <label class="lb">Catatan Coach</label>
-          <textarea name="catatan" class="form-control mb-3" rows="2" placeholder="Kualitas teknik, kompensasi, sisi lemah..."></textarea>
-          <button type="submit" class="btn btn-hpcs-primary w-100 d-lg-none"><i class="bi bi-save2-fill me-1"></i>SIMPAN DATA L2</button>
+          <textarea name="catatan" class="form-control mb-3" rows="2" placeholder="Observasi teknik, kondisi lapangan, sisi lemah..."></textarea>
+          <button type="submit" class="btn btn-hpcs-primary w-100 d-lg-none"><i class="bi bi-save2-fill me-1"></i>SIMPAN DATA L3</button>
         </div>
       </div>
       <div class="col-lg-4">
         <div class="card-hpcs text-center">
-          <span class="section-label"><i class="bi bi-radar"></i>Strength Distribution Radar</span>
+          <span class="section-label"><i class="bi bi-radar"></i>Power Distribution Radar</span>
           <div style="height:320px;display:flex;align-items:center;justify-content:center;margin:8px 0"><canvas id="radarChart"></canvas></div>
           <div class="d-flex justify-content-center gap-2 flex-wrap mt-2" id="pillRow"></div>
           <div id="narasi_panel" class="text-start mt-4" style="display:none">
@@ -149,8 +148,8 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
           <div class="total-score" id="total_display">0.0</div>
           <div class="mt-2 mb-2"><span id="predikat_display" class="predikat-pill pred-NONE">NOVICE</span></div>
           <div class="mono mb-3" style="font-size:.72rem;color:var(--text-dim)" id="layak_display">Isi data untuk melihat hasil audit</div>
-          <button type="submit" class="btn btn-hpcs-primary w-100 mb-2"><i class="bi bi-save2-fill me-1"></i>SIMPAN DATA L2</button>
-          <div class="note-box text-start">Lolos ke L3 (Power) bila skor total ≥ 7.0. Skor final dihitung ulang server dari data mentah.</div>
+          <button type="submit" class="btn btn-hpcs-primary w-100 mb-2"><i class="bi bi-save2-fill me-1"></i>SIMPAN DATA L3</button>
+          <div class="note-box text-start">Naik ke L4 bila skor total ≥ 7.0. Skor 5.0–6.9 = tahan di L3; di bawah 5.0 kembali perkuat L2. Skor final dihitung ulang server dari data mentah.</div>
         </div>
       </div>
     </div>
@@ -158,19 +157,19 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
 
   <div class="history-wrap no-print mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-      <h6 class="mb-0" style="color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px"><i class="bi bi-clock-history me-1"></i>Database &amp; History Audit L2 — Strength</h6>
+      <h6 class="mb-0" style="color:var(--accent);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px"><i class="bi bi-clock-history me-1"></i>Database &amp; History Audit L3 — Power</h6>
       <div class="d-flex gap-1 align-items-center flex-wrap">
         <a href="?category=" class="ftab {% if not selected_category %}ftab-on{% endif %}">SEMUA</a>
         <a href="?category=elite" class="ftab {% if selected_category == 'elite' %}ftab-on{% endif %}">ELITE</a>
         <a href="?category=senior" class="ftab {% if selected_category == 'senior' %}ftab-on{% endif %}">SENIOR</a>
         <a href="?category=junior" class="ftab {% if selected_category == 'junior' %}ftab-on{% endif %}">JUNIOR</a>
         <a href="?category=youth" class="ftab {% if selected_category == 'youth' %}ftab-on{% endif %}">YOUTH</a>
-        <span class="badge ms-2" style="background:rgba(96,165,250,.2);color:var(--accent)">{{ history|length }} Record</span>
+        <span class="badge ms-2" style="background:rgba(245,158,11,.2);color:var(--accent)">{{ history|length }} Record</span>
       </div>
     </div>
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
-        <thead><tr><th>#</th><th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Gender</th><th>BB</th><th>Lower</th><th>Upper</th><th>Core</th><th>1-Leg</th><th>Broad</th><th>Total</th><th>Predikat</th><th class="text-center">Aksi</th></tr></thead>
+        <thead><tr><th>#</th><th>Tanggal</th><th>Atlet</th><th>Kategori</th><th>Gender</th><th>Jump</th><th>Sprint</th><th>Agility</th><th>RSI</th><th>COD</th><th>Total</th><th>Predikat</th><th class="text-center">Aksi</th></tr></thead>
         <tbody>
           {% for item in history %}
           <tr id="row-{{ item.pk }}">
@@ -179,19 +178,18 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
             <td class="fw-bold">{{ item.atlet.nama_atlet }}</td>
             <td><span class="score-pill">{{ item.kategori_usia }}</span></td>
             <td class="mono" style="color:var(--text-dim)">{{ item.gender }}</td>
-            <td class="mono" style="color:var(--text-dim)">{% if item.kelas_berat %}{{ item.kelas_berat|floatformat:1 }} kg{% else %}—{% endif %}</td>
-            <td><span class="score-pill">{{ item.score_lower|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_upper|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_core|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_single_leg|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_broad|floatformat:1 }}</span></td>
+            <td><span class="score-pill">{{ item.score_jump|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_sprint|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_agility|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_rsi|floatformat:1 }}</span></td><td><span class="score-pill">{{ item.score_cod|floatformat:1 }}</span></td>
             <td style="font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:800;color:var(--accent)">{{ item.total_skor }}</td>
             <td><span class="predikat-pill pred-{{ item.predikat }}" style="font-size:.7rem;padding:1px 10px;border-width:1px">{{ item.predikat }}</span></td>
             <td class="text-center">
               <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" title="Hapus" onclick="konfirmasiHapus({{ item.pk }}, '{{ item.atlet.nama_atlet|escapejs }}')"><i class="bi bi-trash3-fill"></i></button>
-              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="cetakAuditBasketLevel('L2','Strength','{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}','{{ item.gender }}','{{ item.timestamp|date:"d/m/Y H:i" }}',{{ item.total_skor|stringformat:'f' }},'{{ item.predikat }}',[['Lower Body',{{ item.score_lower|stringformat:'f' }}],['Upper Body',{{ item.score_upper|stringformat:'f' }}],['Core',{{ item.score_core|stringformat:'f' }}],['Single-Leg',{{ item.score_single_leg|stringformat:'f' }}],['Broad Jump',{{ item.score_broad|stringformat:'f' }}]])" title="Cetak laporan audit"><i class="bi bi-printer-fill"></i></button>
+              <button type="button" class="btn btn-sm btn-outline-info py-0 px-2 ms-1" onclick="cetakAuditBasketLevel('L3','Power','{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}','{{ item.gender }}','{{ item.timestamp|date:"d/m/Y H:i" }}',{{ item.total_skor|stringformat:'f' }},'{{ item.predikat }}',[['Vertical Jump',{{ item.score_jump|stringformat:'f' }}],['Sprint',{{ item.score_sprint|stringformat:'f' }}],['Lane Agility',{{ item.score_agility|stringformat:'f' }}],['RSI',{{ item.score_rsi|stringformat:'f' }}],['COD',{{ item.score_cod|stringformat:'f' }}]])" title="Cetak laporan audit"><i class="bi bi-printer-fill"></i></button>
               <button type="button" class="btn btn-sm btn-outline-success py-0 px-2 ms-1" title="Kirim WhatsApp"
-                onclick="kirimWARowL2('{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}',{{ item.total_skor|stringformat:'f' }},'{{ item.predikat }}','{{ item.timestamp|date:"d/m/Y H:i" }}','{{ item.atlet.pelatih.profil_pelatih.no_hp|default:""|escapejs }}')"><i class="bi bi-whatsapp"></i></button>
+                onclick="kirimWARow('{{ item.atlet.nama_atlet|escapejs }}','{{ item.kategori_usia }}',{{ item.total_skor|stringformat:'f' }},'{{ item.predikat }}','{{ item.timestamp|date:"d/m/Y H:i" }}','{{ item.atlet.pelatih.profil_pelatih.no_hp|default:""|escapejs }}')"><i class="bi bi-whatsapp"></i></button>
             </td>
           </tr>
           {% empty %}
-          <tr><td colspan="14" class="text-center mono" style="color:var(--text-faint);padding:30px;font-size:.75rem">🏀 Belum ada data audit L2 Basketball. Simpan audit pertama.</td></tr>
+          <tr><td colspan="13" class="text-center mono" style="color:var(--text-faint);padding:30px;font-size:.75rem">🏀 Belum ada data audit L3 Basketball. Simpan audit pertama.</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -209,118 +207,97 @@ label.lb{font-size:.72rem;color:var(--text-dim);margin-bottom:2px}
   </div></div></div>
 </div>
 
-{{ rubrik_l2|json_script:"rubrik-l2-data" }}
+{{ rubrik_l3|json_script:"rubrik-data" }}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const HAPUS_URL = "{% url 'basketball:hapus_l2' 0 %}";
-const RUB = JSON.parse(document.getElementById('rubrik-l2-data').textContent);
-const TH = RUB.tables, BAND = RUB.band, YOUTH_SKOR = RUB.youth, ASIM = RUB.asym_single_leg;
-
-const PIL = [
- {k:'lower', t:'Lower Body Strength', s:'Squat 1RM (× BW)', ic:'bi-arrow-down-circle-fill', u:'×BW', ratio:true, bbNeeded:true,
-  f:[['squat_1rm','Beban 1RM','120','kg',0.5]],
-  why:'Fondasi lompatan vertikal, defensive stance rendah, penyerapan landing, dan kekuatan boxout. Dinilai relatif terhadap berat badan.',
-  sop:['Alat: barbell, rack, spotter, timbangan badan.','Pemanasan progresif, lalu naikkan beban hingga 1RM (atau estimasi dari 3–5RM untuk Junior).','Squat sah: bahu bar stabil, paha minimal sejajar lantai, lutut tidak collapse ke dalam, berdiri tuntas.','Input: beban maksimal (kg); rasio ×BW dihitung otomatis dari BB atlet.']},
- {k:'upper', t:'Upper Body Strength', s:'Bench Press 1RM (× BW)', ic:'bi-arrow-up-circle-fill', u:'×BW', ratio:true, bbNeeded:true,
-  f:[['bench_1rm','Beban 1RM','80','kg',0.5]],
-  why:'Kekuatan dorong untuk screen, boxout, finishing di tengah kontak, dan mempertahankan posisi post.',
-  sop:['Alat: barbell, bench, rack, spotter.','Punggung, bahu, dan bokong menempel bench; kaki menapak lantai.','Turunkan bar ke dada tanpa memantul, dorong sampai siku lurus.','Input: beban maksimal sah (kg); rasio ×BW otomatis.']},
- {k:'core', t:'Core Strength', s:'Plank (detik)', ic:'bi-shield-fill', u:'dtk',
-  f:[['plank_detik','Durasi tahan sempurna','90','dtk',1]],
-  why:'Core menstabilkan transfer gaya saat kontak, pivot, dan mendarat; menjaga posisi tubuh saat shooting di bawah tekanan.',
-  sop:['Alat: matras, stopwatch.','Plank siku: tubuh lurus dari kepala–tumit, pinggul tidak turun/naik.','Stop saat pinggul runtuh atau posisi berubah; catat durasi (detik).']},
- {k:'single_leg', t:'Single-Leg Strength', s:'Single-Leg Squat to Box (reps, kaki terburuk)', ic:'bi-lightning-fill', u:'reps', pair:true,
-  f:[['single_leg_squat_kiri','Kiri','8','reps',1],['single_leg_squat_kanan','Kanan','8','reps',1]],
-  why:'Cut, euro step, stop-jump, dan landing satu kaki. Kaki terlemah menentukan risiko cedera lutut/ankle; asimetri dipenalti.',
-  sop:['Alat: box setinggi lutut, tangan boleh di depan dada.','Turun terkontrol ke box (duduk ringan), kaki bebas tidak menyentuh lantai, naik tanpa momentum.','Repetisi sah bila lutut sejajar jari kaki dan pinggul tidak jatuh; hitung maksimal bersih per kaki.','Nilai memakai kaki terburuk; selisih > 2 reps = penalti −1 poin.']},
- {k:'broad', t:'Explosive Lower Strength', s:'Standing Broad Jump (m, terjauh dari 3 percobaan)', ic:'bi-arrow-right-circle-fill', u:'m',
-  f:[['broad_jump_m','Jarak lompat','2.50','m',0.01]],
-  why:'Standing broad jump mengukur daya ledak horizontal tungkai (pendorong hip–lutut–ankle), yang menopang first step, drive ke ring, dan lompatan dari posisi rendah. Menjembatani kekuatan L2 ke power L3.',
-  sop:['Alat: matras/lantai antiselip, meteran, penanda garis start.','Berdiri di belakang garis, kaki selebar bahu. Ayun lengan, tekuk lutut, lompat sejauh mungkin ke depan dengan dua kaki.','Mendarat dua kaki dan bertahan tanpa melangkah/menyentuh lantai dengan tangan.','Ukur dari garis ke tumit terdekat. 3 percobaan, istirahat 1 menit, ambil terjauh.']}
-];
-const REKO = {
- lower:{low:['Goblet & front squat progresif 3×8 (fokus kedalaman)','RDL 3×8 untuk hamstring–glute','Drop landing bilateral 3×5'],mid:['Back squat 4×5 @ ±80% 1RM','Trap-bar deadlift 3×5','Box jump dengan landing stabil'],high:['Pertahankan 1–2×/minggu heavy squat in-season','Contrast: squat berat + jump']},
- upper:{low:['Push-up progresif 3×AMRAP','DB bench press 3×8','Band pull-apart untuk keseimbangan dorong–tarik'],mid:['Bench press 4×6','Landmine press 3×8 (ramah bahu)','Medicine-ball chest pass'],high:['Pertahankan 1×/minggu in-season','Bench throw / plyo push-up untuk transfer power']},
- core:{low:['Dead bug 3×10/sisi','Plank progresif 4×30 dtk','Bird-dog 3×10/sisi'],mid:['Pallof press 3×10/sisi (anti-rotasi)','Side plank 3×40 dtk','Ab-wheel 3×8'],high:['Weighted plank & suitcase carry','Anti-rotasi dengan bola saat dribble/pass']},
- single_leg:{low:['Box step-down 3×8/sisi','Split squat 3×8/sisi','Single-leg balance sambil handling bola'],mid:['Bulgarian split squat 3×8','Single-leg squat ke box 3×6','Skater hop + stick landing'],high:['Single-leg RDL berbeban','Lateral bound + stick landing']},
- broad:{low:['Jump squat ringan 3×5','Hip hinge & kettlebell swing 3×10','Pogo hop 3×15'],mid:['Broad jump 4×3 dengan landing stabil','Trap-bar jump 3×5','Bounding 3×20 m'],high:['Pertahankan broad jump & bound 1×/minggu','Contrast: squat berat + broad jump']}
-};
-const LBL = {lower:'Lower', upper:'Upper', core:'Core', single_leg:'1-Leg', broad:'Broad'};
+const HAPUS_URL = "{% url 'basketball:hapus_l3' 0 %}";
+const RUB = JSON.parse(document.getElementById('rubrik-data').textContent);
+const TH = RUB.tables, BAND = RUB.band, YOUTH_SKOR = RUB.youth, SP = RUB.pillars;
+const CFG = {"PIL": [{"k": "jump", "t": "Vertical Jump", "s": "Standing Vertical (CMJ jump-and-reach)", "ic": "bi-arrow-up-circle-fill", "inputs": [{"f": "vertical_jump_cm", "lb": "Lompatan", "ph": "65", "u": "cm", "st": 0.5}, {"f": "standing_reach_cm", "lb": "Standing Reach", "ph": "240", "u": "cm", "st": 1}], "rows": [{"id": "vj", "u": "cm"}], "why": "Lompatan vertikal menentukan rebound, blok, dan finishing di atas ring. Max reach = standing reach + lompatan; standing reach hanya untuk konteks, tidak masuk skor.", "sop": ["Alat: papan/dinding ukur vertikal (atau Vertec), kapur/bubuk, meteran.", "Ukur standing reach: berdiri menyamping, lengan terjulur ke atas, tumit menapak.", "Countermovement jump tanpa langkah awal, ayunkan lengan, sentuh titik tertinggi.", "3 percobaan, istirahat 1 menit, ambil terbaik. Lompatan = titik sentuh − standing reach."], "reko": {"low": ["Goblet/back squat 3×5 + jump squat ringan 3×5", "Box jump 3×5 (turun dengan step)", "Latihan ayunan lengan: CMJ tanpa/dengan lengan"], "mid": ["Trap-bar jump 4×4", "Depth jump rendah 3×5", "Contrast: squat berat + CMJ"], "high": ["Pertahankan plyometric 2×/minggu, volume rendah in-season", "Lompatan reaktif berulang (multiple hops)"]}}, {"k": "sprint", "t": "Sprint", "s": "30 m dan ¾ court (22,9 m)", "ic": "bi-lightning-fill", "inputs": [{"f": "sprint_30m_detik", "lb": "Sprint 30 m", "ph": "4.2", "u": "dtk", "st": 0.01}, {"f": "sprint_court_detik", "lb": "¾ Court", "ph": "3.3", "u": "dtk", "st": 0.01}], "rows": [{"id": "sp30", "u": "dtk"}, {"id": "spct", "u": "dtk", "rs": "¾ Court Sprint (22,9 m)"}], "why": "Fast break, transisi bertahan, dan memenangi bola lepas ditentukan percepatan 0–20 m. ¾ court adalah tes standar combine basket; 30 m mengukur kecepatan maksimal. Keduanya dirata-rata bila terisi.", "sop": ["Alat: stopwatch/timing gate, kerucut, lintasan datar.", "Start dari posisi berdiri, kaki depan di belakang garis, tanpa aba-aba mundur.", "30 m: catat waktu garis 30 m. ¾ court: 22,9 m dari baseline ke garis free-throw seberang.", "2–3 percobaan, istirahat 2–3 menit, ambil terbaik."], "reko": {"low": ["Akselerasi 10–20 m 6×, istirahat penuh", "Wall drill & A-skip 3×20 m", "Sled/resisted sprint ringan"], "mid": ["Sprint 30 m 6×, istirahat 2 menit", "Resisted sprint 3×20 m", "Transisi: sprint–stop–sprint"], "high": ["Pertahankan sprint maksimal 1×/minggu", "Sprint dengan bola (dribble sprint) untuk transfer"]}}, {"k": "agility", "t": "Lane Agility", "s": "NBA Lane Agility Drill (dtk)", "ic": "bi-shuffle", "inputs": [{"f": "lane_agility_detik", "lb": "Lane Agility", "ph": "11.2", "u": "dtk", "st": 0.01}], "rows": [{"id": "lane", "u": "dtk"}], "why": "Mengukur gerak lateral–mundur–maju dalam area cat (lane), mirip kebutuhan bertahan satu lawan satu dan close-out.", "sop": ["Alat: lane 4,9 × 5,8 m (garis cat), 4 kerucut/penanda, stopwatch.", "Start di sudut baseline kiri; sprint ke garis free-throw, slide ke kanan, mundur, slide balik (mengelilingi lane) sesuai pola resmi drill.", "Tidak boleh menyilang kaki saat slide; sentuh garis di tiap titik.", "2 percobaan, ambil terbaik. Catat detik hingga 0,01."], "reko": {"low": ["Defensive slide 3×20 dtk", "Drill 4-cone berpola", "Deceleration: stop cepat 3×5"], "mid": ["Lane agility 4× dengan istirahat 90 dtk", "Reaksi: mirror drill 3×20 dtk", "Close-out & recover 3×6"], "high": ["Pertahankan dengan drill defensif 2×/minggu", "Reaktif: agility dengan isyarat visual/bola"]}}, {"k": "rsi", "t": "Reactive Strength", "s": "Drop Jump — RSI (m/dtk)", "ic": "bi-arrow-repeat", "inputs": [{"f": "rsi_value", "lb": "RSI", "ph": "1.8", "u": "m/dtk", "st": 0.01}, {"f": "drop_jump_cm", "lb": "Tinggi lompat DJ", "ph": "55", "u": "cm", "st": 0.5}], "rows": [{"id": "rsi", "u": "m/dtk"}], "why": "RSI = tinggi lompatan (m) ÷ waktu kontak tanah (dtk). Menggambarkan kemampuan siklus regang-pendek (SSC): lompatan berulang, rebound beruntun, dan landing-ke-lompatan.", "sop": ["Alat: kotak 30 cm, contact mat/aplikasi (mis. My Jump Lab) atau timing.", "Jatuh dari kotak (tidak melompat naik), begitu mendarat langsung melompat setinggi dan secepat mungkin.", "Catat tinggi lompatan dan waktu kontak; RSI = tinggi(m) ÷ kontak(dtk).", "3–5 percobaan, ambil RSI terbaik. Input RSI dipakai untuk skor."], "reko": {"low": ["Pogo hop 3×15", "Landing mechanics bilateral 3×5", "Lompat tali 3×30 dtk"], "mid": ["Drop jump 30 cm 3×5", "Hurdle hop 3×5", "Multi-rebound (tip-ins berulang)"], "high": ["Depth jump 40–50 cm 3×4 (volume rendah)", "Single-leg hop & stick"]}}, {"k": "cod", "t": "Change of Direction", "s": "T-Test (dtk)", "ic": "bi-signpost-split-fill", "inputs": [{"f": "cod_detik", "lb": "T-Test", "ph": "9.8", "u": "dtk", "st": 0.01}], "rows": [{"id": "cod", "u": "dtk"}], "why": "Mengukur perubahan arah maju–lateral–mundur, kebutuhan cut, closeout, dan pivot. Waktu bergantung pada teknik decelerasi.", "sop": ["Alat: 4 kerucut (A start, B 9,14 m di depan; C dan D 4,57 m kiri/kanan B), stopwatch.", "Sprint A→B sentuh kerucut, slide kiri ke C, slide kanan ke D, slide kembali ke B, mundur ke A.", "Tidak menyilang kaki saat slide; sentuh tiap kerucut.", "2 percobaan, ambil terbaik."], "reko": {"low": ["Deceleration drill 3×5", "Lateral shuffle & cut 3×6", "Plant-and-cut latihan teknik"], "mid": ["T-test 4× istirahat 2 menit", "Reactive cut drill 3×6", "Pivot & jab step"], "high": ["Pertahankan 1–2×/minggu", "COD dengan bola & bek pasif"]}}], "LBL": {"jump": "Jump", "sprint": "Sprint", "agility": "Agility", "rsi": "RSI", "cod": "COD"}, "GATE": 7.0, "GATE2": 5.0, "NEXT": {"ok": "LAYAK naik ke L4 — Sport-Specific Skill", "mid": "Tahan di L3 — perkuat pilar terlemah (butuh ≥ 7.0 untuk naik ke L4)", "no": "kembali perkuat L2 Strength / daya ledak dasar"}, "ACC": "#f59e0b"};
+const PIL = CFG.PIL, LBL = CFG.LBL, ACC = CFG.ACC;
 
 (function () {
   let h = '';
   PIL.forEach((p, i) => {
+    const n = p.inputs.length, c = n > 2 ? 'col-4' : n > 1 ? 'col-6' : 'col-12';
     h += `<div class="pilar-card"><div class="pilar-label"><i class="bi ${p.ic} me-1" style="color:var(--accent)"></i><div class="flex-grow-1">${i + 1}. ${p.t}<span class="pilar-tag d-block">${p.s}</span></div><span class="score-pill" id="pv_${p.k}">—</span></div><div class="row g-2">`;
-    p.f.forEach(f => { h += `<div class="${p.f.length > 1 ? 'col-6' : 'col-12'}"><label class="lb">${f[1]}</label><div class="input-group input-group-sm"><input type="number" name="${f[0]}" class="form-control" step="any" min="0" placeholder="${f[2]}" oninput="recalc()"><span class="input-group-text">${f[3]}</span></div></div>`; });
-    h += `</div><input type="hidden" name="score_${p.k}" id="score_${p.k}"><div class="mt-2" style="font-size:.72rem;color:var(--text-dim)">${p.ratio ? 'Rasio: <b id="ra_' + p.k + '" style="color:var(--accent)">—</b> ' : ''}<span id="as_${p.k}"></span></div></div>`;
+    p.inputs.forEach(f => { h += `<div class="${c}"><label class="lb">${f.lb}</label><div class="input-group input-group-sm"><input type="number" name="${f.f}" class="form-control" step="any" min="0"${f.u==='%'?' max="100"':f.u==='/10'?' max="10"':''} placeholder="${f.ph}" oninput="recalc()"><span class="input-group-text">${f.u}</span></div></div>`; });
+    h += `</div><div class="mt-2" style="font-size:.72rem;color:var(--text-dim)"><span id="ex_${p.k}"></span></div></div>`;
   });
   document.getElementById('pilarWrap').innerHTML = h;
   document.getElementById('pillRow').innerHTML = PIL.map(p => `<span class="score-pill" id="pill_${p.k}">${LBL[p.k]}: —</span>`).join('');
 })();
 
 let radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), {type: 'radar',
-  data: {labels: ['Lower', 'Upper', 'Core', 'Single Leg', 'Broad Jump'], datasets: [{data: [0, 0, 0, 0, 0], borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.15)', pointBackgroundColor: '#60a5fa', pointRadius: 5, borderWidth: 2}]},
+  data: {labels: PIL.map(p => LBL[p.k]), datasets: [{data: PIL.map(() => 0), borderColor: ACC, backgroundColor: ACC + '26', pointBackgroundColor: ACC, pointRadius: 5, borderWidth: 2}]},
   options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {r: {min: 0, max: 10, ticks: {display: false, stepSize: 2}, grid: {color: 'rgba(255,255,255,0.07)'}, angleLines: {color: 'rgba(255,255,255,0.07)'}, pointLabels: {color: '#94a3b8', font: {size: 11}}}}}});
 
 function getKat() { return document.getElementById('h_kategori').value; }
 function getGender() { return document.getElementById('h_gender').value === 'Putri' ? 'Putri' : 'Putra'; }
 function num(n) { const e = document.querySelector('[name=' + n + ']'); return e ? (parseFloat(e.value) || 0) : 0; }
-function bandScore(v, t) { let s = BAND[0]; for (let i = 0; i < 4; i++) { if (v >= t[i]) s = BAND[i + 1]; } return s; }
-function scorePilar(p) {
-  const v = p.f.map(f => num(f[0])), bb = num('kelas_berat');
-  if (v.some(x => !x)) return null;
-  const kat = getKat(), youth = kat === 'YOUTH';
-  let base = p.pair ? Math.min(...v) : v[0], shown = null;
-  if (p.ratio) { if (!bb) return null; base = base / bb; shown = base.toFixed(2) + ' ×BW'; }
-  if (youth) return {s: YOUTH_SKOR, val: shown};
-  const t = (TH[kat] || TH.ELITE)[getGender()][p.k];
-  let s = bandScore(base, t), pen = false;
-  if (p.k === 'single_leg' && Math.abs(v[0] - v[1]) > ASIM[0]) { s = Math.max(1, s - ASIM[1]); pen = true; }
-  return {s, pen, val: shown};
+function bandScore(v, t, lo) {
+  if (lo) return v <= t[3] ? BAND[4] : v <= t[2] ? BAND[3] : v <= t[1] ? BAND[2] : v <= t[0] ? BAND[1] : BAND[0];
+  let s = BAND[0]; for (let i = 0; i < 4; i++) { if (v >= t[i]) s = BAND[i + 1]; } return s;
+}
+function partVal(sp) {
+  if (sp.calc === 'weakratio') { const d = num('dribble_speed_dominant'), w = num('dribble_speed_weak'); return d && w ? d / w * 100 : 0; }
+  return num(sp.field);
+}
+function scorePilar(p) {   // identik dengan skor_pilar() di scoring.py
+  const kat = getKat(), g = getGender(); let sum = 0, wt = 0;
+  SP[p.k].forEach(sp => { const v = partVal(sp); if (!v) return;
+    let s; if (sp.direct) s = Math.min(10, v); else if (kat === 'YOUTH') s = YOUTH_SKOR; else s = bandScore(v, (TH[kat] || TH.ELITE)[g][sp.key], sp.lo);
+    sum += s * sp.w; wt += sp.w; });
+  return wt ? Math.floor(sum / wt * 10 + 0.5) / 10 : null;
 }
 function recalc() {
   const sc = {};
   PIL.forEach(p => {
-    const r = scorePilar(p);
-    document.getElementById('score_' + p.k).value = r ? r.s : '';
-    document.getElementById('pv_' + p.k).textContent = r ? r.s.toFixed(1) + ' / 10' : '—';
-    document.getElementById('as_' + p.k).innerHTML = r && r.pen ? '<span style="color:var(--gold)">⚠ asimetri, −1 poin</span>' : (p.bbNeeded && !num('kelas_berat') && p.f.every(f => num(f[0])) ? '<span style="color:var(--gold)">isi BB dulu</span>' : '');
-    if (p.ratio) document.getElementById('ra_' + p.k).textContent = r && r.val ? r.val : '—';
-    sc[p.k] = r ? r.s : 0;
-    document.getElementById('pill_' + p.k).textContent = LBL[p.k] + ': ' + (r ? r.s.toFixed(1) : '—');
+    const s = scorePilar(p);
+    document.getElementById('pv_' + p.k).textContent = s === null ? '—' : s.toFixed(1) + ' / 10';
+    document.getElementById('pill_' + p.k).textContent = LBL[p.k] + ': ' + (s === null ? '—' : s.toFixed(1));
+    sc[p.k] = s || 0;
+    const ex = document.getElementById('ex_' + p.k); if (ex) ex.innerHTML = EXTRA[p.k] ? EXTRA[p.k]() : '';
   });
   radarChart.data.datasets[0].data = PIL.map(p => sc[p.k]); radarChart.update('none');
-  const vals = Object.values(sc).filter(v => v > 0), total = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0, tr = Math.round(total * 10) / 10;
+  const vals = Object.values(sc).filter(v => v > 0), total = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0, tr = Math.floor(total * 10 + 0.5) / 10;
   const pred = tr >= 9 ? 'ELITE' : tr >= 7 ? 'READY' : tr >= 5 ? 'DEVELOPING' : 'NOVICE';
-  const col = {ELITE: '#2ecc71', READY: '#60a5fa', DEVELOPING: '#facc15', NOVICE: '#e74c3c'};
+  const col = {ELITE: '#2ecc71', READY: ACC, DEVELOPING: '#facc15', NOVICE: '#e74c3c'};
   const d = document.getElementById('total_display'); d.textContent = tr.toFixed(1); d.style.color = vals.length ? col[pred] : 'var(--accent)';
   const pe = document.getElementById('predikat_display'); pe.textContent = pred; pe.className = 'predikat-pill pred-' + (vals.length ? pred : 'NONE');
-  const ly = document.getElementById('layak_display');
+  const ly = document.getElementById('layak_display'), st = gateState(tr);
   if (!vals.length) { ly.textContent = 'Isi data untuk melihat hasil audit'; ly.style.color = 'var(--text-dim)'; }
-  else { const ok = tr >= 7; ly.textContent = ok ? '✅ LAYAK naik ke L3 — Power' : '⚠️ Skor ' + tr + ' < 7.0 — belum layak ke L3, perkuat pilar terlemah'; ly.style.color = ok ? '#2ecc71' : '#facc15'; }
+  else { ly.textContent = (st === 'ok' ? '✅ ' : st === 'mid' ? 'ℹ️ ' : '⚠️ ') + CFG.NEXT[st]; ly.style.color = st === 'ok' ? '#2ecc71' : st === 'mid' ? '#60a5fa' : '#facc15'; }
   let html = '';
-  PIL.forEach(p => { const v = sc[p.k]; if (!v) return; const db = REKO[p.k], tips = v < 5.5 ? db.low : v < 7.5 ? db.mid : db.high, c = v < 5.5 ? '#e74c3c' : v < 7.5 ? '#facc15' : '#2ecc71', lb = v < 5.5 ? 'PRIORITAS' : v < 7.5 ? 'PERHATIAN' : 'PERTAHANKAN';
+  PIL.forEach(p => { const v = sc[p.k]; if (!v) return; const db = p.reko, tips = v < 5.5 ? db.low : v < 7.5 ? db.mid : db.high, c = v < 5.5 ? '#e74c3c' : v < 7.5 ? '#facc15' : '#2ecc71', lb = v < 5.5 ? 'PRIORITAS' : v < 7.5 ? 'PERHATIAN' : 'PERTAHANKAN';
     html += `<div class="mb-2"><div class="mono" style="font-size:.66rem;font-weight:700;color:${c}">${LBL[p.k].toUpperCase()} · ${lb}</div>` + tips.map(t => `<div class="reko-item"><span class="reko-icon">▸</span>${t}</div>`).join('') + '</div>'; });
   document.getElementById('reko_box').innerHTML = html || '<div style="color:var(--text-dim);font-size:.75rem">Isi data pilar untuk melihat rekomendasi</div>';
-  generateNarasi(PIL.map(p => ({nama: p.t, val: sc[p.k]})), tr, pred);
+  generateNarasi(PIL.map(p => ({nama: p.t, val: sc[p.k]})), tr, pred, st);
 }
+function gateState(tr) { return tr >= CFG.GATE ? 'ok' : (CFG.GATE2 && tr >= CFG.GATE2) ? 'mid' : 'no'; }
+const EXTRA = {
+  jump: () => { const j = num('vertical_jump_cm'), r = num('standing_reach_cm'); return j && r ? 'Max reach: <b style="color:var(--accent)">' + (j + r).toFixed(0) + ' cm</b>' : ''; },
+  dribbling: () => { const d = num('dribble_speed_dominant'), w = num('dribble_speed_weak'); if (!d || !w) return ''; const r = d / w * 100; return 'Efisiensi tangan lemah: <b style="color:var(--accent)">' + r.toFixed(1) + '%</b>' + (r < 85 ? ' <span style="color:#facc15">(asimetris)</span>' : ''); },
+  conditioning: () => { const m = num('yoyo_jarak_m'); return m ? 'Est. VO₂max: <b style="color:var(--accent)">' + (m * 0.0084 + 36.4).toFixed(1) + '</b> ml/kg/mnt' : ''; }
+};
 
-function generateNarasi(pilars, total, pred) {
+function generateNarasi(pilars, total, pred, st) {
   const panel = document.getElementById('narasi_panel'), box = document.getElementById('narasi_box');
   const filled = pilars.filter(p => p.val > 0);
   if (!filled.length) { panel.style.display = 'none'; return; }
   const sel = document.getElementById('select_atlet'), nama = (sel && sel.value) ? sel.options[sel.selectedIndex].textContent.trim() : 'Atlet';
-  const wrn = v => v >= 9 ? '#2ecc71' : v >= 7 ? '#60a5fa' : v >= 5 ? '#facc15' : '#e74c3c', lbl = v => v >= 9 ? 'sangat baik' : v >= 7 ? 'baik' : v >= 5 ? 'cukup' : 'perlu perhatian';
-  const sorted = [...filled].sort((a, b) => b.val - a.val), kuat = sorted.slice(0, 2), lemah = sorted.slice(-2).reverse(), layak = total >= 7;
+  const wrn = v => v >= 9 ? '#2ecc71' : v >= 7 ? ACC : v >= 5 ? '#facc15' : '#e74c3c', lbl = v => v >= 9 ? 'sangat baik' : v >= 7 ? 'baik' : v >= 5 ? 'cukup' : 'perlu perhatian';
+  const sorted = [...filled].sort((a, b) => b.val - a.val), kuat = sorted.slice(0, 2), lemah = sorted.slice(-2).reverse();
   const row = (p, c) => '<div style="margin-bottom:4px"><strong style="color:' + c + '">' + p.nama + '</strong> — ' + lbl(p.val) + ' <span style="color:' + wrn(p.val) + ';font-weight:700">(' + p.val.toFixed(1) + '/10)</span></div>';
   const semuaPrima = (sorted[0].val - sorted[sorted.length - 1].val) <= 0.5 && sorted[sorted.length - 1].val >= 8.5;
-  box.innerHTML = '<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(96,165,250,0.15)"><b style="color:var(--accent)">👤 ' + nama + '</b> — level <b style="color:' + wrn(total) + '">' + pred + '</b>, total <b style="color:' + wrn(total) + '">' + total.toFixed(1) + '/10</b></div>'
+  const kc = st === 'ok' ? '#2ecc71' : st === 'mid' ? '#60a5fa' : '#e74c3c', ik = st === 'ok' ? '✅' : st === 'mid' ? 'ℹ️' : '⛔';
+  box.innerHTML = '<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.1)"><b style="color:var(--accent)">👤 ' + nama + '</b> — level <b style="color:' + wrn(total) + '">' + pred + '</b>, total <b style="color:' + wrn(total) + '">' + total.toFixed(1) + '/10</b></div>'
     + '<div style="margin-bottom:10px"><div style="color:var(--text-faint);font-size:10px;margin-bottom:5px;letter-spacing:1px">▲ KEUNGGULAN</div>' + kuat.map(p => row(p, '#2ecc71')).join('') + '</div>'
     + '<div style="margin-bottom:10px"><div style="color:var(--text-faint);font-size:10px;margin-bottom:5px;letter-spacing:1px">▼ AREA KELEMAHAN</div>' + (semuaPrima ? '<div style="color:#2ecc71;font-weight:600">🏆 Semua pilar prima — tidak ada kelemahan signifikan.</div>' : lemah.map(p => row(p, wrn(p.val))).join('')) + '</div>'
     + '<div style="padding:10px 12px;border-radius:8px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.07)"><div style="color:var(--text-faint);font-size:10px;margin-bottom:6px;letter-spacing:1px">📋 KESIMPULAN</div>'
-    + (layak ? '<span style="color:#2ecc71;font-weight:700">✅ LAYAK naik ke L3 Power</span>' : '<span style="color:#e74c3c;font-weight:700">⛔ BELUM LAYAK ke L3 — perkuat dasar dulu</span>')
-    + '<br><span style="color:var(--text-dim);font-size:10.5px">' + (semuaPrima ? 'Pertahankan beban kerja; siap program power.' : 'Fokus perkuat <b>' + lemah[0].nama + '</b>' + (lemah[1] ? ' dan <b>' + lemah[1].nama + '</b>' : '') + ' sebelum power/plyometric intens.') + '</span></div>';
+    + '<span style="color:' + kc + ';font-weight:700">' + ik + ' ' + CFG.NEXT[st] + '</span>'
+    + '<br><span style="color:var(--text-dim);font-size:10.5px">' + (semuaPrima ? 'Pertahankan beban kerja saat ini.' : 'Fokus perkuat <b>' + lemah[0].nama + '</b>' + (lemah[1] ? ' dan <b>' + lemah[1].nama + '</b>' : '') + '.') + '</span></div>';
   panel.style.display = 'block';
 }
 
@@ -329,7 +306,7 @@ function onAtletChange(sel) {
   const kat = (opt.dataset.kategori || 'ELITE').toUpperCase(), gen = opt.dataset.gender === 'Putri' ? 'Putri' : 'Putra';
   document.getElementById('h_kategori').value = kat; document.getElementById('h_gender').value = gen;
   document.getElementById('disp_kategori').value = kat; document.getElementById('disp_gender').value = gen;
-  if (opt.dataset.berat) document.getElementById('inp_bb').value = opt.dataset.berat;
+  document.getElementById('disp_posisi').value = opt.dataset.posisi || '—';
   recalc();
 }
 function toggleRubrik() { const p = document.getElementById('rubrikPanel'); p.style.display = p.style.display === 'none' ? 'block' : 'none'; if (p.style.display === 'block') renderRubrik(); }
@@ -337,10 +314,17 @@ function fmt(x) { return Number.isInteger(x) ? x : (Math.round(x * 100) / 100); 
 function renderRubrik() {
   const kat = document.getElementById('rbKat').value, g = document.getElementById('rbGen'), cls = ['c-k', 'c-k', 'c-c', 'c-b', 'c-b']; let h = '';
   g.style.display = kat === 'YOUTH' ? 'none' : '';
-  if (kat === 'YOUTH') { h = '<div class="p-3" style="font-size:.8rem;color:var(--text-dim)">Youth (9–12 thn) tidak memakai norma beban dewasa. Penilaian kualitatif: fokus penguasaan teknik (goblet squat, push-up, plank, step-down, broad jump terkontrol), bukan beban maksimal. Pilar yang datanya terisi otomatis bernilai 7.0 (“Berkembang Sesuai Tahap”).</div>'; }
-  else PIL.forEach(p => { const t = TH[kat][g.value][p.k], u = p.u;
-    const cells = [`< ${fmt(t[0])}`, `${fmt(t[0])} – ${fmt(t[1])}`, `${fmt(t[1])} – ${fmt(t[2])}`, `${fmt(t[2])} – ${fmt(t[3])}`, `≥ ${fmt(t[3])}`].map(x => x + ' ' + u);
-    h += `<div class="row g-0 rubrik-row"><div class="col-2"><b>${p.t}</b><br><span style="color:var(--text-dim);font-size:.68rem">${p.s}</span></div>` + cells.map((x, i) => `<div class="col text-center ${cls[i]}">${x}</div>`).join('') + `</div><div class="row g-0"><div class="col-12" style="padding:2px 10px 8px;font-size:.7rem;color:var(--text-dim)">🏀 ${p.why}</div></div>`; });
+  PIL.forEach(p => {
+    if (kat === 'YOUTH') { h += `<div class="row g-0 rubrik-row"><div class="col-2"><b>${p.t}</b><br><span style="color:var(--text-dim);font-size:.68rem">${p.s}</span></div><div class="col text-center c-c">${p.rows.some(r => !SP[p.k].find(s => s.id === r.id).direct) ? 'Kualitatif → 7.0 bila data terisi' : 'Penilaian coach 0–10 dipakai apa adanya'}</div></div>`; return; }
+    p.rows.forEach((r, ix) => { const sp = SP[p.k].find(s => s.id === r.id); let cells;
+      if (sp.direct) cells = ['1–3', '4–5', '6–7', '8–9', '10'].map(x => x + ' /10');
+      else { const t = TH[kat][g.value][sp.key];
+        cells = (sp.lo ? [`> ${fmt(t[0])}`, `${fmt(t[1])} – ${fmt(t[0])}`, `${fmt(t[2])} – ${fmt(t[1])}`, `${fmt(t[3])} – ${fmt(t[2])}`, `≤ ${fmt(t[3])}`]
+                       : [`< ${fmt(t[0])}`, `${fmt(t[0])} – ${fmt(t[1])}`, `${fmt(t[1])} – ${fmt(t[2])}`, `${fmt(t[2])} – ${fmt(t[3])}`, `≥ ${fmt(t[3])}`]).map(x => x + ' ' + r.u); }
+      h += `<div class="row g-0 rubrik-row"><div class="col-2"><b>${ix === 0 ? p.t : ''}</b><br><span style="color:var(--text-dim);font-size:.68rem">${r.rs || p.s}</span></div>` + cells.map((x, i) => `<div class="col text-center ${cls[i]}">${x}</div>`).join('') + '</div>'; });
+    h += `<div class="row g-0"><div class="col-12" style="padding:2px 10px 8px;font-size:.7rem;color:var(--text-dim)">🏀 ${p.why}</div></div>`;
+  });
+  if (kat === 'YOUTH') h = '<div class="p-3" style="font-size:.8rem;color:var(--text-dim)">Youth (9–12 thn) tidak memakai norma dewasa. Penilaian kualitatif: fokus kualitas gerak, landing stabil, dan kesenangan bergerak — bukan angka. Pilar yang datanya terisi otomatis bernilai 7.0 (“Berkembang Sesuai Tahap”).</div>' + h;
   document.getElementById('rubrikBody').innerHTML = h;
   document.getElementById('sopBody').innerHTML = PIL.map((p, i) => `<div class="pilar-card"><div class="pilar-label"><span class="badge bg-secondary me-1">${i + 1}</span>${p.t} — ${p.s}</div><ol class="mb-0 ps-3" style="font-size:.76rem;color:var(--text-dim)">${p.sop.map(x => '<li>' + x + '</li>').join('')}</ol></div>`).join('');
 }
@@ -358,10 +342,10 @@ function eksekusiHapus(auditId, namaAtlet) {
       if (row) { row.style.transition = 'opacity .35s,transform .35s'; row.style.opacity = '0'; row.style.transform = 'translateX(-12px)'; setTimeout(() => row.remove(), 380); } })
     .catch(e => alert('Gagal: ' + e.message));
 }
-function kirimWARowL2(nama, kat, total, predikat, tgl, noHpCoach) {
+function kirimWARow(nama, kat, total, predikat, tgl, noHpCoach) {
   let waNum = (noHpCoach || '').replace(/[^0-9]/g, '');
   if (waNum.startsWith('0')) waNum = '62' + waNum.slice(1); else if (!waNum.startsWith('62') && waNum.length > 0) waNum = '62' + waNum;
-  const pesan = encodeURIComponent('*LAPORAN AUDIT L2 - HPCS BASKETBALL*\n========================\nAtlet: ' + nama + '\nKategori: ' + kat + '\nTanggal: ' + tgl + '\n========================\nTotal Skor: ' + parseFloat(total).toFixed(1) + '/10\nPredikat: ' + predikat + '\n========================\nDikirim otomatis oleh HPCS Basketball System');
+  const pesan = encodeURIComponent('*LAPORAN AUDIT L3 - HPCS BASKETBALL*\n========================\nAtlet: ' + nama + '\nKategori: ' + kat + '\nTanggal: ' + tgl + '\n========================\nTotal Skor: ' + parseFloat(total).toFixed(1) + '/10\nPredikat: ' + predikat + '\n========================\nDikirim otomatis oleh HPCS Basketball System');
   if (waNum.length > 8) { window.open('https://wa.me/' + waNum + '?text=' + pesan, '_blank'); return; }
   const n = prompt('Nomor WhatsApp tujuan (contoh: 08123456789):'); if (!n) return;
   let num = n.replace(/[^0-9]/g, ''); if (num.startsWith('0')) num = '62' + num.slice(1);

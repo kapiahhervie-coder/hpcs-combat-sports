@@ -459,8 +459,20 @@ tbody tr:last-child td { border-bottom: none; }
         </div>
         <div class="hpcs-leg"><span><i style="background:#2ecc71"></i>&ge; 7,0 baik</span><span><i style="background:#f5a623"></i>5,0&ndash;6,9 perlu perhatian</span><span><i style="background:#e74c3c"></i>&lt; 5,0 prioritas</span></div>
 
-        <!-- Fatigue indicator -->
-        
+        <!-- Profil Kondisi Atlet -->
+        <div id="narasi_l4" style="display:none;margin-top:16px;text-align:left;width:100%;align-self:stretch;">
+          <div style="font-size:10px;font-weight:700;color:#06b6d4;letter-spacing:1px;margin-bottom:6px;">
+            &#9889; PROFIL KONDISI ATLET
+          </div>
+          <div id="narasi_box_l4" style="
+            background:rgba(6,182,212,0.05);
+            border:1px solid rgba(6,182,212,0.2);
+            border-radius:10px;padding:12px;
+            font-size:11px;line-height:1.7;
+            color:#9ca3af;text-align:left;">
+          </div>
+        </div>
+
       </div>
 
       <!-- Kolom 3: Result -->
@@ -469,20 +481,6 @@ tbody tr:last-child td { border-bottom: none; }
           <div class="card-title" style="justify-content:center;">Audit Result</div>
           <div class="result-score" id="res_total">0.0</div>
           <div class="result-badge rb-novice" id="res_badge">NOVICE</div>
-
-          <!-- Profil Kondisi Atlet -->
-          <div id="narasi_l4" style="display:none;margin-top:10px;text-align:left;">
-            <div style="font-size:10px;font-weight:700;color:#06b6d4;letter-spacing:1px;margin-bottom:6px;">
-              &#9889; PROFIL KONDISI ATLET
-            </div>
-            <div id="narasi_box_l4" style="
-              background:rgba(6,182,212,0.05);
-              border:1px solid rgba(6,182,212,0.2);
-              border-radius:10px;padding:12px;
-              font-size:11px;line-height:1.7;
-              color:#9ca3af;text-align:left;">
-            </div>
-          </div>
 
           <div class="rekomendasi" id="rekomendasi">
             <div class="rek-title">&#128203; Rekomendasi Pelatih:</div>
@@ -973,10 +971,12 @@ function onAtletChange(sel) {
   if (gen) gen.value = opt.dataset.gender;
   if (hKat) hKat.value = opt.dataset.kategori || 'ELITE';
   if (hGen) hGen.value = opt.dataset.gender   || 'Putra';
-  if (hBb)  hBb.value  = opt.dataset.berat    || '';
-  if (bb)  bb.value  = opt.dataset.berat;
+  var bAman = parseFloat(String(opt.dataset.berat || '').replace(',', '.'));
+  bAman = bAman > 0 ? String(bAman) : '';
+  if (hBb)  hBb.value  = bAman;
+  if (bb)  bb.value  = bAman;
   var inf = document.getElementById('atlet_info');
-  if (inf) { inf.className = 'hpcs-info'; inf.innerHTML = HPCS.infoAtletHTML(opt.dataset.kategori, opt.dataset.gender, opt.dataset.berat); }
+  if (inf) { inf.className = 'hpcs-info'; inf.innerHTML = HPCS.infoAtletHTML(opt.dataset.kategori, opt.dataset.gender, bAman); }
   calcHex(); autoScorePunch(); calcYoYo();
 }
 

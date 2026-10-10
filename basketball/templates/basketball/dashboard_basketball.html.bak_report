@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% block title %}HPCS - Digital Performance Profile{% endblock %}
 {% block page_title %}Basketball Dashboard{% endblock %}
 
@@ -87,7 +87,7 @@ body{background-color:var(--bg-dark);color:#fff;font-family:'Segoe UI',Roboto,sa
           {% endfor %}
         </select>
         {% if atlet %}
-        <a href="{% url 'basketball:report_card' atlet.pk %}" target="_blank" class="btn-report"><i class="fa-solid fa-file-lines"></i> Report Card</a>
+        <a href="{% url 'combat:report_card' atlet.pk %}" target="_blank" class="btn-report"><i class="fa-solid fa-file-lines"></i> Report Card</a>
         {% else %}
         <span class="btn-report" style="opacity:0.4;cursor:not-allowed;"><i class="fa-solid fa-file-lines"></i> Report Card</span>
         {% endif %}
